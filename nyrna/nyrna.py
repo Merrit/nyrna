@@ -7,16 +7,21 @@ https://stackoverflow.com/a/36419702/9872288
 
 Prerequisites
 
-All:
+All platforms:
+Python 3
 psutil (pip install psutil)
 
 For Linux:
 Install wnck (sudo apt-get install python-wnck on Ubuntu, see libwnck.)
+TODO: This doesn't actually seem to be necessary, since I have been using it without.
+Manjaro came with PyGObject/gi installed by default, and it has been working fine. Should we worry about wnck at all?
+Is one more performant than the other?
 
-For Windows:
+For Windows (IN PROGRESS - not yet implemented):
 Make sure win32gui is available
+TODO: This package now appears to be part of pywin32, so you need to import pywin32 and call win32gui?
 
-For Mac:
+For Mac (May be possible to support in the future):
 Make sure AppKit is available
 """
 
