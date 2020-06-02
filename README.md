@@ -45,3 +45,9 @@ I haven't seen this issue, however if at any time the hotkey isn't working to re
 
 - Windows support
 - Run in system tray with hotkey configured by app
+
+# FAQ
+
+**Can I suspend to disk so that I can restore after reboot / free up RAM usage / etc?**
+
+Unfortunately no. CRUI looks very promising to allow us to do this (on linux), however it [does not currently support suspending GUI applications](https://criu.org/X_applications).
