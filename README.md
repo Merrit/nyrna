@@ -10,9 +10,12 @@ Nyrna currently works on Linux. Windows support is in progress.
 
 # Prerequisites
 
+- wnck (install libwnck3 via your package manager)
 - Python 3
-  - psutil (pip install psutil)
-  - PyGObject (pip install PyGObject)
+  - pip (sudo apt install pip3)
+    - psutil (pip3 install psutil)
+
+_In a future update I will hopefully be able to package this to make it easier on the end-user._
 
 # Usage
 

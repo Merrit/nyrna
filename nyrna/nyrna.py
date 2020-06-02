@@ -91,7 +91,7 @@ def get_active_window():
         try:
             import wnck
         except ImportError:
-            logging.info("wnck not installed")
+            log("wnck not installed")
             wnck = None
         if wnck is not None:
             screen = wnck.screen_get_default()
@@ -107,7 +107,7 @@ def get_active_window():
 
                 gi = "Installed"
             except ImportError:
-                logging.info("gi.repository not installed")
+                log("gi.repository not installed")
                 gi = None
             if gi is not None:
                 Gtk.init([])  # necessary if not using a Gtk.main() loop
