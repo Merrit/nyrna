@@ -4,6 +4,9 @@ nyrna.log
 # Ignore pickled app info
 paused_app.pkl
 
+# Ignore Dolphin directory config files
+.directory
+
 #
 # Python .gitignore from GitHub
 #
