@@ -27,8 +27,10 @@ https://stackoverflow.com/a/36419702/9872288
 Prerequisites
 
 All platforms:
-Python 3
-psutil (pip install psutil)
+- Python 3
+    - psutil (pip3 install psutil)
+    - pynput (pip3 install pynput)
+    - PySimpleGUI (pip3 install pysimplegui)
 
 For Linux:
 Wnck (Install libwnck3 from package manager)

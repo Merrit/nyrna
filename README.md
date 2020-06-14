@@ -12,24 +12,18 @@ Nyrna currently works on Linux. Windows support is in progress.
 
 - wnck (install libwnck3 via your package manager)
 - Python 3
-  - pip (sudo apt install pip3)
-    - psutil (pip3 install psutil)
+  - pip (`sudo apt install pip3` or `sudo pacman -S python-pip`)
+    - psutil (`pip3 install psutil`)
+    - pynput (`pip3 install pynput`)
+    - PySimpleGUI (`pip3 install pysimplegui`)
 
 _In a future update I will hopefully be able to package this to make it easier on the end-user._
 
 # Usage
 
-Download `nyrna.py`, ensure it is set as executable and create a custom shortcut to it so that it can triggered with a hotkey.
+Download or clone the repository. Ensure `nyrna.py` is set as executable and then run, it will run in your system tray. Press the `Pause` key on your keyboard to suspend the active, foreground application. Press again to resume the same application regardless of the current focus.
 
-Example on KDE:  
-System Settings -> Shortcuts -> Custom Shortcuts  
-Edit -> New -> Global Shortcut -> Command/URL  
-Trigger: Choose a hotkey (eg, Pause)  
-Action: `python /path/to/nyrna.py`
-
-![How to assign a hotkey](images/demo_assign_hotkey.png)
-
-When you press the hotkey it will toggle suspend/resume on the program with the active window. This is currently only tested to work with **_one application at a time_**, so using it with multiple apps might not work as expected. This is especially true for Wine games using an emulated desktop - you likely won't be able to resume that Wine game if you have paused something else afterwards.
+![Demo of Nyrna running as a Tray Icon](images/demo_nyrna_tray.png)
 
 # Disclaimer
 
@@ -44,7 +38,7 @@ I haven't seen this issue, however if at any time the hotkey isn't working to re
 # Planned Features
 
 - Windows support
-- Run in system tray with hotkey configured by app
+- ~~Run in system tray with hotkey configured by app~~ :heavy_check_mark:
 
 # FAQ
 
