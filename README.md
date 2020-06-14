@@ -37,8 +37,9 @@ I haven't seen this issue, however if at any time the hotkey isn't working to re
 
 # Planned Features
 
-- Windows support
 - ~~Run in system tray with hotkey configured by app~~ :heavy_check_mark:
+- Package(s) for ease of use
+- Windows support
 
 # FAQ
 
