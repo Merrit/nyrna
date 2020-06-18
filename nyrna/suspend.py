@@ -1,31 +1,15 @@
 # Standard Library
-import logging
-import logging.handlers
 import os
 import pickle
+import subprocess
 import sys
 
 # Third Party Libraries
 import psutil
 
-
-# Since this runs via hotkey there is no terminal to
-# print to, we need a logger for debugging.
-LOG_FILENAME = os.path.join(sys.path[0], "nyrna.log")
-logger = logging.getLogger("Logger")
-logger.setLevel(logging.DEBUG)
-handler = logging.handlers.RotatingFileHandler(
-    filename=LOG_FILENAME, maxBytes=1000000, backupCount=2, encoding="utf-8"
-)
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-
-
-def log(logMessage):
-    # Easier way to call the debug logger:
-    # log("message")
-    return logger.debug(logMessage)
+# Nyrna Modules
+from constant import user_cache_dir, user_data_dir
+from nyrna_logger import log
 
 
 class Process:
@@ -58,7 +42,10 @@ class Process:
     def check_for_saved_process(self):
         """ Check if a saved process file exists from a previous suspend """
         try:
-            saved_process_file = open(os.path.join(sys.path[0], "paused_app.pkl"), "rb")
+            os.makedirs(user_data_dir, exist_ok=True)
+            saved_process_file = open(
+                os.path.join(user_data_dir, "paused_app.pkl"), "rb"
+            )
             saved_process = pickle.load(saved_process_file)  # Saved dictionary
             log("Opened paused_app.pkl:")
             log(saved_process)
@@ -85,38 +72,19 @@ class Process:
 
     def get_active_window_linux(self):
         """ Find the process of the active window on Linux """
-        # Alternatives: http://unix.stackexchange.com/q/38867/4784
-        try:
-            import wnck
-        except ImportError:
-            log("wnck not installed")
-            wnck = None
-        if wnck is not None:
-            screen = wnck.screen_get_default()
-            screen.force_update()
-            window = screen.get_active_window()
-            if window is not None:
-                pid = window.get_pid()
-                with open("/proc/{pid}/cmdline".format(pid=pid)) as f:
-                    active_window_name = f.read()
-        else:
-            try:
-                from gi.repository import Gtk, Wnck
-
-                gi = "Installed"
-            except ImportError:
-                log("gi.repository not installed")
-                gi = None
-            if gi is not None:
-                Gtk.init([])  # necessary if not using a Gtk.main() loop
-                screen = Wnck.Screen.get_default()
-                screen.force_update()  # recommended per Wnck documentation
-                active_window = screen.get_active_window()
-                pid = active_window.get_pid()
-                with open("/proc/{pid}/cmdline".format(pid=pid)) as f:
-                    active_window_name = f.read()
-        # Check if we found a Wine process with virtual desktop enabled
-        if "explorer.exe" not in active_window_name:
+        xdotool_pid = subprocess.run(
+            ["xdotool", "getwindowfocus", "getwindowpid"],
+            stdout=subprocess.PIPE,
+            text=True,
+        )
+        pid = int(xdotool_pid.stdout.strip())
+        xdotool_active_window_name = subprocess.run(
+            ["xdotool", "getwindowfocus", "getwindowname"],
+            stdout=subprocess.PIPE,
+            text=True,
+        )
+        active_window_name = xdotool_active_window_name.stdout.strip()
+        if "explorer.exe" and "WineDesktop" not in active_window_name:
             return psutil.Process(pid)
         else:
             return self.find_wine_process()
@@ -177,7 +145,8 @@ class Process:
             log(f"Resumed process has PID: {self.process.pid}")
             # Remove the saved object from disk so as
             # to not cause confusion for next time
-            os.remove(os.path.join(sys.path[0], "paused_app.pkl"))
+            os.makedirs(user_data_dir, exist_ok=True)
+            os.remove(os.path.join(user_data_dir, "paused_app.pkl"))
         else:  # Suspend
             psutil.Process(self.process.pid).suspend()
             log(f"Suspended process has name: {self.process.name()}")
@@ -188,7 +157,10 @@ class Process:
             save_values = {}  # Save to dict since we can't pickle the psutil object
             save_values["pid"] = self.process.pid
             save_values["name"] = self.process.name()
-            saved_process_file = open(os.path.join(sys.path[0], "paused_app.pkl"), "wb")
+            os.makedirs(user_data_dir, exist_ok=True)
+            saved_process_file = open(
+                os.path.join(user_data_dir, "paused_app.pkl"), "wb"
+            )
             pickle.dump(save_values, saved_process_file, pickle.HIGHEST_PROTOCOL)
             saved_process_file.close()
 
