@@ -8,7 +8,7 @@ import sys
 import psutil
 
 # Nyrna Modules
-from constant import user_cache_dir, user_data_dir
+from constant import USER_CACHE_DIR, USER_DATA_DIR
 from nyrna_logger import log
 
 
@@ -42,9 +42,9 @@ class Process:
     def check_for_saved_process(self):
         """ Check if a saved process file exists from a previous suspend """
         try:
-            os.makedirs(user_data_dir, exist_ok=True)
+            os.makedirs(USER_DATA_DIR, exist_ok=True)
             saved_process_file = open(
-                os.path.join(user_data_dir, "paused_app.pkl"), "rb"
+                os.path.join(USER_DATA_DIR, "paused_app.pkl"), "rb"
             )
             saved_process = pickle.load(saved_process_file)  # Saved dictionary
             log("Opened paused_app.pkl:")
@@ -145,8 +145,8 @@ class Process:
             log(f"Resumed process has PID: {self.process.pid}")
             # Remove the saved object from disk so as
             # to not cause confusion for next time
-            os.makedirs(user_data_dir, exist_ok=True)
-            os.remove(os.path.join(user_data_dir, "paused_app.pkl"))
+            os.makedirs(USER_DATA_DIR, exist_ok=True)
+            os.remove(os.path.join(USER_DATA_DIR, "paused_app.pkl"))
         else:  # Suspend
             psutil.Process(self.process.pid).suspend()
             log(f"Suspended process has name: {self.process.name()}")
@@ -157,9 +157,9 @@ class Process:
             save_values = {}  # Save to dict since we can't pickle the psutil object
             save_values["pid"] = self.process.pid
             save_values["name"] = self.process.name()
-            os.makedirs(user_data_dir, exist_ok=True)
+            os.makedirs(USER_DATA_DIR, exist_ok=True)
             saved_process_file = open(
-                os.path.join(user_data_dir, "paused_app.pkl"), "wb"
+                os.path.join(USER_DATA_DIR, "paused_app.pkl"), "wb"
             )
             pickle.dump(save_values, saved_process_file, pickle.HIGHEST_PROTOCOL)
             saved_process_file.close()

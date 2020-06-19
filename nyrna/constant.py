@@ -5,6 +5,6 @@ import os
 from appdirs import AppDirs
 
 
-directories = AppDirs("Nyrna")
-user_cache_dir = directories.user_cache_dir
-user_data_dir = directories.user_data_dir
+DIRECTORIES = AppDirs("Nyrna")
+USER_CACHE_DIR = DIRECTORIES.user_cache_dir
+USER_DATA_DIR = DIRECTORIES.user_data_dir
