@@ -33,7 +33,7 @@ All platforms:
     - PySimpleGUI (pip3 install pysimplegui)
 
 For Linux:
-Wnck (Install libwnck3 from package manager)
+- xdotool (sudo apt install xdotool, or sudo pacman -S xdotool)
 
 For Windows (IN PROGRESS - not yet implemented):
 Make sure win32gui is available

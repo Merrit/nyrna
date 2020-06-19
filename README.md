@@ -10,7 +10,7 @@ Nyrna currently works on Linux. Windows support is in progress.
 
 # Prerequisites
 
-- wnck (install libwnck3 via your package manager)
+- xdotool (`sudo apt install xdotool` or `sudo pacman -S xdotool`)
 - Python 3
   - pip (`sudo apt install pip3` or `sudo pacman -S python-pip`)
     - psutil (`pip3 install psutil`)
