@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "nyrna"
+version = "0.1.0"
+description = "Nyrna allows the user to pause any game or application on their PC."
+authors = ["Kristen McWilliam <merritt_public@outlook.com>"]
+license = "GPL-3.0-or-later"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+psutil = "^5.7.0"
+pysimplegui = "^4.20.0"
+pynput = "^1.6.8"
+pysimpleguiqt = "^0.35.0"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.8.3"
+black = "^19.10b0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
