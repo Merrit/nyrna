@@ -10,18 +10,16 @@ Nyrna currently works on Linux. Windows support is in progress.
 
 # Prerequisites
 
-- xdotool (`sudo apt install xdotool` or `sudo pacman -S xdotool`)
-- Python 3
-  - pip (`sudo apt install pip3` or `sudo pacman -S python-pip`)
-    - psutil (`pip3 install psutil`)
-    - pynput (`pip3 install pynput`)
-    - PySimpleGUI (`pip3 install pysimplegui`)
+GNOME users may need to install `libappindicator3` with their package manager, since GNOME doesn't seem to ship with support for system tray icons. Example:
 
-_In a future update I will hopefully be able to package this to make it easier on the end-user._
+- Debian / Ubuntu: `sudo apt install libappindicator3-1`
+- Arch / Manjaro: `sudo pacman -S libappindicator-gtk3`
 
 # Usage
 
-Download or clone the repository. Ensure `nyrna.py` is set as executable and then run, it will run in your system tray. Press the `Pause` key on your keyboard to suspend the active, foreground application. Press again to resume the same application regardless of the current focus.
+- [Download Nyrna](https://github.com/Merrit/nyrna/releases/latest/download/nyrna).
+- Make sure it is set as executable and then click to run - it will run in your system tray.
+- Press the `Pause` key on your keyboard to suspend the active, foreground application. Press again to resume the same application regardless of the current focus.
 
 ![Demo of Nyrna running as a Tray Icon](images/demo_nyrna_tray.png)
 
@@ -38,8 +36,9 @@ I haven't seen this issue, however if at any time the hotkey isn't working to re
 # Planned Features
 
 - ~~Run in system tray with hotkey configured by app~~ :heavy_check_mark:
-- Package(s) for ease of use
+- ~~Package(s) for ease of use~~ :heavy_check_mark:
 - Windows support
+- Simple way to customize hotkey
 
 # FAQ
 
