@@ -8,17 +8,30 @@ That said this can be used to pause normal, non-game applications as well. For e
 
 Nyrna currently works on Linux. Windows support is in progress.
 
-# Prerequisites
+# Installing
+
+## Arch / Manjaro
+
+A package is available [in the AUR](https://aur.archlinux.org/packages/nyrna/).
+
+- `yay nyrna`
+
+## Any distro: portable version
+
+_Requirements_:
 
 GNOME users may need to install `libappindicator3` with their package manager, since GNOME doesn't seem to ship with support for system tray icons. Example:
 
 - Debian / Ubuntu: `sudo apt install libappindicator3-1`
-- Arch / Manjaro: `sudo pacman -S libappindicator-gtk3`
+
+_Setup portable version_:
+
+- [Download Nyrna](https://github.com/Merrit/nyrna/releases/latest/download/nyrna).
+- Place wherever you would like the application to live (eg: ~/Applications)
+- Make sure it is set as executable and then click to run - it will run in your system tray.
 
 # Usage
 
-- [Download Nyrna](https://github.com/Merrit/nyrna/releases/latest/download/nyrna).
-- Make sure it is set as executable and then click to run - it will run in your system tray.
 - Press the `Pause` key on your keyboard to suspend the active, foreground application. Press again to resume the same application regardless of the current focus.
 
 ![Demo of Nyrna running as a Tray Icon](images/demo_nyrna_tray.png)
@@ -37,6 +50,7 @@ I haven't seen this issue, however if at any time the hotkey isn't working to re
 
 - ~~Run in system tray with hotkey configured by app~~ :heavy_check_mark:
 - ~~Package(s) for ease of use~~ :heavy_check_mark:
+  - ~~Arch User Repository~~ :heavy_check_mark:
 - Windows support
 - Simple way to customize hotkey
 
