@@ -10,13 +10,13 @@ Nyrna currently works on Linux. Windows support is in progress.
 
 # Installing
 
-## Arch / Manjaro
+### Arch / Manjaro
 
 A package is available [in the AUR](https://aur.archlinux.org/packages/nyrna/).
 
 - `yay nyrna`
 
-## Any distro: portable version
+### Any distro: portable version
 
 _Requirements_:
 
