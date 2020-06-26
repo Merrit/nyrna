@@ -50,6 +50,7 @@ I haven't seen this issue, however if at any time the hotkey isn't working to re
 
 - ~~Run in system tray with hotkey configured by app~~ :heavy_check_mark:
 - ~~Package(s) for ease of use~~ :heavy_check_mark:
+  - ~~Portable executable~~ :heavy_check_mark:
   - ~~Arch User Repository~~ :heavy_check_mark:
 - Windows support
 - Simple way to customize hotkey
