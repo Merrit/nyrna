@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Nyrna
+Comment=Simple program to pause games & applications
+Exec=nyrna
+Icon=nyrna
+Terminal=false
+StartupNotify=false
+Categories=Application;
