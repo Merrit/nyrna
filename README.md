@@ -16,6 +16,12 @@ A package is available [in the AUR](https://aur.archlinux.org/packages/nyrna/).
 
 - `yay nyrna`
 
+### Gentoo
+
+A package is available in the [edgets overlay](https://github.com/BlueManCZ/edgets/tree/master/x11-misc/nyrna-bin).
+
+- `layman --add edgets && emerge --ask nyrna-bin`
+
 ### Any distro: portable version
 
 _Requirements_:
