@@ -1,3 +1,6 @@
+# GitHub specific configs
+.github
+
 # KDE's Dolphin directory config files
 .directory
 
