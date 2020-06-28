@@ -8,7 +8,7 @@ import (
 	"github.com/getlantern/systray"
 
 	// Nyrna Packages
-	icon "github.com/Merrit/nyrna/tree/master/nyrna/icons"
+	icon "github.com/Merrit/nyrna/nyrna/icons"
 )
 
 func onReady() {
