@@ -1,4 +1,4 @@
-module github.com/Merrit/nyrna
+module github.com/Merrit/nyrna/nyrna
 
 go 1.14
 
