@@ -40,6 +40,7 @@ func ToggleSuspend() {
 		// If a saved file exists, try to resume that process
 		if status == "T" {
 			log.Println(name, "is stopped - resuming.")
+			NotifyResume(name)
 			process.Resume()
 			err := os.Remove(SavedProcessFile)
 			Check(err)
@@ -65,9 +66,11 @@ func ToggleSuspend() {
 		switch status {
 		case "Running":
 			log.Println("Suspending", name)
+			NotifySuspend(name)
 			process.Suspend()
 		case "Suspended":
 			log.Println("Resuming", name)
+			NotifyResume(name)
 			process.Resume()
 		}
 		// Save suspended process details to file
