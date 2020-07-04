@@ -33,7 +33,9 @@ func GetActiveWindowLinux() (string, int32) {
 	Check(err)
 	log.Printf("Window name: %s", windowName)
 	// Check if the window is a Wine virtual desktop
-	if strings.Contains(windowName, "explorer.exe") == false && strings.Contains(windowName, "WineDesktop") == false {
+	if strings.Contains(windowName, "explorer.exe") == false &&
+		strings.Contains(windowName, "WineDesktop") == false &&
+		strings.Contains(windowName, "Wine") == false {
 		log.Print("Not a Wine process")
 		return windowName, processID
 	}
