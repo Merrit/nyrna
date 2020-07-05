@@ -28,3 +28,9 @@ func getSavedProcessFilePath() string {
 // and PID of the suspended process. It is a variable because
 // Golang can't assign constants with a function..
 var SavedProcessFile string = getSavedProcessFilePath()
+
+// ConfigFilePath is the XDG path for the config file
+// Linux: ~/.cache/Nyrna/suspended.txt
+// Mac: ~/Library/Caches/Nyrna/suspended.txt
+// Windows: %LOCALAPPDATA%\cache\Nyrna\suspended.txt
+var ConfigFilePath string = xdg.ConfigHome

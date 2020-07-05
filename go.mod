@@ -11,4 +11,7 @@ require (
 	github.com/getlantern/systray v1.0.3
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/shirou/gopsutil v2.20.5+incompatible
+	github.com/spf13/viper v1.7.0
+	github.com/stretchr/testify v1.4.0 // indirect
+	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
 )
