@@ -30,7 +30,7 @@ func getSavedProcessFilePath() string {
 var SavedProcessFile string = getSavedProcessFilePath()
 
 // ConfigFilePath is the XDG path for the config file
-// Linux: ~/.cache/Nyrna/suspended.txt
-// Mac: ~/Library/Caches/Nyrna/suspended.txt
-// Windows: %LOCALAPPDATA%\cache\Nyrna\suspended.txt
+// Linux: ~/.config/nyrna_config.json
+// Mac: ~/Library/Preferences/nyrna_config.json
+// Windows: %LOCALAPPDATA%\nyrna_config.json
 var ConfigFilePath string = xdg.ConfigHome
