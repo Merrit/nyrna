@@ -13,6 +13,12 @@ import (
 
 func onReady() {
 	systray.SetIcon(icon.Data)
+	mSettings := systray.AddMenuItem("Settings", "Open Nyrna settings")
+	go func() {
+		<-mSettings.ClickedCh
+		OpenSettings()
+	}()
+	systray.AddSeparator()
 	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
 	go func() {
 		<-mQuitOrig.ClickedCh

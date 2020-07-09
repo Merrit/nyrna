@@ -17,6 +17,13 @@ package main
 
 func main() {
 	ConfigLoad()
-	go StartHotkey()
+
+	switch OS {
+	case "linux":
+		go StartHotkeyLinux()
+	case "windows":
+		// go StartHotkeyWindows()
+	}
+
 	StartTray()
 }
