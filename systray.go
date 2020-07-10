@@ -13,10 +13,10 @@ import (
 
 func onReady() {
 	systray.SetIcon(icon.Data)
-	mSettings := systray.AddMenuItem("Settings", "Open Nyrna settings")
+	mRebind := systray.AddMenuItem("Change Hotkey", "Choose a new hotkey")
 	go func() {
-		<-mSettings.ClickedCh
-		OpenSettings()
+		<-mRebind.ClickedCh
+		RebindDialogLinux()
 	}()
 	systray.AddSeparator()
 	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")

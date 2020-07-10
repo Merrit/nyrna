@@ -4,17 +4,14 @@ package main
 
 import (
 	// Standard Library
-
 	"log"
 	"strings"
 
 	// Third Party Libraries
-	"github.com/BurntSushi/xgb/xproto"
-
 	"github.com/BurntSushi/xgbutil"
+	"github.com/BurntSushi/xgbutil/ewmh"
 	"github.com/BurntSushi/xgbutil/keybind"
 	"github.com/BurntSushi/xgbutil/xevent"
-	"github.com/BurntSushi/xgbutil/xwindow"
 )
 
 /* -------------------------------------------------------------------------- */
@@ -37,7 +34,8 @@ func StartHotkeyLinux() {
 			// Do things
 			log.Printf("Pause key was pressed")
 			// ToggleSuspend()
-			RebindLinux()
+			// RebindLinux()
+			// RebindDialog()
 		}).Connect(X, X.RootWin(), "Pause", true)
 	if err != nil {
 		log.Fatal(err)
@@ -56,43 +54,43 @@ func StartHotkeyLinux() {
 // RebindLinux will listen for a new hotkey and save preference to config
 func RebindLinux() {
 	// Connect to the X server using the DISPLAY environment variable.
+	/* 	X, err := xgbutil.NewConn()
+	   	if err != nil {
+	   		log.Fatal(err)
+	   	} */
+	/* -------------------------------------------------------------------------- */
+
+	// Connect to the X server using the DISPLAY environment variable.
 	X, err := xgbutil.NewConn()
-	if err != nil {
-		log.Fatal(err)
-	}
+	Check(err)
+	// Get the Window ID of the active window
+	windowID, err := ewmh.ActiveWindowGet(X)
+	Check(err)
+	log.Printf("Window ID: %d", windowID)
+	// Get the name of the active window
+	windowName, err := ewmh.WmNameGet(X, windowID)
+	Check(err)
+	log.Println("Window name: ", windowName)
+
+	/* -------------------------------------------------------------------------- */
 	// Initialize the connection
 	keybind.Initialize(X)
 	// Create a new window. We will listen for key presses and
 	// translate them only when this window is in focus.
-	win, err := xwindow.Generate(X)
-	if err != nil {
-		log.Fatalf("Could not generate a new window X id: %s", err)
-	}
+	/* 	win, err := xwindow.Generate(X)
+	   	if err != nil {
+	   		log.Fatalf("Could not generate a new window X id: %s", err)
+	   	} */
 
 	/* -------------------------- Define Rebind Window -------------------------- */
 
-	// Variables for window properties
-	/* 	var (
-		// The geometry of the canvas to draw text on.
-		canvasWidth, canvasHeight = 600, 100
-		// The background color of the canvas.
-		bg = xgraphics.BGRA{B: 0xff, G: 0x66, R: 0x33, A: 0xff}
-		// The path to the font used to draw text.
-		fontPath = "fonts/FreeMonoBold.ttf"
-		// The color of the text.
-		fg = xgraphics.BGRA{B: 0xff, G: 0xff, R: 0xff, A: 0xff}
-		// The size of the text.
-		size = 20.0
-		// The text to draw.
-		msg = "This is some text drawn by xgraphics!"
-	) */
-	win.Create(X.RootWin(), 0, 0, 500, 500, xproto.CwBackPixel, 0xffffffff)
-	// Listen for Key{Press,Release} events.
-	win.Listen(xproto.EventMaskKeyPress, xproto.EventMaskKeyRelease)
-	// Map the window.
-	win.Map()
-	// Find the window ID
-	wid := win.Id
+	/* 	win.Create(X.RootWin(), 0, 0, 500, 500, xproto.CwBackPixel, 0xffffffff)
+	   	// Listen for Key{Press,Release} events.
+	   	win.Listen(xproto.EventMaskKeyPress, xproto.EventMaskKeyRelease)
+	   	// Map the window.
+	   	win.Map()
+	   	// Find the window ID
+	   	wid := win.Id */
 
 	/* ------------------------------ Rebind Logic ------------------------------ */
 
@@ -113,7 +111,7 @@ func RebindLinux() {
 			case keybind.KeyMatch(X, "Escape", e.State, e.Detail):
 				log.Println("Escape detected. Hotkey not changed.")
 				xevent.Quit(X)
-				win.Destroy()
+				// win.Destroy()
 			// Hotkey with modifiers
 			case len(modStr) > 0 && modStr != "mod2":
 				newHotkey := modStr + "+" + keyStr
@@ -123,64 +121,9 @@ func RebindLinux() {
 				newHotkey := keyStr
 				log.Println("New Hotkey: ", newHotkey)
 			}
-		}).Connect(X, wid)
+		}).Connect(X, windowID)
 	// Start the event loop to listen for rebind keys.
 	// This will route events to the callback function.
 	log.Println("Ready. Press the key(s) you wish to use for the hotkey.")
 	xevent.Main(X)
 }
-
-/* -------------------------------------------------------------------------- */
-/*                                   Example                                  */
-/* -------------------------------------------------------------------------- */
-
-/* func DrawText() {
-	X, err := xgbutil.NewConn()
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Load some font. You may need to change the path depending upon your
-	// system configuration.
-	fontReader, err := os.Open(fontPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Now parse the font.
-	font, err := xgraphics.ParseFont(fontReader)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Create some canvas.
-	ximg := xgraphics.New(X, image.Rect(0, 0, canvasWidth, canvasHeight))
-	ximg.For(func(x, y int) xgraphics.BGRA {
-		return bg
-	})
-	// Now write the text.
-	_, _, err = ximg.Text(10, 10, fg, size, font, msg)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Compute extents of first line of text.
-	_, firsth := xgraphics.Extents(font, size, msg)
-	// Now show the image in its own window.
-	win := ximg.XShowExtra("Drawing text using xgraphics", true)
-	// Now draw some more text below the above and demonstrate how to update
-	// only the region we've updated.
-	_, _, err = ximg.Text(10, 10+firsth, fg, size, font, "Some more text.")
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Now compute extents of the second line of text, so we know which region
-	// to update.
-	secw, sech := xgraphics.Extents(font, size, "Some more text.")
-	// Now repaint on the region that we drew text on. Then update the screen.
-	bounds := image.Rect(10, 10+firsth, 10+secw, 10+firsth+sech)
-	ximg.SubImage(bounds).(*xgraphics.Image).XDraw()
-	ximg.XPaint(win.Id)
-	// All we really need to do is block, which could be achieved using
-	// 'select{}'. Invoking the main event loop however, will emit error
-	// message if anything went seriously wrong above.
-	xevent.Main(X)
-}
-
-*/
