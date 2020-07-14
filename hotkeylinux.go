@@ -5,23 +5,34 @@ package main
 import (
 	// Standard Library
 	"log"
+	"os/exec"
 	"strings"
 
 	// Third Party Libraries
 	"github.com/BurntSushi/xgbutil"
-	"github.com/BurntSushi/xgbutil/ewmh"
 	"github.com/BurntSushi/xgbutil/keybind"
 	"github.com/BurntSushi/xgbutil/xevent"
 )
 
-/* -------------------------------------------------------------------------- */
-/*                                   Hotkey                                   */
-/* -------------------------------------------------------------------------- */
+type HotkeyLinux struct {
+	keys string
+}
 
-// StartHotkeyLinux will listen for the configured hotkey globally,
-// then call the function to toggle suspend.
+var hotkey HotkeyLinux = HotkeyLinux{}
+
+func loadHotkey() {
+	hotkey.keys = ConfigLoad() // Load default or saved hotkey
+}
+
+func updateHotkey(newHotkey string) {
+	hotkey.keys = newHotkey
+	ConfigWrite(newHotkey)
+}
+
+// StartHotkeyLinux will listen for the configured hotkey globally.
 func StartHotkeyLinux() {
 	// Connect to the X server using the DISPLAY environment variable.
+	loadHotkey()
 	X, err := xgbutil.NewConn()
 	if err != nil {
 		log.Fatal(err)
@@ -32,96 +43,90 @@ func StartHotkeyLinux() {
 	err = keybind.KeyReleaseFun(
 		func(X *xgbutil.XUtil, e xevent.KeyReleaseEvent) {
 			// Do things
-			log.Printf("Pause key was pressed")
-			// ToggleSuspend()
-			// RebindLinux()
-			// RebindDialog()
-		}).Connect(X, X.RootWin(), "Pause", true)
+			log.Println("Hotkey was pressed: ", hotkey.keys)
+			ToggleSuspend()
+		}).Connect(X, X.RootWin(), hotkey.keys, true)
 	if err != nil {
 		log.Fatal(err)
 	}
 	// Start the event loop to listen for the hotkey.
-	// This will route events to the callback function,
-	// which can then take appropriate actions.
-	log.Println("Nyrna initialized, listening for pause key.")
+	// This will route events to the callback function.
+	log.Println("Nyrna initialized, listening for hotkey: ", hotkey.keys)
 	xevent.Main(X)
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                Rebind Hotkey                               */
-/* -------------------------------------------------------------------------- */
+// EndRebindDialogLinux - kill the window after we finish with it
+func EndRebindDialogLinux(X *xgbutil.XUtil) {
+	cmd := exec.Command("killall", "zenity")
+	err := cmd.Run()
+	if err != nil {
+		log.Println("Killing Zenity dialog")
+	}
+	xevent.Quit(X)
+	keybind.UngrabKeyboard(X)
+}
 
 // RebindLinux will listen for a new hotkey and save preference to config
 func RebindLinux() {
 	// Connect to the X server using the DISPLAY environment variable.
-	/* 	X, err := xgbutil.NewConn()
-	   	if err != nil {
-	   		log.Fatal(err)
-	   	} */
-	/* -------------------------------------------------------------------------- */
-
-	// Connect to the X server using the DISPLAY environment variable.
 	X, err := xgbutil.NewConn()
 	Check(err)
-	// Get the Window ID of the active window
-	windowID, err := ewmh.ActiveWindowGet(X)
-	Check(err)
-	log.Printf("Window ID: %d", windowID)
-	// Get the name of the active window
-	windowName, err := ewmh.WmNameGet(X, windowID)
-	Check(err)
-	log.Println("Window name: ", windowName)
-
-	/* -------------------------------------------------------------------------- */
 	// Initialize the connection
 	keybind.Initialize(X)
-	// Create a new window. We will listen for key presses and
-	// translate them only when this window is in focus.
-	/* 	win, err := xwindow.Generate(X)
-	   	if err != nil {
-	   		log.Fatalf("Could not generate a new window X id: %s", err)
-	   	} */
-
-	/* -------------------------- Define Rebind Window -------------------------- */
-
-	/* 	win.Create(X.RootWin(), 0, 0, 500, 500, xproto.CwBackPixel, 0xffffffff)
-	   	// Listen for Key{Press,Release} events.
-	   	win.Listen(xproto.EventMaskKeyPress, xproto.EventMaskKeyRelease)
-	   	// Map the window.
-	   	win.Map()
-	   	// Find the window ID
-	   	wid := win.Id */
-
-	/* ------------------------------ Rebind Logic ------------------------------ */
-
 	// Callback function to listen for keys
-	xevent.KeyPressFun(
-		func(X *xgbutil.XUtil, e xevent.KeyPressEvent) {
+	xevent.KeyReleaseFun(
+		func(X *xgbutil.XUtil, e xevent.KeyReleaseEvent) {
 			// Listen to modifier keys
 			modStr := keybind.ModifierString(e.State)
 			// Listen to regular keys
 			keyStr := keybind.LookupString(X, e.State, e.Detail)
 			// Remove NumLock modifier ("mod2") from string if found,
-			// if present when setting the hotkey, it won't work.
+			// if present when setting the hotkey it won't work.
 			modStr = strings.Replace(modStr, "mod2-", "", -1)
 			modStr = strings.Replace(modStr, "-mod2", "", -1)
-			// Save new hotkey to preferences..
+			/* if prefix control+Control Replace control+ ""
+
+			niceModifiers = []string{
+				"shift", "lock", "control", "mod1", "mod2", "mod3", "mod4", "mod5", "",
+			} */
 			switch {
 			// Abort hotkey rebinding with Esc
 			case keybind.KeyMatch(X, "Escape", e.State, e.Detail):
 				log.Println("Escape detected. Hotkey not changed.")
-				xevent.Quit(X)
-				// win.Destroy()
-			// Hotkey with modifiers
+				EndRebindDialogLinux(X)
+			// Save new hotkey with modifiers
 			case len(modStr) > 0 && modStr != "mod2":
+				/* for _, niceModifier := range keybind.NiceModifiers {
+					if modStr
+				} */
 				newHotkey := modStr + "+" + keyStr
 				log.Println("New Hotkey (with modifiers): ", newHotkey)
-			// Hotkey without modifiers
+				// updateHotkey(newHotkey)
+				EndRebindDialogLinux(X)
+			// Save new hotkey without modifiers
 			default:
 				newHotkey := keyStr
 				log.Println("New Hotkey: ", newHotkey)
+				// updateHotkey(newHotkey)
+				EndRebindDialogLinux(X)
 			}
-		}).Connect(X, windowID)
+		}).Connect(X, X.RootWin())
+	// Show the rebind prompt
+	go func() {
+		dialogClosed := RebindDialogLinux()
+		if dialogClosed == "closed" {
+			EndRebindDialogLinux(X)
+		}
+	}()
+	// Take over the entire keyboard to listen for the new hotkey.
+	err = keybind.GrabKeyboard(X, X.RootWin())
+	if err != nil {
+		log.Println("Could not grab keyboard: ", err)
+	} else {
+		log.Println("WARNING: We are taking *complete* control of the keyboard. " +
+			"The only way out is to press 'Escape' or to close the window with " +
+			"the mouse.")
+	}
 	// Start the event loop to listen for rebind keys.
 	// This will route events to the callback function.
 	log.Println("Ready. Press the key(s) you wish to use for the hotkey.")
