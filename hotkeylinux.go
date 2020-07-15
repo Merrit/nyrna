@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	// Third Party Libraries
+
 	"github.com/BurntSushi/xgbutil"
 	"github.com/BurntSushi/xgbutil/keybind"
 	"github.com/BurntSushi/xgbutil/xevent"
@@ -93,6 +94,60 @@ func EndRebindDialogLinux(X *xgbutil.XUtil) {
 
 // RebindLinux will listen for a new hotkey and save preference to config
 func RebindLinux() {
+
+	var weirdKeysyms = map[string]rune{
+		"space":        ' ',
+		"exclam":       '!',
+		"at":           '@',
+		"numbersign":   '#',
+		"dollar":       '$',
+		"percent":      '%',
+		"asciicircum":  '^',
+		"ampersand":    '&',
+		"asterisk":     '*',
+		"parenleft":    '(',
+		"parenright":   ')',
+		"bracketleft":  '[',
+		"bracketright": ']',
+		"braceleft":    '{',
+		"braceright":   '}',
+		"minus":        '-',
+		"underscore":   '_',
+		"equal":        '=',
+		"plus":         '+',
+		"backslash":    '\\',
+		"bar":          '|',
+		"semicolon":    ';',
+		"colon":        ':',
+		"apostrophe":   '\'',
+		"quoteright":   '\'',
+		"quotedbl":     '"',
+		"less":         '<',
+		"greater":      '>',
+		"comma":        ',',
+		"period":       '.',
+		"slash":        '/',
+		"question":     '?',
+		"grave":        '`',
+		"quoteleft":    '`',
+		"asciitilde":   '~',
+		"KP_Multiply":  '*',
+		"KP_Divide":    '/',
+		"KP_Subtract":  '-',
+		"KP_Add":       '+',
+		"KP_Decimal":   '.',
+		"KP_0":         '0',
+		"KP_1":         '1',
+		"KP_2":         '2',
+		"KP_3":         '3',
+		"KP_4":         '4',
+		"KP_5":         '5',
+		"KP_6":         '6',
+		"KP_7":         '7',
+		"KP_8":         '8',
+		"KP_9":         '9',
+	}
+
 	// Connect to the X server using the DISPLAY environment variable.
 	X, err := xgbutil.NewConn()
 	Check(err)
@@ -103,8 +158,19 @@ func RebindLinux() {
 		func(X *xgbutil.XUtil, e xevent.KeyReleaseEvent) {
 			// Listen to modifier keys
 			modStr := keybind.ModifierString(e.State)
+			log.Println("modStr: ", modStr)
 			// Listen to regular keys
 			keyStr := keybind.LookupString(X, e.State, e.Detail)
+			// Convert characters like ~, /, *, -, etc into
+			// string representations that the hotkey system
+			// can understand. Ex: ` becomes "grave".
+			for word, rune := range weirdKeysyms {
+				runeStr := string(rune)
+				if keyStr == runeStr {
+					keyStr = word
+				}
+			}
+			log.Println("keyStr: ", keyStr)
 			// Remove NumLock modifier ("mod2") from string if found,
 			// if present when setting the hotkey it won't work.
 			modStr = strings.Replace(modStr, "mod2-", "", -1)
