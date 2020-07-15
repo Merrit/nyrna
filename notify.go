@@ -26,3 +26,12 @@ func NotifyResume(name string) {
 		log.Println(err)
 	}
 }
+
+// NotifyHotkeyFailure sends a notification if we fail to activate the hotkey
+func NotifyHotkeyFailure(hotkeyErr error) {
+	message := fmt.Sprintf("%v", hotkeyErr)
+	err := beeep.Notify("Issue", message, "icons/nyrna.png")
+	if err != nil {
+		log.Println(err)
+	}
+}

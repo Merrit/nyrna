@@ -16,7 +16,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package main
 
 func main() {
-	ConfigLoad()
-	go StartHotkey()
+	// ConfigLoad()
+
+	switch OS {
+	case "linux":
+		go StartHotkeyLinux()
+	case "windows":
+		// go StartHotkeyWindows()
+	}
+
 	StartTray()
 }

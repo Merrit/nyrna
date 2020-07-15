@@ -8,7 +8,7 @@ import (
 )
 
 // ConfigLoad ...
-func ConfigLoad() {
+func ConfigLoad() (hotkey string) {
 	viper.SetConfigName("nyrna_config")
 	viper.SetConfigType("json")
 	viper.AddConfigPath(ConfigFilePath)
@@ -17,13 +17,14 @@ func ConfigLoad() {
 	if err != nil {             // Handle errors reading the config file
 		Check(err)
 	}
-	hotkey := viper.GetString("hotkey")
+	hotkey = viper.GetString("hotkey")
 	log.Println("Hotkey is:", hotkey)
+	return hotkey
 }
 
 // ConfigWrite ...
-func ConfigWrite() {
-	viper.Set("hotkey", "End")
+func ConfigWrite(newHotkey string) {
+	viper.Set("hotkey", newHotkey)
 	configFile := ConfigFilePath + "/nyrna_config.json"
 	viper.WriteConfigAs(configFile)
 }

@@ -35,3 +35,6 @@ nyrna
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Testing / scratch file
+test.go
