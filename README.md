@@ -26,9 +26,13 @@ A package is available in the [edgets overlay](https://github.com/BlueManCZ/edge
 
 _Requirements_:
 
-GNOME users may need to install `libappindicator3` with their package manager, since GNOME doesn't seem to ship with support for system tray icons. Example:
+- `libappindicator3`
+- `gtk+3.0`
+- `zenity`
 
-- Debian / Ubuntu: `sudo apt install libappindicator3-1`
+_Example_:
+
+- Debian / Ubuntu: `sudo apt install libappindicator3-1 gtk+3.0 zenity`
 
 _Setup portable version_:
 
@@ -41,6 +45,8 @@ _Setup portable version_:
 - Press the `Pause` key on your keyboard to suspend the active, foreground application. Press again to resume the same application regardless of the current focus.
 
 ![Demo of Nyrna running as a Tray Icon](images/demo_nyrna_tray.png)
+
+- To change the hotkey: Right click tray icon -> `Change Hotkey`
 
 # Disclaimer
 
@@ -58,8 +64,8 @@ I haven't seen this issue, however if at any time the hotkey isn't working to re
 - ~~Package(s) for ease of use~~ :heavy_check_mark:
   - ~~Portable executable~~ :heavy_check_mark:
   - ~~Arch User Repository~~ :heavy_check_mark:
+- ~~Simple way to customize hotkey~~ :heavy_check_mark:
 - Windows support
-- Simple way to customize hotkey
 
 # FAQ
 
