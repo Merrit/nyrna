@@ -18,7 +18,8 @@ type HotkeyLinux struct {
 	keys string
 }
 
-var hotkey HotkeyLinux = HotkeyLinux{}
+var hotkey *HotkeyLinux = &HotkeyLinux{}
+var xServer *xgbutil.XUtil = initializeHotkey()
 
 func loadHotkey() {
 	hotkey.keys = ConfigLoad() // Load default or saved hotkey
@@ -27,27 +28,51 @@ func loadHotkey() {
 func updateHotkey(newHotkey string) {
 	hotkey.keys = newHotkey
 	ConfigWrite(newHotkey)
+	// TODO: Currently when rebinding the hotkey, the previous
+	// hotkey will continue to work until application restart.
+	// Need to find out how to kill the old keybinding, as the
+	// below wasn't working.
+	/* 	err := keybind.KeyReleaseFun(
+	   		func(X *xgbutil.XUtil, e xevent.KeyReleaseEvent) {
+	   			// Use keybind.Detach to detach the root window
+	   			// from all KeyPress *and* KeyRelease handlers.
+	   			keybind.Detach(X, X.RootWin())
+
+	   			log.Printf("Detached all Key{Press,Release}Events from the "+
+	   				"root window (%d).", X.RootWin())
+	   		}).Connect(xServer, xServer.RootWin(), newHotkey, true)
+	   	if err != nil {
+	   		log.Println("Error detaching hotkey: ", err)
+	   	} */
+	go StartHotkeyLinux()
+}
+
+func initializeHotkey() (xServer *xgbutil.XUtil) {
+	// Connect to the X server using the DISPLAY environment variable.
+	var err error
+	xServer, err = xgbutil.NewConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return xServer
 }
 
 // StartHotkeyLinux will listen for the configured hotkey globally.
 func StartHotkeyLinux() {
-	// Connect to the X server using the DISPLAY environment variable.
 	loadHotkey()
-	X, err := xgbutil.NewConn()
-	if err != nil {
-		log.Fatal(err)
-	}
+	X := xServer
 	// Initialize the connection
 	keybind.Initialize(X)
 	// Callback function to listen for the Hotkey
-	err = keybind.KeyReleaseFun(
+	err := keybind.KeyReleaseFun(
 		func(X *xgbutil.XUtil, e xevent.KeyReleaseEvent) {
 			// Do things
 			log.Println("Hotkey was pressed: ", hotkey.keys)
 			ToggleSuspend()
 		}).Connect(X, X.RootWin(), hotkey.keys, true)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Failed to start hotkey: ", err)
+		NotifyHotkeyFailure(err)
 	}
 	// Start the event loop to listen for the hotkey.
 	// This will route events to the callback function.
@@ -84,6 +109,7 @@ func RebindLinux() {
 			// if present when setting the hotkey it won't work.
 			modStr = strings.Replace(modStr, "mod2-", "", -1)
 			modStr = strings.Replace(modStr, "-mod2", "", -1)
+			// This commented out code doesn't seem needed, reevaluate..
 			/* if prefix control+Control Replace control+ ""
 
 			niceModifiers = []string{
@@ -96,18 +122,19 @@ func RebindLinux() {
 				EndRebindDialogLinux(X)
 			// Save new hotkey with modifiers
 			case len(modStr) > 0 && modStr != "mod2":
+				// Also seems unneeded..
 				/* for _, niceModifier := range keybind.NiceModifiers {
 					if modStr
 				} */
-				newHotkey := modStr + "+" + keyStr
+				newHotkey := modStr + "-" + keyStr
 				log.Println("New Hotkey (with modifiers): ", newHotkey)
-				// updateHotkey(newHotkey)
+				updateHotkey(newHotkey)
 				EndRebindDialogLinux(X)
 			// Save new hotkey without modifiers
 			default:
 				newHotkey := keyStr
 				log.Println("New Hotkey: ", newHotkey)
-				// updateHotkey(newHotkey)
+				updateHotkey(newHotkey)
 				EndRebindDialogLinux(X)
 			}
 		}).Connect(X, X.RootWin())
