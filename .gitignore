@@ -4,6 +4,16 @@
 # VSCode
 .vscode
 
+# PKGBUILD extras
+packaging/PKGBUILD/.SRCINFO
+packaging/PKGBUILD/.gitignore
+packaging/PKGBUILD/README
+packaging/PKGBUILD/nyrna.png
+
+# Local-only files
+nyrna-release.txt
+nyrna-requirements.txt
+
 #
 # Go .gitignore
 #
