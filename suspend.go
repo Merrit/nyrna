@@ -18,7 +18,7 @@ func findProcess() (string, int32) {
 	case "linux":
 		name, pid = GetActiveWindowLinux()
 	case "windows":
-		log.Fatal("Windows is not yet supported.")
+		log.Println("Windows is not yet supported.")
 	}
 	return name, pid
 }

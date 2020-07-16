@@ -53,7 +53,7 @@ func initializeHotkey() (xServer *xgbutil.XUtil) {
 	var err error
 	xServer, err = xgbutil.NewConn()
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error connecting to X server display: ", err)
 	}
 	return xServer
 }

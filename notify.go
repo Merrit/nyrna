@@ -14,7 +14,7 @@ func NotifySuspend(name string) {
 	message := fmt.Sprintf("%v was suspended.", name)
 	err := beeep.Notify("Suspended", message, "icons/nyrna.png")
 	if err != nil {
-		log.Println(err)
+		log.Println("NotifySuspend error: ", err)
 	}
 }
 
@@ -23,7 +23,7 @@ func NotifyResume(name string) {
 	message := fmt.Sprintf("%v was resumed.", name)
 	err := beeep.Notify("Resumed", message, "icons/nyrna.png")
 	if err != nil {
-		log.Println(err)
+		log.Println("NotifyResume error: ", err)
 	}
 }
 
@@ -32,6 +32,6 @@ func NotifyHotkeyFailure(hotkeyErr error) {
 	message := fmt.Sprintf("%v", hotkeyErr)
 	err := beeep.Notify("Issue", message, "icons/nyrna.png")
 	if err != nil {
-		log.Println(err)
+		log.Println("NotifyHotkeyFailure error: ", err)
 	}
 }
