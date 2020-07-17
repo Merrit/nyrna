@@ -20,31 +20,19 @@ type HotkeyLinux struct {
 }
 
 var hotkey *HotkeyLinux = &HotkeyLinux{}
-var xServer *xgbutil.XUtil = initializeHotkey()
+var xServer *xgbutil.XUtil
 
 func loadHotkey() {
 	hotkey.keys = ConfigLoad() // Load default or saved hotkey
 }
 
 func updateHotkey(newHotkey string) {
+	// Release the old hotkey
+	keybind.Detach(xServer, xServer.RootWin())
+	// Set the new hotkey and save to config file
 	hotkey.keys = newHotkey
 	ConfigWrite(newHotkey)
-	// TODO: Currently when rebinding the hotkey, the previous
-	// hotkey will continue to work until application restart.
-	// Need to find out how to kill the old keybinding, as the
-	// below wasn't working.
-	/* 	err := keybind.KeyReleaseFun(
-	   		func(X *xgbutil.XUtil, e xevent.KeyReleaseEvent) {
-	   			// Use keybind.Detach to detach the root window
-	   			// from all KeyPress *and* KeyRelease handlers.
-	   			keybind.Detach(X, X.RootWin())
-
-	   			log.Printf("Detached all Key{Press,Release}Events from the "+
-	   				"root window (%d).", X.RootWin())
-	   		}).Connect(xServer, xServer.RootWin(), newHotkey, true)
-	   	if err != nil {
-	   		log.Println("Error detaching hotkey: ", err)
-	   	} */
+	// Start new hotkey
 	go StartHotkeyLinux()
 }
 
@@ -60,6 +48,7 @@ func initializeHotkey() (xServer *xgbutil.XUtil) {
 
 // StartHotkeyLinux will listen for the configured hotkey globally.
 func StartHotkeyLinux() {
+	xServer = initializeHotkey()
 	loadHotkey()
 	X := xServer
 	// Initialize the connection
