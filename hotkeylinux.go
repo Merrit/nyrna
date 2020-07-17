@@ -15,6 +15,7 @@ import (
 	"github.com/BurntSushi/xgbutil/xevent"
 )
 
+// HotkeyLinux intuitively represents the hotkey on Linux
 type HotkeyLinux struct {
 	keys string
 }
