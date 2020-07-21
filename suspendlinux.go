@@ -18,19 +18,27 @@ import (
 func GetActiveWindowLinux() (string, int32) {
 	// Connect to the X server using the DISPLAY environment variable.
 	X, err := xgbutil.NewConn()
-	Check(err)
+	if err != nil {
+		log.Println("Error connecting to X Server: ", err)
+	}
 	// Get the Window ID of the active window
 	windowID, err := ewmh.ActiveWindowGet(X)
-	Check(err)
+	if err != nil {
+		log.Println("Error getting ID of active window: ", err)
+	}
 	log.Printf("Window ID: %d", windowID)
 	// Get the PID of the active window
 	pid, err := ewmh.WmPidGet(X, windowID)
-	Check(err)
+	if err != nil {
+		log.Println("Error getting PID of active window: ", err)
+	}
 	log.Printf("PID: %d", pid)
 	processID := int32(pid)
 	// Get the name of the active window
 	windowName, err := ewmh.WmNameGet(X, windowID)
-	Check(err)
+	if err != nil {
+		log.Println("Error getting name of active window: ", err)
+	}
 	log.Printf("Window name: %s", windowName)
 	// Check if the window is a Wine virtual desktop
 	if strings.Contains(windowName, "explorer.exe") == false &&
