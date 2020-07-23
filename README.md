@@ -22,9 +22,9 @@ A package is available in the [edgets overlay](https://github.com/BlueManCZ/edge
 
 - `layman --add edgets && emerge --ask nyrna-bin`
 
-### Any distro: portable version
+### Portable version (Linux / Windows)
 
-_Requirements_:
+_Linux Requirements_:
 
 - `libappindicator3`
 - `gtk+3.0`
@@ -38,7 +38,8 @@ _Setup portable version_:
 
 - [Download Nyrna](https://github.com/Merrit/nyrna/releases/latest/download/nyrna).
 - Place wherever you would like the application to live (eg: ~/Applications)
-- Make sure it is set as executable and then click to run - it will run in your system tray.
+- _Linux only:_ Make sure it is set as executable
+- Click to run - it will run in your system tray.
 
 # Usage
 
@@ -65,7 +66,7 @@ I haven't seen this issue, however if at any time the hotkey isn't working to re
   - ~~Portable executable~~ :heavy_check_mark:
   - ~~Arch User Repository~~ :heavy_check_mark:
 - ~~Simple way to customize hotkey~~ :heavy_check_mark:
-- Windows support
+- ~~Windows support~~ :heavy_check_mark:
 
 # FAQ
 
