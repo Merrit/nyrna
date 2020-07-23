@@ -16,6 +16,7 @@ import (
 // active window, and if a Wine emulated desktop is detected it will
 // call findWineProcess to discover the real process information.
 func GetActiveWindowLinux() (string, int32) {
+	// TODO: Send notification if there is an error with these
 	// Connect to the X server using the DISPLAY environment variable.
 	X, err := xgbutil.NewConn()
 	if err != nil {

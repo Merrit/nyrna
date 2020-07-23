@@ -35,3 +35,12 @@ func NotifyHotkeyFailure(hotkeyErr error) {
 		log.Println("NotifyHotkeyFailure error: ", err)
 	}
 }
+
+// Notify sends a notification instructing how to rebind hotkey
+func Notify(msg string) {
+	message := fmt.Sprintf("%v", msg)
+	err := beeep.Notify("Info", message, "icons/nyrna.png")
+	if err != nil {
+		log.Println("Notify failure error: ", err)
+	}
+}

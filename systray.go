@@ -7,6 +7,7 @@ import (
 
 	// Third Party Libraries
 	"github.com/getlantern/systray"
+	"github.com/go-vgo/robotgo"
 
 	// Nyrna Packages
 	icon "github.com/Merrit/nyrna/icons"
@@ -28,7 +29,12 @@ func onReady() {
 	for {
 		select {
 		case <-mRebind.ClickedCh:
-			go RebindLinux()
+			if OS == "linux" {
+				go RebindLinux()
+			} else {
+				robotgo.EventEnd()
+				go rebindHotkeyWindows(HotkeyWindows)
+			}
 		}
 	}
 }

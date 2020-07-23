@@ -15,14 +15,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 package main
 
+import "log"
+
 func main() {
-	// ConfigLoad()
+	log.Println("DataHome: ", DataHome())
 
 	switch OS {
 	case "linux":
 		go StartHotkeyLinux()
 	case "windows":
-		// go StartHotkeyWindows()
+		go StartHotkeyWindows()
 	}
 
 	StartTray()

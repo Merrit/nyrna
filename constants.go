@@ -34,3 +34,23 @@ var SavedProcessFile string = getSavedProcessFilePath()
 // Mac: ~/Library/Preferences/nyrna_config.json
 // Windows: %LOCALAPPDATA%\nyrna_config.json
 var ConfigFilePath string = xdg.ConfigHome
+
+// DataHome is the XDG path for data files
+// Linux: ~/.local/share/Nyrna
+// Mac: ~/Library/Application Support/Nyrna
+// Windows: %LOCALAPPDATA%\Nyrna
+func DataHome() (DataHomePath string) {
+	var DataHome string
+	if OS == "linux" {
+		DataHome = xdg.DataHome + "/Nyrna/"
+	} else if OS == "windows" {
+		DataHome = xdg.DataHome + "\\Nyrna\\"
+	}
+	return DataHome
+}
+
+// PSLIST is the location of pslist64.exe
+var PSLIST string = DataHome() + "pslist64.exe"
+
+// PSSUSPEND is the location of pssuspend64.exe
+var PSSUSPEND string = DataHome() + "pssuspend64.exe"

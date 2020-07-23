@@ -18,6 +18,7 @@ func findProcess() (string, int32) {
 	case "linux":
 		name, pid = GetActiveWindowLinux()
 	case "windows":
+		// gopsutil doesn't support suspend / resume on Windows..
 		log.Println("Windows is not yet supported.")
 	}
 	return name, pid

@@ -9,7 +9,7 @@ license=('GPL3 or any later version')
 depends=('gtk3' 'libappindicator-gtk3' 'zenity')
 makedepends=('go' 'gcc')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Merrit/nyrna/archive/v$pkgver.tar.gz")
-sha256sums=('41072a702a8aa74a70b7e3ca0d94f697cd6126d5df9943c12a5b1378650479af')
+sha256sums=('c4e6f67a453a51549a29167ae6c975b6b2f965264d9858286536f6314123e71a')
 
 prepare(){
   cd "$pkgname-$pkgver"
