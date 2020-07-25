@@ -1,6 +1,6 @@
 # Maintainer: Kristen McWilliam <merritt_public at outlook dot com>
 pkgname=nyrna
-pkgver=1.1.1
+pkgver=1.2
 pkgrel=1
 pkgdesc='Simple program to pause games & applications'
 arch=('x86_64')
@@ -9,7 +9,7 @@ license=('GPL3 or any later version')
 depends=('gtk3' 'libappindicator-gtk3' 'zenity')
 makedepends=('go' 'gcc')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Merrit/nyrna/archive/v$pkgver.tar.gz")
-sha256sums=('c4e6f67a453a51549a29167ae6c975b6b2f965264d9858286536f6314123e71a')
+sha256sums=('ba6e81f9a91e74025ad2e1a0c027b15a13eb61b212107bc77fc479768ccf0fd9')
 
 prepare(){
   cd "$pkgname-$pkgver"
