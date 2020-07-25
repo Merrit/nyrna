@@ -36,7 +36,9 @@ _Example_:
 
 _Setup portable version_:
 
-- [Download Nyrna](https://github.com/Merrit/nyrna/releases/latest/download/nyrna).
+- Download Nyrna:
+  - [Linux](https://github.com/Merrit/nyrna/releases/latest/download/nyrna)
+  - [Windows](https://github.com/Merrit/nyrna/releases/latest/download/nyrna.exe)
 - Place wherever you would like the application to live (eg: ~/Applications)
 - _Linux only:_ Make sure it is set as executable
 - Click to run - it will run in your system tray.
