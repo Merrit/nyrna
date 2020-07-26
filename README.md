@@ -18,9 +18,9 @@ A package is available [in the AUR](https://aur.archlinux.org/packages/nyrna/).
 
 ### Gentoo
 
-A package is available in the [edgets overlay](https://github.com/BlueManCZ/edgets/tree/master/x11-misc/nyrna-bin).
+A package is available as [nyrna](https://github.com/BlueManCZ/edgets/tree/master/x11-misc/nyrna) or [nyrna-bin](https://github.com/BlueManCZ/edgets/tree/master/x11-misc/nyrna-bin) in the [edgets overlay](https://github.com/BlueManCZ/edgets).
 
-- `layman --add edgets && emerge --ask nyrna-bin`
+- `layman --add edgets && emerge --ask nyrna`
 
 ### Portable version (Linux / Windows)
 
