@@ -21,11 +21,6 @@ func onReady() {
 	systray.AddSeparator()
 	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
 	go func() {
-		<-mAbout.ClickedCh
-		log.Println("Opening changelog in default browser.")
-		open.Run(HOMEPAGE + "/releases/tag/" + VERSION)
-	}()
-	go func() {
 		<-mQuitOrig.ClickedCh
 		log.Println("Quit pressed, exiting Nyrna.")
 		systray.Quit()
@@ -42,6 +37,9 @@ func onReady() {
 				robotgo.EventEnd()
 				go rebindHotkeyWindows(HotkeyWindows)
 			}
+		case <-mAbout.ClickedCh:
+			log.Println("Opening changelog in default browser.")
+			log.Println(open.Start(HOMEPAGE + "/releases/tag/" + VERSION))
 		}
 	}
 }
