@@ -7,4 +7,4 @@ Exec=nyrna
 Icon=nyrna
 Terminal=false
 StartupNotify=false
-Categories=Application;
+Categories=Utility;
