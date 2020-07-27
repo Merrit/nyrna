@@ -6,6 +6,10 @@ import (
 	"github.com/adrg/xdg"
 )
 
+// Constants for building url address for online changelog
+const VERSION string = "1.2"
+const HOMEPAGE string = "https://github.com/Merrit/nyrna"
+
 // OS constant since we repeatedly check which
 // platform we are currently running under.
 // Maybe this is not necessary - does GOOS

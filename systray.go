@@ -8,6 +8,7 @@ import (
 	// Third Party Libraries
 	"github.com/getlantern/systray"
 	"github.com/go-vgo/robotgo"
+	"github.com/skratchdot/open-golang/open"
 
 	// Nyrna Packages
 	icon "github.com/Merrit/nyrna/icons"
@@ -16,6 +17,7 @@ import (
 func onReady() {
 	systray.SetIcon(icon.Data)
 	mRebind := systray.AddMenuItem("Change Hotkey", "Choose a new hotkey")
+	mAbout := systray.AddMenuItem("About Nyrna "+VERSION, "Open changelog")
 	systray.AddSeparator()
 	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
 	go func() {
@@ -34,6 +36,13 @@ func onReady() {
 			} else {
 				robotgo.EventEnd()
 				go rebindHotkeyWindows(HotkeyWindows)
+			}
+		case <-mAbout.ClickedCh:
+			log.Println("Opening changelog in default browser.")
+			err := open.Run(HOMEPAGE + "/releases/tag/v" + VERSION)
+			if err != nil {
+				log.Println("Error opening Nyrna changelog: ", err)
+				Notify("Error opening Nyrna changelog")
 			}
 		}
 	}
