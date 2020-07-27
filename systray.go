@@ -41,9 +41,9 @@ func onReady() {
 			log.Println("Opening changelog in default browser.")
 			err := open.Run(HOMEPAGE + "/releases/tag/v" + VERSION)
 			if err != nil {
-		    log.Println("Error opening Nyrna changelog: ", err)
-		    // maybe also use Notify() to send a user-facing message
-		    // about the failure? Not sure what kind of error it returns..
+				log.Println("Error opening Nyrna changelog: ", err)
+				// maybe also use Notify() to send a user-facing message
+				// about the failure? Not sure what kind of error it returns..
 			}
 		}
 	}
