@@ -17,7 +17,8 @@ import (
 func onReady() {
 	systray.SetIcon(icon.Data)
 	mRebind := systray.AddMenuItem("Change Hotkey", "Choose a new hotkey")
-	mAbout := systray.AddMenuItem("About Nyrna "+VERSION, "Open changelog")
+	aboutText := "About Nyrna" + VERSION
+	mAbout := systray.AddMenuItem(aboutText, "Open changelog")
 	systray.AddSeparator()
 	mQuitOrig := systray.AddMenuItem("Quit", "Quit the whole app")
 	go func() {
