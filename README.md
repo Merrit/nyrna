@@ -6,7 +6,7 @@ The reason for this project is to have a function on PC similar to the incredibl
 
 That said this can be used to pause normal, non-game applications as well. For example: while doing a long 3D render, or maybe a video encoding job, the CPU and GPU resources are being hogged by said task - maybe for hours - when you would like to use the system for something else. With Nyrna you can pause that program, freeing up the CPU and GPU resources (not RAM) until the process is resumed, without losing where you were.
 
-Nyrna currently works on Linux. Windows support is in progress.
+Nyrna works on Linux with X11 and Microsoft Windows (tested on Windows 10).
 
 # Installing
 
