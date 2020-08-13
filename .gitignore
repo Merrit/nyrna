@@ -12,6 +12,7 @@ packaging/PKGBUILD/README
 # Local-only files
 nyrna-release.txt
 nyrna-requirements.txt
+scratch.go
 
 #
 # Go .gitignore
