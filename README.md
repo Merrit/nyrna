@@ -10,19 +10,19 @@ Nyrna works on Linux with X11 and Microsoft Windows (tested on Windows 10).
 
 # Installing
 
-### Arch / Manjaro
+## Arch / Manjaro
 
 A package is available [in the AUR](https://aur.archlinux.org/packages/nyrna/).
 
 - `yay nyrna`
 
-### Gentoo
+## Gentoo
 
 A package is available as [nyrna](https://github.com/BlueManCZ/edgets/tree/master/x11-misc/nyrna) or [nyrna-bin](https://github.com/BlueManCZ/edgets/tree/master/x11-misc/nyrna-bin) in the [edgets overlay](https://github.com/BlueManCZ/edgets).
 
 - `layman --add edgets && emerge --ask nyrna`
 
-### Portable version (Linux / Windows)
+## Portable version (Linux / Windows)
 
 _Linux Requirements_:
 
@@ -57,21 +57,28 @@ I have not had any issues using Nyrna, however keep in mind it is possible somet
 
 # In case of issue
 
-I haven't seen this issue, however if at any time the hotkey isn't working to resume, you can always manually find your process in task manager and resume or send signal SIGCONT / CONT:
+I haven't seen an issue like this, however if at any time the hotkey isn't working to resume, you can always manually find your process in task manager and resume or send signal SIGCONT / CONT:
 
 ![How to manually resume](images/demo_manual_resume.jpg)
 
-# Planned Features
+# Development Plans
 
-- ~~Run in system tray with hotkey configured by app~~ :heavy_check_mark:
-- ~~Package(s) for ease of use~~ :heavy_check_mark:
-  - ~~Portable executable~~ :heavy_check_mark:
-  - ~~Arch User Repository~~ :heavy_check_mark:
-- ~~Simple way to customize hotkey~~ :heavy_check_mark:
-- ~~Windows support~~ :heavy_check_mark:
+- Suspend multiple applications at once
+- Informative error dialog with issue reporting
+- Settings screen
+- Option to minimize before suspend
+- Automatic check for updates
+- AppImage for Linux
+- Chocolatey distribution for Windows
 
 # FAQ
 
 **Can I suspend to disk so that I can restore after reboot / free up RAM usage / etc?**
 
-Unfortunately no. [CRIU](https://criu.org/) looks very promising to allow us to do this (on linux), however it [does not currently support suspending GUI applications](https://criu.org/X_applications).
+Unfortunately no. [CRIU](https://criu.org/) looks very promising to allow us to do this (on Linux), however it [does not currently support suspending GUI applications](https://criu.org/X_applications).
+
+# Donate
+
+[![Donate](.README/Donate-PayPal-green.svg)](https://paypal.me/KristenMcWilliam)
+
+If you like Nyrna consider donating a coffee ☕. 
