@@ -1,10 +1,8 @@
-package main
+package find_process_linux
 
 import (
 	// Standard Library
 	"log"
-	"os/exec"
-	"strconv"
 	"strings"
 
 	// Third Party Libraries
@@ -50,53 +48,4 @@ func GetActiveWindowLinux() (string, int32) {
 	}
 	log.Print("Found a Wine emulated desktop")
 	return findWineProcess()
-}
-
-func findWineProcess() (string, int32) {
-	// Use pgrep to search for running *.exe processes
-	log.Print("Searching for Wine process..")
-	pgrepOut, err := exec.Command("pgrep", ".exe$", "-l").Output()
-	Check(err)
-	// Convert the pgrep output to a map
-	pgrepString := string(pgrepOut[:])
-	pgrepSlice := strings.Fields(pgrepString)
-	pgrepMap := make(map[string]string)
-	for i := 0; i < len(pgrepSlice); i += 2 {
-		pgrepMap[pgrepSlice[i+1]] = pgrepSlice[i]
-	}
-	// Print the results for debugging purposes
-	for name, pid := range pgrepMap {
-		log.Println("Name:", name, "=>", "PID:", pid)
-	}
-	// Remove the .exe processes belonging to Wine
-	for name := range pgrepMap {
-		switch name {
-		case "services.exe":
-			delete(pgrepMap, name)
-			fallthrough
-		case "explorer.exe":
-			delete(pgrepMap, name)
-			fallthrough
-		case "winedevice.exe":
-			delete(pgrepMap, name)
-			fallthrough
-		case "plugplay.exe":
-			delete(pgrepMap, name)
-		}
-	}
-	if len(pgrepMap) != 1 {
-		log.Println("Multiple remaining processes:", pgrepMap)
-		log.Fatal("Not able to find real wine process! Please report this issue.")
-	}
-	// Extract name and pid from the map
-	var processName string
-	var processIDint int
-	for name, pid := range pgrepMap {
-		processName = name
-		processIDint, err = strconv.Atoi(pid)
-		Check(err)
-	}
-	var processID int32 = int32(processIDint)
-	log.Println("I think the real process is:", processName, "with PID:", processID)
-	return processName, processID
 }
