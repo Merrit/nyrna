@@ -80,7 +80,7 @@ I haven't seen an issue like this, however if at any time the hotkey isn't worki
 - Option to minimize before suspend
 - Automatic check for updates
 - AppImage for Linux
-- Chocolatey distribution for Windows
+-   ~~Chocolatey distribution for Windows~~
 
 # FAQ
 
