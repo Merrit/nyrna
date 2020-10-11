@@ -27,6 +27,12 @@ A package is available as [nyrna](https://github.com/BlueManCZ/edgets/tree/maste
 
 - `layman --add edgets && emerge --ask nyrna`
 
+## Microsoft Windows
+
+Available in the [Chocolatey Community Packages repository](https://chocolatey.org/packages/nyrna)
+
+-   `choco install nyrna`
+
 ## Portable version (Linux / Windows)
 
 _Linux Requirements_:
