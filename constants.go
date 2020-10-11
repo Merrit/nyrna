@@ -7,7 +7,7 @@ import (
 )
 
 // Constants for building url address for online changelog
-const VERSION string = "1.2"
+const VERSION string = "1.3"
 const HOMEPAGE string = "https://github.com/Merrit/nyrna"
 
 // OS constant since we repeatedly check which
