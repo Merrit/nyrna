@@ -7,8 +7,6 @@ import (
 
 	// Third Party Libraries
 	"github.com/shirou/gopsutil/process"
-	// Nyrna Packages
-	// "github.com/Merrit/nyrna/find_process/find_process_linux"
 )
 
 // FindProcess is the beginning of the tree to
@@ -56,27 +54,33 @@ func ToggleSuspend() {
 	case err != nil:
 		log.Println("No saved process details found")
 		name, pid := findProcess()
-		process, err := process.NewProcess(pid)
-		Check(err)
-		status, err := process.Status()
-		Check(err)
-		if status == "T" {
-			status = "Suspended"
+		if pid == 0 {
+			log.Println("Error! Received PID 0.")
+			Notify("Error! Received PID 0.")
 		} else {
-			status = "Running"
+			process, err := process.NewProcess(pid)
+			Check(err)
+			status, err := process.Status()
+			Check(err)
+			if status == "T" {
+				status = "Suspended"
+			} else {
+				status = "Running"
+			}
+			log.Println("Checking process - name:", name, "PID:", pid, "status:", status)
+			switch status {
+			case "Running":
+				log.Println("Suspending", name)
+				NotifySuspend(name)
+				process.Suspend()
+			case "Suspended":
+				log.Println("Resuming", name)
+				NotifyResume(name)
+				process.Resume()
+			}
+			// Save suspended process details to file
+			SaveProcessFile(name, pid)
 		}
-		log.Println("Checking process - name:", name, "PID:", pid, "status:", status)
-		switch status {
-		case "Running":
-			log.Println("Suspending", name)
-			NotifySuspend(name)
-			process.Suspend()
-		case "Suspended":
-			log.Println("Resuming", name)
-			NotifyResume(name)
-			process.Resume()
-		}
-		// Save suspended process details to file
-		SaveProcessFile(name, pid)
+
 	}
 }
