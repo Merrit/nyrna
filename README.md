@@ -1,5 +1,8 @@
 # Nyrna
 
+[![Packaging status](https://repology.org/badge/tiny-repos/nyrna.svg)](https://repology.org/project/nyrna/versions)
+[![latest packaged version(s)](https://repology.org/badge/latest-versions/nyrna.svg)](https://repology.org/project/nyrna/versions)
+
 **Nyrna allows the user to pause any game or application on their PC.**
 
 The reason for this project is to have a function on PC similar to the incredibly useful sleep/suspend function found in consoles like the Nintendo Switch and Sony PlayStation; suspend your game (and its resource usage) at any time, and resume whenever you wish - at the push of a button.
@@ -9,6 +12,8 @@ That said this can be used to pause normal, non-game applications as well. For e
 Nyrna works on Linux with X11 and Microsoft Windows (tested on Windows 10).
 
 # Installing
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/nyrna.svg)](https://repology.org/project/nyrna/versions)
 
 ## Arch / Manjaro
 
