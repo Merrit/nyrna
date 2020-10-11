@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -8,6 +9,7 @@ import (
 // simple errors cleaner and easier.
 func Check(e error) {
 	if e != nil {
-		log.Println(e)
+		errorText := fmt.Sprintf("Caught an error: %v", e)
+		log.Println(errorText)
 	}
 }

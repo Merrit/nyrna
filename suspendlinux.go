@@ -53,45 +53,60 @@ func GetActiveWindowLinux() (string, int32) {
 }
 
 func findWineProcess() (string, int32) {
-	// Use pgrep to search for running *.exe processes
+	// Use ps to search for running *.exe processes
 	log.Print("Searching for Wine process..")
-	pgrepOut, err := exec.Command("pgrep", ".exe$", "-l").Output()
+	cmd := "ps aux | grep .exe$"
+	psOutput, err := exec.Command("bash", "-c", cmd).Output()
 	Check(err)
-	// Convert the pgrep output to a map
-	pgrepString := string(pgrepOut[:])
-	pgrepSlice := strings.Fields(pgrepString)
-	pgrepMap := make(map[string]string)
-	for i := 0; i < len(pgrepSlice); i += 2 {
-		pgrepMap[pgrepSlice[i+1]] = pgrepSlice[i]
-	}
-	// Print the results for debugging purposes
-	for name, pid := range pgrepMap {
-		log.Println("Name:", name, "=>", "PID:", pid)
-	}
-	// Remove the .exe processes belonging to Wine
-	for name := range pgrepMap {
-		switch name {
-		case "services.exe":
-			delete(pgrepMap, name)
-			fallthrough
-		case "explorer.exe":
-			delete(pgrepMap, name)
-			fallthrough
-		case "winedevice.exe":
-			delete(pgrepMap, name)
-			fallthrough
-		case "plugplay.exe":
-			delete(pgrepMap, name)
+	// Convert the output to a string so we can search and manipulate.
+	psString := string(psOutput[:])
+	// Each line of the output is for a single process, so seperate them into
+	// a slice, one for each process found.
+	var rawProcesses []string = strings.Split(psString, "\n")
+	// Create a map of the found processes in the form of name:PID.
+	psMap := make(map[string]string)
+	for _, process := range rawProcesses {
+		if process != "" {
+			// Split the string by white space.
+			// 0th entry should be the user, which we don't care about.
+			// 1st entry should be the PID.
+			var parts []string = strings.Fields(process)
+			var PID string = parts[1]
+			// log.Printf("PID: %v", PID)
+			findName := strings.Split(process, "\\")
+			var processName string = findName[len(findName)-1]
+			// log.Printf("processName: %v", processName)
+			psMap[processName] = PID
 		}
 	}
-	if len(pgrepMap) != 1 {
-		log.Println("Multiple remaining processes:", pgrepMap)
-		log.Fatal("Not able to find real wine process! Please report this issue.")
+	// Print the results for debugging purposes
+	for name, pid := range psMap {
+		log.Println("\n", "Name:", name, "\n", "PID:", pid, "\n ")
+	}
+	// Remove the .exe processes belonging to Wine
+	for name := range psMap {
+		switch name {
+		case "services.exe":
+			delete(psMap, name)
+			fallthrough
+		case "explorer.exe":
+			delete(psMap, name)
+			fallthrough
+		case "winedevice.exe":
+			delete(psMap, name)
+			fallthrough
+		case "plugplay.exe":
+			delete(psMap, name)
+		}
+	}
+	if len(psMap) != 1 {
+		log.Println("Multiple remaining processes:", psMap)
+		log.Println("Not able to find real wine process! Please report this issue.")
 	}
 	// Extract name and pid from the map
 	var processName string
 	var processIDint int
-	for name, pid := range pgrepMap {
+	for name, pid := range psMap {
 		processName = name
 		processIDint, err = strconv.Atoi(pid)
 		Check(err)
