@@ -7,7 +7,6 @@
 # PKGBUILD extras
 packaging/PKGBUILD/.SRCINFO
 packaging/PKGBUILD/.gitignore
-packaging/PKGBUILD/README
 
 # Local-only files
 nyrna-release.txt
