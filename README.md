@@ -27,7 +27,7 @@ A package is available as [nyrna](https://github.com/BlueManCZ/edgets/tree/maste
 
 ## Microsoft Windows
 
-Available in the [Chocolatey Community Packages repository](https://chocolatey.org/packages/nyrna)
+Available in the [Chocolatey Community Packages repository.](https://chocolatey.org/packages/nyrna)
 
 -   `choco install nyrna`
 
