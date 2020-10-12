@@ -1,7 +1,5 @@
 # Nyrna
 
-[![Packaging status](https://repology.org/badge/tiny-repos/nyrna.svg)](https://repology.org/project/nyrna/versions)
-[![latest packaged version(s)](https://repology.org/badge/latest-versions/nyrna.svg)](https://repology.org/project/nyrna/versions)
 
 **Nyrna allows the user to pause any game or application on their PC.**
 
