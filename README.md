@@ -1,5 +1,6 @@
 # Nyrna
 
+
 **Nyrna allows the user to pause any game or application on their PC.**
 
 The reason for this project is to have a function on PC similar to the incredibly useful sleep/suspend function found in consoles like the Nintendo Switch and Sony PlayStation; suspend your game (and its resource usage) at any time, and resume whenever you wish - at the push of a button.
@@ -9,6 +10,8 @@ That said this can be used to pause normal, non-game applications as well. For e
 Nyrna works on Linux with X11 and Microsoft Windows (tested on Windows 10).
 
 # Installing
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/nyrna.svg)](https://repology.org/project/nyrna/versions)
 
 ## Arch / Manjaro
 
@@ -21,6 +24,12 @@ A package is available [in the AUR](https://aur.archlinux.org/packages/nyrna/).
 A package is available as [nyrna](https://github.com/BlueManCZ/edgets/tree/master/x11-misc/nyrna) or [nyrna-bin](https://github.com/BlueManCZ/edgets/tree/master/x11-misc/nyrna-bin) in the [edgets overlay](https://github.com/BlueManCZ/edgets).
 
 - `layman --add edgets && emerge --ask nyrna`
+
+## Microsoft Windows
+
+Available in the [Chocolatey Community Packages repository.](https://chocolatey.org/packages/nyrna)
+
+-   `choco install nyrna`
 
 ## Portable version (Linux / Windows)
 
@@ -69,7 +78,7 @@ I haven't seen an issue like this, however if at any time the hotkey isn't worki
 - Option to minimize before suspend
 - Automatic check for updates
 - AppImage for Linux
-- Chocolatey distribution for Windows
+- ~~Chocolatey distribution for Windows~~ ✅
 
 # FAQ
 
