@@ -14,7 +14,6 @@ class Window {
   int id;
 
   void minimize() {
-    print('minimizing id: $id');
     if (Platform.isLinux) {
       Process.runSync(
         'xdotool',
