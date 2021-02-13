@@ -37,11 +37,7 @@ class _WindowTileState extends State<WindowTile> {
             ? Icons.flag_outlined
             : Icons.run_circle;
 
-        Color backgroundColor =
-            process.status == 'suspended' ? Colors.blueGrey : null;
-
         return Card(
-          color: backgroundColor,
           child: ListTile(
             leading: Icon(_icon),
             title: Text(window.title),
@@ -57,8 +53,6 @@ class _WindowTileState extends State<WindowTile> {
 
   _toggle() {
     bool successful = process.toggle(); // TODO: Notify of failure.
-    // setState(() => backgroundColor = successful ? Colors.blueGrey : null);
-    // if (!successful) setState(() => backgroundColor = Colors.red);
     if (successful && true) _toggleWindow(); // TODO: Option for window minimize
   }
 
