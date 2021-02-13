@@ -33,7 +33,7 @@ class _WindowTileState extends State<WindowTile> {
     return GestureDetector(
       onTap: () => _toggle(),
       child: Consumer<Process>(builder: (context, process, widget) {
-        var _color =
+        var _circleStatusColor =
             process.status == 'suspended' ? Colors.orange[700] : Colors.green;
 
         return Card(
@@ -43,7 +43,7 @@ class _WindowTileState extends State<WindowTile> {
               width: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _color,
+                color: _circleStatusColor,
               ),
             ),
             title: Text(window.title),
