@@ -33,9 +33,9 @@ class Window {
 }
 
 class ActiveWindow extends Window {
-  ActiveWindow() {
-    _fetchActiveWindow();
-  }
+  ActiveWindow()
+      : _pid = _activeWindowPid(),
+        _id = _activeWindowId();
 
   int _pid;
 
@@ -45,9 +45,26 @@ class ActiveWindow extends Window {
 
   int get id => _id;
 
-  void _fetchActiveWindow() {
-    if (DartIO.Platform.isLinux) _pid = Linux.activeWindowPid;
-    if (DartIO.Platform.isLinux) _id = Linux.activeWindowId;
+  static int _activeWindowPid() {
+    int _activePid;
+    switch (DartIO.Platform.operatingSystem) {
+      case 'linux':
+        _activePid = Linux.activeWindowPid;
+        break;
+      default:
+    }
+    return _activePid;
+  }
+
+  static int _activeWindowId() {
+    int _activeId;
+    switch (DartIO.Platform.operatingSystem) {
+      case 'linux':
+        _activeId = Linux.activeWindowId;
+        break;
+      default:
+    }
+    return _activeId;
   }
 
   Future<void> toggle() async {
