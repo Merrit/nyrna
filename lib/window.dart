@@ -34,8 +34,16 @@ class Window {
 
 class ActiveWindow extends Window {
   ActiveWindow()
-      : _pid = _activeWindowPid(),
-        _id = _activeWindowId();
+      : nyrnaPid = DartIO.pid,
+        _pid = _activeWindowPid(),
+        _id = _activeWindowId() {
+    if (_pid == nyrnaPid) {
+      print("Active window PID was Nyrna's own, this shouldn't happen...");
+      DartIO.exit(1);
+    }
+  }
+
+  final int nyrnaPid;
 
   int _pid;
 
