@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  flutter_audio_desktop
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

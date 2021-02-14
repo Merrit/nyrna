@@ -24,8 +24,6 @@ dependencies:
   flutter:
     sdk: flutter
   args: ^1.6.0
-  cupertino_icons: ^1.0.2
-  flutter_audio_desktop: ^0.0.8
   provider: ^4.3.3
   settings_ui: ^0.6.0
   shared_preferences: ^0.5.12+4
