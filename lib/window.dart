@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' as DartIO;
 
 import 'package:nyrna/linux/linux.dart';
 import 'package:nyrna/process.dart' as NyrnaProcess;
@@ -14,8 +14,8 @@ class Window {
   int id;
 
   void minimize() {
-    if (Platform.isLinux) {
-      Process.runSync(
+    if (DartIO.Platform.isLinux) {
+      DartIO.Process.runSync(
         'xdotool',
         ['windowminimize', '$id', '--sync'],
       );
@@ -23,8 +23,8 @@ class Window {
   }
 
   void restore() {
-    if (Platform.isLinux) {
-      Process.runSync(
+    if (DartIO.Platform.isLinux) {
+      DartIO.Process.runSync(
         'xdotool',
         ['windowactivate', '$id', '--sync'],
       );
@@ -46,8 +46,8 @@ class ActiveWindow extends Window {
   int get id => _id;
 
   void _fetchActiveWindow() {
-    if (Platform.isLinux) _pid = Linux.activeWindowPid;
-    if (Platform.isLinux) _id = Linux.activeWindowId;
+    if (DartIO.Platform.isLinux) _pid = Linux.activeWindowPid;
+    if (DartIO.Platform.isLinux) _id = Linux.activeWindowId;
   }
 
   Future<void> toggle() async {
