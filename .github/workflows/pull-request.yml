@@ -1,0 +1,20 @@
+name: Flutter test on PR
+'on':
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+jobs:
+  build_and_preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1.4.0
+        with:
+          channel: dev
+      - run: flutter config --enable-linux
+      - run: flutter config --enable-windows
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build linux
