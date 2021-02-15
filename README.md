@@ -1,3 +1,6 @@
+[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >](https://www.buymeacoffee.com/Merritt)
+
+
 # Nyrna
 
 
@@ -85,9 +88,3 @@ I haven't seen an issue like this, however if at any time the hotkey isn't worki
 **Can I suspend to disk so that I can restore after reboot / free up RAM usage / etc?**
 
 Unfortunately no. [CRIU](https://criu.org/) looks very promising to allow us to do this (on Linux), however it [does not currently support suspending GUI applications](https://criu.org/X_applications).
-
-# Donate
-
-[![Donate](.README/Donate-PayPal-green.svg)](https://paypal.me/KristenMcWilliam)
-
-If you like Nyrna consider donating a coffee ☕. 
