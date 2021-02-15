@@ -1,4 +1,4 @@
-[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >](https://www.buymeacoffee.com/Merritt)
+[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" height="40px" width="145" >](https://www.buymeacoffee.com/Merritt)
 
 
 # Nyrna
