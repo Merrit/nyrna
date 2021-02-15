@@ -13,8 +13,8 @@ jobs:
       - uses: subosito/flutter-action@v1.4.0
         with:
           channel: dev
-      - run: flutter config --enable-linux
-      - run: flutter config --enable-windows
+      - run: flutter config --enable-linux-desktop
+      - run: flutter config --enable-windows-desktop
       - run: flutter pub get
       - run: flutter test
       - run: flutter build linux
