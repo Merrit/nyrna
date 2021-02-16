@@ -1,4 +1,4 @@
-name: Flutter test on Merge
+name: Flutter build on Merge
 'on':
   push:
     branches: [ master ]
@@ -16,5 +16,4 @@ jobs:
       - run: flutter config --enable-linux-desktop
       - run: flutter config --enable-windows-desktop
       - run: flutter pub get
-      - run: flutter test
       - run: flutter build linux
