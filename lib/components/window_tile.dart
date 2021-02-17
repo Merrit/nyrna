@@ -47,6 +47,7 @@ class _WindowTileState extends State<WindowTile> {
               ),
             ),
             title: Text(window.title),
+            subtitle: Text(process.executable),
             contentPadding: EdgeInsets.symmetric(
               vertical: 2,
               horizontal: 20,

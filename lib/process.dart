@@ -12,6 +12,8 @@ class Process extends ChangeNotifier {
   final int pid;
   NativeProcess _process;
 
+  String get executable => _process.executable;
+
   String get status => _process.status;
 
   bool toggle() {

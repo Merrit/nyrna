@@ -3,9 +3,19 @@ import 'dart:io';
 import 'package:nyrna/native_process.dart';
 
 class LinuxProcess extends NativeProcess {
-  LinuxProcess(this.pid);
+  LinuxProcess(this.pid) {
+    executable = _checkExecutable();
+  }
 
   final int pid;
+
+  String executable;
+
+  String _checkExecutable() {
+    var result = Process.runSync('readlink', ['/proc/$pid/exe']);
+    var _exec = result.stdout.toString().split('/').last.trim();
+    return _exec;
+  }
 
   @override
   String get status {
