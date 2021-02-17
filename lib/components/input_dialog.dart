@@ -108,7 +108,21 @@ class InputDialog extends StatelessWidget {
           controller: controller,
           focusNode: textFieldFocusNode,
           autofocus: true,
-          decoration: InputDecoration(hintText: hintText),
+          decoration: InputDecoration(
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: const BorderSide(
+                color: Colors.lightBlue,
+                width: 0,
+              ),
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: const BorderSide(
+                color: Colors.lightBlueAccent,
+                width: 0,
+              ),
+            ),
+            hintText: hintText,
+          ),
           keyboardType: keyboardType,
           inputFormatters: formatter,
           minLines: 1,
