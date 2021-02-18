@@ -56,6 +56,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
+              SettingsSection(
+                title: 'About',
+                titlePadding: EdgeInsets.only(top: 100),
+                tiles: [
+                  SettingsTile(
+                    leading: Icon(Icons.info_outline),
+                    title: 'Nyrna version',
+                    subtitle: '2.0-alpha.1', // TODO: Automate this.
+                  ),
+                ],
+              ),
             ],
           ),
         ),
