@@ -15,20 +15,20 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<bool>(
-        future: Nyrna.checkDependencies(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            bool dependenciesPresent = snapshot.data;
-            if (dependenciesPresent) {
-              // Slightly delay required so we don't push the main
-              // screen while the build method is still executing.
-              Future.microtask(() {
-                Navigator.pushReplacementNamed(context, RunningAppsScreen.id);
-              });
-            } else {
-              return Center(
-                child: Card(
+      body: Center(
+        child: FutureBuilder<bool>(
+          future: Nyrna.checkDependencies(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              bool dependenciesPresent = snapshot.data;
+              if (dependenciesPresent) {
+                // Slightly delay required so we don't push the main
+                // screen while the build method is still executing.
+                Future.microtask(() {
+                  Navigator.pushReplacementNamed(context, RunningAppsScreen.id);
+                });
+              } else {
+                return Card(
                   child: Container(
                     padding: const EdgeInsets.all(20.0),
                     child: Text('''
@@ -39,15 +39,15 @@ Please make sure you have installed Nyrna's dependencies.
 (On Linux this would be wmctrl and xdotool)
                     '''),
                   ),
-                ),
-              );
+                );
+              }
+            } else if (snapshot.hasError) {
+              print('Error: ${snapshot.error}');
+              return Text('Error: ${snapshot.error}');
             }
-          }
-
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+            return CircularProgressIndicator();
+          },
+        ),
       ),
     );
   }

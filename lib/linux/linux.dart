@@ -68,10 +68,16 @@ class Linux {
 
   /// Verify wmctrl and xdotool are present on the system.
   static Future<bool> checkDependencies() async {
-    var wmctrl = await Process.run('wmctrl', ['-d']);
-    if (wmctrl.stderr != "") return false;
-    var xdotool = await Process.run('xdotool', ['getactivewindow']);
-    if (xdotool.stderr != "") return false;
+    try {
+      await Process.run('wmctrl', ['-d']);
+    } catch (err) {
+      return false;
+    }
+    try {
+      await Process.run('xdotool', ['getactivewindow']);
+    } catch (err) {
+      return false;
+    }
     return true;
   }
 }
