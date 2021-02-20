@@ -41,10 +41,14 @@ class _LinuxLauncher {
   ///
   /// https://portland.freedesktop.org/doc/xdg-icon-resource.html
   static Future<void> _addIcon() async {
-    var result = await Process.run(
-      'xdg-icon-resource',
-      ['install', '--novendor', '--size', '256', '${Nyrna.iconPath}'],
-    );
+    try {
+      await Process.run(
+        'xdg-icon-resource',
+        ['install', '--novendor', '--size', '256', '${Nyrna.iconPath}'],
+      );
+    } catch (err) {
+      // TODO: Error handling.
+    }
   }
 
   /// Install Nyrna's .desktop file according to the XDG specification.
@@ -58,10 +62,14 @@ class _LinuxLauncher {
     final desktopFile = File('$tempDir/nyrna.desktop');
     await desktopFile.writeAsString(_desktopFileContent);
     // Install to xdg location.
-    var result = await Process.run(
-      'xdg-desktop-menu',
-      ['install', '--novendor', '${desktopFile.path}'],
-    );
+    try {
+      await Process.run(
+        'xdg-desktop-menu',
+        ['install', '--novendor', '${desktopFile.path}'],
+      );
+    } catch (err) {
+      // TODO: Error handling.
+    }
   }
 }
 
