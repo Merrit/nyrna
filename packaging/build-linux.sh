@@ -17,7 +17,7 @@ cd ..
 
 flutter build linux
 
-cd build/linux/release/
+cd build/linux/release/ || cd build/linux/x64/release/
 
 mv bundle nyrna
 
