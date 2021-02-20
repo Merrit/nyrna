@@ -5,6 +5,7 @@ import 'package:nyrna/settings/components/system_integration_tiles.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const id = 'settings_screen';
@@ -73,6 +74,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     leading: Icon(Icons.info_outline),
                     title: 'Nyrna version',
                     subtitle: '2.0-alpha.1', // TODO: Automate this.
+                  ),
+                  SettingsTile(
+                    leading: Icon(Icons.launch),
+                    title: 'GitHub repository',
+                    onPressed: (context) async {
+                      await launch('https://github.com/Merrit/nyrna');
+                    },
                   ),
                 ],
               ),
