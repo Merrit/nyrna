@@ -24,7 +24,8 @@ freeing up the resources (excluding RAM) until the process is resumed,
 without losing where you were - like the middle of a long job, or a gaming session
 between save points.
 
-Nyrna works on Linux with X11 and Microsoft Windows (tested on Windows 10).
+Nyrna works on Linux with X11
+ <!-- and Microsoft Windows (tested on Windows 10). -->
 
 
 # Installing
