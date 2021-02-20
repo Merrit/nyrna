@@ -16,3 +16,11 @@ version_check
 cd ..
 
 flutter build linux
+
+cd build/linux/release/
+
+mv bundle nyrna
+
+tar -zcvf nyrna.tar.gz nyrna
+
+rm -rf nyrna
