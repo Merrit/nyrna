@@ -131,4 +131,17 @@ class Nyrna extends ChangeNotifier {
     _tempDir = directory.path;
     return _tempDir;
   }
+
+  /// Verify Nyrna's dependencies are available on the system.
+  static Future<bool> checkDependencies() async {
+    bool dependenciesPresent = false;
+    switch (DartIO.Platform.operatingSystem) {
+      case 'linux':
+        dependenciesPresent = await Linux.checkDependencies();
+        break;
+      default:
+        break;
+    }
+    return dependenciesPresent;
+  }
 }

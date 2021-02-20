@@ -65,4 +65,13 @@ class Linux {
     var _windowId = int.tryParse(result.stdout.toString().trim());
     return _windowId ?? 0;
   }
+
+  /// Verify wmctrl and xdotool are present on the system.
+  static Future<bool> checkDependencies() async {
+    var wmctrl = await Process.run('wmctrl', ['-d']);
+    if (wmctrl.stderr != "") return false;
+    var xdotool = await Process.run('xdotool', ['getactivewindow']);
+    if (xdotool.stderr != "") return false;
+    return true;
+  }
 }

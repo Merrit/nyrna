@@ -5,6 +5,7 @@ import 'package:nyrna/config.dart';
 import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/parse_args.dart';
 import 'package:nyrna/screens/apps_screen.dart';
+import 'package:nyrna/screens/loading_screen.dart';
 import 'package:nyrna/settings/screens/settings_screen.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/theme.dart';
@@ -37,10 +38,11 @@ class MyApp extends StatelessWidget {
         title: 'Nyrna',
         theme: NyrnaTheme.dark,
         routes: {
+          LoadingScreen.id: (context) => LoadingScreen(),
           RunningAppsScreen.id: (context) => RunningAppsScreen(),
           SettingsScreen.id: (conext) => SettingsScreen(),
         },
-        home: RunningAppsScreen(),
+        home: LoadingScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );
