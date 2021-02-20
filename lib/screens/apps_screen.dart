@@ -18,7 +18,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
 
   @override
   void didChangeDependencies() {
-    nyrna = Provider.of(context);
+    nyrna = Provider.of<Nyrna>(context);
     super.didChangeDependencies();
   }
 
