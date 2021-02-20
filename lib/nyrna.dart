@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' as DartIO;
 
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:nyrna/linux/linux.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/window.dart';
@@ -90,5 +91,44 @@ class Nyrna extends ChangeNotifier {
       ['getactivewindow', 'windowunmap', '--sync'],
     );
     return null;
+  }
+
+  static String _executablePath;
+
+  /// Absolute path to Nyrna's executable.
+  static String get executablePath {
+    if (_executablePath != null) return _executablePath;
+    _executablePath = DartIO.Platform.resolvedExecutable;
+    return _executablePath;
+  }
+
+  static String _nyrnaDir;
+
+  /// Absolute path to Nyrna's install directory.
+  static String get directory {
+    if (_nyrnaDir != null) return _nyrnaDir;
+    var nyrnaPath = executablePath.substring(0, (executablePath.length - 5));
+    _nyrnaDir = nyrnaPath;
+    return nyrnaPath;
+  }
+
+  static String _iconPath;
+
+  /// Absolute path to Nyrna's bundled icon asset.
+  static String get iconPath {
+    if (_iconPath != null) return _iconPath;
+    var _ending = (DartIO.Platform.isLinux) ? 'png' : 'ico';
+    _iconPath = '${directory}data/flutter_assets/assets/icons/nyrna.$_ending';
+    return _iconPath;
+  }
+
+  static String _tempDir;
+
+  /// Absolute path to the operating system's temp directory.
+  static Future<String> get tempDirectory async {
+    if (_tempDir != null) return _tempDir;
+    final directory = await getTemporaryDirectory();
+    _tempDir = directory.path;
+    return _tempDir;
   }
 }
