@@ -15,6 +15,10 @@ version_check
 
 cd ..
 
+flutter clean
+
+flutter pub get
+
 flutter build linux
 
 cd build/linux/release/ || cd build/linux/x64/release/
