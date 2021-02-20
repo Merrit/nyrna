@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nyrna/components/input_dialog.dart';
 import 'package:nyrna/nyrna.dart';
+import 'package:nyrna/settings/components/system_integration_tiles.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -14,6 +15,9 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   Nyrna nyrna;
+
+  /// Adds a little space between sections.
+  static const double sectionPadding = 50;
 
   @override
   void didChangeDependencies() {
@@ -57,8 +61,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
               SettingsSection(
+                title: 'System Integration',
+                titlePadding: EdgeInsets.only(top: sectionPadding),
+                tiles: systemIntegrationTiles(context),
+              ),
+              SettingsSection(
                 title: 'About',
-                titlePadding: EdgeInsets.only(top: 100),
+                titlePadding: EdgeInsets.only(top: sectionPadding),
                 tiles: [
                   SettingsTile(
                     leading: Icon(Icons.info_outline),
