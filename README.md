@@ -83,6 +83,10 @@ _Setup portable version_:
 - Ensure that the `nyrna` file is set as executable
 - Start the `nyrna` file to run the program
 
+_Optional:_
+
+In settings is a button to add Nyrna to the system launcher.
+
 
 # Usage
 
