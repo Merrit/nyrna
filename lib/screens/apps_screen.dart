@@ -61,7 +61,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
         ),
       ),
       floatingActionButton:
-          ((settings.autoRefresh && settings.refreshInterval > 10) ||
+          ((settings.autoRefresh && settings.refreshInterval > 5) ||
                   !settings.autoRefresh)
               ? _floatingActionButton()
               : null,

@@ -13,13 +13,13 @@ class Settings {
     return;
   }
 
-  bool get autoRefresh => prefs.getBool('autoRefresh') ?? false;
+  bool get autoRefresh => prefs.getBool('autoRefresh') ?? true;
 
   set autoRefresh(bool shouldRefresh) {
     prefs.setBool('autoRefresh', shouldRefresh);
   }
 
-  int get refreshInterval => prefs.getInt('refreshInterval') ?? 2;
+  int get refreshInterval => prefs.getInt('refreshInterval') ?? 5;
 
   set refreshInterval(int interval) {
     if (interval > 0) {
