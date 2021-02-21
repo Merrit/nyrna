@@ -53,11 +53,19 @@ class Nyrna extends ChangeNotifier {
     if (DartIO.Platform.isLinux) newWindows = await Linux.windows;
     if (DartIO.Platform.isWindows) return null;
     if (DartIO.Platform.isMacOS) return null;
-    // Remove if window no longer present.
-    _windows.removeWhere((pid, _) => !newWindows.containsKey(pid));
+    // Remove if window no longer present, or title has changed.
+    _windows.removeWhere((pid, window) {
+      if (!newWindows.containsKey(pid) || // Window no longer present.
+          (newWindows[pid].title != window.title)) // Window title changed.
+      {
+        return true;
+      } else {
+        return false;
+      }
+    });
     // Filter out own window.
     newWindows.removeWhere((pid, window) => window.title == 'Nyrna');
-    // Add new windows.
+    // Add new windows (and those whose title changed).
     newWindows.forEach((pid, window) {
       if (!_windows.containsKey(pid)) _windows[pid] = window;
     });
