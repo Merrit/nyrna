@@ -7,9 +7,9 @@ class Linux {
 
   /// Returns the index of the currently active
   /// virtual desktop as reported by wmctrl.
-  static int get currentDesktop {
+  static Future<int> get currentDesktop async {
     int desktop;
-    var result = Process.runSync('wmctrl', ['-d']);
+    var result = await Process.run('wmctrl', ['-d']);
     var lines = result.stdout.toString().split('\n');
     lines.forEach((line) {
       if (line.contains('*')) {
@@ -25,7 +25,7 @@ class Linux {
   ///
   /// Expects [currentDesktop] to have been called first for the desktop number.
   static Future<Map<String, Window>> get windows async {
-    _desktop = currentDesktop;
+    _desktop = await currentDesktop;
     Map<String, Window> windows = {};
     var result = await Process.run('bash', ['-c', 'wmctrl -lp']);
     // Each line from wmctrl will be something like so:

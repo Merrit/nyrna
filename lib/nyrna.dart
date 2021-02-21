@@ -36,8 +36,8 @@ class Nyrna extends ChangeNotifier {
     return _currentDesktop;
   }
 
-  void fetchDesktop() {
-    if (DartIO.Platform.isLinux) _currentDesktop = Linux.currentDesktop;
+  Future<void> fetchDesktop() async {
+    if (DartIO.Platform.isLinux) _currentDesktop = await Linux.currentDesktop;
     if (DartIO.Platform.isWindows) return null;
     if (DartIO.Platform.isMacOS) return null;
     notifyListeners();

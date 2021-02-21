@@ -50,9 +50,10 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
               var keys = nyrna.windows.keys.toList();
               var window = nyrna.windows[keys[index]];
               return ChangeNotifierProvider(
-                key: UniqueKey(),
+                key: ObjectKey(window.pid),
                 create: (context) => Process(window.pid),
                 child: WindowTile(
+                  key: ObjectKey(window.pid),
                   window: window,
                 ),
               );

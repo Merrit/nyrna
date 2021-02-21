@@ -13,18 +13,18 @@ class Window {
   /// Unique window id from the hexadecimal integer.
   int id;
 
-  void minimize() {
+  Future<void> minimize() async {
     if (DartIO.Platform.isLinux) {
-      DartIO.Process.runSync(
+      await DartIO.Process.run(
         'xdotool',
         ['windowminimize', '$id', '--sync'],
       );
     }
   }
 
-  void restore() {
+  Future<void> restore() async {
     if (DartIO.Platform.isLinux) {
-      DartIO.Process.runSync(
+      await DartIO.Process.run(
         'xdotool',
         ['windowactivate', '$id', '--sync'],
       );
@@ -89,7 +89,8 @@ class ActiveWindow extends Window {
     _pid = settings.savedProcess;
     _id = settings.savedWindowId;
     var process = NyrnaProcess.Process(_pid);
-    if (process.status == 'suspended') {
+    var _status = await process.status;
+    if (_status == 'suspended') {
       process.toggle();
       await settings.setSavedProcess(null);
       await settings.setSavedWindowId(null);
@@ -100,7 +101,7 @@ class ActiveWindow extends Window {
 
   Future<void> _suspend(NyrnaProcess.Process process) async {
     minimize();
-    var successful = process.toggle();
+    var successful = await process.toggle();
     await settings.setSavedProcess(pid);
     await settings.setSavedWindowId(id);
     if (!successful) {

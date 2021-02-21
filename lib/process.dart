@@ -10,14 +10,15 @@ class Process extends ChangeNotifier {
   }
 
   final int pid;
+
   NativeProcess _process;
 
-  String get executable => _process.executable;
+  Future<String> get executable async => await _process.executable;
 
-  String get status => _process.status;
+  Future<String> get status async => await _process.status;
 
-  bool toggle() {
-    bool successful = _process.toggle();
+  Future<bool> toggle() async {
+    bool successful = await _process.toggle();
     notifyListeners();
     return successful;
   }

@@ -3,24 +3,24 @@ import 'dart:io';
 import 'package:nyrna/native_process.dart';
 
 class LinuxProcess extends NativeProcess {
-  LinuxProcess(this.pid) {
-    executable = _checkExecutable();
-  }
+  LinuxProcess(this.pid);
 
   final int pid;
 
-  String executable;
+  String _executable;
 
-  String _checkExecutable() {
-    var result = Process.runSync('readlink', ['/proc/$pid/exe']);
-    var _exec = result.stdout.toString().split('/').last.trim();
-    return _exec;
+  @override
+  Future<String> get executable async {
+    if (_executable != null) return _executable;
+    var result = await Process.run('readlink', ['/proc/$pid/exe']);
+    _executable = result.stdout.toString().split('/').last.trim();
+    return _executable;
   }
 
   @override
-  String get status {
+  Future<String> get status async {
     String _status;
-    var result = Process.runSync('ps', ['-o', 's=', '-p', '$pid']);
+    var result = await Process.run('ps', ['-o', 's=', '-p', '$pid']);
     // For OSX you need to use `state=` in this command.
     switch (result.stdout.trim()) {
       case 'I':
@@ -42,9 +42,10 @@ class LinuxProcess extends NativeProcess {
   }
 
   @override
-  bool toggle() {
+  Future<bool> toggle() async {
+    var _status = await status;
     ProcessSignal signal =
-        (status == 'normal') ? ProcessSignal.sigstop : ProcessSignal.sigcont;
+        (_status == 'normal') ? ProcessSignal.sigstop : ProcessSignal.sigcont;
     bool successful = Process.killPid(pid, signal);
     return successful;
   }
