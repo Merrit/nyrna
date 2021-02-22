@@ -27,27 +27,32 @@ void main() {
   });
 
   group('executable', () {
-    test('executable is a String', () {
-      expect(process.executable, isA<String>());
+    test('executable is a String', () async {
+      var executable = await process.executable;
+      expect(executable, isA<String>());
     });
 
-    test('executable name is not empty', () {
-      expect(process.executable, isNotEmpty);
+    test('executable name is not empty', () async {
+      var executable = await process.executable;
+      expect(executable, isNotEmpty);
     });
   });
 
   group('status', () {
-    test('status is a String', () {
-      expect(process.status, isA<String>());
+    test('status is a String', () async {
+      var status = await process.status;
+      expect(status, isA<String>());
     });
 
-    test('status is not empty', () {
-      expect(process.status, isNotEmpty);
+    test('status is not empty', () async {
+      var status = await process.status;
+      expect(status, isNotEmpty);
     });
 
-    test('status is normal', () {
+    test('status is normal', () async {
       // Because this is the current process, it really should be..
-      expect(process.status, 'normal');
+      var status = await process.status;
+      expect(status, 'normal');
     });
   });
 }
