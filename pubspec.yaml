@@ -24,9 +24,11 @@ dependencies:
   flutter:
     sdk: flutter
   args: ^1.6.0
+  path_provider: ^1.6.27
   provider: ^4.3.3
   settings_ui: ^0.6.0
   shared_preferences: ^0.5.12+4
+  url_launcher: ^5.7.10
 
 dev_dependencies:
   flutter_test:
@@ -43,7 +45,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  
+
   assets:
     - assets/icons/
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,9 +1,12 @@
 /// Abstract type bridges classes for specific operating systems.
 /// Used by [LinuxProcess] and [WindowsProcess].
 abstract class NativeProcess {
+  /// Name of the executable, for example 'firefox' or 'firefox-bin'.
+  Future<String> get executable;
+
   /// Status will be one of [normal], [suspended] or [unknown].
-  String get status;
+  Future<String> get status;
 
   /// Returns true for success or false for failure.
-  bool toggle();
+  Future<bool> toggle();
 }

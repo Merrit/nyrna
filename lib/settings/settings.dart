@@ -5,39 +5,39 @@ Settings settings;
 
 /// Manage all the app settings.
 class Settings {
-  SharedPreferences _prefs;
+  SharedPreferences prefs;
 
   Future<void> initialize() async {
-    if (_prefs != null) return;
-    _prefs = await SharedPreferences.getInstance();
+    if (prefs != null) return;
+    prefs = await SharedPreferences.getInstance();
     return;
   }
 
-  bool get autoRefresh => _prefs.getBool('autoRefresh') ?? false;
+  bool get autoRefresh => prefs.getBool('autoRefresh') ?? true;
 
   set autoRefresh(bool shouldRefresh) {
-    _prefs.setBool('autoRefresh', shouldRefresh);
+    prefs.setBool('autoRefresh', shouldRefresh);
   }
 
-  int get refreshInterval => _prefs.getInt('refreshInterval') ?? 2;
+  int get refreshInterval => prefs.getInt('refreshInterval') ?? 5;
 
   set refreshInterval(int interval) {
     if (interval > 0) {
-      _prefs.setInt('refreshInterval', interval);
+      prefs.setInt('refreshInterval', interval);
     }
   }
 
-  int get savedProcess => _prefs.getInt('savedProcess');
+  int get savedProcess => prefs.getInt('savedProcess');
 
   Future<void> setSavedProcess(int pid) async {
-    await _prefs.setInt('savedProcess', pid);
+    await prefs.setInt('savedProcess', pid);
     return null;
   }
 
-  int get savedWindowId => _prefs.getInt('savedWindowId');
+  int get savedWindowId => prefs.getInt('savedWindowId');
 
   Future<void> setSavedWindowId(int id) async {
-    await _prefs.setInt('savedWindowId', id);
+    await prefs.setInt('savedWindowId', id);
     return null;
   }
 }

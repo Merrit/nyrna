@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nyrna/components/input_dialog.dart';
 import 'package:nyrna/nyrna.dart';
+import 'package:nyrna/settings/components/system_integration_tiles.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:provider/provider.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const id = 'settings_screen';
@@ -14,6 +16,9 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   Nyrna nyrna;
+
+  /// Adds a little space between sections.
+  static const double sectionPadding = 50;
 
   @override
   void didChangeDependencies() {
@@ -53,6 +58,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     trailing: Text('${settings.refreshInterval} seconds'),
                     enabled: settings.autoRefresh,
                     onPressed: (context) => _refreshInterval(),
+                  ),
+                ],
+              ),
+              SettingsSection(
+                title: 'System Integration',
+                titlePadding: EdgeInsets.only(top: sectionPadding),
+                tiles: systemIntegrationTiles(context),
+              ),
+              SettingsSection(
+                title: 'About',
+                titlePadding: EdgeInsets.only(top: sectionPadding),
+                tiles: [
+                  SettingsTile(
+                    leading: Icon(Icons.info_outline),
+                    title: 'Nyrna version',
+                    subtitle: '2.0-alpha.1', // TODO: Automate this.
+                  ),
+                  SettingsTile(
+                    leading: Icon(Icons.launch),
+                    title: 'GitHub repository',
+                    onPressed: (context) async {
+                      await launch('https://github.com/Merrit/nyrna');
+                    },
                   ),
                 ],
               ),

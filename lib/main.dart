@@ -5,8 +5,10 @@ import 'package:nyrna/config.dart';
 import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/parse_args.dart';
 import 'package:nyrna/screens/apps_screen.dart';
+import 'package:nyrna/screens/loading_screen.dart';
 import 'package:nyrna/settings/screens/settings_screen.dart';
 import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/theme.dart';
 import 'package:nyrna/window.dart';
 import 'package:provider/provider.dart';
 
@@ -34,15 +36,13 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Nyrna',
-        theme: ThemeData(
-          brightness: Brightness.dark,
-          primarySwatch: Colors.blue,
-        ),
+        theme: NyrnaTheme.dark,
         routes: {
+          LoadingScreen.id: (context) => LoadingScreen(),
           RunningAppsScreen.id: (context) => RunningAppsScreen(),
           SettingsScreen.id: (conext) => SettingsScreen(),
         },
-        home: RunningAppsScreen(),
+        home: LoadingScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );

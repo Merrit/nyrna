@@ -7,10 +7,20 @@ class LinuxProcess extends NativeProcess {
 
   final int pid;
 
+  String _executable;
+
   @override
-  String get status {
+  Future<String> get executable async {
+    if (_executable != null) return _executable;
+    var result = await Process.run('readlink', ['/proc/$pid/exe']);
+    _executable = result.stdout.toString().split('/').last.trim();
+    return _executable;
+  }
+
+  @override
+  Future<String> get status async {
     String _status;
-    var result = Process.runSync('ps', ['-o', 's=', '-p', '$pid']);
+    var result = await Process.run('ps', ['-o', 's=', '-p', '$pid']);
     // For OSX you need to use `state=` in this command.
     switch (result.stdout.trim()) {
       case 'I':
@@ -32,9 +42,10 @@ class LinuxProcess extends NativeProcess {
   }
 
   @override
-  bool toggle() {
+  Future<bool> toggle() async {
+    var _status = await status;
     ProcessSignal signal =
-        (status == 'normal') ? ProcessSignal.sigstop : ProcessSignal.sigcont;
+        (_status == 'normal') ? ProcessSignal.sigstop : ProcessSignal.sigcont;
     bool successful = Process.killPid(pid, signal);
     return successful;
   }

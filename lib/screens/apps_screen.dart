@@ -18,7 +18,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
 
   @override
   void didChangeDependencies() {
-    nyrna = Provider.of(context);
+    nyrna = Provider.of<Nyrna>(context);
     super.didChangeDependencies();
   }
 
@@ -50,9 +50,10 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
               var keys = nyrna.windows.keys.toList();
               var window = nyrna.windows[keys[index]];
               return ChangeNotifierProvider(
-                key: UniqueKey(),
+                key: ValueKey('${window.pid}${window.title}'),
                 create: (context) => Process(window.pid),
                 child: WindowTile(
+                  key: ValueKey('${window.pid}${window.title}'),
                   window: window,
                 ),
               );
@@ -61,7 +62,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
         ),
       ),
       floatingActionButton:
-          ((settings.autoRefresh && settings.refreshInterval > 10) ||
+          ((settings.autoRefresh && settings.refreshInterval > 5) ||
                   !settings.autoRefresh)
               ? _floatingActionButton()
               : null,
