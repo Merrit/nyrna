@@ -114,3 +114,8 @@ your work and games.
 **Can I suspend to disk so that I can restore after reboot / free up RAM usage / etc?**
 
 Unfortunately no. [CRIU](https://criu.org/) looks very promising to allow us to do this (on Linux), however it [does not currently support suspending GUI applications](https://criu.org/X_applications).
+
+
+# Compiling
+
+See [COMPILING](COMPILING.MD)
