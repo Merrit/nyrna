@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nyrna/components/window_tile.dart';
 import 'package:nyrna/nyrna.dart';
-import 'package:nyrna/process.dart';
+import 'package:nyrna/process/process.dart';
 import 'package:nyrna/settings/screens/settings_screen.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:provider/provider.dart';

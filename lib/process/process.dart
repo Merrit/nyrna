@@ -1,8 +1,8 @@
 import 'dart:io' as DartIO;
 
 import 'package:flutter/material.dart';
-import 'package:nyrna/linux/linux_process.dart';
-import 'package:nyrna/native_process.dart';
+import 'package:nyrna/process/linux_process.dart';
+import 'package:nyrna/process/native_process.dart';
 
 class Process extends ChangeNotifier {
   Process(this.pid) {

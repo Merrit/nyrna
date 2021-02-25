@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nyrna/process.dart';
-import 'package:nyrna/window.dart';
+import 'package:nyrna/process/process.dart';
+import 'package:nyrna/window/window.dart';
 import 'package:provider/provider.dart';
 
 class WindowTile extends StatefulWidget {

@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:io' as DartIO;
 
 import 'package:flutter/foundation.dart';
+import 'package:nyrna/platform/native_platform.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:nyrna/linux/linux.dart';
 import 'package:nyrna/settings/settings.dart';
-import 'package:nyrna/window.dart';
+import 'package:nyrna/window/window.dart';
 
 class Nyrna extends ChangeNotifier {
-  Nyrna() {
+  Nyrna() : _nativePlatform = NativePlatform() {
     setRefresh();
   }
 
@@ -25,6 +25,8 @@ class Nyrna extends ChangeNotifier {
     }
   }
 
+  NativePlatform _nativePlatform;
+
   int _currentDesktop;
 
   /// Returns the index of the currently active virtual desktop.
@@ -37,9 +39,7 @@ class Nyrna extends ChangeNotifier {
   }
 
   Future<void> fetchDesktop() async {
-    if (DartIO.Platform.isLinux) _currentDesktop = await Linux.currentDesktop;
-    if (DartIO.Platform.isWindows) return null;
-    if (DartIO.Platform.isMacOS) return null;
+    _currentDesktop = await _nativePlatform.currentDesktop;
     notifyListeners();
   }
 
@@ -49,10 +49,7 @@ class Nyrna extends ChangeNotifier {
   Map<String, Window> get windows => _windows;
 
   Future<void> fetchWindows() async {
-    Map<String, Window> newWindows;
-    if (DartIO.Platform.isLinux) newWindows = await Linux.windows;
-    if (DartIO.Platform.isWindows) return null;
-    if (DartIO.Platform.isMacOS) return null;
+    Map<String, Window> newWindows = await _nativePlatform.windows;
     // Remove if window no longer present, or title has changed.
     _windows.removeWhere((pid, window) {
       if (!newWindows.containsKey(pid) || // Window no longer present.
@@ -90,7 +87,6 @@ class Nyrna extends ChangeNotifier {
       default:
         break;
     }
-    return null;
   }
 
   static Future<void> _hideLinux() async {
@@ -98,7 +94,6 @@ class Nyrna extends ChangeNotifier {
       'xdotool',
       ['getactivewindow', 'windowunmap', '--sync'],
     );
-    return null;
   }
 
   static String _executablePath;
@@ -140,16 +135,10 @@ class Nyrna extends ChangeNotifier {
     return _tempDir;
   }
 
+  Nyrna.loading() : _nativePlatform = NativePlatform();
+
   /// Verify Nyrna's dependencies are available on the system.
-  static Future<bool> checkDependencies() async {
-    bool dependenciesPresent = false;
-    switch (DartIO.Platform.operatingSystem) {
-      case 'linux':
-        dependenciesPresent = await Linux.checkDependencies();
-        break;
-      default:
-        break;
-    }
-    return dependenciesPresent;
+  Future<bool> checkDependencies() async {
+    return await _nativePlatform.checkDependencies();
   }
 }

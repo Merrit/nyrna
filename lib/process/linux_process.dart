@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:nyrna/native_process.dart';
+import 'package:nyrna/process/native_process.dart';
 
 class LinuxProcess extends NativeProcess {
   LinuxProcess(this.pid);
