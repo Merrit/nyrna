@@ -14,8 +14,6 @@ import 'package:provider/provider.dart';
 
 Future<void> main(List<String> args) async {
   parseArgs(args);
-  settings = Settings();
-  await settings.initialize();
   if (Config.toggle) {
     // Not yet possible to run without GUI, so we just exit after toggle.
     await Nyrna.hide();
@@ -24,6 +22,8 @@ Future<void> main(List<String> args) async {
     await activeWindow.toggle();
     exit(0);
   } else {
+    settings = Settings();
+    await settings.initialize();
     runApp(MyApp());
   }
 }
