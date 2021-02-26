@@ -23,8 +23,6 @@ class Linux implements NativePlatform {
 
   /// Returns a list of [Window] objects based on the reported
   /// open application windows from wmctrl.
-  ///
-  /// Expects [currentDesktop] to have been called first for the desktop number.
   Future<Map<String, Window>> get windows async {
     _desktop = await currentDesktop;
     Map<String, Window> windows = {};
