@@ -6,8 +6,7 @@ import 'package:nyrna/window/window.dart';
 class Linux implements NativePlatform {
   int _desktop;
 
-  /// Returns the index of the currently active
-  /// virtual desktop as reported by wmctrl.
+  // Active virtual desktop as reported by wmctrl.
   Future<int> get currentDesktop async {
     int desktop;
     var result = await Process.run('wmctrl', ['-d']);
@@ -21,8 +20,7 @@ class Linux implements NativePlatform {
     return desktop;
   }
 
-  /// Returns a list of [Window] objects based on the reported
-  /// open application windows from wmctrl.
+  // Gets all open windows from wmctrl.
   Future<Map<String, Window>> get windows async {
     _desktop = await currentDesktop;
     Map<String, Window> windows = {};
@@ -58,14 +56,13 @@ class Linux implements NativePlatform {
     return _pid ?? 0;
   }
 
-  /// Unique hex id for the active window.
   Future<int> get activeWindowId async {
     var result = await Process.run('xdotool', ['getactivewindow']);
     var _windowId = int.tryParse(result.stdout.toString().trim());
     return _windowId ?? 0;
   }
 
-  /// Verify wmctrl and xdotool are present on the system.
+  // Verify wmctrl and xdotool are present on the system.
   Future<bool> checkDependencies() async {
     try {
       await Process.run('wmctrl', ['-d']);
