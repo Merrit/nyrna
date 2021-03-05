@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:nyrna/components/input_dialog.dart';
 import 'package:nyrna/nyrna.dart';
@@ -61,11 +63,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
-              SettingsSection(
-                title: 'System Integration',
-                titlePadding: EdgeInsets.only(top: sectionPadding),
-                tiles: systemIntegrationTiles(context),
-              ),
+              // Should this be shown on Windows?
+              // Only for the portable, non installed version?
+              // How to tell the difference?
+              if (Platform.isLinux)
+                SettingsSection(
+                  title: 'System Integration',
+                  titlePadding: EdgeInsets.only(top: sectionPadding),
+                  tiles: systemIntegrationTiles(context),
+                ),
               SettingsSection(
                 title: 'About',
                 titlePadding: EdgeInsets.only(top: sectionPadding),

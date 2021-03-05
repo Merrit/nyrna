@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:nyrna/platform/linux.dart';
-import 'package:nyrna/platform/win32.dart';
+import 'package:nyrna/platform/win32/win32.dart';
 import 'package:nyrna/window/window.dart';
 
 class NativePlatform {

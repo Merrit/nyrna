@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:nyrna/process/native_process.dart';
+import 'package:nyrna/process/process_status.dart';
 
 class LinuxProcess implements NativeProcess {
   LinuxProcess(this.pid);
@@ -18,25 +19,25 @@ class LinuxProcess implements NativeProcess {
   }
 
   @override
-  Future<String> get status async {
-    String _status;
+  Future<ProcessStatus> get status async {
+    ProcessStatus _status;
     var result = await Process.run('ps', ['-o', 's=', '-p', '$pid']);
     // For OSX you need to use `state=` in this command.
     switch (result.stdout.trim()) {
       case 'I':
-        _status = 'normal';
+        _status = ProcessStatus.normal;
         break;
       case 'R':
-        _status = 'normal';
+        _status = ProcessStatus.normal;
         break;
       case 'S':
-        _status = 'normal';
+        _status = ProcessStatus.normal;
         break;
       case 'T':
-        _status = 'suspended';
+        _status = ProcessStatus.suspended;
         break;
       default:
-        _status = 'unknown';
+        _status = ProcessStatus.unknown;
     }
     return _status;
   }
@@ -44,8 +45,9 @@ class LinuxProcess implements NativeProcess {
   @override
   Future<bool> toggle() async {
     var _status = await status;
-    ProcessSignal signal =
-        (_status == 'normal') ? ProcessSignal.sigstop : ProcessSignal.sigcont;
+    ProcessSignal signal = (_status == ProcessStatus.normal)
+        ? ProcessSignal.sigstop
+        : ProcessSignal.sigcont;
     bool successful = Process.killPid(pid, signal);
     return successful;
   }

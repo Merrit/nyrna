@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:win32/win32.dart';
+
 ///
 abstract class WindowControls {
   Future<void> minimize(int id);
@@ -15,6 +17,7 @@ class WindowControlsProvider {
         _controls = _LinuxWindowControls();
         break;
       case 'windows':
+        _controls = _Win32WindowControls();
         break;
       default:
         break;
@@ -24,7 +27,7 @@ class WindowControlsProvider {
 }
 
 ///
-class _LinuxWindowControls extends WindowControls {
+class _LinuxWindowControls implements WindowControls {
   Future<void> minimize(int id) async {
     await Process.run(
       'xdotool',
@@ -38,4 +41,10 @@ class _LinuxWindowControls extends WindowControls {
       ['windowactivate', '$id', '--sync'],
     );
   }
+}
+
+class _Win32WindowControls implements WindowControls {
+  Future<void> minimize(int id) async => ShowWindow(id, SW_FORCEMINIMIZE);
+
+  Future<void> restore(int id) async => ShowWindow(id, SW_RESTORE);
 }

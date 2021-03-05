@@ -26,7 +26,7 @@ class Settings {
     }
   }
 
-  int get savedProcess => prefs.getInt('savedProcess');
+  int get savedProcess => prefs.getInt('savedProcess') ?? 0;
 
   Future<void> setSavedProcess(int pid) async {
     await prefs.setInt('savedProcess', pid);

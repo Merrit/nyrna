@@ -13,19 +13,31 @@ import 'package:nyrna/window/active_window.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main(List<String> args) async {
+  // Parse command-line arguments.
   parseArgs(args);
+
+  // Initialize the global settings instance in settings.dart
+  // Needed early both because it runs syncronously and would block UI,
+  // as well as because the toggle feature checks for a saved process.
+  settings = Settings();
+  await settings.initialize();
+
   if (Config.toggle) {
-    // Not yet possible to run without GUI, so we just exit after toggle.
-    await Nyrna.hide();
-    var activeWindow = ActiveWindow();
-    await activeWindow.initialize();
-    await activeWindow.toggle();
-    exit(0);
+    // `-t` or `--toggle` flag detected.
+    await _toggleActiveWindow();
   } else {
-    settings = Settings();
-    await settings.initialize();
+    // Run main GUI interface.
     runApp(MyApp());
   }
+}
+
+/// Not yet possible to run without GUI, so we just exit after toggling.
+Future<void> _toggleActiveWindow() async {
+  var activeWindow = ActiveWindow();
+  await activeWindow.hideNyrna();
+  await activeWindow.initialize();
+  await activeWindow.toggle();
+  exit(0);
 }
 
 class MyApp extends StatelessWidget {

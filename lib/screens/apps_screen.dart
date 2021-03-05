@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:nyrna/components/window_tile.dart';
 import 'package:nyrna/nyrna.dart';
@@ -26,11 +28,13 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Consumer<Nyrna>(
-          builder: (context, nyrna, widget) {
-            return Text('Current Desktop: ${nyrna.currentDesktop}');
-          },
-        ),
+        title: (Platform.isLinux)
+            ? Consumer<Nyrna>(
+                builder: (context, nyrna, widget) {
+                  return Text('Current Desktop: ${nyrna.currentDesktop}');
+                },
+              )
+            : null,
         centerTitle: true,
         actions: [
           IconButton(

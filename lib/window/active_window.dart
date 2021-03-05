@@ -1,9 +1,11 @@
-import 'dart:io' as io show pid, exit;
+import 'dart:io' as io;
 
 import 'package:nyrna/platform/native_platform.dart';
 import 'package:nyrna/process/process.dart';
+import 'package:nyrna/process/process_status.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/window/window_controls.dart';
+import 'package:win32/win32.dart';
 
 /// Represents the active, foreground window on the system.
 ///
@@ -23,6 +25,37 @@ class ActiveWindow {
 
   int id;
 
+  /// Hide the Nyrna window.
+  ///
+  /// Necessary when using the toggle active window feature,
+  /// until Flutter has a way to run without GUI.
+  Future<void> hideNyrna() async {
+    switch (io.Platform.operatingSystem) {
+      case 'linux':
+        await _hideLinux();
+        break;
+      case 'windows':
+        await _hideWindows();
+        break;
+      default:
+        break;
+    }
+  }
+
+  Future<void> _hideLinux() async {
+    await io.Process.run(
+      'xdotool',
+      ['getactivewindow', 'windowunmap', '--sync'],
+    );
+  }
+
+  Future<void> _hideWindows() async {
+    var id = GetForegroundWindow();
+    // We would prefer SW_HIDE, however that leaves Nyrna still
+    // considered the foreground window. So, minimize instead.
+    ShowWindow(id, SW_FORCEMINIMIZE);
+  }
+
   Future<void> initialize() async {
     nyrnaPid = io.pid;
     pid = await _nativePlatform.activeWindowPid;
@@ -39,8 +72,9 @@ class ActiveWindow {
     }
   }
 
+  /// Toggle the suspend / resume state of the given process.
   Future<void> toggle() async {
-    if (settings.savedProcess != null) {
+    if (settings.savedProcess != 0) {
       await _resume();
     } else {
       await _suspend();
@@ -52,10 +86,10 @@ class ActiveWindow {
     id = settings.savedWindowId;
     var process = Process(pid);
     var _status = await process.status;
-    if (_status == 'suspended') {
+    if (_status == ProcessStatus.suspended) {
       await process.toggle();
-      await settings.setSavedProcess(null);
-      await settings.setSavedWindowId(null);
+      await settings.setSavedProcess(0);
+      await settings.setSavedWindowId(0);
     }
     await _windowControls.restore(id);
   }
@@ -63,6 +97,11 @@ class ActiveWindow {
   Future<void> _suspend() async {
     var process = Process(pid);
     await _windowControls.minimize(id);
+    // Small delay on Windows to ensure the window actually minimizes.
+    // Doesn't seem to be necessary on Linux.
+    if (io.Platform.isWindows) {
+      await Future.delayed(Duration(milliseconds: 500));
+    }
     var successful = await process.toggle();
     await settings.setSavedProcess(pid);
     await settings.setSavedWindowId(id);

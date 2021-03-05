@@ -32,11 +32,7 @@ class Nyrna extends ChangeNotifier {
   /// Returns the index of the currently active virtual desktop.
   ///
   /// The left-most / first desktop starts at 0.
-  ///
-  // ignore: missing_return
-  int get currentDesktop {
-    return _currentDesktop;
-  }
+  int get currentDesktop => _currentDesktop;
 
   Future<void> fetchDesktop() async {
     _currentDesktop = await _nativePlatform.currentDesktop;
@@ -73,27 +69,6 @@ class Nyrna extends ChangeNotifier {
     fetchDesktop();
     fetchWindows();
     notifyListeners();
-  }
-
-  /// Hide the Nyrna window.
-  ///
-  /// Necessary when using the toggle active window feature,
-  /// until Flutter has a way to run without GUI.
-  static Future<void> hide() async {
-    switch (DartIO.Platform.operatingSystem) {
-      case 'linux':
-        await _hideLinux();
-        break;
-      default:
-        break;
-    }
-  }
-
-  static Future<void> _hideLinux() async {
-    await DartIO.Process.run(
-      'xdotool',
-      ['getactivewindow', 'windowunmap', '--sync'],
-    );
   }
 
   static String _executablePath;
