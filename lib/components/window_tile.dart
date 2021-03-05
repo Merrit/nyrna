@@ -31,18 +31,16 @@ class _WindowTileState extends State<WindowTile> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _toggle(),
-      child: Card(
-        child: ListTile(
-          leading: _statusWidget(),
-          title: Text(window.title),
-          subtitle: _executableNameWidget(),
-          contentPadding: EdgeInsets.symmetric(
-            vertical: 2,
-            horizontal: 20,
-          ),
+    return Card(
+      child: ListTile(
+        leading: _statusWidget(),
+        title: Text(window.title),
+        subtitle: _executableNameWidget(),
+        contentPadding: EdgeInsets.symmetric(
+          vertical: 2,
+          horizontal: 20,
         ),
+        onTap: () => _toggle(),
       ),
     );
   }
