@@ -37,7 +37,7 @@ fi
 echo -e "Starting build.. \n"
 
 
-cd ..
+cd ../..
 
 flutter clean
 
