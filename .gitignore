@@ -1,5 +1,6 @@
 # Packaging output
 packaging/output/
+*.snap
 
 # PKGBUILD extras
 packaging/PKGBUILD/.SRCINFO

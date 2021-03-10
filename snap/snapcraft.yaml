@@ -1,0 +1,37 @@
+name: nyrna
+version: 2.0-beta.1
+summary: Suspend games and applications
+description: |
+  Similar to the incredibly useful sleep/suspend function found in
+  consoles like the Nintendo Switch and Sony PlayStation; suspend your
+  game (and its resource usage) at any time, and 
+  resume whenever you wish - at the push of a button.
+
+confinement: strict
+base: core18
+grade: devel
+
+slots:
+  dbus-nyrna: # Necessary for now, Flutter team looking to make it not so.
+    interface: dbus
+    bus: session
+    name: codes.merritt.nyrna
+
+apps:
+  nyrna:
+    command: nyrna
+    extensions: [flutter-dev] # Flutter channel to use for the build.
+    plugs:
+      - network
+      - process-control # Necessary for core functionality.
+    slots:
+      - dbus-nyrna
+
+parts:
+  nyrna:
+    source: .
+    plugin: flutter
+    flutter-target: lib/main.dart
+    stage-packages:
+      - wmctrl
+      - xdotool

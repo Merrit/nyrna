@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Nyrna
+Comment=Simple program to suspend games & applications
+Exec=nyrna
+Icon=nyrna
+Terminal=false
+StartupNotify=false
+Categories=Utility;
