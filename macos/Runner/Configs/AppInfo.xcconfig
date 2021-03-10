@@ -8,7 +8,7 @@
 PRODUCT_NAME = nyrna
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.nyrna
+PRODUCT_BUNDLE_IDENTIFIER = codes.merritt.nyrna
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2021 com.example. All rights reserved.
