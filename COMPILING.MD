@@ -1,6 +1,14 @@
+# Compiling Nyrna
+
+
+## Requirements
+
 Compiling Nyrna requires a working Flutter setup with desktop support.
 
-For Linux this will mean:
+See https://flutter.dev/desktop for full instructions on setting up Flutter with
+desktop support enabled.
+
+### Linux Requirements
 
 - Clang
 - CMake
@@ -9,25 +17,30 @@ For Linux this will mean:
 - pkg-config
 - libblkid
 - liblzma
-- Flutter SDK on channel `dev`
+- Flutter SDK on channel `beta`
 
-See https://flutter.dev/desktop for full instructions on setting up Flutter with
-desktop support enabled.
+### Windows Requirements
 
-#### Recommended
+- [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) (not to be confused with Visual Studio Code) with the “Desktop development with C++” workload installed, including all of its default components
 
-Run the build script which will make sure everything is cleaned and ready, and
-creates an appropriately named output.
+<br>
 
-```bash
-cd packaging
-./build-linux.sh
-```
+## Building
 
-#### Manual
+Run these commands from the root directory of the repo:
 
-From the root directory of the repo:
+1. `flutter clean`
+2. `flutter pub get`
+3. `flutter build linux` or `flutter build windows`
 
-```bash
-flutter build linux
-```
+Note: You must compile on the target operating system.
+
+### Output location
+
+#### Linux
+
+`build/linux/release/bundle` or `build/linux/x64/release/bundle`
+
+#### Windows
+
+`build\windows\runner\Release`
