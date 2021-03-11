@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Nyrna
-Comment=Simple program to suspend games & applications
+Comment=Suspend games and applications
 Exec=nyrna
 Icon=nyrna
 Terminal=false
