@@ -1,0 +1,24 @@
+Id: merrittcodes.nyrna
+Publisher: MerrittCodes
+Name: Nyrna
+AppMoniker: nyrna
+Version: 2.0-beta.1
+License: GPL-3.0
+LicenseUrl: https://github.com/Merrit/nyrna/blob/master/LICENSE
+MinOSVersion: 10.0.0.0
+Description:
+  Suspend games and applications.
+
+  Similar to the incredibly useful sleep/suspend function found in
+  consoles like the Nintendo Switch and Sony PlayStation; suspend
+  your game (and its resource usage) at any time, and resume
+  whenever you wish - at the push of a button.
+Homepage: https://github.com/Merrit/nyrna
+Tags: game, games, suspend, pause, sleep, hibernate
+ProductCode: "{38E9E039-D0B7-4ED0-98A5-4ECBD3E24222}"
+InstallerType: inno
+Installers:
+  - Arch: x64
+    Url: string # path to download installation file of the specified version
+    Sha256: string # SHA256 calculated from installer
+ManifestVersion: 0.1.0
