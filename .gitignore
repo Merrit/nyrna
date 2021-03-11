@@ -1,6 +1,9 @@
 # Packaging output
-packaging/output/
+*.AppImage
 *.snap
+packaging/linux/AppDir
+packaging/linux/appimage-builder-cache
+packaging/output/
 
 # PKGBUILD extras
 packaging/PKGBUILD/.SRCINFO
