@@ -12,5 +12,5 @@ jobs:
       - run: flutter build windows
       - uses: actions/upload-artifact@v2
         with:
-          name: windows
+          name: nyrna-windows
           path: build\windows\runner\Release
