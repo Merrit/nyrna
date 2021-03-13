@@ -1,8 +1,8 @@
 # Packaging output
 *.AppImage
 *.snap
-packaging/linux/AppDir
-packaging/linux/appimage-builder-cache
+packaging/linux/appimage/AppDir
+packaging/linux/appimage/appimage-builder-cache
 packaging/output/
 
 # PKGBUILD extras
