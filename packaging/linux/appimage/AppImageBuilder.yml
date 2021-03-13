@@ -2,18 +2,18 @@
 version: 1
 script:
  - rm -rf AppDir || true
- - cp -r ../../build/linux/x64/release/bundle AppDir
+ - cp -r ../../../build/linux/x64/release/bundle AppDir
  - mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps/
- - cp ../../assets/icons/nyrna.png AppDir/usr/share/icons/hicolor/256x256/apps/
+ - cp ../../../assets/icons/nyrna.png AppDir/usr/share/icons/hicolor/256x256/apps/
  - mkdir -p AppDir/usr/share/applications
- - cp nyrna.desktop AppDir/usr/share/applications/codes.merritt.nyrna.desktop
+ - cp ../nyrna.desktop AppDir/usr/share/applications/nyrna.desktop
 AppDir:
   path: ./AppDir
   app_info:
-    id: codes.merritt.nyrna
+    id: nyrna
     name: Nyrna
     icon: nyrna
-    version: latest
+    version: !ENV ${APP_VERSION}
     exec: nyrna
     exec_args: $@
   apt:

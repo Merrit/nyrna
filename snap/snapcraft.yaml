@@ -9,7 +9,7 @@ description: |
 
 confinement: strict
 base: core18
-grade: devel
+grade: stable
 
 slots:
   dbus-nyrna: # Necessary for now, Flutter team looking to make it not so.

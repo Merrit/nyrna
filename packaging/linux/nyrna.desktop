@@ -7,3 +7,4 @@ Icon=nyrna
 Terminal=false
 StartupNotify=false
 Categories=Utility;
+StartupWMClass=Nyrna
