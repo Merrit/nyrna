@@ -1,0 +1,7 @@
+main:
+  - title: "Usage"
+    url: /usage
+  - title: "Download"
+    url: /download
+  - title: <input type="image" src="assets/images/logos/github.png" style="width:30px">
+    url: https://github.com/Merrit/nyrna
