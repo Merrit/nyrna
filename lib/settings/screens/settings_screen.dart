@@ -19,8 +19,27 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   Nyrna nyrna;
 
+  /// Check for `PORTABLE` file in the Nyrna directory, which should only be
+  /// present for the portable build on Linux.
+  final portableFile = File('PORTABLE');
+  bool isPortable = false;
+
   /// Adds a little space between sections.
   static const double sectionPadding = 50;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkPortable();
+  }
+
+  /// Check if Nyrna is running as Portable version.
+  Future<void> _checkPortable() async {
+    final _isPortable = await portableFile.exists();
+    if (_isPortable) {
+      setState(() => isPortable = _isPortable);
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -63,10 +82,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
-              // Should this be shown on Windows?
-              // Only for the portable, non installed version?
-              // How to tell the difference?
-              if (Platform.isLinux)
+              // Only show for Nyrna Portable on Linux.
+              if (Platform.isLinux && isPortable)
                 SettingsSection(
                   title: 'System Integration',
                   titlePadding: EdgeInsets.only(top: sectionPadding),
