@@ -24,3 +24,13 @@ between save points.
 
 <br>
 
+
+# Disclaimer
+
+I have not had any issues using Nyrna, however keep in mind it is possible
+something could go wrong with an application while suspended. So please remember to always save
+your work and games.
+
+
+<br>
+
