@@ -19,9 +19,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   Nyrna nyrna;
 
-  /// Check for `PORTABLE` file in the Nyrna directory, which should only be
-  /// present for the portable build on Linux.
-  final portableFile = File('PORTABLE');
+  /// Check if Nyrna is running as Portable version.
   bool isPortable = false;
 
   /// Adds a little space between sections.
@@ -33,8 +31,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _checkPortable();
   }
 
-  /// Check if Nyrna is running as Portable version.
+  /// Check for `PORTABLE` file in the Nyrna directory, which should only be
+  /// present for the portable build on Linux.
   Future<void> _checkPortable() async {
+    final portableFile = File('PORTABLE');
     final _isPortable = await portableFile.exists();
     if (_isPortable) {
       setState(() => isPortable = _isPortable);
