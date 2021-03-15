@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:nyrna/window.dart';
+import 'package:nyrna/platform/native_platform.dart';
+import 'package:nyrna/window/window.dart';
 
-class Linux {
-  static int _desktop;
+class Linux implements NativePlatform {
+  int _desktop;
 
-  /// Returns the index of the currently active
-  /// virtual desktop as reported by wmctrl.
-  static Future<int> get currentDesktop async {
+  // Active virtual desktop as reported by wmctrl.
+  Future<int> get currentDesktop async {
     int desktop;
     var result = await Process.run('wmctrl', ['-d']);
     var lines = result.stdout.toString().split('\n');
@@ -20,11 +20,8 @@ class Linux {
     return desktop;
   }
 
-  /// Returns a list of [Window] objects based on the reported
-  /// open application windows from wmctrl.
-  ///
-  /// Expects [currentDesktop] to have been called first for the desktop number.
-  static Future<Map<String, Window>> get windows async {
+  // Gets all open windows from wmctrl.
+  Future<Map<String, Window>> get windows async {
     _desktop = await currentDesktop;
     Map<String, Window> windows = {};
     var result = await Process.run('bash', ['-c', 'wmctrl -lp']);
@@ -52,22 +49,21 @@ class Linux {
     return windows;
   }
 
-  static int get activeWindowPid {
+  Future<int> get activeWindowPid async {
     var result =
-        Process.runSync('xdotool', ['getactivewindow', 'getwindowpid']);
+        await Process.run('xdotool', ['getactivewindow', 'getwindowpid']);
     var _pid = int.tryParse(result.stdout.toString().trim());
     return _pid ?? 0;
   }
 
-  /// Unique hex id for the active window.
-  static int get activeWindowId {
-    var result = Process.runSync('xdotool', ['getactivewindow']);
+  Future<int> get activeWindowId async {
+    var result = await Process.run('xdotool', ['getactivewindow']);
     var _windowId = int.tryParse(result.stdout.toString().trim());
     return _windowId ?? 0;
   }
 
-  /// Verify wmctrl and xdotool are present on the system.
-  static Future<bool> checkDependencies() async {
+  // Verify wmctrl and xdotool are present on the system.
+  Future<bool> checkDependencies() async {
     try {
       await Process.run('wmctrl', ['-d']);
     } catch (err) {

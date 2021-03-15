@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:nyrna/process.dart';
-import 'package:nyrna/window.dart';
+import 'package:nyrna/process/process.dart';
+import 'package:nyrna/process/process_status.dart';
+import 'package:nyrna/window/window.dart';
 import 'package:provider/provider.dart';
 
 class WindowTile extends StatefulWidget {
@@ -28,18 +31,16 @@ class _WindowTileState extends State<WindowTile> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _toggle(),
-      child: Card(
-        child: ListTile(
-          leading: _statusWidget(),
-          title: Text(window.title),
-          subtitle: _executableNameWidget(),
-          contentPadding: EdgeInsets.symmetric(
-            vertical: 2,
-            horizontal: 20,
-          ),
+    return Card(
+      child: ListTile(
+        leading: _statusWidget(),
+        title: Text(window.title),
+        subtitle: _executableNameWidget(),
+        contentPadding: EdgeInsets.symmetric(
+          vertical: 2,
+          horizontal: 20,
         ),
+        onTap: () => _toggle(),
       ),
     );
   }
@@ -51,7 +52,7 @@ class _WindowTileState extends State<WindowTile> {
           future: process.status,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {}
-            var _circleStatusColor = (snapshot.data == 'suspended')
+            var _circleStatusColor = (snapshot.data == ProcessStatus.suspended)
                 ? Colors.orange[700]
                 : Colors.green;
             return Container(
@@ -82,16 +83,26 @@ class _WindowTileState extends State<WindowTile> {
   }
 
   _toggle() async {
-    bool successful = await process.toggle(); // TODO: Notify of failure.
-    if (successful && true) _toggleWindow(); // TODO: Option for window minimize
-  }
-
-  _toggleWindow() async {
     var _status = await process.status;
-    if (_status == 'suspended') {
-      window.minimize();
+    if (_status == ProcessStatus.suspended) {
+      // Resume.
+      bool successful = await process.toggle();
+      if (!successful) {
+        // TODO: Notify of failure.
+      }
+      // Restore the window _after_ resuming or it might not restore.
+      await window.restore();
     } else {
-      window.restore();
+      // Suspend.
+      // Minimize the window before suspending or it might not minimize.
+      await window.minimize();
+      // Small delay on Windows to ensure the window actually minimizes.
+      // Doesn't seem to be necessary on Linux.
+      if (Platform.isWindows) await Future.delayed(Duration(milliseconds: 500));
+      bool successful = await process.toggle();
+      if (!successful) {
+        // TODO: Notify of failure.
+      }
     }
   }
 }

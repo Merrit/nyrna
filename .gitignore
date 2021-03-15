@@ -1,3 +1,10 @@
+# Packaging output
+*.AppImage
+*.snap
+packaging/linux/appimage/AppDir
+packaging/linux/appimage/appimage-builder-cache
+packaging/output/
+
 # PKGBUILD extras
 packaging/PKGBUILD/.SRCINFO
 packaging/PKGBUILD/.gitignore

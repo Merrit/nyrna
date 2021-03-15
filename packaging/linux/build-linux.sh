@@ -26,7 +26,7 @@ fi
 
 
 # Confirm version number has been updated.
-if confirm "Did you update version number? [y/N]"; then
+if confirm "Did you update version number (constant, pubspec, changelog)? [y/N]"; then
     echo
 else
     echo "Update version number first." && exit
@@ -37,7 +37,7 @@ fi
 echo -e "Starting build.. \n"
 
 
-cd ..
+cd ../..
 
 flutter clean
 

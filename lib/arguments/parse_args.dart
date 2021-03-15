@@ -1,7 +1,7 @@
 import 'package:args/args.dart';
 import 'package:nyrna/config.dart';
 
-Future<void> parseArgs(List<String> args) {
+void parseArgs(List<String> args) {
   var parser = ArgParser();
 
   parser.addFlag(
@@ -17,6 +17,4 @@ Future<void> parseArgs(List<String> args) {
   } catch (e) {
     print(e);
   }
-
-  return null;
 }

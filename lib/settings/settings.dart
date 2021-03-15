@@ -10,7 +10,6 @@ class Settings {
   Future<void> initialize() async {
     if (prefs != null) return;
     prefs = await SharedPreferences.getInstance();
-    return;
   }
 
   bool get autoRefresh => prefs.getBool('autoRefresh') ?? true;
@@ -27,17 +26,15 @@ class Settings {
     }
   }
 
-  int get savedProcess => prefs.getInt('savedProcess');
+  int get savedProcess => prefs.getInt('savedProcess') ?? 0;
 
   Future<void> setSavedProcess(int pid) async {
     await prefs.setInt('savedProcess', pid);
-    return null;
   }
 
   int get savedWindowId => prefs.getInt('savedWindowId');
 
   Future<void> setSavedWindowId(int id) async {
     await prefs.setInt('savedWindowId', id);
-    return null;
   }
 }

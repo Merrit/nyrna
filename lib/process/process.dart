@@ -1,8 +1,10 @@
 import 'dart:io' as DartIO;
 
 import 'package:flutter/material.dart';
-import 'package:nyrna/linux/linux_process.dart';
-import 'package:nyrna/native_process.dart';
+import 'package:nyrna/process/linux_process.dart';
+import 'package:nyrna/process/native_process.dart';
+import 'package:nyrna/process/process_status.dart';
+import 'package:nyrna/process/win32_process.dart';
 
 class Process extends ChangeNotifier {
   Process(this.pid) {
@@ -15,7 +17,7 @@ class Process extends ChangeNotifier {
 
   Future<String> get executable async => await _process.executable;
 
-  Future<String> get status async => await _process.status;
+  Future<ProcessStatus> get status async => await _process.status;
 
   Future<bool> toggle() async {
     bool successful = await _process.toggle();
@@ -28,7 +30,11 @@ class Process extends ChangeNotifier {
       case 'linux':
         _process = LinuxProcess(pid);
         break;
+      case 'windows':
+        _process = Win32Process(pid);
+        break;
       default:
+        break;
     }
   }
 }

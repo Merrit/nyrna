@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nyrna/config.dart';
-import 'package:nyrna/parse_args.dart';
+import 'package:nyrna/arguments/parse_args.dart';
 
 void main() {
   group(

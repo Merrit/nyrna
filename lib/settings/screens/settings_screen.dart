@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:nyrna/components/input_dialog.dart';
 import 'package:nyrna/nyrna.dart';
@@ -17,8 +19,27 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   Nyrna nyrna;
 
+  /// Check if Nyrna is running as Portable version.
+  bool isPortable = false;
+
   /// Adds a little space between sections.
   static const double sectionPadding = 50;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkPortable();
+  }
+
+  /// Check for `PORTABLE` file in the Nyrna directory, which should only be
+  /// present for the portable build on Linux.
+  Future<void> _checkPortable() async {
+    final portableFile = File('PORTABLE');
+    final _isPortable = await portableFile.exists();
+    if (_isPortable) {
+      setState(() => isPortable = _isPortable);
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -61,11 +82,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ],
               ),
-              SettingsSection(
-                title: 'System Integration',
-                titlePadding: EdgeInsets.only(top: sectionPadding),
-                tiles: systemIntegrationTiles(context),
-              ),
+              // Only show for Nyrna Portable on Linux.
+              if (Platform.isLinux && isPortable)
+                SettingsSection(
+                  title: 'System Integration',
+                  titlePadding: EdgeInsets.only(top: sectionPadding),
+                  tiles: systemIntegrationTiles(context),
+                ),
               SettingsSection(
                 title: 'About',
                 titlePadding: EdgeInsets.only(top: sectionPadding),

@@ -12,12 +12,20 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  Nyrna nyrna;
+
+  @override
+  void initState() {
+    super.initState();
+    nyrna = Nyrna.loading();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: FutureBuilder<bool>(
-          future: Nyrna.checkDependencies(),
+          future: nyrna.checkDependencies(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               bool dependenciesPresent = snapshot.data;
