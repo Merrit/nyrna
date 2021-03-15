@@ -3,5 +3,7 @@ main:
     url: /usage
   - title: "Download"
     url: /download
+  - title: "Donate"
+    url: https://merritt.codes/support
   - title: <input type="image" src="assets/images/logos/github.png" style="width:30px">
     url: https://github.com/Merrit/nyrna
