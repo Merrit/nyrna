@@ -32,29 +32,15 @@ AppDir:
     - sourceline: deb http://security.ubuntu.com/ubuntu focal-security multiverse
     include:
     - bash
-    - libgcrypt20
-    - liblz4-1
-    - liblzma5
-    - libpciaccess0
-    - libpcre3
-    - libwayland-server0
     - libgtk-3-0
-    - libblkid1
-    - libxau6
-    - libxcb-sync1
-    - libxdmcp6
-    - libxext6
-    - libxfixes3
-    - libxinerama1
-    - libxrender1
-    - libxshmfence1
-    - libxxf86vm1
-    - libzstd1
     - wmctrl
     - xdotool
+    - zsync
     exclude:
     - humanity-icon-theme
     - hicolor-icon-theme
+    - adwaita-icon-theme
+    - ubuntu-mono
   files:
     exclude:
     - usr/share/man
