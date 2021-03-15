@@ -21,7 +21,6 @@ jobs:
         uses: AppImageCrafters/build-appimage-action@master
         env:
           APP_VERSION: 2.0-beta.1
-          UPDATE_INFO: gh-releases-zsync|merrit|nyrna|latest|*x86_64.AppImage.zsync
         with:
           recipe: packaging/linux/appimage/AppImageBuilder.yml
       - uses: actions/upload-artifact@v2

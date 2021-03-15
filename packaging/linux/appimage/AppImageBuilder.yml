@@ -73,5 +73,5 @@ AppDir:
       use_host_x: true
 AppImage:
   arch: x86_64
-  update-information: guess
+  update-information: gh-releases-zsync|merrit|nyrna|latest|*x86_64.AppImage.zsync
   sign-key: None
