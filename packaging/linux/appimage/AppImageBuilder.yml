@@ -2,13 +2,13 @@
 version: 1
 script:
  - rm -rf AppDir || true
- - cp -r ../../../build/linux/release/bundle AppDir
- - mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps/
- - cp ../../../assets/icons/nyrna.png AppDir/usr/share/icons/hicolor/256x256/apps/
- - mkdir -p AppDir/usr/share/applications
- - cp ../nyrna.desktop AppDir/usr/share/applications/nyrna.desktop
+ - cp -r build/linux/release/bundle AppDir
+ - mkdir -p build/AppDir/usr/share/icons/hicolor/256x256/apps/
+ - cp assets/icons/nyrna.png build/AppDir/usr/share/icons/hicolor/256x256/apps/
+ - mkdir -p build/AppDir/usr/share/applications
+ - cp packaging/linux/nyrna.desktop build/AppDir/usr/share/applications/nyrna.desktop
 AppDir:
-  path: ./AppDir
+  path: ./build/AppDir
   app_info:
     id: nyrna
     name: Nyrna
