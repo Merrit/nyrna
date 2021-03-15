@@ -27,3 +27,6 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: AppImage
+          path: |
+            *.AppImage
+            *.zsync
