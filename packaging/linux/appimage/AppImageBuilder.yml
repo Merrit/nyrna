@@ -35,7 +35,6 @@ AppDir:
     - libgtk-3-0
     - wmctrl
     - xdotool
-    - zsync
     exclude:
     - humanity-icon-theme
     - hicolor-icon-theme
