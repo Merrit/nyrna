@@ -2,7 +2,7 @@
 version: 1
 script:
  - rm -rf AppDir || true
- - cp -r ../../../build/linux/x64/release/bundle AppDir
+ - cp -r ../../../build/linux/release/bundle AppDir
  - mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps/
  - cp ../../../assets/icons/nyrna.png AppDir/usr/share/icons/hicolor/256x256/apps/
  - mkdir -p AppDir/usr/share/applications
