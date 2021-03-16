@@ -8,7 +8,11 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: beta
-      - run: |
+      - name: Read VERSION file
+        id: getversion
+        run: echo "::set-output name=version::$(cat VERSION)"
+      - name: Build Nyrna portable
+        run: |
           $VER = [IO.FILE]::ReadAllText(".\VERSION")
           echo "VERSION=$VER" >> $GITHUB_ENV
 
@@ -23,5 +27,5 @@ jobs:
           xcopy C:\Windows\System32\vcruntime140_1.dll nyrna
       - uses: actions/upload-artifact@v2
         with:
-          name: nyrna-windows-portable-${{ env.VERSION }}
+          name: nyrna-windows-portable-${{ steps.getversion.outputs.version }}
           path: nyrna\
