@@ -5,7 +5,7 @@ set appName=Nyrna
 :: Remember to update the version number before packaging.
 setlocal
 :PROMPT
-SET /P AREYOUSURE=Did you update version in constants.dart, changelog, etc? (Y/[N])?
+SET /P AREYOUSURE=Did you update VERSION? (Y/[N])?
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO END
 
 
@@ -48,11 +48,23 @@ xcopy C:\Windows\System32\msvcp140.dll %outputDir%\%appName%
 xcopy C:\Windows\System32\vcruntime140.dll %outputDir%\%appName%
 xcopy C:\Windows\System32\vcruntime140_1.dll %outputDir%\%appName%
 
-echo Creating portable version archive..
-call powershell Compress-Archive %outputDir%\%appName% %outputDir%\%appName%-windows-portable.zip 
+
+echo.
+echo Copying VERSION into bundle
+echo.
+copy VERSION %outputDir%\%appName%\VERSION
 
 echo Creating installer version..
 call iscc %cd%\packaging\win32\inno_setup_script.iss
+
+echo.
+echo Creating PORTABLE file before packaging portable version
+echo.
+echo null > %outputDir%\%appName%\PORTABLE
+
+echo Creating portable version archive..
+call powershell Compress-Archive %outputDir%\%appName% %outputDir%\%appName%-windows-portable.zip 
+
 
 echo Finished building and packaging %appName%
 
