@@ -59,7 +59,8 @@ Example (Debian / Ubuntu):
   {{ requirements-text | markdownify }}
 </div>
 
-[Download Linux portable](https://github.com/Merrit/nyrna/releases/latest/download/nyrna.tar.gz){: .btn .btn--info}
+<!-- TODO: Figure out how to populate the version info for links automatically. -->
+[Download Linux portable](https://github.com/Merrit/nyrna/releases/download/v2.0-beta.1/nyrna-linux-portable-2.0-beta.1.zip){: .btn .btn--info}
 
 <br>
 
@@ -69,7 +70,7 @@ Windows
 
 ## Installer
 
-[Download Installer exe](){: .btn .btn--info}
+[Download Installer exe](https://github.com/Merrit/nyrna/releases/download/v2.0-beta.1/nyrna-windows-installer-2.0-beta.1.exe){: .btn .btn--info}
 
 
 ## winget
@@ -86,4 +87,4 @@ Windows
 
 ## Portable
 
-[Download Windows portable](){: .btn .btn--info}
+[Download Windows portable](https://github.com/Merrit/nyrna/releases/download/v2.0-beta.1/Nyrna-windows-portable-2.0-beta.1.zip){: .btn .btn--info}
