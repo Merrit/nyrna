@@ -32,7 +32,9 @@ AppDir:
     - sourceline: deb http://security.ubuntu.com/ubuntu focal-security multiverse
     include:
     - bash
+    - libblkid1
     - libgtk-3-0
+    - liblzma5
     - wmctrl
     - xdotool
     exclude:
