@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:nyrna/components/input_dialog.dart';
+import 'package:nyrna/globals.dart';
 import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/settings/components/system_integration_tiles.dart';
 import 'package:nyrna/settings/settings.dart';
@@ -96,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   SettingsTile(
                     leading: Icon(Icons.info_outline),
                     title: 'Nyrna version',
-                    subtitle: '2.0-alpha.1', // TODO: Automate this.
+                    subtitle: Globals.version,
                   ),
                   SettingsTile(
                     leading: Icon(Icons.launch),
