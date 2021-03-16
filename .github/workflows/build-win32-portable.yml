@@ -13,9 +13,6 @@ jobs:
         run: echo "::set-output name=version::$(cat VERSION)"
       - name: Build Nyrna portable
         run: |
-          $VER = [IO.FILE]::ReadAllText(".\VERSION")
-          echo "VERSION=$VER" >> $GITHUB_ENV
-
           flutter config --enable-windows-desktop
           flutter pub get
           flutter build windows
