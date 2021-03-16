@@ -1,0 +1,26 @@
+name: Build Linux portable version on release
+on: [release, workflow_dispatch]
+jobs:
+  build_and_preview:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          VER=$(cat VERSION)
+          echo "VERSION=$VER" >> $GITHUB_ENV
+      - run: sudo apt-get update -y
+      - run: sudo apt-get install -y ninja-build libgtk-3-dev libblkid-dev
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1.4.0
+        with:
+          channel: beta
+      - run: |
+          flutter config --enable-linux-desktop
+          flutter pub get
+          flutter build linux
+          mv build/linux/release/bundle nyrna
+          touch nyrna/PORTABLE
+          cp VERSION nyrna/VERSION
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nyrna-linux-portable-${{ env.VERSION }}
+          path: nyrna/
