@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:nyrna/config.dart';
+import 'package:nyrna/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Globally available settings instance.
@@ -10,6 +14,13 @@ class Settings {
   Future<void> initialize() async {
     if (prefs != null) return;
     prefs = await SharedPreferences.getInstance();
+    if (!Config.toggle) await _readVersion();
+  }
+
+  Future<void> _readVersion() async {
+    final file = File('VERSION');
+    final version = await file.readAsString();
+    Globals.version = version.trim();
   }
 
   bool get autoRefresh => prefs.getBool('autoRefresh') ?? true;
@@ -37,4 +48,7 @@ class Settings {
   Future<void> setSavedWindowId(int id) async {
     await prefs.setInt('savedWindowId', id);
   }
+
+  /// If user has ignored an update that version number is saved here.
+  String get ignoredUpdate => prefs.getString('ignoredUpdate');
 }
