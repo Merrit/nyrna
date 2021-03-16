@@ -9,8 +9,8 @@ jobs:
         with:
           channel: beta
       - run: |
-          set /p VER=<VERSION
-          echo "VERSION=%VER%" >> $GITHUB_ENV
+          $VER = [IO.FILE]::ReadAllText(".\VERSION")
+          echo "VERSION=$VER" >> $GITHUB_ENV
 
           flutter config --enable-windows-desktop
           flutter pub get
