@@ -15,11 +15,13 @@ toc_sticky: true
 Linux
 =====
 
+<!-- AppImage has a blank window; disabled until it is fixed.
 ## AppImage
 
 *Supports auto-update*
 
-[Download AppImage](){: .btn .btn--info}
+[Download AppImage](){: .btn .btn--info} -->
+
 
 <!-- Packages need to be updated for Nyrna 2.0
 ## Packages
@@ -71,11 +73,6 @@ Windows
 ## Installer
 
 [Download Installer exe](https://github.com/Merrit/nyrna/releases/download/v2.0-beta.1/nyrna-windows-installer-2.0-beta.1.exe){: .btn .btn--info}
-
-
-## winget
-
-*Add command*
 
 <!--                # Chocolatey needs updating for Nyrna 2.0
 ## Chocolatey
