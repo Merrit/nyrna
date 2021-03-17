@@ -21,7 +21,7 @@ jobs:
           flutter pub get
           flutter build linux
 
-          cp build/linux/release/bundle nyrna
+          cp -r build/linux/release/bundle nyrna
           touch nyrna/PORTABLE
           cp VERSION nyrna/VERSION
       - name: Build AppImage
