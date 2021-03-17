@@ -1,5 +1,5 @@
 name: Build AppImage on new release
-on: [release, workflow_dispatch]
+on: [push, release, workflow_dispatch]
 jobs:
   build-appimage:
     runs-on: ubuntu-latest
@@ -11,22 +11,30 @@ jobs:
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1.4.0
         with:
-          flutter-version: '2.0.0'
           channel: beta
       - name: Build Flutter app
         run: |
+          VER=$(cat VERSION)
+          echo "VERSION=$VER" >> $GITHUB_ENV
+
           flutter config --enable-linux-desktop
           flutter pub get
           flutter build linux
+
+          cp build/linux/release/bundle nyrna
+          touch nyrna/PORTABLE
+          cp VERSION nyrna/VERSION
       - name: Build AppImage
         uses: AppImageCrafters/build-appimage-action@master
         env:
-          APP_VERSION: 2.0-beta.1
+          APP_VERSION: ${{ env.VERSION }}
         with:
           recipe: packaging/linux/appimage/AppImageBuilder.yml
       - uses: actions/upload-artifact@v2
         with:
-          name: AppImage
+          name: Nyrna-AppImage-${{ env.VERSION }}
           path: |
             *.AppImage
             *.zsync
+            nyrna/
+            build/AppDir/
