@@ -39,6 +39,8 @@ Once the hotkey is set, simply press that key to have the window of your
 currently active application suspended. A subsequent press will resume that
 application.
 
+*Note: Not reliable if Nyrna is already running.*
+
 
 **Linux Example**
 
