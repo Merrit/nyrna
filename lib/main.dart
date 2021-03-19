@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 Future<void> main(List<String> args) async {
   // Parse command-line arguments.
-  parseArgs(args);
+  ArgumentParser(args);
 
   // Initialize the global settings instance in settings.dart
   // Needed early both because it runs syncronously and would block UI,
