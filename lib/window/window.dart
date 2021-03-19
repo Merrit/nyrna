@@ -4,7 +4,7 @@ class Window {
   Window({this.title, this.pid, this.id})
       : _windowControls = WindowControlsProvider.getNativeControls();
 
-  WindowControls _windowControls;
+  final WindowControls _windowControls;
 
   String title;
 

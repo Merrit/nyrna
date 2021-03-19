@@ -115,7 +115,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  _refreshInterval() async {
+  void _refreshInterval() async {
     var result = await showInputDialog(
       context: context,
       type: InputDialogs.onlyInt,

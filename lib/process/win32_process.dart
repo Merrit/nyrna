@@ -15,6 +15,7 @@ class Win32Process implements NativeProcess {
 
   String _executable;
 
+  @override
   Future<String> get executable async {
     if (_executable != null) return _executable;
     final processHandle =
@@ -47,6 +48,7 @@ class Win32Process implements NativeProcess {
   // NtQuerySystemInformation() was a consideration, however it is
   // complicated, at threat of being depreciated, and since it has to
   // enumerate every process likely not much better performance-wise anyway.
+  @override
   Future<ProcessStatus> get status async {
     final result = await Process.run(
       'powershell',
@@ -58,11 +60,11 @@ class Win32Process implements NativeProcess {
         '\$threads | select Id,ThreadState,WaitReason',
       ],
     );
-    if (result.stderr != "") return ProcessStatus.unknown;
+    if (result.stderr != '') return ProcessStatus.unknown;
     var threads = result.stdout.toString().trim().split('\n');
     // Strip out the column headers
     threads = threads.sublist(2);
-    List<bool> suspended = [];
+    final suspended = [];
     // Check each thread's status, track in [suspended] variable.
     threads.forEach((thread) {
       final threadWaitReason = thread.split(' ').last.trim();
@@ -76,6 +78,7 @@ class Win32Process implements NativeProcess {
         : ProcessStatus.suspended;
   }
 
+  @override
   Future<bool> toggle() async {
     final _status = await status;
     if (_status == ProcessStatus.unknown) return false;

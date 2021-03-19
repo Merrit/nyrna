@@ -11,8 +11,8 @@ void parseArgs(List<String> args) {
   );
 
   try {
-    ArgResults results = parser.parse(args);
-    bool toggle = results.wasParsed('toggle');
+    final results = parser.parse(args);
+    final toggle = results.wasParsed('toggle');
     if (toggle) Config.toggle = true;
   } catch (e) {
     print(e);

@@ -45,10 +45,10 @@ class LinuxProcess implements NativeProcess {
   @override
   Future<bool> toggle() async {
     var _status = await status;
-    ProcessSignal signal = (_status == ProcessStatus.normal)
+    final signal = (_status == ProcessStatus.normal)
         ? ProcessSignal.sigstop
         : ProcessSignal.sigcont;
-    bool successful = Process.killPid(pid, signal);
+    final successful = Process.killPid(pid, signal);
     return successful;
   }
 }

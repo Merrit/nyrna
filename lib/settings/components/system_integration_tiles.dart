@@ -6,7 +6,7 @@ import 'package:settings_ui/settings_ui.dart';
 
 // In the future this can contain settings for system tray, hotkey, etc.
 List<SettingsTile> systemIntegrationTiles(BuildContext context) {
-  List<SettingsTile> _tiles = [];
+  var _tiles = [];
   switch (Platform.operatingSystem) {
     case 'linux':
       _tiles = [
@@ -26,7 +26,7 @@ List<SettingsTile> systemIntegrationTiles(BuildContext context) {
   return _tiles;
 }
 
-_confirmAddToLauncher(BuildContext context) {
+void _confirmAddToLauncher(BuildContext context) {
   showDialog(
     context: context,
     builder: (context) {

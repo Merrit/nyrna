@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io' as DartIO;
+import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
 import 'package:nyrna/platform/native_platform.dart';
@@ -25,7 +25,7 @@ class Nyrna extends ChangeNotifier {
     }
   }
 
-  NativePlatform _nativePlatform;
+  final NativePlatform _nativePlatform;
 
   int _currentDesktop;
 
@@ -39,13 +39,13 @@ class Nyrna extends ChangeNotifier {
     notifyListeners();
   }
 
-  Map<String, Window> _windows = {};
+  final Map<String, Window> _windows = {};
 
   /// Map where keys are [pid] and values are [Window] objects.
   Map<String, Window> get windows => _windows;
 
   Future<void> fetchWindows() async {
-    Map<String, Window> newWindows = await _nativePlatform.windows;
+    final newWindows = await _nativePlatform.windows;
     // Remove if window no longer present, or title has changed.
     _windows.removeWhere((pid, window) {
       if (!newWindows.containsKey(pid) || // Window no longer present.
@@ -76,7 +76,7 @@ class Nyrna extends ChangeNotifier {
   /// Absolute path to Nyrna's executable.
   static String get executablePath {
     if (_executablePath != null) return _executablePath;
-    _executablePath = DartIO.Platform.resolvedExecutable;
+    _executablePath = io.Platform.resolvedExecutable;
     return _executablePath;
   }
 
@@ -95,7 +95,7 @@ class Nyrna extends ChangeNotifier {
   /// Absolute path to Nyrna's bundled icon asset.
   static String get iconPath {
     if (_iconPath != null) return _iconPath;
-    var _ending = (DartIO.Platform.isLinux) ? 'png' : 'ico';
+    var _ending = (io.Platform.isLinux) ? 'png' : 'ico';
     _iconPath = '${directory}data/flutter_assets/assets/icons/nyrna.$_ending';
     return _iconPath;
   }

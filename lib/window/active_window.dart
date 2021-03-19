@@ -15,9 +15,9 @@ class ActiveWindow {
       : _nativePlatform = NativePlatform(),
         _windowControls = WindowControlsProvider.getNativeControls();
 
-  NativePlatform _nativePlatform;
+  final NativePlatform _nativePlatform;
 
-  WindowControls _windowControls;
+  final WindowControls _windowControls;
 
   int nyrnaPid;
 

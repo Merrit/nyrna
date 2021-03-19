@@ -1,4 +1,4 @@
-import 'dart:io' as DartIO;
+import 'dart:io' as io;
 
 import 'package:flutter/material.dart';
 import 'package:nyrna/process/linux_process.dart';
@@ -20,13 +20,13 @@ class Process extends ChangeNotifier {
   Future<ProcessStatus> get status async => await _process.status;
 
   Future<bool> toggle() async {
-    bool successful = await _process.toggle();
+    final successful = await _process.toggle();
     notifyListeners();
     return successful;
   }
 
   void _fetchProcess() {
-    switch (DartIO.Platform.operatingSystem) {
+    switch (io.Platform.operatingSystem) {
       case 'linux':
         _process = LinuxProcess(pid);
         break;

@@ -10,8 +10,10 @@ import 'package:nyrna/window/window.dart';
 
 class Win32 implements NativePlatform {
   // Not available on Windows, so just return 0 always.
+  @override
   Future<int> get currentDesktop async => 0;
 
+  @override
   Future<Map<String, Window>> get windows async {
     WindowBuilder.windows.clear();
     final _callback = Pointer.fromFunction<EnumWindowsProc>(
@@ -34,14 +36,17 @@ class Win32 implements NativePlatform {
     return _windowPid;
   }
 
+  @override
   Future<int> get activeWindowPid async {
     final windowId = await activeWindowId;
     return getWindowPid(windowId);
   }
 
+  @override
   Future<int> get activeWindowId async => GetForegroundWindow();
 
   // No external dependencies for Win32.
+  @override
   Future<bool> checkDependencies() async => true;
 }
 

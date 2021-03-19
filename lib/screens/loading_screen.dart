@@ -28,7 +28,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           future: nyrna.checkDependencies(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              bool dependenciesPresent = snapshot.data;
+              final dependenciesPresent = snapshot.data;
               if (dependenciesPresent) {
                 // Slightly delay required so we don't push the main
                 // screen while the build method is still executing.

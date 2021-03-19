@@ -28,6 +28,7 @@ class WindowControlsProvider {
 
 ///
 class _LinuxWindowControls implements WindowControls {
+  @override
   Future<void> minimize(int id) async {
     await Process.run(
       'xdotool',
@@ -35,6 +36,7 @@ class _LinuxWindowControls implements WindowControls {
     );
   }
 
+  @override
   Future<void> restore(int id) async {
     await Process.run(
       'xdotool',
@@ -44,7 +46,9 @@ class _LinuxWindowControls implements WindowControls {
 }
 
 class _Win32WindowControls implements WindowControls {
+  @override
   Future<void> minimize(int id) async => ShowWindow(id, SW_FORCEMINIMIZE);
 
+  @override
   Future<void> restore(int id) async => ShowWindow(id, SW_RESTORE);
 }

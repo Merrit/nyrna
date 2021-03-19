@@ -55,7 +55,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
             padding: EdgeInsets.only(top: 40),
             itemCount: nyrna.windows.length,
             itemBuilder: (context, index) {
-              if (nyrna.windows.length == 0) return Container();
+              if (nyrna.windows.isEmpty) return Container();
               var keys = nyrna.windows.keys.toList();
               var window = nyrna.windows[keys[index]];
               return ChangeNotifierProvider(
@@ -101,10 +101,10 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
     final notifier = UpdateNotifier();
     final latestVersion = await notifier.latestVersion();
     const url = 'https://nyrna.merritt.codes/download';
-    String _message = 'An update for Nyrna is available!\n\n'
+    var _message = 'An update for Nyrna is available!\n\n'
         'Current version: ${Globals.version}\n'
         'Latest version: $latestVersion';
-    showDialog(
+    await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -142,8 +142,8 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
 
   FloatingActionButton _floatingActionButton() {
     return FloatingActionButton(
-      child: Icon(Icons.refresh),
       onPressed: () => nyrna.fetchData(),
+      child: Icon(Icons.refresh),
     );
   }
 }

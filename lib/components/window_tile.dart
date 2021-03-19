@@ -7,10 +7,12 @@ import 'package:nyrna/window/window.dart';
 import 'package:provider/provider.dart';
 
 class WindowTile extends StatefulWidget {
-  final Window window;
+  WindowTile({this.window, this.key});
+
+  @override
   final Key key;
 
-  WindowTile({this.window, this.key});
+  final Window window;
 
   @override
   _WindowTileState createState() => _WindowTileState();
@@ -82,11 +84,11 @@ class _WindowTileState extends State<WindowTile> {
     );
   }
 
-  _toggle() async {
+  void _toggle() async {
     var _status = await process.status;
     if (_status == ProcessStatus.suspended) {
       // Resume.
-      bool successful = await process.toggle();
+      final successful = await process.toggle();
       if (!successful) {
         // TODO: Notify of failure.
       }
@@ -99,7 +101,7 @@ class _WindowTileState extends State<WindowTile> {
       // Small delay on Windows to ensure the window actually minimizes.
       // Doesn't seem to be necessary on Linux.
       if (Platform.isWindows) await Future.delayed(Duration(milliseconds: 500));
-      bool successful = await process.toggle();
+      final successful = await process.toggle();
       if (!successful) {
         // TODO: Notify of failure.
       }
