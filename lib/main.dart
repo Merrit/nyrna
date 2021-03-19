@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/nyrna.dart';
-import 'package:nyrna/arguments/parse_args.dart';
+import 'package:nyrna/arguments/argument_parser.dart';
 import 'package:nyrna/screens/apps_screen.dart';
 import 'package:nyrna/screens/loading_screen.dart';
 import 'package:nyrna/settings/screens/settings_screen.dart';
