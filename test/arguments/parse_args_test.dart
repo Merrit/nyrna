@@ -11,14 +11,14 @@ void main() {
       test(
         'With no flags toggle is false',
         () {
-          parseArgs([]);
+          ArgumentParser([]);
           expect(Config.toggle, false);
         },
       );
       test(
         '--toggle sets Config.toggle to true',
         () {
-          parseArgs(['--toggle']);
+          ArgumentParser(['--toggle']);
           expect(Config.toggle, true);
         },
       );
@@ -26,7 +26,7 @@ void main() {
       test(
         '-t sets Config.toggle to true',
         () {
-          parseArgs(['-t']);
+          ArgumentParser(['-t']);
           expect(Config.toggle, true);
         },
       );
@@ -34,7 +34,7 @@ void main() {
       test(
         'With unknown flag Config.toggle returns false',
         () {
-          parseArgs(['--taco']);
+          ArgumentParser(['--taco']);
           expect(Config.toggle, false);
         },
       );
