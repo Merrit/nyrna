@@ -25,7 +25,7 @@ class Linux implements NativePlatform {
   @override
   Future<Map<String, Window>> get windows async {
     _desktop = await currentDesktop;
-    final windows = {};
+    final windows = <String, Window>{};
     var result = await Process.run('bash', ['-c', 'wmctrl -lp']);
     // Each line from wmctrl will be something like so:
     // 0x03600041  1 1459   SHODAN Inbox - Unified Folders - Mozilla Thunderbird
