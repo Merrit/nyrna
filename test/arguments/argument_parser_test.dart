@@ -53,14 +53,6 @@ void main() {
   );
 
   test(
-    'With unknown flag Config.toggle returns false',
-    () async {
-      final parser = ArgumentParser(['--taco']);
-      await parser.init();
-      expect(Config.toggle, false);
-    },
-  );
-  test(
     'With log and toggle flags log and toggle are true',
     () async {
       final parser = ArgumentParser(['-tl']);

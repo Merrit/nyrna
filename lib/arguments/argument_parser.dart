@@ -36,7 +36,12 @@ class ArgumentParser {
 
   Future<void> _parse() async {
     // Parse toggle flag.
-    final results = _parser.parse(args);
+    ArgResults results;
+    try {
+      results = _parser.parse(args);
+    } on ArgParserException catch (e) {
+      print('Unknown argument: $e');
+    }
     try {
       final toggle = results.wasParsed('toggle');
       if (toggle) Config.toggle = true;
