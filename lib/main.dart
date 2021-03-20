@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:nyrna/config.dart';
+import 'package:nyrna/logger/logger.dart';
 import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/arguments/argument_parser.dart';
 import 'package:nyrna/screens/apps_screen.dart';
@@ -14,7 +15,8 @@ import 'package:provider/provider.dart';
 
 Future<void> main(List<String> args) async {
   // Parse command-line arguments.
-  ArgumentParser(args);
+  final parser = ArgumentParser(args);
+  await parser.init();
 
   // Initialize the global settings instance in settings.dart
   // Needed early both because it runs syncronously and would block UI,
@@ -37,6 +39,8 @@ Future<void> _toggleActiveWindow() async {
   await activeWindow.hideNyrna();
   await activeWindow.initialize();
   await activeWindow.toggle();
+  final logger = Logger.instance;
+  await logger.flush('Finished toggle window, exiting..');
   exit(0);
 }
 

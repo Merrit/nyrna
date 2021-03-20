@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:nyrna/logger/logger.dart';
 import 'package:nyrna/platform/native_platform.dart';
 import 'package:nyrna/process/process.dart';
 import 'package:nyrna/process/process_status.dart';
@@ -68,6 +69,8 @@ class ActiveWindow {
   void _verifyPid() {
     if (pid == nyrnaPid) {
       print("Active window PID was Nyrna's own, this shouldn't happen...");
+      final logger = Logger.instance;
+      logger.flush('Active window was Nyrna');
       io.exit(1);
     }
   }
