@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/arguments/argument_parser.dart';
-import 'package:nyrna/logger/logger.dart';
 
 void main() {
   setUp(() {
