@@ -8,6 +8,7 @@
             "name": "Nyrna",
             "request": "launch",
             "type": "dart",
+            "program": "lib/main.dart"
         }
     ]
 }
