@@ -6,12 +6,15 @@ import 'package:nyrna/process/process_status.dart';
 import 'package:nyrna/window/window.dart';
 import 'package:provider/provider.dart';
 
+/// Represents a visible window on the desktop, running state and actions.
 class WindowTile extends StatefulWidget {
   WindowTile({this.window, this.key});
 
+  /// Key is overridden to ensure unique, non-double entries.
   @override
   final Key key;
 
+  /// The visible window.
   final Window window;
 
   @override
@@ -19,7 +22,10 @@ class WindowTile extends StatefulWidget {
 }
 
 class _WindowTileState extends State<WindowTile> {
+  /// The process associated with the window.
   Process process;
+
+  /// The visible window.
   Window window;
 
   @override
@@ -38,7 +44,7 @@ class _WindowTileState extends State<WindowTile> {
         leading: _statusWidget(),
         title: Text(window.title),
         subtitle: _executableNameWidget(),
-        contentPadding: EdgeInsets.symmetric(
+        contentPadding: const EdgeInsets.symmetric(
           vertical: 2,
           horizontal: 20,
         ),
@@ -47,13 +53,16 @@ class _WindowTileState extends State<WindowTile> {
     );
   }
 
+  /// Show the process' suspend status. Green = normal, orange = suspended.
   Widget _statusWidget() {
     return Consumer<Process>(
       builder: (context, process, widget) {
         return FutureBuilder(
           future: process.status,
           builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {}
+            if (snapshot.connectionState != ConnectionState.done) {
+              return Container();
+            }
             var _circleStatusColor = (snapshot.data == ProcessStatus.suspended)
                 ? Colors.orange[700]
                 : Colors.green;
@@ -79,32 +88,50 @@ class _WindowTileState extends State<WindowTile> {
         if (snapshot.hasData) {
           return Text(snapshot.data);
         }
-        return Text('');
+        return const Text('');
       },
     );
   }
 
-  void _toggle() async {
-    var _status = await process.status;
+  /// Toggle suspend / resume for the process associated with the given window.
+  Future<void> _toggle() async {
+    final _status = await process.status;
     if (_status == ProcessStatus.suspended) {
-      // Resume.
-      final successful = await process.toggle();
-      if (!successful) {
-        // TODO: Notify of failure.
-      }
-      // Restore the window _after_ resuming or it might not restore.
-      await window.restore();
+      await _resume();
     } else {
-      // Suspend.
-      // Minimize the window before suspending or it might not minimize.
-      await window.minimize();
-      // Small delay on Windows to ensure the window actually minimizes.
-      // Doesn't seem to be necessary on Linux.
-      if (Platform.isWindows) await Future.delayed(Duration(milliseconds: 500));
-      final successful = await process.toggle();
-      if (!successful) {
-        // TODO: Notify of failure.
-      }
+      await _suspend();
     }
   }
+
+  Future<void> _suspend() async {
+    // Minimize the window before suspending or it might not minimize.
+    await window.minimize();
+    // Small delay on Win32 to ensure the window actually minimizes.
+    // Doesn't seem to be necessary on Linux.
+    if (Platform.isWindows) await Future.delayed(Duration(milliseconds: 500));
+    final successful = await process.toggle();
+    if (!successful) await _showSnackError(_ToggleError.Suspend);
+  }
+
+  Future<void> _resume() async {
+    final successful = await process.toggle();
+    if (!successful) await _showSnackError(_ToggleError.Resume);
+    // Restore the window _after_ resuming or it might not restore.
+    await window.restore();
+  }
+
+  Future<void> _showSnackError(_ToggleError errorType) async {
+    final name = await process.executable;
+    final suspendMessage = 'There was a problem suspending $name';
+    final resumeMessage = 'There was a problem resuming $name';
+    final message =
+        (errorType == _ToggleError.Suspend) ? suspendMessage : resumeMessage;
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+}
+
+enum _ToggleError {
+  Suspend,
+  Resume,
 }
