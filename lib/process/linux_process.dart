@@ -13,7 +13,7 @@ class LinuxProcess implements NativeProcess {
   @override
   Future<String> get executable async {
     if (_executable != null) return _executable;
-    var result = await Process.run('readlink', ['/proc/$pid/exe']);
+    final result = await Process.run('readlink', ['/proc/$pid/exe']);
     _executable = result.stdout.toString().split('/').last.trim();
     return _executable;
   }
@@ -21,7 +21,7 @@ class LinuxProcess implements NativeProcess {
   @override
   Future<ProcessStatus> get status async {
     ProcessStatus _status;
-    var result = await Process.run('ps', ['-o', 's=', '-p', '$pid']);
+    final result = await Process.run('ps', ['-o', 's=', '-p', '$pid']);
     // For OSX you need to use `state=` in this command.
     switch (result.stdout.trim()) {
       case 'I':
