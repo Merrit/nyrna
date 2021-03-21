@@ -1,4 +1,6 @@
-// ignore_for_file: non_constant_identifier_names
+/// Win32 wrapper for dwmapi.dll API syscalls.
+///
+/// https://docs.microsoft.com/en-us/windows/win32/api/dwmapi/
 
 import 'dart:ffi';
 
