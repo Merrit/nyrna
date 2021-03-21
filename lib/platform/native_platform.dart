@@ -4,9 +4,11 @@ import 'package:nyrna/platform/linux.dart';
 import 'package:nyrna/platform/win32/win32.dart';
 import 'package:nyrna/window/window.dart';
 
+/// Interact with the native operating system.
 class NativePlatform {
   NativePlatform _platform;
 
+  /// Subtype depending on the running operating system.
   NativePlatform() {
     switch (Platform.operatingSystem) {
       case 'linux':
