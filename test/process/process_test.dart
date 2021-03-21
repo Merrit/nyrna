@@ -2,9 +2,6 @@ import 'dart:io' as io;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nyrna/process/process.dart';
-import 'package:nyrna/process/process_status.dart';
-
-// ignore_for_file: unused_local_variable
 
 void main() {
   var pid = io.pid; // The current process' pid.

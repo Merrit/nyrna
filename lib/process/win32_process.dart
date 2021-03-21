@@ -1,16 +1,16 @@
 import 'dart:ffi';
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:ffi/ffi.dart';
+import 'package:flutter/foundation.dart';
+import 'package:nyrna/process/process.dart';
 import 'package:win32/win32.dart';
 import 'package:win32_suspend_process/win32_suspend_process.dart' as w32proc;
 
-import 'package:nyrna/process/native_process.dart';
-import 'package:nyrna/process/process_status.dart';
-
-class Win32Process implements NativeProcess {
+class Win32Process with ChangeNotifier implements Process {
   Win32Process(this.pid);
 
+  @override
   final int pid;
 
   String _executable;
@@ -21,18 +21,19 @@ class Win32Process implements NativeProcess {
     final processHandle =
         OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
     // Pointer that will be populated with the full executable path.
-    var path = calloc<Uint16>(MAX_PATH).cast<Utf16>();
-    // If the function succeeds, the return value specifies
+    final path = calloc<Uint16>(MAX_PATH).cast<Utf16>();
+    // If the GetModuleFileNameEx function succeeds, the return value specifies
     // the length of the string copied to the buffer.
     // If the function fails, the return value is zero.
-    var result = GetModuleFileNameEx(processHandle, NULL, path, MAX_PATH);
+    final result = GetModuleFileNameEx(processHandle, NULL, path, MAX_PATH);
     if (result == 0) {
       print('Error getting executable name: ${GetLastError()}');
       return '';
     }
+    // Pull the value from the pointer.
     // Discard all of path except the executable name.
     _executable = path.toDartString().split('\\').last;
-    // Clean up memory.
+    // Free the pointer's memory.
     calloc.free(path);
     CloseHandle(processHandle);
     return _executable;
@@ -40,8 +41,8 @@ class Win32Process implements NativeProcess {
 
   // Get process suspended status from .NET calls through Powershell.
   //
-  // This feels hacky and slow, but win32 doesn't really provide a better
-  // method for doing this. There is discussion on GitHub about adding
+  // This feels hacky and slow, but the win32 API doesn't really provide a
+  // better method for doing this. There is discussion on GitHub about adding
   // support for C# to dart:ffi, if that comes to fruition
   // this can all be done through native calls to .NET instead.
   //
@@ -50,7 +51,7 @@ class Win32Process implements NativeProcess {
   // enumerate every process likely not much better performance-wise anyway.
   @override
   Future<ProcessStatus> get status async {
-    final result = await Process.run(
+    final result = await io.Process.run(
       'powershell',
       [
         '\$process=[System.Diagnostics.Process]::GetProcessById($pid)',
@@ -64,7 +65,7 @@ class Win32Process implements NativeProcess {
     var threads = result.stdout.toString().trim().split('\n');
     // Strip out the column headers
     threads = threads.sublist(2);
-    final suspended = [];
+    final suspended = <bool>[];
     // Check each thread's status, track in [suspended] variable.
     threads.forEach((thread) {
       final threadWaitReason = thread.split(' ').last.trim();
@@ -78,6 +79,7 @@ class Win32Process implements NativeProcess {
         : ProcessStatus.suspended;
   }
 
+  // Use the w32_suspend_process library to suspend & resume.
   @override
   Future<bool> toggle() async {
     final _status = await status;

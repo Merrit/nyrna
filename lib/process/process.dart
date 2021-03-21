@@ -1,40 +1,47 @@
 import 'dart:io' as io;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:nyrna/process/linux_process.dart';
-import 'package:nyrna/process/native_process.dart';
-import 'package:nyrna/process/process_status.dart';
 import 'package:nyrna/process/win32_process.dart';
 
-class Process extends ChangeNotifier {
-  Process(this.pid) {
-    _fetchProcess();
-  }
+/// Represents the running state of a process.
+enum ProcessStatus {
+  normal,
+  suspended,
+  unknown,
+}
 
-  final int pid;
-
-  NativeProcess _process;
-
-  Future<String> get executable async => await _process.executable;
-
-  Future<ProcessStatus> get status async => await _process.status;
-
-  Future<bool> toggle() async {
-    final successful = await _process.toggle();
-    notifyListeners();
-    return successful;
-  }
-
-  void _fetchProcess() {
+/// Represents a process including its metadata and controls.
+///
+/// Abstract class bridges types for specific operating systems.
+/// Used by [LinuxProcess] and [Win32Process].
+abstract class Process with ChangeNotifier {
+  // Return correct subtype depending on the current operating system.
+  factory Process(int pid) {
     switch (io.Platform.operatingSystem) {
       case 'linux':
-        _process = LinuxProcess(pid);
+        return LinuxProcess(pid);
         break;
       case 'windows':
-        _process = Win32Process(pid);
+        return Win32Process(pid);
         break;
       default:
-        break;
+        return null;
     }
   }
+
+  /// The Process ID (PID) of the given process.
+  final int pid;
+
+  /// Name of the executable, for example 'firefox' or 'firefox-bin'.
+  Future<String> get executable;
+
+  /// Status will be one of [ProcessStatus.normal],
+  /// [ProcessStatus.suspended] or [ProcessStatus.unknown].
+  Future<ProcessStatus> get status;
+
+  /// Toggle the suspend / resume state of the given process.
+  ///
+  /// Returns true for success or false for failure.
+  Future<bool> toggle();
 }

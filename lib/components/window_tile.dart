@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:nyrna/process/process.dart';
-import 'package:nyrna/process/process_status.dart';
 import 'package:nyrna/window/window.dart';
 import 'package:provider/provider.dart';
 

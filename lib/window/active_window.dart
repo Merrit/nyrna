@@ -3,7 +3,6 @@ import 'dart:io' as io;
 import 'package:nyrna/logger/logger.dart';
 import 'package:nyrna/platform/native_platform.dart';
 import 'package:nyrna/process/process.dart';
-import 'package:nyrna/process/process_status.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/window/window_controls.dart';
 import 'package:win32/win32.dart';
