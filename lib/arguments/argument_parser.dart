@@ -22,11 +22,16 @@ class ArgumentParser {
   }
 
   void _setFlags() {
+    // Toggle flag means Nyrna should toggle the suspend / resume state of the
+    // active application and then exit. Needed as a workaround since Flutter
+    // doesn't currently support a global hotkey. Not reliable if Nyrna is
+    // already running.
     _parser.addFlag(
       'toggle',
       abbr: 't',
       defaultsTo: false,
     );
+    // Log flag is to enable conditional use of the Logger() class for debug.
     _parser.addFlag(
       'log',
       abbr: 'l',
@@ -34,27 +39,32 @@ class ArgumentParser {
     );
   }
 
+  ArgResults _results;
+
   Future<void> _parse() async {
-    // Parse toggle flag.
-    ArgResults results;
+    _parseArgs();
+    _checkToggleFlag();
+    await _checkLogFlag();
+  }
+
+  /// Parse received arguments.
+  void _parseArgs() {
     try {
-      results = _parser.parse(args);
+      _results = _parser.parse(args);
     } on ArgParserException catch (e) {
       print('Unknown argument: $e');
     }
-    try {
-      final toggle = results.wasParsed('toggle');
-      if (toggle) Config.toggle = true;
-    } catch (e) {
-      print('Error parsing toggle flag: \n$e');
-    }
-    // Parse log flag.
-    bool logger;
-    try {
-      logger = results.wasParsed('log');
-    } catch (e) {
-      print('Error parsing logger flag: \n$e');
-    }
+  }
+
+  /// Check if `toggle` flag was received.
+  void _checkToggleFlag() {
+    final toggle = _results.wasParsed('toggle');
+    if (toggle) Config.toggle = true;
+  }
+
+  /// Check if `log` flag was received.
+  Future<void> _checkLogFlag() async {
+    final logger = _results.wasParsed('log');
     if (logger) {
       // Set environment variable.
       Config.log = true;
