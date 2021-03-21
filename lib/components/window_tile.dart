@@ -59,18 +59,14 @@ class _WindowTileState extends State<WindowTile> {
         return FutureBuilder(
           future: process.status,
           builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return Container();
-            }
-            var _circleStatusColor = (snapshot.data == ProcessStatus.suspended)
-                ? Colors.orange[700]
-                : Colors.green;
             return Container(
               height: 20,
               width: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _circleStatusColor,
+                color: (snapshot.data == ProcessStatus.suspended)
+                    ? Colors.orange[700]
+                    : Colors.green,
               ),
             );
           },
