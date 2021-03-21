@@ -3,11 +3,14 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:nyrna/platform/win32/dwmapi.dart';
 import 'package:nyrna/process/win32_process.dart';
-import 'package:win32/win32.dart';
 import 'package:nyrna/platform/win32/user32.dart';
 import 'package:nyrna/platform/native_platform.dart';
 import 'package:nyrna/window/window.dart';
+import 'package:win32/win32.dart';
 
+/// Interact with the native win32 operating system.
+///
+/// Requires many syscalls to the win32 API.
 class Win32 implements NativePlatform {
   // Not available on Windows, so just return 0 always.
   @override
@@ -27,11 +30,13 @@ class Win32 implements NativePlatform {
   /// Takes the window handle as an argument and returns the
   /// pid of the associated process.
   int getWindowPid(int windowId) {
-    // GetWindowThreadProcessId will assign the PID to this variable.
+    // GetWindowThreadProcessId will assign the PID to this pointer.
     final _pid = calloc<Uint32>();
-    // ignore: unused_local_variable
-    var threadPid = GetWindowThreadProcessId(windowId, _pid);
+    // Populate the `_pid` pointer.
+    GetWindowThreadProcessId(windowId, _pid);
+    // Extract value from the pointer.
     _windowPid = _pid.value;
+    // Free the pointer memory.
     calloc.free(_pid);
     return _windowPid;
   }
@@ -45,13 +50,14 @@ class Win32 implements NativePlatform {
   @override
   Future<int> get activeWindowId async => GetForegroundWindow();
 
-  // No external dependencies for Win32.
+  // No external dependencies for Win32, so always return true.
   @override
   Future<bool> checkDependencies() async => true;
 }
 
-// Bunch of static methods required because the win32 callback
-// is required to be static.
+// Static methods required because the win32 callback is required to be static.
+//
+/// Generates the list of visible windows on the user's desktop.
 class WindowBuilder {
   /// Callback for each window found by EnumWindows().
   static int enumWindowsCallback(int hWnd, int lParam) {
@@ -67,7 +73,7 @@ class WindowBuilder {
     // Populate pointer.
     GetWindowText(hWnd, buffer, length + 1);
     // Callback to build Window object with pointer value.
-    buildWindowMap(hWnd, buffer.toDartString());
+    _buildWindowMap(hWnd, buffer.toDartString());
     // Free pointer memory.
     calloc.free(buffer);
     return TRUE;
@@ -105,12 +111,11 @@ class WindowBuilder {
   static Map<String, Window> windows = {};
 
   /// Called during the callback for every window to map the data.
-  static Future<void> buildWindowMap(int windowId, String title) async {
-    // if (filterWindows.contains(title)) return;
-    var pid = Win32().getWindowPid(windowId);
-    var process = Win32Process(pid);
-    var executable = await process.executable;
-    if (!filterWindows.contains(executable)) {
+  static Future<void> _buildWindowMap(int windowId, String title) async {
+    final pid = Win32().getWindowPid(windowId);
+    final process = Win32Process(pid);
+    final executable = await process.executable;
+    if (!_filterWindows.contains(executable)) {
       windows[pid.toString()] = Window(
         title: title,
         id: windowId,
@@ -121,7 +126,7 @@ class WindowBuilder {
 }
 
 /// System-level executables. Nyrna shouldn't show these.
-List<String> filterWindows = [
+List<String> _filterWindows = [
   'ApplicationFrameHost.exe', // Manages UWP (Universal Windows Platform) apps
   'explorer.exe', // Windows File Explorer
   'perfmon.exe', // Resource Monitor
