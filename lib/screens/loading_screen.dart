@@ -30,7 +30,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             if (snapshot.hasData) {
               final dependenciesPresent = snapshot.data;
               if (dependenciesPresent) {
-                // Slightly delay required so we don't push the main
+                // Slight delay required so we don't push the main
                 // screen while the build method is still executing.
                 Future.microtask(() {
                   Navigator.pushReplacementNamed(context, RunningAppsScreen.id);
@@ -39,7 +39,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 return Card(
                   child: Container(
                     padding: const EdgeInsets.all(20.0),
-                    child: Text('''
+                    child: const Text('''
 Dependency check failed.
 
 Please make sure you have installed Nyrna's dependencies.
@@ -53,7 +53,7 @@ Please make sure you have installed Nyrna's dependencies.
               print('Error: ${snapshot.error}');
               return Text('Error: ${snapshot.error}');
             }
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           },
         ),
       ),
