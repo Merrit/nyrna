@@ -11,6 +11,9 @@ import 'package:nyrna/settings/update_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// The main screen for Nyrna.
+///
+/// Shows a ListView with tiles for each open window on the current desktop.
 class RunningAppsScreen extends StatefulWidget {
   static const id = 'running_apps_screen';
 
@@ -20,6 +23,8 @@ class RunningAppsScreen extends StatefulWidget {
 
 class _RunningAppsScreenState extends State<RunningAppsScreen> {
   Nyrna nyrna;
+
+  /// Whether or not a newer version of Nyrna is available.
   Future<bool> updateAvailable = UpdateNotifier().updateAvailable;
 
   @override
@@ -31,28 +36,12 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: (Platform.isLinux)
-            ? Consumer<Nyrna>(
-                builder: (context, nyrna, widget) {
-                  return Text('Current Desktop: ${nyrna.currentDesktop}');
-                },
-              )
-            : null,
-        centerTitle: true,
-        actions: [
-          _updateIcon(),
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () => Navigator.pushNamed(context, SettingsScreen.id),
-          ),
-        ],
-      ),
+      appBar: _appBar(context),
       body: Center(
         child: Container(
           width: MediaQuery.of(context).size.width / 1.20,
           child: ListView.builder(
-            padding: EdgeInsets.only(top: 40),
+            padding: const EdgeInsets.only(top: 40),
             itemCount: nyrna.windows.length,
             itemBuilder: (context, index) {
               if (nyrna.windows.isEmpty) return Container();
@@ -70,6 +59,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
           ),
         ),
       ),
+      // We don't show a manual refresh button with a short auto-refresh.
       floatingActionButton:
           ((settings.autoRefresh && settings.refreshInterval > 5) ||
                   !settings.autoRefresh)
@@ -78,6 +68,31 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
     );
   }
 
+  AppBar _appBar(BuildContext context) {
+    return AppBar(
+      // Display the current desktop index, only for Linux.
+      // For Win32 this would require wrapping something like
+      // GetWindowDesktopId() with FFI.
+      // https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ivirtualdesktopmanager-getwindowdesktopid
+      title: (Platform.isLinux)
+          ? Consumer<Nyrna>(
+              builder: (context, nyrna, widget) {
+                return Text('Current Desktop: ${nyrna.currentDesktop}');
+              },
+            )
+          : null,
+      centerTitle: true,
+      actions: [
+        _updateIcon(),
+        IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () => Navigator.pushNamed(context, SettingsScreen.id),
+        ),
+      ],
+    );
+  }
+
+  /// Show an icon if a newer version of Nyrna is available.
   FutureBuilder<bool> _updateIcon() {
     return FutureBuilder<bool>(
         future: updateAvailable,
@@ -97,6 +112,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
         });
   }
 
+  /// Inform user about new version of Nyrna, download link, etc.
   Future<void> _showUpdateDialog() async {
     final notifier = UpdateNotifier();
     final latestVersion = await notifier.latestVersion();
@@ -108,7 +124,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Update available'),
+          title: const Text('Update available'),
           content: Text(_message),
           actions: [
             TextButton(
@@ -119,7 +135,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
                         _message = 'Error launching browser.';
                       });
               },
-              child: Text('Open download page'),
+              child: const Text('Open download page'),
             ),
             TextButton(
               onPressed: () {
@@ -128,11 +144,11 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
                   Navigator.pushReplacementNamed(context, RunningAppsScreen.id);
                 });
               },
-              child: Text('Dismiss'),
+              child: const Text('Dismiss'),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -140,10 +156,11 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
     );
   }
 
+  /// FAB allows for manually refreshing the list of windows & their status.
   FloatingActionButton _floatingActionButton() {
     return FloatingActionButton(
       onPressed: () => nyrna.fetchData(),
-      child: Icon(Icons.refresh),
+      child: const Icon(Icons.refresh),
     );
   }
 }
