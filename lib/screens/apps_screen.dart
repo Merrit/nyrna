@@ -27,7 +27,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
   final _settings = Settings.instance;
 
   /// Whether or not a newer version of Nyrna is available.
-  Future<bool> updateAvailable = UpdateNotifier().updateAvailable;
+  Future<bool> updateAvailable = UpdateNotifier().updateAvailable();
 
   @override
   void didChangeDependencies() {

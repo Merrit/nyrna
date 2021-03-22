@@ -7,7 +7,7 @@ class UpdateNotifier {
   final _settings = Settings.instance;
 
   /// If update is available returns true.
-  Future<bool> get updateAvailable async {
+  Future<bool> updateAvailable() async {
     if (!_shouldCheck()) return false;
     final latest = await latestVersion();
     if (latest == '') return false;
