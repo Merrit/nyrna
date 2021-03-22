@@ -83,7 +83,6 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
               },
             )
           : null,
-      centerTitle: true,
       actions: [
         _updateIcon(),
         IconButton(
