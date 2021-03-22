@@ -4,11 +4,12 @@ import 'package:nyrna/config.dart';
 import 'package:nyrna/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Globally available settings instance.
-Settings settings;
-
 /// Manage all the app settings.
 class Settings {
+  // Settings is a singleton.
+  Settings._privateConstructor();
+  static final Settings instance = Settings._privateConstructor();
+
   SharedPreferences prefs;
 
   Future<void> initialize() async {

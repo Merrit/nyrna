@@ -4,18 +4,20 @@ import 'package:nyrna/settings/settings.dart';
 
 /// Check if updates to Nyrna are available.
 class UpdateNotifier {
+  final _settings = Settings.instance;
+
   /// If update is available returns true.
   Future<bool> get updateAvailable async {
     if (!_shouldCheck()) return false;
     final latest = await latestVersion();
     if (latest == '') return false;
-    if (settings.ignoredUpdate == latest) return false;
+    if (_settings.ignoredUpdate == latest) return false;
     return (Globals.version == latest) ? false : true;
   }
 
   /// Only check for update once a day.
   bool _shouldCheck() {
-    final savedCheck = settings.prefs.getString('checkedUpdate');
+    final savedCheck = _settings.prefs.getString('checkedUpdate');
     if (savedCheck == null) return true;
     final lastChecked = DateTime.tryParse(savedCheck);
     if (lastChecked == null) return true;
@@ -35,6 +37,6 @@ class UpdateNotifier {
 
   /// If user wishes to ignore this update, save to SharedPreferences.
   void ignoreVersion(String version) {
-    settings.prefs.setString('ignoredUpdate', version);
+    _settings.prefs.setString('ignoredUpdate', version);
   }
 }

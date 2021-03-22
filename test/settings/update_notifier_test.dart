@@ -4,13 +4,15 @@ import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/settings/update_notifier.dart';
 
 void main() {
+  Settings _settings;
+
   setUp(() async {
-    settings = Settings();
-    await settings.initialize();
+    _settings = Settings.instance;
+    await _settings.initialize();
   });
 
   tearDown(() {
-    settings = null;
+    _settings = null;
   });
 
   test('Current version being old returns true', () async {

@@ -21,7 +21,7 @@ Future<void> main(List<String> args) async {
   // Initialize the global settings instance in settings.dart
   // Needed early both because it runs syncronously and would block UI,
   // as well as because the toggle feature checks for a saved process.
-  settings = Settings();
+  final settings = Settings.instance;
   await settings.initialize();
 
   if (Config.toggle) {

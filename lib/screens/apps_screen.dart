@@ -24,6 +24,8 @@ class RunningAppsScreen extends StatefulWidget {
 class _RunningAppsScreenState extends State<RunningAppsScreen> {
   Nyrna nyrna;
 
+  final _settings = Settings.instance;
+
   /// Whether or not a newer version of Nyrna is available.
   Future<bool> updateAvailable = UpdateNotifier().updateAvailable;
 
@@ -61,8 +63,8 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
       ),
       // We don't show a manual refresh button with a short auto-refresh.
       floatingActionButton:
-          ((settings.autoRefresh && settings.refreshInterval > 5) ||
-                  !settings.autoRefresh)
+          ((_settings.autoRefresh && _settings.refreshInterval > 5) ||
+                  !_settings.autoRefresh)
               ? _floatingActionButton()
               : null,
     );

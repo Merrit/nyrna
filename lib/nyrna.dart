@@ -12,14 +12,16 @@ class Nyrna extends ChangeNotifier {
     setRefresh();
   }
 
+  final _settings = Settings.instance;
+
   Timer _timer;
 
   void setRefresh() {
     fetchData();
     if (_timer != null) _timer.cancel();
-    if (settings.autoRefresh) {
+    if (_settings.autoRefresh) {
       _timer = Timer.periodic(
-        Duration(seconds: settings.refreshInterval),
+        Duration(seconds: _settings.refreshInterval),
         (timer) => fetchData(),
       );
     }

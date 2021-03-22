@@ -25,6 +25,8 @@ class ActiveWindow {
 
   int id;
 
+  final _settings = Settings.instance;
+
   /// Hide the Nyrna window.
   ///
   /// Necessary when using the toggle active window feature,
@@ -76,7 +78,7 @@ class ActiveWindow {
 
   /// Toggle the suspend / resume state of the given process.
   Future<void> toggle() async {
-    if (settings.savedProcess != 0) {
+    if (_settings.savedProcess != 0) {
       await _resume();
     } else {
       await _suspend();
@@ -84,14 +86,14 @@ class ActiveWindow {
   }
 
   Future<void> _resume() async {
-    pid = settings.savedProcess;
-    id = settings.savedWindowId;
+    pid = _settings.savedProcess;
+    id = _settings.savedWindowId;
     var process = Process(pid);
     var _status = await process.status;
     if (_status == ProcessStatus.suspended) {
       await process.toggle();
-      await settings.setSavedProcess(0);
-      await settings.setSavedWindowId(0);
+      await _settings.setSavedProcess(0);
+      await _settings.setSavedWindowId(0);
     }
     await _windowControls.restore(id);
   }
@@ -105,8 +107,8 @@ class ActiveWindow {
       await Future.delayed(Duration(milliseconds: 500));
     }
     var successful = await process.toggle();
-    await settings.setSavedProcess(pid);
-    await settings.setSavedWindowId(id);
+    await _settings.setSavedProcess(pid);
+    await _settings.setSavedWindowId(id);
     if (!successful) {
       // TODO: Notify user of failure.
     }
