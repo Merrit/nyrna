@@ -52,4 +52,11 @@ class Settings {
 
   /// If user has ignored an update that version number is saved here.
   String get ignoredUpdate => prefs.getString('ignoredUpdate');
+
+  /// Check for `PORTABLE` file in the Nyrna directory, which should only be
+  /// present for the portable build on Linux.
+  Future<bool> isPortable() async {
+    final file = File('PORTABLE');
+    return await file.exists();
+  }
 }
