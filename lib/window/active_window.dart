@@ -9,19 +9,26 @@ import 'package:win32/win32.dart';
 
 /// Represents the active, foreground window on the system.
 ///
-/// initialize() must be called before anything else.
+/// Initialize() must be called before anything else.
 class ActiveWindow {
   final _nativePlatform = NativePlatform();
 
   final _windowControls = WindowControls();
 
-  int nyrnaPid;
+  final _settings = Settings.instance;
 
-  int pid;
+  /// Nyrna's own PID.
+  final int nyrnaPid = io.pid;
 
   int id;
 
-  final _settings = Settings.instance;
+  int pid;
+
+  Future<void> initialize() async {
+    pid = await _nativePlatform.activeWindowPid;
+    _verifyPid();
+    id = await _nativePlatform.activeWindowId;
+  }
 
   /// Hide the Nyrna window.
   ///
@@ -40,6 +47,7 @@ class ActiveWindow {
     }
   }
 
+  /// Hide own window using `xdotool`.
   Future<void> _hideLinux() async {
     await io.Process.run(
       'xdotool',
@@ -47,6 +55,7 @@ class ActiveWindow {
     );
   }
 
+  /// Hide own window using the win32 API.
   Future<void> _hideWindows() async {
     var id = GetForegroundWindow();
     // We would prefer SW_HIDE, however that leaves Nyrna still
@@ -54,15 +63,8 @@ class ActiveWindow {
     ShowWindow(id, SW_FORCEMINIMIZE);
   }
 
-  Future<void> initialize() async {
-    nyrnaPid = io.pid;
-    pid = await _nativePlatform.activeWindowPid;
-    _verifyPid();
-    id = await _nativePlatform.activeWindowId;
-  }
-
   // This _could_ happen because we have to hide Nyrna's window instead of
-  // just not running the GUI for now. Sanity check here.
+  // just not running the GUI for now. Sanity check: don't suspend self.
   void _verifyPid() {
     if (pid == nyrnaPid) {
       print("Active window PID was Nyrna's own, this shouldn't happen...");
@@ -84,8 +86,8 @@ class ActiveWindow {
   Future<void> _resume() async {
     pid = _settings.savedProcess;
     id = _settings.savedWindowId;
-    var process = Process(pid);
-    var _status = await process.status;
+    final process = Process(pid);
+    final _status = await process.status;
     if (_status == ProcessStatus.suspended) {
       await process.toggle();
       await _settings.setSavedProcess(0);
@@ -95,14 +97,14 @@ class ActiveWindow {
   }
 
   Future<void> _suspend() async {
-    var process = Process(pid);
+    final process = Process(pid);
     await _windowControls.minimize(id);
     // Small delay on Windows to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
     if (io.Platform.isWindows) {
       await Future.delayed(Duration(milliseconds: 500));
     }
-    var successful = await process.toggle();
+    final successful = await process.toggle();
     await _settings.setSavedProcess(pid);
     await _settings.setSavedWindowId(id);
     if (!successful) {
