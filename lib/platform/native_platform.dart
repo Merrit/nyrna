@@ -5,36 +5,38 @@ import 'package:nyrna/platform/win32/win32.dart';
 import 'package:nyrna/window/window.dart';
 
 /// Interact with the native operating system.
-class NativePlatform {
-  NativePlatform _platform;
-
-  /// Subtype depending on the running operating system.
-  NativePlatform() {
+///
+/// Abstract class bridges types for specific operating systems.
+/// Used by [Linux] and [Win32].
+abstract class NativePlatform {
+  // Return correct subtype depending on the current operating system.
+  factory NativePlatform() {
     switch (Platform.operatingSystem) {
       case 'linux':
-        _platform = Linux();
+        return Linux();
         break;
       case 'windows':
-        _platform = Win32();
+        return Win32();
         break;
       default:
+        return null;
         break;
     }
   }
 
   /// Returns the index of the currently active virtual desktop.
-  Future<int> get currentDesktop async => await _platform.currentDesktop;
+  Future<int> get currentDesktop;
 
   /// Returns a Map where the keys are the `pid` and the values are [Window]
   /// objects, based on the reported open application windows.
-  Future<Map<String, Window>> get windows async => await _platform.windows;
+  Future<Map<String, Window>> get windows;
 
   /// Returns the pid associated with the active window.
-  Future<int> get activeWindowPid => _platform.activeWindowPid;
+  Future<int> get activeWindowPid;
 
   /// Returns the unique hex id for the active window.
-  Future<int> get activeWindowId => _platform.activeWindowId;
+  Future<int> get activeWindowId;
 
   /// Verify dependencies are present on the system.
-  Future<bool> checkDependencies() async => await _platform.checkDependencies();
+  Future<bool> checkDependencies();
 }
