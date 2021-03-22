@@ -1,10 +1,9 @@
 import 'package:nyrna/window/window_controls.dart';
 
 class Window {
-  Window({this.title, this.pid, this.id})
-      : _windowControls = WindowControlsProvider.getNativeControls();
+  Window({this.title, this.pid, this.id});
 
-  final WindowControls _windowControls;
+  final _windowControls = WindowControls();
 
   String title;
 

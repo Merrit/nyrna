@@ -2,31 +2,29 @@ import 'dart:io';
 
 import 'package:win32/win32.dart';
 
-///
+/// Provides window actions like [minimize] & [restore].
 abstract class WindowControls {
+  factory WindowControls() {
+    switch (Platform.operatingSystem) {
+      case 'linux':
+        return _LinuxWindowControls();
+        break;
+      case 'windows':
+        return _Win32WindowControls();
+      default:
+        return null;
+        break;
+    }
+  }
+
+  /// Minimize the window associated with the given [id].
   Future<void> minimize(int id);
 
+  /// Restore (un-minimize) the window associated with the given [id].
   Future<void> restore(int id);
 }
 
-class WindowControlsProvider {
-  static WindowControls getNativeControls() {
-    WindowControls _controls;
-    switch (Platform.operatingSystem) {
-      case 'linux':
-        _controls = _LinuxWindowControls();
-        break;
-      case 'windows':
-        _controls = _Win32WindowControls();
-        break;
-      default:
-        break;
-    }
-    return _controls;
-  }
-}
-
-///
+/// Linux specific window controls using `xdotool`.
 class _LinuxWindowControls implements WindowControls {
   @override
   Future<void> minimize(int id) async {
@@ -45,6 +43,7 @@ class _LinuxWindowControls implements WindowControls {
   }
 }
 
+/// Win32 specific window controls using the win32 API.
 class _Win32WindowControls implements WindowControls {
   @override
   Future<void> minimize(int id) async => ShowWindow(id, SW_FORCEMINIMIZE);

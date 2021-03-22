@@ -11,13 +11,9 @@ import 'package:win32/win32.dart';
 ///
 /// initialize() must be called before anything else.
 class ActiveWindow {
-  ActiveWindow()
-      : _nativePlatform = NativePlatform(),
-        _windowControls = WindowControlsProvider.getNativeControls();
+  final _nativePlatform = NativePlatform();
 
-  final NativePlatform _nativePlatform;
-
-  final WindowControls _windowControls;
+  final _windowControls = WindowControls();
 
   int nyrnaPid;
 
