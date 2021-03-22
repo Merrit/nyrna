@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:nyrna/globals.dart';
 import 'package:nyrna/nyrna.dart';
 
 /// Manage launcher entry.
