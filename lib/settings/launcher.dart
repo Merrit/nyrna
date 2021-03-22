@@ -8,6 +8,8 @@ import 'package:nyrna/nyrna.dart';
 ///
 /// Enables system integration for Nyrna to provide a shortcut in the user's
 /// launcher / start menu with Nyrna's associated icon.
+///
+/// Currently only for the portable version on Linux.
 class Launcher {
   /// Add a launcher entry for Nyrna with icon.
   static Future<void> add(BuildContext context) async {
@@ -75,10 +77,9 @@ class _LinuxLauncher {
 
 final String _desktopFileContent = '''
 [Desktop Entry]
-Version=${Globals.version}
 Type=Application
 Name=Nyrna
-Comment=Simple program to suspend games & applications
+Comment=Suspend games & applications
 Exec=${Nyrna.executablePath}
 Icon=nyrna
 Terminal=false
