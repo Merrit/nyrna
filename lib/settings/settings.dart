@@ -4,32 +4,37 @@ import 'package:nyrna/config.dart';
 import 'package:nyrna/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Manage all the app settings.
+/// Manages settings & preferences.
 class Settings {
   // Settings is a singleton.
   Settings._privateConstructor();
   static final Settings instance = Settings._privateConstructor();
 
+  /// Instance of SharedPreferences for getting and setting preferences.
   SharedPreferences prefs;
 
+  /// Initialize should only need to be called once, in main().
   Future<void> initialize() async {
     if (prefs != null) return;
     prefs = await SharedPreferences.getInstance();
-    if (!Config.toggle) await _readVersion();
+    if (!Config.toggle) await _readVersion(); // Not needed for toggle func.
   }
 
+  /// Read Nyrna's version info from the `VERSION` file.
   Future<void> _readVersion() async {
     final file = File('VERSION');
     final version = await file.readAsString();
     Globals.version = version.trim();
   }
 
+  /// Whether or not to automatically refresh the list of open windows.
   bool get autoRefresh => prefs.getBool('autoRefresh') ?? true;
 
   set autoRefresh(bool shouldRefresh) {
     prefs.setBool('autoRefresh', shouldRefresh);
   }
 
+  /// How often to automatically refresh the list of open windows, in seconds.
   int get refreshInterval => prefs.getInt('refreshInterval') ?? 5;
 
   set refreshInterval(int interval) {
@@ -38,12 +43,16 @@ class Settings {
     }
   }
 
+  /// The PID of the process Nyrna suspended via [ActiveWindow.toggle()].
+  ///
+  /// Returns 0 if Nyrna hasn't suspended anything in this fashion.
   int get savedProcess => prefs.getInt('savedProcess') ?? 0;
 
   Future<void> setSavedProcess(int pid) async {
     await prefs.setInt('savedProcess', pid);
   }
 
+  /// The unique hex ID of the window suspended via [ActiveWindow.toggle()].
   int get savedWindowId => prefs.getInt('savedWindowId');
 
   Future<void> setSavedWindowId(int id) async {
