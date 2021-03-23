@@ -3,19 +3,18 @@ import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
 import 'package:nyrna/platform/native_platform.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/window/window.dart';
 
+/// Represents Nyrna, its state, and interactions.
 class Nyrna extends ChangeNotifier {
-  Nyrna() : _nativePlatform = NativePlatform() {
+  Nyrna() {
     setRefresh();
   }
 
-  final _settings = Settings.instance;
-
   Timer _timer;
 
+  /// The time which auto-refreshes the list of open windows.
   void setRefresh() {
     fetchData();
     if (_timer != null) _timer.cancel();
@@ -27,15 +26,18 @@ class Nyrna extends ChangeNotifier {
     }
   }
 
-  final NativePlatform _nativePlatform;
+  final _nativePlatform = NativePlatform();
+
+  final _settings = Settings.instance;
 
   int _currentDesktop;
 
   /// Returns the index of the currently active virtual desktop.
   ///
-  /// The left-most / first desktop starts at 0.
+  /// The left-most / first desktop starts at index 0.
   int get currentDesktop => _currentDesktop;
 
+  /// Check which virtual desktop is active.
   Future<void> fetchDesktop() async {
     _currentDesktop = await _nativePlatform.currentDesktop;
     notifyListeners();
@@ -43,9 +45,10 @@ class Nyrna extends ChangeNotifier {
 
   final Map<String, Window> _windows = {};
 
-  /// Map where keys are [pid] and values are [Window] objects.
+  /// [Map] where keys are [pid] and values are [Window] objects.
   Map<String, Window> get windows => _windows;
 
+  /// Check for which windows are open.
   Future<void> fetchWindows() async {
     final newWindows = await _nativePlatform.windows;
     // Remove if window no longer present, or title has changed.
@@ -58,8 +61,8 @@ class Nyrna extends ChangeNotifier {
         return false;
       }
     });
-    // Filter out own window.
-    newWindows.removeWhere((pid, window) => window.title == 'Nyrna');
+    // Filter out Nyrna's own window / process.
+    newWindows.removeWhere((pid, window) => pid == io.pid.toString());
     // Add new windows (and those whose title changed).
     newWindows.forEach((pid, window) {
       if (!_windows.containsKey(pid)) _windows[pid] = window;
@@ -67,6 +70,7 @@ class Nyrna extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Fetch fresh data.
   void fetchData() {
     fetchDesktop();
     fetchWindows();
@@ -87,7 +91,7 @@ class Nyrna extends ChangeNotifier {
   /// Absolute path to Nyrna's install directory.
   static String get directory {
     if (_nyrnaDir != null) return _nyrnaDir;
-    var nyrnaPath = executablePath.substring(0, (executablePath.length - 5));
+    final nyrnaPath = executablePath.substring(0, (executablePath.length - 5));
     _nyrnaDir = nyrnaPath;
     return nyrnaPath;
   }
@@ -97,22 +101,15 @@ class Nyrna extends ChangeNotifier {
   /// Absolute path to Nyrna's bundled icon asset.
   static String get iconPath {
     if (_iconPath != null) return _iconPath;
-    var _ending = (io.Platform.isLinux) ? 'png' : 'ico';
+    final _ending = (io.Platform.isLinux) ? 'png' : 'ico';
     _iconPath = '${directory}data/flutter_assets/assets/icons/nyrna.$_ending';
     return _iconPath;
   }
 
-  static String _tempDir;
-
-  /// Absolute path to the operating system's temp directory.
-  static Future<String> get tempDirectory async {
-    if (_tempDir != null) return _tempDir;
-    final directory = await getTemporaryDirectory();
-    _tempDir = directory.path;
-    return _tempDir;
-  }
-
-  Nyrna.loading() : _nativePlatform = NativePlatform();
+  /// Instantiate the Nyrna class without a timer.
+  ///
+  /// Used by [Loading] when checking dependencies at startup.
+  Nyrna.loading();
 
   /// Verify Nyrna's dependencies are available on the system.
   Future<bool> checkDependencies() async {

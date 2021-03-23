@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:nyrna/globals.dart';
 import 'package:nyrna/nyrna.dart';
 
 /// Manage launcher entry.
@@ -59,7 +60,7 @@ class _LinuxLauncher {
   /// https://portland.freedesktop.org/xdg-utils-1.1.0-rc1/scripts/html/xdg-desktop-menu.html
   static Future<void> _addDesktopFile() async {
     // Write .desktop file to disk in the temp directory.
-    final tempDir = await Nyrna.tempDirectory;
+    final tempDir = await Globals.tempPath;
     final desktopFile = File('$tempDir/nyrna.desktop');
     await desktopFile.writeAsString(_desktopFileContent);
     // Install to xdg location.
