@@ -14,36 +14,48 @@ import 'package:nyrna/window/active_window.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main(List<String> args) async {
-  // Parse command-line arguments.
-  final parser = ArgumentParser(args);
-  await parser.init();
+  await parseArgs(args);
+  await initSettings();
 
-  // Initialize the global settings instance in settings.dart
-  // Needed early both because it runs syncronously and would block UI,
-  // as well as because the toggle feature checks for a saved process.
-  final settings = Settings.instance;
-  await settings.initialize();
+  // `-t` or `--toggle` flag detected.
+  if (Config.toggle) await toggleActiveWindow();
 
-  if (Config.toggle) {
-    // `-t` or `--toggle` flag detected.
-    await _toggleActiveWindow();
-  } else {
-    // Run main GUI interface.
-    runApp(MyApp());
-  }
+  // Run main GUI interface.
+  runApp(MyApp());
 }
 
-/// Not yet possible to run without GUI, so we just exit after toggling.
-Future<void> _toggleActiveWindow() async {
-  var activeWindow = ActiveWindow();
+/// Parse command-line arguments.
+Future<void> parseArgs(List<String> args) async {
+  final parser = ArgumentParser(args);
+  await parser.init();
+}
+
+/// Initialize the singleton Settings instance in settings.dart
+///
+/// Needed early both because it runs syncronously and would block UI,
+/// as well as because the toggle feature checks for a saved process.
+Future<void> initSettings() async {
+  final settings = Settings.instance;
+  await settings.initialize();
+}
+
+/// Toggle suspend / resume for the active, foreground window.
+Future<void> toggleActiveWindow() async {
+  Logger logger;
+  if (Config.log) {
+    logger = Logger.instance;
+    await logger.init();
+  }
+  final activeWindow = ActiveWindow();
   await activeWindow.hideNyrna();
   await activeWindow.initialize();
   await activeWindow.toggle();
-  final logger = Logger.instance;
-  await logger.flush('Finished toggle window, exiting..');
+  if (Config.log) await logger.flush('Finished toggle window, exiting..');
+  // Not yet possible to run without GUI, so we just exit after toggling.
   exit(0);
 }
 
+/// The entrance to the main Nyrna app.
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
