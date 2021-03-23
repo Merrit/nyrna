@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Nyrna's theme configuration.
 class NyrnaTheme {
   static final dark = ThemeData(
     accentColor: Colors.lightBlueAccent,
