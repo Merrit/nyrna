@@ -13,12 +13,12 @@ Description:
   consoles like the Nintendo Switch and Sony PlayStation; suspend
   your game (and its resource usage) at any time, and resume
   whenever you wish - at the push of a button.
-Homepage: https://github.com/Merrit/nyrna
+Homepage: https://nyrna.merritt.codes
 Tags: game, games, suspend, pause, sleep, hibernate
 ProductCode: "{38E9E039-D0B7-4ED0-98A5-4ECBD3E24222}"
 InstallerType: inno
 Installers:
   - Arch: x64
-    Url: string # path to download installation file of the specified version
-    Sha256: string # SHA256 calculated from installer
+    Url: https://github.com/Merrit/nyrna/releases/download/v2.0-beta.1/nyrna-windows-installer-2.0-beta.1.exe
+    Sha256: f3c2d5b6d868660798f03cb1a713d4f52197657aaa318609493692174a33b75f
 ManifestVersion: 0.1.0
