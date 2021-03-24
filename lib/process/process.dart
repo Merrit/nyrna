@@ -44,4 +44,9 @@ abstract class Process with ChangeNotifier {
   ///
   /// Returns true for success or false for failure.
   Future<bool> toggle();
+
+  /// Whether or not a process with the given pid currently exists.
+  ///
+  /// ActiveWindow uses this to check a saved pid is still around.
+  Future<bool> exists();
 }

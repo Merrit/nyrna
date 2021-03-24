@@ -93,4 +93,11 @@ class Win32Process with ChangeNotifier implements Process {
     }
     return _success;
   }
+
+  // If the pid doesn't exist this won't be able to return the exe name.
+  @override
+  Future<bool> exists() async {
+    final name = await executable;
+    return (name == '') ? false : true;
+  }
 }

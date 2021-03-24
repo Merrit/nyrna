@@ -54,4 +54,14 @@ class LinuxProcess with ChangeNotifier implements Process {
     notifyListeners();
     return successful;
   }
+
+  @override
+  Future<bool> exists() async {
+    final result = await io.Process.run(
+      'ps',
+      ['-q', '$pid', '-o', 'pid='],
+    );
+    final checkedPid = int.tryParse(result.stdout.toString().trim());
+    return (checkedPid == pid) ? true : false;
+  }
 }
