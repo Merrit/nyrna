@@ -2,8 +2,7 @@
 # Building manually for the moment. ( ˘︹˘ )
 
 name: Build Win32 portable version on release
-# on: [release, workflow_dispatch]
-on: [workflow_dispatch]
+on: [release, workflow_dispatch]
 jobs:
   build_and_preview:
     runs-on: windows-latest
