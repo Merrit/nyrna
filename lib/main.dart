@@ -45,12 +45,21 @@ Future<void> toggleActiveWindow() async {
   if (Config.log) {
     logger = Logger.instance;
     await logger.init();
+    await logger.log('===== Started toggle active window function =====\n');
   }
   final activeWindow = ActiveWindow();
   await activeWindow.hideNyrna();
   await activeWindow.initialize();
-  await activeWindow.toggle();
-  if (Config.log) await logger.flush('Finished toggle window, exiting..');
+  final successful = await activeWindow.toggle();
+  if (!successful) {
+    await activeWindow.removeSavedProcess();
+    if (Config.log) {
+      await logger.log('Failed to toggle active window. Cleared saved pid.');
+    }
+  }
+  if (Config.log) {
+    await logger.flush('Finished toggle window, exiting..\n\n');
+  }
   // Not yet possible to run without GUI, so we just exit after toggling.
   exit(0);
 }

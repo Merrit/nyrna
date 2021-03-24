@@ -15,6 +15,8 @@ class ActiveWindow {
 
   final _windowControls = WindowControls();
 
+  final _logger = Logger.instance;
+
   final _settings = Settings.instance;
 
   /// Nyrna's own PID.
@@ -26,7 +28,7 @@ class ActiveWindow {
 
   Future<void> initialize() async {
     pid = await _nativePlatform.activeWindowPid;
-    _verifyPid();
+    await _verifyPid();
     id = await _nativePlatform.activeWindowId;
   }
 
@@ -51,7 +53,7 @@ class ActiveWindow {
   Future<void> _hideLinux() async {
     await io.Process.run(
       'xdotool',
-      ['getactivewindow', 'windowunmap', '--sync'],
+      ['getactivewindow', 'windowminimize', '--sync'],
     );
   }
 
@@ -63,40 +65,70 @@ class ActiveWindow {
     ShowWindow(id, SW_FORCEMINIMIZE);
   }
 
-  // This _could_ happen because we have to hide Nyrna's window instead of
-  // just not running the GUI for now. Sanity check: don't suspend self.
-  void _verifyPid() {
+  Future<void> _verifyPid() async {
+    // Verify active window wasn't Nyrna.
+    // This _could_ happen because we have to hide Nyrna's window instead of
+    // just not running the GUI for now. Sanity check: don't suspend self.
     if (pid == nyrnaPid) {
       print("Active window PID was Nyrna's own, this shouldn't happen...");
-      final logger = Logger.instance;
-      logger.flush('Active window was Nyrna');
+      await _logger.flush('Active window was Nyrna');
       io.exit(1);
+    }
+    if (_settings.savedProcess != 0) await _checkStillExists();
+  }
+
+  /// Check that saved process still exists.
+  Future<void> _checkStillExists() async {
+    final savedPid = _settings.savedProcess;
+    final savedProcess = Process(savedPid);
+    final exists = await savedProcess.exists();
+    if (!exists) {
+      await removeSavedProcess();
+      await _logger.flush('Saved pid no longer exists, removed.');
+      io.exit(0);
     }
   }
 
   /// Toggle the suspend / resume state of the given process.
-  Future<void> toggle() async {
+  Future<bool> toggle() async {
     if (_settings.savedProcess != 0) {
-      await _resume();
+      final successful = await _resume();
+      return successful;
     } else {
-      await _suspend();
+      final successful = await _suspend();
+      return successful;
     }
   }
 
-  Future<void> _resume() async {
+  Future<bool> _resume() async {
+    var successful = false;
     pid = _settings.savedProcess;
     id = _settings.savedWindowId;
     final process = Process(pid);
     final _status = await process.status;
-    if (_status == ProcessStatus.suspended) {
-      await process.toggle();
-      await _settings.setSavedProcess(0);
-      await _settings.setSavedWindowId(0);
+    if (_status == ProcessStatus.unknown) {
+      await removeSavedProcess();
+      await _logger.log('Issue getting status, removed saved process.');
     }
-    await _windowControls.restore(id);
+    if (_status == ProcessStatus.suspended) {
+      successful = await process.toggle();
+      await removeSavedProcess();
+      if (!successful) {
+        await _logger.log('Failed to resume PID: $pid');
+        return successful;
+      }
+      await _windowControls.restore(id);
+    }
+    return successful;
   }
 
-  Future<void> _suspend() async {
+  Future<void> removeSavedProcess() async {
+    await _settings.setSavedProcess(0);
+    await _settings.setSavedWindowId(0);
+  }
+
+  Future<bool> _suspend() async {
+    var successful = false;
     final process = Process(pid);
     await _windowControls.minimize(id);
     // Small delay on Windows to ensure the window actually minimizes.
@@ -104,11 +136,12 @@ class ActiveWindow {
     if (io.Platform.isWindows) {
       await Future.delayed(Duration(milliseconds: 500));
     }
-    final successful = await process.toggle();
+    successful = await process.toggle();
     await _settings.setSavedProcess(pid);
     await _settings.setSavedWindowId(id);
     if (!successful) {
-      // TODO: Notify user of failure.
+      await _logger.log('Failed to suspend PID: $pid');
     }
+    return successful;
   }
 }

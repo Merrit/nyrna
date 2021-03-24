@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nyrna/process/process.dart';
 
 void main() {
-  var pid = io.pid; // The current process' pid.
+  final pid = io.pid; // Dart or Nyrna's own pid.
   Process process;
 
   setUp(() => process = Process(pid));

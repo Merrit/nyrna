@@ -1,7 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/window/active_window.dart';
 
-void main() {
+Future<void> main() async {
+  final settings = Settings.instance;
+  await settings.initialize();
+
   ActiveWindow activeWindow;
 
   setUp(() async {
