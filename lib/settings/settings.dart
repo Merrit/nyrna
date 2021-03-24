@@ -23,8 +23,13 @@ class Settings {
   /// Read Nyrna's version info from the `VERSION` file.
   Future<void> _readVersion() async {
     final file = File('VERSION');
-    final version = await file.readAsString();
-    Globals.version = version.trim();
+    final exists = await file.exists();
+    if (!exists) {
+      Globals.version = 'Unknown';
+    } else {
+      final version = await file.readAsString();
+      Globals.version = version.trim();
+    }
   }
 
   /// Whether or not to automatically refresh the list of open windows.
