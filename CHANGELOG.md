@@ -1,5 +1,9 @@
 # Changelog
 
+## [v2.0-beta.2](https://github.com/Merrit/nyrna/tree/v2.0-beta.2) (2021-03-24)
+
+[Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0-beta.1...v2.0-beta.2)
+
 ## [v2.0-beta.1](https://github.com/Merrit/nyrna/tree/v2.0-beta.1) (2021-03-16)
 
 [Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0-alpha.1...v2.0-beta.1)
