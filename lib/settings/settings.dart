@@ -22,13 +22,25 @@ class Settings {
 
   /// Read Nyrna's version info from the `VERSION` file.
   Future<void> _readVersion() async {
-    final file = File('VERSION');
-    final exists = await file.exists();
-    if (!exists) {
-      Globals.version = 'Unknown';
+    File file;
+    if (Platform.isLinux) {
+      // This is necessary for AppImage, because it runs in a temp folder.
+      // Gets the path to the running executable, then read the VERSION
+      // file that is in that directory.
+      final nyrnaPath = Platform.resolvedExecutable;
+      final splitPath = nyrnaPath.split('');
+      final lastSeperator = splitPath.lastIndexOf('/');
+      final path = splitPath.sublist(0, lastSeperator).join();
+      file = File('$path/VERSION');
     } else {
+      file = File('VERSION');
+    }
+    final exists = await file.exists();
+    if (exists) {
       final version = await file.readAsString();
       Globals.version = version.trim();
+    } else {
+      Globals.version = 'Unknown';
     }
   }
 
