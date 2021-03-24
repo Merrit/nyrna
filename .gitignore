@@ -1,6 +1,8 @@
 # Packaging output
 *.AppImage
 *.snap
+*.zsync
+appimage-builder-cache
 packaging/linux/appimage/AppDir
 packaging/linux/appimage/appimage-builder-cache
 packaging/output/
