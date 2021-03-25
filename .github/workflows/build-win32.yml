@@ -23,7 +23,7 @@ jobs:
           xcopy C:\Windows\System32\msvcp140.dll build\Nyrna
           xcopy C:\Windows\System32\vcruntime140.dll build\Nyrna
           xcopy C:\Windows\System32\vcruntime140_1.dll build\Nyrna
-        uses: crazy-max/ghaction-chocolatey@v1
+      - uses: crazy-max/ghaction-chocolatey@v1
         with:
           args: install innosetup -y
       - name: Package with Inno Setup
