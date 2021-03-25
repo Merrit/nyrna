@@ -1,0 +1,41 @@
+name: Build Win32 portable version on release
+on: [release, workflow_dispatch]
+jobs:
+  build_and_preview:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: beta
+      - name: Read VERSION file
+        id: getversion
+        run: echo "::set-output name=version::$(cat VERSION)"
+      - name: Build Nyrna portable
+        run: |
+          flutter config --enable-windows-desktop
+          flutter pub get
+          flutter build windows
+
+          move build\windows\runner\Release build\Nyrna
+
+          copy VERSION build\Nyrna
+          xcopy C:\Windows\System32\msvcp140.dll build\Nyrna
+          xcopy C:\Windows\System32\vcruntime140.dll build\Nyrna
+          xcopy C:\Windows\System32\vcruntime140_1.dll build\Nyrna
+      - name: Package with Inno Setup
+        uses: crazy-max/ghaction-chocolatey@v1
+        with:
+          args: install innosetup -y
+        run: |
+          iscc packaging\win32\inno_setup_script.iss
+      - name: Upload win32 portable artifact
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nyrna-windows-portable-${{ steps.getversion.outputs.version }}
+          path: build\Nyrna
+      - name: Upload win32 installer artifact
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nyrna-windows-installer-${{ steps.getversion.outputs.version }}
+          path: build\nyrna-windows-installer.exe

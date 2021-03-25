@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Nyrna"
-#define MyAppVersion "2.0.0-beta.1"
+#define MyAppVersion "2.0.0-beta.2"
 #define MyAppPublisher "Kristen McWilliam"
-#define MyAppURL "https://merritt.codes/nyrna/"
+#define MyAppURL "https://nyrna.merritt.codes"
 #define MyAppExeName "nyrna.exe"
 
 [Setup]
@@ -23,7 +23,7 @@ DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
-OutputDir=..\output
+OutputDir=..\..\build
 OutputBaseFilename=nyrna-windows-installer
 SetupIconFile=..\..\assets\icons\nyrna.ico
 Compression=lzma
@@ -37,8 +37,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\output\Nyrna\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\output\Nyrna\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\build\Nyrna\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\build\Nyrna\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
