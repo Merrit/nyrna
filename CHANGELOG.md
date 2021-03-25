@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/Merrit/nyrna/tree/HEAD)
+
+[Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0.0-beta.3...HEAD)
+
+**Implemented enhancements:**
+
+- \[Feature Request\] Pause multiple applications [\#4](https://github.com/Merrit/nyrna/issues/4)
+
 ## [v2.0.0-beta.3](https://github.com/Merrit/nyrna/tree/v2.0.0-beta.3) (2021-03-25)
 
 [Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0-beta.2...v2.0.0-beta.3)
