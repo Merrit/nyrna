@@ -23,5 +23,5 @@ jobs:
           cp VERSION nyrna/VERSION
       - uses: actions/upload-artifact@v2
         with:
-          name: nyrna-linux-portable-${{ env.VERSION }}
+          name: nyrna-linux-portable
           path: nyrna/

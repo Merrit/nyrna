@@ -14,7 +14,7 @@ AppDir:
     id: nyrna
     name: Nyrna
     icon: nyrna
-    version: !ENV ${APP_VERSION}
+    version: latest
     exec: nyrna
     exec_args: $@
   apt:

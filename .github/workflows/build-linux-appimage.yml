@@ -34,7 +34,7 @@ jobs:
           args: --recipe packaging/linux/appimage/AppImageBuilder.yml --skip-test
       - uses: actions/upload-artifact@v2
         with:
-          name: Nyrna-AppImage-${{ env.VERSION }}
+          name: Nyrna-AppImage
           path: |
             *.AppImage
             *.zsync

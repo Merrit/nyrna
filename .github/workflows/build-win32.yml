@@ -28,9 +28,9 @@ jobs:
           iscc packaging\win32\inno_setup_script.iss
       - uses: actions/upload-artifact@v2
         with:
-          name: nyrna-windows-portable-${{ steps.getversion.outputs.version }}
+          name: nyrna-windows-portable
           path: build\Nyrna
       - uses: actions/upload-artifact@v2
         with:
-          name: nyrna-windows-installer-${{ steps.getversion.outputs.version }}
+          name: nyrna-windows-installer
           path: build\nyrna-windows-installer.exe
