@@ -3,6 +3,7 @@ import 'dart:io' as io;
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logging/logging.dart';
 import 'package:nyrna/process/process.dart';
 import 'package:win32/win32.dart';
 import 'package:win32_suspend_process/win32_suspend_process.dart' as w32proc;
@@ -12,6 +13,8 @@ class Win32Process with ChangeNotifier implements Process {
 
   @override
   final int pid;
+
+  static final _log = Logger('Win32Process');
 
   String _executable;
 
@@ -35,7 +38,10 @@ class Win32Process with ChangeNotifier implements Process {
     _executable = path.toDartString().split('\\').last;
     // Free the pointer's memory.
     calloc.free(path);
-    CloseHandle(processHandle);
+    final handleClosed = CloseHandle(processHandle);
+    if (handleClosed == 0) {
+      _log.severe('get executable failed to close the process handle.');
+    }
     return _executable;
   }
 
