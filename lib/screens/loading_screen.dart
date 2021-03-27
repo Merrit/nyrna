@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/screens/apps_screen.dart';
 
@@ -12,11 +13,13 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  static final _log = Logger('LoadingScreen');
   Nyrna nyrna;
 
   @override
   void initState() {
     super.initState();
+    _log.info('Loading screen initializing');
     nyrna = Nyrna.loading();
   }
 
