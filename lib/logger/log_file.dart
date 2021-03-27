@@ -1,12 +1,16 @@
+import 'dart:collection';
 import 'dart:io';
 import 'package:nyrna/config.dart';
 import 'package:path_provider/path_provider.dart' as p;
 
 /// Log debug messages to a temp file.
-class Logger {
-  // Logger is a singleton.
-  Logger._privateConstructor();
-  static final Logger instance = Logger._privateConstructor();
+///
+/// Necessary for the `Toggle` functionality since it won't have
+/// a GUI nor console to print logs to.
+class LogFile {
+  // LogFile is a singleton.
+  LogFile._privateConstructor();
+  static final LogFile instance = LogFile._privateConstructor();
 
   /// System's temp dir, for example: `/tmp`.
   Directory _tempDir;
@@ -40,23 +44,13 @@ class Logger {
     await _logFile.rename('$_tempPath/nyrna.log.old');
   }
 
-  /// Write line(s) to the `nyrna.log` file.
-  Future<void> log(Object object) async {
-    if (Config.log) {
-      await _logFile.writeAsString(
-        '${DateTime.now()} $object'
-        '\n',
-        mode: FileMode.append,
-      );
-    }
-  }
+  static final logs = Queue();
 
   /// Flush the log to ensure it has been written to disk before exiting.
-  Future<void> flush(Object object) async {
+  Future<void> write() async {
     if (Config.log) {
-      await _logFile.writeAsString('\n${DateTime.now()} $object');
       await _logFile.writeAsString(
-        '===== Flush log =====\n',
+        logs.toString(),
         mode: FileMode.append,
         flush: true,
       );

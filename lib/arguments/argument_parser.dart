@@ -1,6 +1,6 @@
 import 'package:args/args.dart';
 import 'package:nyrna/config.dart';
-import 'package:nyrna/logger/logger.dart';
+import 'package:nyrna/logger/log_file.dart';
 
 /// Parse command-line arguments.
 ///
@@ -69,8 +69,8 @@ class ArgumentParser {
       // Set environment variable.
       Config.log = true;
       // One-time initialization of the logger.
-      final logger = Logger.instance;
-      await logger.init();
+      final logFile = LogFile.instance;
+      await logFile.init();
     }
   }
 }

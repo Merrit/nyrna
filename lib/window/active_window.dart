@@ -1,6 +1,7 @@
 import 'dart:io' as io;
 
-import 'package:nyrna/logger/logger.dart';
+import 'package:logging/logging.dart';
+import 'package:nyrna/logger/log_file.dart';
 import 'package:nyrna/platform/native_platform.dart';
 import 'package:nyrna/process/process.dart';
 import 'package:nyrna/settings/settings.dart';
@@ -15,7 +16,7 @@ class ActiveWindow {
 
   final _windowControls = WindowControls();
 
-  final _logger = Logger.instance;
+  static final _log = Logger('ActiveWindow');
 
   final _settings = Settings.instance;
 
@@ -70,8 +71,8 @@ class ActiveWindow {
     // This _could_ happen because we have to hide Nyrna's window instead of
     // just not running the GUI for now. Sanity check: don't suspend self.
     if (pid == nyrnaPid) {
-      print("Active window PID was Nyrna's own, this shouldn't happen...");
-      await _logger.flush('Active window was Nyrna');
+      _log.severe("Active window PID was Nyrna's own, exiting.");
+      await LogFile.instance.write();
       io.exit(1);
     }
     if (_settings.savedProcess != 0) await _checkStillExists();
@@ -84,7 +85,8 @@ class ActiveWindow {
     final exists = await savedProcess.exists();
     if (!exists) {
       await removeSavedProcess();
-      await _logger.flush('Saved pid no longer exists, removed.');
+      _log.warning('Saved pid no longer exists, removed.');
+      await LogFile.instance.write();
       io.exit(0);
     }
   }
@@ -108,13 +110,13 @@ class ActiveWindow {
     final _status = await process.status;
     if (_status == ProcessStatus.unknown) {
       await removeSavedProcess();
-      await _logger.log('Issue getting status, removed saved process.');
+      _log.warning('Issue getting status, removed saved process.');
     }
     if (_status == ProcessStatus.suspended) {
       successful = await process.toggle();
       await removeSavedProcess();
       if (!successful) {
-        await _logger.log('Failed to resume PID: $pid');
+        _log.warning('Failed to resume PID: $pid');
         return successful;
       }
       await _windowControls.restore(id);
@@ -140,7 +142,7 @@ class ActiveWindow {
     await _settings.setSavedProcess(pid);
     await _settings.setSavedWindowId(id);
     if (!successful) {
-      await _logger.log('Failed to suspend PID: $pid');
+      _log.warning('Failed to suspend PID: $pid');
     }
     return successful;
   }

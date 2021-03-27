@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   args: ^1.6.0
   http: ^0.13.0
+  logging: ^1.0.1
   path_provider: ^2.0.0
   provider: ^4.3.3
   settings_ui: ^0.6.0
