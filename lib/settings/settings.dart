@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +10,8 @@ class Settings {
   // Settings is a singleton.
   Settings._privateConstructor();
   static final Settings instance = Settings._privateConstructor();
+
+  static final _log = Logger('Settings');
 
   /// Instance of SharedPreferences for getting and setting preferences.
   SharedPreferences prefs;
@@ -23,7 +26,13 @@ class Settings {
   /// Read Nyrna's version info from the `VERSION` file.
   Future<void> _readVersion() async {
     File file;
-    if (Platform.isLinux) {
+    try {
+      file = File('VERSION');
+    } catch (e) {
+      _log.info('No VERSION file found in current directory.\n'
+          '$e');
+    }
+    if (Platform.isLinux && file == null) {
       // This is necessary for AppImage, because it runs in a temp folder.
       // Gets the path to the running executable, then read the VERSION
       // file that is in that directory.
