@@ -93,6 +93,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   SettingsTile(
                     leading: const Icon(Icons.launch),
+                    title: 'Nyrna homepage',
+                    onPressed: (context) async {
+                      await launch('https://nyrna.merritt.codes');
+                    },
+                  ),
+                  SettingsTile(
+                    leading: const Icon(Icons.launch),
                     title: 'GitHub repository',
                     onPressed: (context) async {
                       await launch('https://github.com/Merrit/nyrna');
