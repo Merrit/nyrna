@@ -18,9 +18,12 @@ class Win32 implements NativePlatform {
 
   @override
   Future<Map<String, Window>> get windows async {
+    // Clear the map to ensure we are starting fresh each time.
     WindowBuilder.windows.clear();
+    // Assign the callback to a pointer.
     final _callback = Pointer.fromFunction<EnumWindowsProc>(
         WindowBuilder.enumWindowsCallback, 0);
+    // Process open windows.
     EnumWindows(_callback, 0);
     return WindowBuilder.windows;
   }
