@@ -30,7 +30,7 @@ class Win32Process with ChangeNotifier implements Process {
     // If the function fails, the return value is zero.
     final result = GetModuleFileNameEx(processHandle, NULL, path, MAX_PATH);
     if (result == 0) {
-      print('Error getting executable name: ${GetLastError()}');
+      _log.warning('Error getting executable name: ${GetLastError()}');
       return '';
     }
     // Pull the value from the pointer.
