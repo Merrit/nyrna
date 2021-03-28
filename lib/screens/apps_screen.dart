@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:nyrna/components/window_tile.dart';
 import 'package:nyrna/globals.dart';
 import 'package:nyrna/nyrna.dart';
@@ -24,10 +25,12 @@ class RunningAppsScreen extends StatefulWidget {
 class _RunningAppsScreenState extends State<RunningAppsScreen> {
   Nyrna nyrna;
 
-  final _settings = Settings.instance;
-
   /// Whether or not a newer version of Nyrna is available.
   Future<bool> updateAvailable = UpdateNotifier().updateAvailable();
+
+  static final _log = Logger('RunningAppsScreen');
+
+  final _settings = Settings.instance;
 
   @override
   void didChangeDependencies() {
@@ -87,7 +90,10 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
         _updateIcon(),
         IconButton(
           icon: const Icon(Icons.settings),
-          onPressed: () => Navigator.pushNamed(context, SettingsScreen.id),
+          onPressed: () {
+            _log.info('User clicked settings button');
+            Navigator.pushNamed(context, SettingsScreen.id);
+          },
         ),
       ],
     );
