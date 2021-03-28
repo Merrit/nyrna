@@ -67,7 +67,10 @@ class Win32Process with ChangeNotifier implements Process {
         '\$threads | select Id,ThreadState,WaitReason',
       ],
     );
-    if (result.stderr != '') return ProcessStatus.unknown;
+    if (result.stderr != '') {
+      _log.warning('Unable to get process status', result.stderr);
+      return ProcessStatus.unknown;
+    }
     var threads = result.stdout.toString().trim().split('\n');
     // Strip out the column headers
     threads = threads.sublist(2);
