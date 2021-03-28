@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:io';
+import 'package:logging/logging.dart';
 import 'package:nyrna/config.dart';
 import 'package:path_provider/path_provider.dart' as p;
 
@@ -44,7 +45,8 @@ class LogFile {
     await _logFile.rename('$_tempPath/nyrna.log.old');
   }
 
-  static final logs = Queue();
+  /// A running list of the log messages so they can be referenced later.
+  static final logs = Queue<LogRecord>();
 
   /// Flush the log to ensure it has been written to disk before exiting.
   Future<void> write() async {

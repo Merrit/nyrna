@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/logger/log_file.dart';
+import 'package:nyrna/logger/log_screen.dart';
 import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/arguments/argument_parser.dart';
 import 'package:nyrna/screens/apps_screen.dart';
@@ -18,11 +19,10 @@ Future<void> main(List<String> args) async {
   await parseArgs(args);
   await initSettings();
 
+  initLogger();
+
   // `-t` or `--toggle` flag detected.
   if (Config.toggle) await toggleActiveWindow();
-
-  // If not doing toggle, initialize the regular logger.
-  initLogger();
 
   // Run main GUI interface.
   runApp(MyApp());
@@ -43,23 +43,22 @@ Future<void> initSettings() async {
   await settings.initialize();
 }
 
+/// Print log messages & add them to a Queue so they can be referenced, for
+/// example from the [LogScreen].
 void initLogger() {
+  final logQueue = LogFile.logs;
   Logger.root.onRecord.listen((record) {
     print('${record.level.name}: ${record.time}: ${record.message}');
-  });
-}
-
-/// Toggle suspend / resume for the active, foreground window.
-Future<void> toggleActiveWindow() async {
-  Logger.root.onRecord.listen((record) {
-    var msg = '${record.level.name}: ${record.time}: ${record.message}';
-    final logQueue = LogFile.logs;
-    logQueue.addLast(msg);
+    logQueue.addLast(record);
     // In case the log grows too crazy, prune for sanity.
     while (logQueue.length > 100) {
       logQueue.removeFirst();
     }
   });
+}
+
+/// Toggle suspend / resume for the active, foreground window.
+Future<void> toggleActiveWindow() async {
   final _log = Logger('toggleActiveWindow');
   _log.info('toggleActiveWindow beginning');
   final activeWindow = ActiveWindow();
@@ -89,6 +88,7 @@ class MyApp extends StatelessWidget {
         theme: NyrnaTheme.dark,
         routes: {
           LoadingScreen.id: (context) => LoadingScreen(),
+          LogScreen.id: (context) => LogScreen(),
           RunningAppsScreen.id: (context) => RunningAppsScreen(),
           SettingsScreen.id: (conext) => SettingsScreen(),
         },
