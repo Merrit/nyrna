@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:nyrna/components/input_dialog.dart';
 import 'package:nyrna/globals.dart';
+import 'package:nyrna/logger/log_screen.dart';
 import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/settings/components/system_integration_tiles.dart';
 import 'package:nyrna/settings/settings.dart';
@@ -82,6 +83,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   titlePadding: const EdgeInsets.only(top: sectionPadding),
                   tiles: systemIntegrationTiles(context),
                 ),
+              SettingsSection(
+                title: 'Troubleshooting',
+                titlePadding: const EdgeInsets.only(top: sectionPadding),
+                tiles: [
+                  SettingsTile(
+                    leading: const Icon(Icons.article_outlined),
+                    title: 'Logs',
+                    onPressed: (context) {
+                      Navigator.pushNamed(context, LogScreen.id);
+                    },
+                  ),
+                ],
+              ),
               SettingsSection(
                 title: 'About',
                 titlePadding: const EdgeInsets.only(top: sectionPadding),
