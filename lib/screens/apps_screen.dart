@@ -33,6 +33,12 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
   final _settings = Settings.instance;
 
   @override
+  void initState() {
+    _log.info('RunningAppsScreen initialized');
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
     nyrna = Provider.of<Nyrna>(context);
     super.didChangeDependencies();
