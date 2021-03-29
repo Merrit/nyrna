@@ -25,8 +25,6 @@ class Win32 implements NativePlatform {
         WindowBuilder.enumWindowsCallback, 0);
     // Process open windows.
     EnumWindows(_callback, 0);
-    // Free the _callback pointer now that we are finished with it.
-    calloc.free(_callback);
     return WindowBuilder.windows;
   }
 
