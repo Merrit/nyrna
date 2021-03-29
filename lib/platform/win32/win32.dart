@@ -20,11 +20,8 @@ class Win32 implements NativePlatform {
   Future<Map<String, Window>> get windows async {
     // Clear the map to ensure we are starting fresh each time.
     WindowBuilder.windows.clear();
-    // Assign the callback to a pointer.
-    final _callback = Pointer.fromFunction<EnumWindowsProc>(
-        WindowBuilder.enumWindowsCallback, 0);
     // Process open windows.
-    EnumWindows(_callback, 0);
+    EnumWindows(WindowBuilder.callback, 0);
     return WindowBuilder.windows;
   }
 
@@ -62,6 +59,13 @@ class Win32 implements NativePlatform {
 //
 /// Generates the list of visible windows on the user's desktop.
 class WindowBuilder {
+  /// Persistant callback because:
+  /// "The pointer returned will remain alive for the
+  /// duration of the current isolate's lifetime."
+  /// https://api.flutter.dev/flutter/dart-ffi/Pointer/fromFunction.html
+  static final callback = Pointer.fromFunction<EnumWindowsProc>(
+      WindowBuilder.enumWindowsCallback, 0);
+
   /// Callback for each window found by EnumWindows().
   static int enumWindowsCallback(int hWnd, int lParam) {
     // Only enumerate windows that are marked WS_VISIBLE.
