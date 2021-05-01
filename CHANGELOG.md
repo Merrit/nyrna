@@ -13,6 +13,10 @@
 - \[BUG\] Starts with white screen when added to Task Scheduler - Windows 10 [\#31](https://github.com/Merrit/nyrna/issues/31)
 - Flutter version for Windows [\#26](https://github.com/Merrit/nyrna/issues/26)
 
+**Merged pull requests:**
+
+- Bump rexml from 3.2.4 to 3.2.5 in /docs [\#33](https://github.com/Merrit/nyrna/pull/33) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v2.0.0-beta.3](https://github.com/Merrit/nyrna/tree/v2.0.0-beta.3) (2021-03-25)
 
 [Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0-beta.2...v2.0.0-beta.3)
