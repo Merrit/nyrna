@@ -10,6 +10,7 @@
 
 **Closed issues:**
 
+- Keyboard Shortcut? [\#34](https://github.com/Merrit/nyrna/issues/34)
 - \[BUG\] Starts with white screen when added to Task Scheduler - Windows 10 [\#31](https://github.com/Merrit/nyrna/issues/31)
 - Flutter version for Windows [\#26](https://github.com/Merrit/nyrna/issues/26)
 
