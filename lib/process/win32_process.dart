@@ -63,6 +63,7 @@ class Win32Process with ChangeNotifier implements Process {
     final result = await io.Process.run(
       'powershell',
       [
+        '-NoProfile',
         '\$process=[System.Diagnostics.Process]::GetProcessById($pid)',
         ';',
         '\$threads=\$process.Threads',
