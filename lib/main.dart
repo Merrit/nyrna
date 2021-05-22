@@ -48,7 +48,10 @@ Future<void> initSettings() async {
 void initLogger() {
   final logQueue = LogFile.logs;
   Logger.root.onRecord.listen((record) {
-    print('${record.level.name}: ${record.time}: ${record.message}');
+    var msg = '${record.level.name}: ${record.time}: '
+        '${record.loggerName}: ${record.message}';
+    if (record.error != null) msg += '\nError: ${record.error}';
+    print(msg);
     logQueue.addLast(record);
     // In case the log grows too crazy, prune for sanity.
     while (logQueue.length > 100) {
