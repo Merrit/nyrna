@@ -51,6 +51,9 @@ class Win32Process with ChangeNotifier implements Process {
   // better method for doing this. There is discussion on GitHub about adding
   // support for C# to dart:ffi, if that comes to fruition
   // this can all be done through native calls to .NET instead.
+  // Reference:
+  // https://github.com/flutter/flutter/issues/74720
+  // https://github.com/flutter/flutter/issues/64958
   //
   // NtQuerySystemInformation() was a consideration, however it is
   // complicated, at threat of being depreciated, and since it has to
