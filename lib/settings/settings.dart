@@ -54,7 +54,11 @@ class Settings {
   }
 
   /// Whether or not to automatically refresh the list of open windows.
-  bool get autoRefresh => prefs.getBool('autoRefresh') ?? true;
+  bool get autoRefresh {
+    bool defaultValue;
+    defaultValue = (Platform.isWindows) ? false : true;
+    return prefs.getBool('autoRefresh') ?? defaultValue;
+  }
 
   set autoRefresh(bool shouldRefresh) {
     prefs.setBool('autoRefresh', shouldRefresh);
