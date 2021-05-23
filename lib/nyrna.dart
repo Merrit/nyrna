@@ -12,12 +12,12 @@ class Nyrna extends ChangeNotifier {
     setRefresh();
   }
 
-  Timer _timer;
+  Timer? _timer;
 
   /// The time which auto-refreshes the list of open windows.
   void setRefresh() {
     fetchData();
-    if (_timer != null) _timer.cancel();
+    if (_timer != null) _timer!.cancel();
     if (_settings.autoRefresh) {
       _timer = Timer.periodic(
         Duration(seconds: _settings.refreshInterval),
@@ -30,12 +30,12 @@ class Nyrna extends ChangeNotifier {
 
   final _settings = Settings.instance;
 
-  int _currentDesktop;
+  int? _currentDesktop;
 
   /// Returns the index of the currently active virtual desktop.
   ///
   /// The left-most / first desktop starts at index 0.
-  int get currentDesktop => _currentDesktop;
+  int? get currentDesktop => _currentDesktop;
 
   /// Check which virtual desktop is active.
   Future<void> fetchDesktop() async {
@@ -54,7 +54,7 @@ class Nyrna extends ChangeNotifier {
     // Remove if window no longer present, or title has changed.
     _windows.removeWhere((pid, window) {
       if (!newWindows.containsKey(pid) || // Window no longer present.
-          (newWindows[pid].title != window.title)) // Window title changed.
+          (newWindows[pid]!.title != window.title)) // Window title changed.
       {
         return true;
       } else {
@@ -77,29 +77,29 @@ class Nyrna extends ChangeNotifier {
     notifyListeners();
   }
 
-  static String _executablePath;
+  static String? _executablePath;
 
   /// Absolute path to Nyrna's executable.
   static String get executablePath {
-    if (_executablePath != null) return _executablePath;
+    if (_executablePath != null) return _executablePath!;
     _executablePath = io.Platform.resolvedExecutable;
-    return _executablePath;
+    return _executablePath!;
   }
 
-  static String _nyrnaDir;
+  static String? _nyrnaDir;
 
   /// Absolute path to Nyrna's install directory.
   static String get directory {
-    if (_nyrnaDir != null) return _nyrnaDir;
+    if (_nyrnaDir != null) return _nyrnaDir!;
     final nyrnaPath = executablePath.substring(0, (executablePath.length - 5));
     _nyrnaDir = nyrnaPath;
     return nyrnaPath;
   }
 
-  static String _iconPath;
+  static String? _iconPath;
 
   /// Absolute path to Nyrna's bundled icon asset.
-  static String get iconPath {
+  static String? get iconPath {
     if (_iconPath != null) return _iconPath;
     final _ending = (io.Platform.isLinux) ? 'png' : 'ico';
     _iconPath = '${directory}data/flutter_assets/assets/icons/nyrna.$_ending';

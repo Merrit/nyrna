@@ -16,17 +16,15 @@ enum ProcessStatus {
 /// Abstract class bridges types for specific operating systems.
 /// Used by [LinuxProcess] and [Win32Process].
 abstract class Process with ChangeNotifier {
+  // ignore: unused_element
+  Process._unused(this.pid);
+
   // Return correct subtype depending on the current operating system.
   factory Process(int pid) {
-    switch (io.Platform.operatingSystem) {
-      case 'linux':
-        return LinuxProcess(pid);
-        break;
-      case 'windows':
-        return Win32Process(pid);
-        break;
-      default:
-        return null;
+    if (io.Platform.isLinux) {
+      return LinuxProcess(pid);
+    } else {
+      return Win32Process(pid);
     }
   }
 

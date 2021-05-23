@@ -39,7 +39,7 @@ class ArgumentParser {
     );
   }
 
-  ArgResults _results;
+  late ArgResults _results;
 
   Future<void> _parse() async {
     _parseArgs();

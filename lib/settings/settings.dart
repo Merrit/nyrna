@@ -14,7 +14,7 @@ class Settings {
   static final _log = Logger('Settings');
 
   /// Instance of SharedPreferences for getting and setting preferences.
-  SharedPreferences prefs;
+  SharedPreferences? prefs;
 
   /// Initialize should only need to be called once, in main().
   Future<void> initialize() async {
@@ -25,7 +25,7 @@ class Settings {
 
   /// Read Nyrna's version info from the `VERSION` file.
   Future<void> _readVersion() async {
-    File file;
+    File? file;
     try {
       file = File('VERSION');
     } catch (e) {
@@ -57,40 +57,40 @@ class Settings {
   bool get autoRefresh {
     bool defaultValue;
     defaultValue = (Platform.isWindows) ? false : true;
-    return prefs.getBool('autoRefresh') ?? defaultValue;
+    return prefs!.getBool('autoRefresh') ?? defaultValue;
   }
 
   set autoRefresh(bool shouldRefresh) {
-    prefs.setBool('autoRefresh', shouldRefresh);
+    prefs!.setBool('autoRefresh', shouldRefresh);
   }
 
   /// How often to automatically refresh the list of open windows, in seconds.
-  int get refreshInterval => prefs.getInt('refreshInterval') ?? 5;
+  int get refreshInterval => prefs!.getInt('refreshInterval') ?? 5;
 
   set refreshInterval(int interval) {
     if (interval > 0) {
-      prefs.setInt('refreshInterval', interval);
+      prefs!.setInt('refreshInterval', interval);
     }
   }
 
   /// The PID of the process Nyrna suspended via [ActiveWindow.toggle()].
   ///
   /// Returns 0 if Nyrna hasn't suspended anything in this fashion.
-  int get savedProcess => prefs.getInt('savedProcess') ?? 0;
+  int get savedProcess => prefs!.getInt('savedProcess') ?? 0;
 
   Future<void> setSavedProcess(int pid) async {
-    await prefs.setInt('savedProcess', pid);
+    await prefs!.setInt('savedProcess', pid);
   }
 
   /// The unique hex ID of the window suspended via [ActiveWindow.toggle()].
-  int get savedWindowId => prefs.getInt('savedWindowId');
+  int? get savedWindowId => prefs!.getInt('savedWindowId');
 
   Future<void> setSavedWindowId(int id) async {
-    await prefs.setInt('savedWindowId', id);
+    await prefs!.setInt('savedWindowId', id);
   }
 
   /// If user has ignored an update that version number is saved here.
-  String get ignoredUpdate => prefs.getString('ignoredUpdate');
+  String? get ignoredUpdate => prefs!.getString('ignoredUpdate');
 
   /// Check for `PORTABLE` file in the Nyrna directory, which should only be
   /// present for the portable build on Linux.

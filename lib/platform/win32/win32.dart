@@ -3,7 +3,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:nyrna/platform/win32/dwmapi.dart';
 import 'package:nyrna/process/win32_process.dart';
-import 'package:nyrna/platform/win32/user32.dart';
+// import 'package:nyrna/platform/win32/user32.dart';
 import 'package:nyrna/platform/native_platform.dart';
 import 'package:nyrna/window/window.dart';
 import 'package:win32/win32.dart';
@@ -25,7 +25,7 @@ class Win32 implements NativePlatform {
     return WindowBuilder.windows;
   }
 
-  int _windowPid;
+  late int _windowPid;
 
   /// Takes the window handle as an argument and returns the
   /// pid of the associated process.

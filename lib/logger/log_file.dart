@@ -14,9 +14,9 @@ class LogFile {
   static final LogFile instance = LogFile._privateConstructor();
 
   /// System's temp dir, for example: `/tmp`.
-  Directory _tempDir;
+  late Directory _tempDir;
 
-  String _tempPath;
+  String? _tempPath;
 
   Future<void> init() async {
     _tempDir = await p.getTemporaryDirectory();
@@ -24,25 +24,25 @@ class LogFile {
     assert(_tempPath != null);
     _logFile = getLogFile();
     // Check for previous log.
-    final previousLog = await _logFile.exists();
+    final previousLog = await _logFile!.exists();
     // If a log > 1MB exists, rename it and start a new log.
     if (previousLog) {
-      final size = await _logFile.length();
+      final size = await _logFile!.length();
       if (size > 1000000) await _backupLog();
     }
   }
 
-  File _logFile;
+  File? _logFile;
 
   /// Handle to the `nyrna.log` file.
-  File getLogFile() {
+  File? getLogFile() {
     if (_logFile != null) return _logFile;
     _logFile = File('$_tempPath/nyrna.log');
     return _logFile;
   }
 
   Future<void> _backupLog() async {
-    await _logFile.rename('$_tempPath/nyrna.log.old');
+    await _logFile!.rename('$_tempPath/nyrna.log.old');
   }
 
   /// A running list of the log messages so they can be referenced later.
@@ -51,7 +51,7 @@ class LogFile {
   /// Flush the log to ensure it has been written to disk before exiting.
   Future<void> write() async {
     if (Config.log) {
-      await _logFile.writeAsString(
+      await _logFile!.writeAsString(
         logs.toString(),
         mode: FileMode.append,
         flush: true,

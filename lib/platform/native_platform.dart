@@ -11,16 +11,10 @@ import 'package:nyrna/window/window.dart';
 abstract class NativePlatform {
   // Return correct subtype depending on the current operating system.
   factory NativePlatform() {
-    switch (Platform.operatingSystem) {
-      case 'linux':
-        return Linux();
-        break;
-      case 'windows':
-        return Win32();
-        break;
-      default:
-        return null;
-        break;
+    if (Platform.isLinux) {
+      return Linux();
+    } else {
+      return Win32();
     }
   }
 

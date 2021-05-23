@@ -4,11 +4,11 @@ import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/settings/update_notifier.dart';
 
 void main() {
-  Settings _settings;
+  Settings? _settings;
 
   setUp(() async {
     _settings = Settings.instance;
-    await _settings.initialize();
+    await _settings!.initialize();
   });
 
   tearDown(() {
