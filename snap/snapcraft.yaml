@@ -1,5 +1,5 @@
 name: nyrna
-version: 2.0-beta.1
+version: 2.0.0
 summary: Suspend games and applications
 description: |
   Similar to the incredibly useful sleep/suspend function found in
@@ -20,7 +20,7 @@ slots:
 apps:
   nyrna:
     command: nyrna
-    extensions: [flutter-dev] # Flutter channel to use for the build.
+    extensions: [flutter-beta] # Flutter channel to use for the build.
     plugs:
       - network
       - process-control # Necessary for core functionality.
