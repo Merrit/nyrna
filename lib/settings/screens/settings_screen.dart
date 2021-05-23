@@ -30,6 +30,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Settings settings = Settings.instance;
 
+  Widget _autoRefreshLeadingWidget() {
+    final _warningChip = ActionChip(
+      label: Text(
+        'Caution',
+        style: TextStyle(color: Colors.red[800]),
+      ),
+      backgroundColor: Colors.yellow,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(
+                'Note: Auto refresh can cause issues with memory consumption on '
+                'Windows at the moment. Until the problem is resolved, consider '
+                'keeping auto refresh off if you experience issues.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+    final _refreshIcon = const Icon(Icons.refresh);
+    final returnIcon = (Platform.isWindows) ? _warningChip : _refreshIcon;
+    return returnIcon;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SettingsSection(
                 tiles: [
                   SettingsTile.switchTile(
-                    leading: const Icon(Icons.refresh),
+                    leading: _autoRefreshLeadingWidget(),
                     title: 'Auto Refresh',
                     subtitle: 'Update window & process info automatically',
                     switchValue: settings.autoRefresh,
@@ -64,6 +97,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       settings.autoRefresh = value;
                       nyrna.setRefresh();
                     }),
+                    trailing: ActionChip(
+                      label: Text('data'),
+                      onPressed: () {},
+                    ),
                   ),
                   SettingsTile(
                     leading: const Icon(Icons.timelapse),
