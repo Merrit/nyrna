@@ -38,7 +38,7 @@ A package is available as [nyrna](https://github.com/BlueManCZ/edgets/tree/maste
 
 ## Snap
 
-*Pending approval in the snap store.*
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/nyrna)
 
 ## Portable
 
