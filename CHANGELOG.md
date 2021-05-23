@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/Merrit/nyrna/tree/HEAD)
+
+[Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0.0...HEAD)
+
+**Merged pull requests:**
+
+- null-safety [\#38](https://github.com/Merrit/nyrna/pull/38) ([Merrit](https://github.com/Merrit))
+
 ## [v2.0.0](https://github.com/Merrit/nyrna/tree/v2.0.0) (2021-05-23)
 
 [Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0.0-beta.3...v2.0.0)
