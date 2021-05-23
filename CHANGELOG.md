@@ -16,6 +16,7 @@
 
 **Merged pull requests:**
 
+- dev [\#36](https://github.com/Merrit/nyrna/pull/36) ([Merrit](https://github.com/Merrit))
 - Bump nokogiri from 1.11.3 to 1.11.5 in /docs [\#35](https://github.com/Merrit/nyrna/pull/35) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump rexml from 3.2.4 to 3.2.5 in /docs [\#33](https://github.com/Merrit/nyrna/pull/33) ([dependabot[bot]](https://github.com/apps/dependabot))
 
