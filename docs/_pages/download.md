@@ -15,13 +15,6 @@ toc_sticky: true
 Linux
 =====
 
-<!-- AppImage has a blank window; disabled until it is fixed.
-## AppImage
-
-*Supports auto-update*
-
-[Download AppImage](){: .btn .btn--info} -->
-
 
 <!-- Packages need to be updated for Nyrna 2.0
 ## Packages
