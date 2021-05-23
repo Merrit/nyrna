@@ -18,21 +18,21 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 2.0.0
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  args: ^1.6.0
-  http: ^0.13.0
+  args: ^2.1.0
+  http: ^0.13.3
   logging: ^1.0.1
-  path_provider: ^2.0.0
-  provider: ^4.3.3
-  settings_ui: ^0.6.0
-  shared_preferences: ^2.0.1
-  url_launcher: ^5.7.10
-  win32: ^2.0.0
-  win32_suspend_process: ^1.0.0-beta.2
+  path_provider: ^2.0.1
+  provider: ^5.0.0
+  settings_ui: ^1.0.0
+  shared_preferences: ^2.0.5
+  url_launcher: ^6.0.4
+  win32: ^2.1.1
+  win32_suspend_process: ^1.0.0
 
 dev_dependencies:
   flutter_test:

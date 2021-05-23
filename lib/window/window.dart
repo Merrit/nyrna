@@ -2,7 +2,11 @@ import 'package:nyrna/window/window_controls.dart';
 
 /// Represents a visible window on the current desktop.
 class Window {
-  Window({this.id, this.pid, this.title});
+  Window({
+    required this.id,
+    required this.pid,
+    required this.title,
+  });
 
   final _windowControls = WindowControls();
 

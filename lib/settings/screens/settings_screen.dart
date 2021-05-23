@@ -23,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   /// Check if Nyrna is running as Portable version.
   bool isPortable = false;
 
-  Nyrna nyrna;
+  late Nyrna nyrna;
 
   /// Adds a little space between sections.
   static const double sectionPadding = 50;
@@ -180,10 +180,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       title: 'Auto Refresh Interval',
       initialValue: settings.refreshInterval.toString(),
     );
+    if (result == null) return;
     final newInterval = int.tryParse(result);
-    if (newInterval != null) {
-      setState(() => settings.refreshInterval = newInterval);
-    }
+    if (newInterval == null) return;
+    setState(() => settings.refreshInterval = newInterval);
     nyrna.setRefresh();
   }
 }

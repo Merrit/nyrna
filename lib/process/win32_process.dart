@@ -16,11 +16,11 @@ class Win32Process with ChangeNotifier implements Process {
 
   static final _log = Logger('Win32Process');
 
-  String _executable;
+  String? _executable;
 
   @override
   Future<String> get executable async {
-    if (_executable != null) return _executable;
+    if (_executable != null) return _executable!;
     final processHandle =
         OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
     // Pointer that will be populated with the full executable path.
@@ -42,7 +42,7 @@ class Win32Process with ChangeNotifier implements Process {
     if (handleClosed == 0) {
       _log.severe('get executable failed to close the process handle.');
     }
-    return _executable;
+    return _executable!;
   }
 
   // Get process suspended status from .NET calls through Powershell.

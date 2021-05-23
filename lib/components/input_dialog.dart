@@ -12,15 +12,15 @@ enum InputDialogs {
 /// Convenience function to show a dialog with a TextFormField so that the user
 /// can enter some data. Return is the String entered, or an empty string if the
 /// field was left blank.
-Future<String> showInputDialog({
-  @required BuildContext context,
-  InputDialogs type,
-  String title,
-  String hintText,
-  String initialValue,
+Future<String?> showInputDialog({
+  required BuildContext context,
+  InputDialogs? type,
+  String? title,
+  String? hintText,
+  String? initialValue,
 }) async {
   TextInputType keyboardType;
-  List<TextInputFormatter> formatter;
+  List<TextInputFormatter>? formatter;
 
   switch (type) {
     case InputDialogs.onlyInt:
@@ -52,7 +52,7 @@ Future<String> showInputDialog({
         hintText: hintText,
         keyboardType: keyboardType,
         formatter: formatter,
-        initialValue: initialValue,
+        initialValue: initialValue!,
       );
     },
   );
@@ -62,7 +62,7 @@ Future<String> showInputDialog({
   // Format as a full double, for example text entered as '.49' becomes '0.49'
   // and '5' becomes '5.00'.
   if (type == InputDialogs.onlyDouble) {
-    var _asDouble = double.tryParse(result);
+    var _asDouble = double.tryParse(result)!;
     result = _asDouble.toStringAsFixed(2).toString();
   }
 
@@ -77,7 +77,7 @@ class InputDialog extends StatelessWidget {
     this.hintText,
     this.keyboardType,
     this.formatter,
-    String initialValue,
+    required String initialValue,
   }) : maxLines = (type == InputDialogs.multiLine) ? 5 : 1 {
     controller.text = initialValue;
     controller.selection = TextSelection(
@@ -86,13 +86,13 @@ class InputDialog extends StatelessWidget {
     );
   }
 
-  final BuildContext context;
-  final InputDialogs type;
-  final String title;
-  final String hintText;
+  final BuildContext? context;
+  final InputDialogs? type;
+  final String? title;
+  final String? hintText;
   final int maxLines;
-  final TextInputType keyboardType;
-  final List<TextInputFormatter> formatter;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? formatter;
   final FocusNode hotkeyFocusNode = FocusNode();
   final FocusNode textFieldFocusNode = FocusNode();
   final TextEditingController controller = TextEditingController();
@@ -103,7 +103,7 @@ class InputDialog extends StatelessWidget {
       focusNode: hotkeyFocusNode,
       onKey: (RawKeyEvent event) => hotkey(event),
       child: AlertDialog(
-        title: (title != null) ? Text(title) : null,
+        title: (title != null) ? Text(title!) : null,
         content: TextFormField(
           controller: controller,
           focusNode: textFieldFocusNode,
@@ -137,16 +137,16 @@ class InputDialog extends StatelessWidget {
     // Ctrl + Enter submits for multiline.
     if (event.data.isModifierPressed(ModifierKey.controlModifier)) {
       if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-        Navigator.pop(context, controller.text);
+        Navigator.pop(context!, controller.text);
       }
     }
   }
 
   void _onSubmitted() {
     if (controller.text == '') {
-      Navigator.pop(context);
+      Navigator.pop(context!);
     } else {
-      Navigator.pop(context, controller.text);
+      Navigator.pop(context!, controller.text);
     }
   }
 }

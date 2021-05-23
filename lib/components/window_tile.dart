@@ -11,10 +11,10 @@ class WindowTile extends StatefulWidget {
 
   /// Key is overridden to ensure unique, non-double entries.
   @override
-  final Key key;
+  final Key? key;
 
   /// The visible window.
-  final Window window;
+  final Window? window;
 
   @override
   _WindowTileState createState() => _WindowTileState();
@@ -22,16 +22,16 @@ class WindowTile extends StatefulWidget {
 
 class _WindowTileState extends State<WindowTile> {
   /// The process associated with the window.
-  Process process;
+  late Process process;
 
   /// The visible window.
-  Window window;
+  Window? window;
 
   @override
   void initState() {
     super.initState();
     window = widget.window;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       process = Provider.of<Process>(context, listen: false);
     });
   }
@@ -41,7 +41,7 @@ class _WindowTileState extends State<WindowTile> {
     return Card(
       child: ListTile(
         leading: _statusWidget(),
-        title: Text(window.title),
+        title: Text(window!.title),
         subtitle: _executableNameWidget(),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 2,
@@ -77,11 +77,12 @@ class _WindowTileState extends State<WindowTile> {
 
   /// Executable name, for example 'firefox' or 'firefox-bin'.
   Widget _executableNameWidget() {
-    return FutureBuilder(
+    return FutureBuilder<String>(
       future: Provider.of<Process>(context, listen: false).executable,
-      builder: (context, snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        final executable = snapshot.data ?? '';
         if (snapshot.hasData) {
-          return Text(snapshot.data);
+          return Text(executable);
         }
         return const Text('');
       },
@@ -100,7 +101,7 @@ class _WindowTileState extends State<WindowTile> {
 
   Future<void> _suspend() async {
     // Minimize the window before suspending or it might not minimize.
-    await window.minimize();
+    await window!.minimize();
     // Small delay on Win32 to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
     if (Platform.isWindows) await Future.delayed(Duration(milliseconds: 500));
@@ -112,7 +113,7 @@ class _WindowTileState extends State<WindowTile> {
     final successful = await process.toggle();
     if (!successful) await _showSnackError(_ToggleError.Resume);
     // Restore the window _after_ resuming or it might not restore.
-    await window.restore();
+    await window!.restore();
   }
 
   Future<void> _showSnackError(_ToggleError errorType) async {

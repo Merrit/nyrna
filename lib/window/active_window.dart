@@ -23,9 +23,9 @@ class ActiveWindow {
   /// Nyrna's own PID.
   final int nyrnaPid = io.pid;
 
-  int id;
+  late int? id;
 
-  int pid;
+  late int pid;
 
   Future<void> initialize() async {
     pid = await _nativePlatform.activeWindowPid;
@@ -140,7 +140,7 @@ class ActiveWindow {
     }
     successful = await process.toggle();
     await _settings.setSavedProcess(pid);
-    await _settings.setSavedWindowId(id);
+    await _settings.setSavedWindowId(id!);
     if (!successful) {
       _log.warning('Failed to suspend PID: $pid');
     }

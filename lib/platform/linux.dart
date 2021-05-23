@@ -5,7 +5,7 @@ import 'package:nyrna/window/window.dart';
 
 /// Interact with the native Linux operating system.
 class Linux implements NativePlatform {
-  int _desktop;
+  int? _desktop;
 
   // Active virtual desktop as reported by wmctrl.
   @override
@@ -37,6 +37,7 @@ class Linux implements NativePlatform {
         if (windowDesktop == _desktop) {
           final pid = int.tryParse(parts[2]);
           final id = int.tryParse(parts[0]);
+          if ((pid == null) || (id == null)) return;
           windows[pid.toString()] = Window(
             title: parts.sublist(4).join(' '),
             pid: pid,

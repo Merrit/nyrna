@@ -31,8 +31,8 @@ class _LogScreenState extends State<LogScreen> {
                 const SizedBox(width: 10),
                 DropdownButton<Level>(
                   value: level,
-                  onChanged: (Level newLevel) {
-                    setState(() => level = newLevel);
+                  onChanged: (Level? newLevel) {
+                    setState(() => level = newLevel!);
                   },
                   items: const [
                     DropdownMenuItem(

@@ -23,7 +23,7 @@ class RunningAppsScreen extends StatefulWidget {
 }
 
 class _RunningAppsScreenState extends State<RunningAppsScreen> {
-  Nyrna nyrna;
+  late Nyrna nyrna;
 
   /// Whether or not a newer version of Nyrna is available.
   Future<bool> updateAvailable = UpdateNotifier().updateAvailable();
@@ -57,7 +57,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
             itemBuilder: (context, index) {
               if (nyrna.windows.isEmpty) return Container();
               var keys = nyrna.windows.keys.toList();
-              var window = nyrna.windows[keys[index]];
+              var window = nyrna.windows[keys[index]]!;
               return ChangeNotifierProvider<Process>(
                 key: ValueKey('${window.pid}${window.title}'),
                 create: (context) => Process(window.pid),
@@ -111,7 +111,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
         future: updateAvailable,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return (snapshot.data)
+            return snapshot.data!
                 ? IconButton(
                     icon: Icon(
                       Icons.notifications_active,

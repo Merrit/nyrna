@@ -14,7 +14,7 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   static final _log = Logger('LoadingScreen');
-  Nyrna nyrna;
+  late Nyrna nyrna;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           future: nyrna.checkDependencies(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              final dependenciesPresent = snapshot.data;
+              final dependenciesPresent = snapshot.data!;
               if (dependenciesPresent) {
                 // Slight delay required so we don't push the main
                 // screen while the build method is still executing.

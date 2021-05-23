@@ -17,7 +17,7 @@ class UpdateNotifier {
 
   /// Only check for update once a day.
   bool _shouldCheck() {
-    final savedCheck = _settings.prefs.getString('checkedUpdate');
+    final savedCheck = _settings.prefs!.getString('checkedUpdate');
     if (savedCheck == null) return true;
     final lastChecked = DateTime.tryParse(savedCheck);
     if (lastChecked == null) return true;
@@ -30,13 +30,12 @@ class UpdateNotifier {
   Future<String> latestVersion() async {
     final uri =
         Uri.https('raw.githubusercontent.com', '/Merrit/nyrna/master/VERSION');
-    if (uri == null) return '';
     final result = await http.read(uri);
     return result.trim();
   }
 
   /// If user wishes to ignore this update, save to SharedPreferences.
   void ignoreVersion(String version) {
-    _settings.prefs.setString('ignoredUpdate', version);
+    _settings.prefs!.setString('ignoredUpdate', version);
   }
 }

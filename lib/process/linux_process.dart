@@ -9,14 +9,14 @@ class LinuxProcess with ChangeNotifier implements Process {
   @override
   final int pid;
 
-  String _executable;
+  String? _executable;
 
   @override
   Future<String> get executable async {
-    if (_executable != null) return _executable;
+    if (_executable != null) return _executable!;
     final result = await io.Process.run('readlink', ['/proc/$pid/exe']);
     _executable = result.stdout.toString().split('/').last.trim();
-    return _executable;
+    return _executable!;
   }
 
   @override
