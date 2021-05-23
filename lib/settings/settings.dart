@@ -94,7 +94,7 @@ class Settings {
 
   /// Check for `PORTABLE` file in the Nyrna directory, which should only be
   /// present for the portable build on Linux.
-  Future<bool> isPortable() async {
+  Future<bool> get isPortable async {
     final file = File('PORTABLE');
     return await file.exists();
   }

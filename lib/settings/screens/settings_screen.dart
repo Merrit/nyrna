@@ -5,11 +5,11 @@ import 'package:nyrna/components/input_dialog.dart';
 import 'package:nyrna/globals.dart';
 import 'package:nyrna/logger/log_screen.dart';
 import 'package:nyrna/nyrna.dart';
-import 'package:nyrna/settings/components/system_integration_tiles.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:provider/provider.dart';
-import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../launcher.dart';
 
 /// Screen with configuration settings for Nyrna.
 class SettingsScreen extends StatefulWidget {
@@ -20,54 +20,40 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  /// Check if Nyrna is running as Portable version.
-  bool isPortable = false;
-
   late Nyrna nyrna;
 
   /// Adds a little space between sections.
-  static const double sectionPadding = 50;
+  final _sectionPadding = const SizedBox(height: 50);
 
   Settings settings = Settings.instance;
 
-  Widget _autoRefreshLeadingWidget() {
-    final _warningChip = ActionChip(
-      label: Text(
-        'Caution',
-        style: TextStyle(color: Colors.red[800]),
-      ),
-      backgroundColor: Colors.yellow,
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Text(
-                'Note: Auto refresh can cause issues with memory consumption on '
-                'Windows at the moment. Until the problem is resolved, consider '
-                'keeping auto refresh off if you experience issues.',
+  late final _warningChip = ActionChip(
+    label: Text(
+      'Caution',
+      style: TextStyle(color: Colors.red[800]),
+    ),
+    backgroundColor: Colors.yellow,
+    onPressed: () {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(
+              'Note: Auto refresh can cause issues with memory consumption on '
+              'Windows at the moment. Until the problem is resolved, consider '
+              'keeping auto refresh off if you experience issues.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Close'),
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text('Close'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-    final _refreshIcon = const Icon(Icons.refresh);
-    final returnIcon = (Platform.isWindows) ? _warningChip : _refreshIcon;
-    return returnIcon;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _checkPortable();
-  }
+            ],
+          );
+        },
+      );
+    },
+  );
 
   @override
   void didChangeDependencies() {
@@ -79,97 +65,97 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
-      body: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width / 1.20,
-          child: SettingsList(
-            contentPadding: const EdgeInsets.only(top: 40),
-            darkBackgroundColor: Colors.grey[850],
-            sections: [
-              SettingsSection(
-                tiles: [
-                  SettingsTile.switchTile(
-                    leading: _autoRefreshLeadingWidget(),
-                    title: 'Auto Refresh',
-                    subtitle: 'Update window & process info automatically',
-                    switchValue: settings.autoRefresh,
-                    onToggle: (value) => setState(() {
-                      settings.autoRefresh = value;
-                      nyrna.setRefresh();
-                    }),
-                    trailing: ActionChip(
-                      label: Text('data'),
-                      onPressed: () {},
-                    ),
-                  ),
-                  SettingsTile(
-                    leading: const Icon(Icons.timelapse),
-                    title: 'Auto Refresh Interval',
-                    trailing: Text('${settings.refreshInterval} seconds'),
-                    enabled: settings.autoRefresh,
-                    onPressed: (context) => _refreshIntervalDialog(),
-                  ),
-                ],
-              ),
-              // Only show for Nyrna Portable on Linux.
-              // We use a conditional because `SettingsList` only accepts
-              // `SettingsSection` items, so we can't use FutureBuilder.
-              if (Platform.isLinux && isPortable)
-                SettingsSection(
-                  title: 'System Integration',
-                  titlePadding: const EdgeInsets.only(top: sectionPadding),
-                  tiles: systemIntegrationTiles(context),
-                ),
-              SettingsSection(
-                title: 'Troubleshooting',
-                titlePadding: const EdgeInsets.only(top: sectionPadding),
-                tiles: [
-                  SettingsTile(
-                    leading: const Icon(Icons.article_outlined),
-                    title: 'Logs',
-                    onPressed: (context) {
-                      Navigator.pushNamed(context, LogScreen.id);
-                    },
-                  ),
-                ],
-              ),
-              SettingsSection(
-                title: 'About',
-                titlePadding: const EdgeInsets.only(top: sectionPadding),
-                tiles: [
-                  SettingsTile(
-                    leading: const Icon(Icons.info_outline),
-                    title: 'Nyrna version',
-                    subtitle: Globals.version,
-                  ),
-                  SettingsTile(
-                    leading: const Icon(Icons.launch),
-                    title: 'Nyrna homepage',
-                    onPressed: (context) async {
-                      await launch('https://nyrna.merritt.codes');
-                    },
-                  ),
-                  SettingsTile(
-                    leading: const Icon(Icons.launch),
-                    title: 'GitHub repository',
-                    onPressed: (context) async {
-                      await launch('https://github.com/Merrit/nyrna');
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
+      body: ListView(
+        padding: EdgeInsets.symmetric(
+          vertical: 30,
+          horizontal: 130,
         ),
+        children: [
+          Text('Preferences'),
+          const SizedBox(height: 8),
+          ListTile(
+            title: Text('Auto Refresh'),
+            leading: Icon(Icons.refresh),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Update window & process info automatically'),
+                const SizedBox(height: 5),
+                if (Platform.isWindows) _warningChip,
+              ],
+            ),
+            trailing: Switch(
+              value: settings.autoRefresh,
+              onChanged: (value) {
+                setState(() {
+                  settings.autoRefresh = value;
+                  nyrna.setRefresh();
+                });
+              },
+            ),
+          ),
+          Divider(),
+          ListTile(
+            leading: const Icon(Icons.timelapse),
+            title: Text('Auto Refresh Interval'),
+            trailing: Text('${settings.refreshInterval} seconds'),
+            enabled: settings.autoRefresh,
+            onTap: () => _refreshIntervalDialog(),
+          ),
+          // Add shortcuts and icons for portable builds.
+          if (Platform.isLinux) // TODO: Add integration function for Windows.
+            FutureBuilder<bool>(
+              future: settings.isPortable,
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data!) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _sectionPadding,
+                      Text('System Integration'),
+                      const SizedBox(height: 8),
+                      ListTile(
+                        leading: Icon(Icons.add_circle_outline),
+                        title: Text('Add Nyrna to launcher'),
+                        onTap: () => _confirmAddToLauncher(context),
+                      ),
+                    ],
+                  );
+                }
+                return const SizedBox();
+              },
+            ),
+          _sectionPadding,
+          Text('Troubleshooting'),
+          ListTile(
+            leading: const Icon(Icons.article_outlined),
+            title: Text('Logs'),
+            onTap: () => Navigator.pushNamed(context, LogScreen.id),
+          ),
+          _sectionPadding,
+          Text('About'),
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: Text('Nyrna version'),
+            subtitle: Text(Globals.version),
+          ),
+          ListTile(
+            leading: const Icon(Icons.launch),
+            title: Text('Nyrna homepage'),
+            onTap: () async {
+              await launch('https://nyrna.merritt.codes');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.launch),
+            title: Text('GitHub repository'),
+            onTap: () async {
+              await launch('https://github.com/Merrit/nyrna');
+            },
+          ),
+        ],
       ),
     );
-  }
-
-  /// Check for `PORTABLE` file in the Nyrna directory, which should only be
-  /// present for the portable build on Linux.
-  Future<void> _checkPortable() async {
-    final _isPortable = await settings.isPortable();
-    if (_isPortable) setState(() => isPortable = _isPortable);
   }
 
   /// Allow user to choose reset interval.
@@ -186,4 +172,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => settings.refreshInterval = newInterval);
     nyrna.setRefresh();
   }
+}
+
+/// Confirm with the user before adding .desktop and icon files.
+void _confirmAddToLauncher(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        insetPadding: const EdgeInsets.symmetric(
+          horizontal: 150.0,
+          vertical: 24.0,
+        ),
+        content: const Text('This will add a menu item to the system '
+            'launcher with an associated icon so launching Nyrna is easier.'
+            '\n\n'
+            'Continue?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Launcher.add(context),
+            child: const Text('Continue'),
+          ),
+        ],
+      );
+    },
+  );
 }

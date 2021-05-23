@@ -14,7 +14,6 @@ dependencies:
   logging: ^1.0.1
   path_provider: ^2.0.1
   provider: ^5.0.0
-  settings_ui: ^1.0.0
   shared_preferences: ^2.0.5
   url_launcher: ^6.0.4
   win32: ^2.1.1
