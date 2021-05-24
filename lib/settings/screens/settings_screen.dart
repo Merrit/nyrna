@@ -22,6 +22,11 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   late Nyrna nyrna;
 
+  final _divider = const Divider(
+    indent: 20,
+    endIndent: 20,
+  );
+
   /// Adds a little space between sections.
   final _sectionPadding = const SizedBox(height: 50);
 
@@ -94,7 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
           ),
-          Divider(),
+          _divider,
           ListTile(
             leading: const Icon(Icons.timelapse),
             title: Text('Auto Refresh Interval'),
@@ -102,6 +107,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             enabled: settings.autoRefresh,
             onTap: () => _refreshIntervalDialog(),
           ),
+          // _divider,
+          // ListTile(
+          //   leading: Icon(Icons.color_lens),
+          //   title: Text('Icon color'),
+          //   trailing: ColorIndicator(),
+          //   onTap: () => _pickIconColor(),
+          // ),
           // Add shortcuts and icons for portable builds.
           if (Platform.isLinux) // TODO: Add integration function for Windows.
             FutureBuilder<bool>(
@@ -172,6 +184,60 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => settings.refreshInterval = newInterval);
     nyrna.setRefresh();
   }
+
+//   Future<void> _pickIconColor() async {
+//     var iconColor = Color(settings.iconColor);
+//     final iconManager = IconManager();
+//     final iconUint8List = await iconManager.iconUint8List;
+//     final confirmed = await showDialog<bool>(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           content: StatefulBuilder(
+//             builder: (context, setState) {
+//               return Column(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   ColorPicker(
+//                     // Current color is pre-selected.
+//                     color: iconColor,
+//                     onColorChanged: (Color color) {
+//                       setState(() => iconColor = color);
+//                     },
+//                     heading: Text('Select color'),
+//                     subheading: Text('Select color shade'),
+//                     pickersEnabled: const <ColorPickerType, bool>{
+//                       ColorPickerType.primary: true,
+//                       ColorPickerType.accent: false,
+//                     },
+//                   ),
+//                   Image.memory(
+//                     iconUint8List,
+//                     height: 150,
+//                     width: 150,
+//                     color: iconColor,
+//                   ),
+//                 ],
+//               );
+//             },
+//           ),
+//           actions: [
+//             TextButton(
+//               onPressed: () => Navigator.pop(context),
+//               child: Text('Cancel'),
+//             ),
+//             TextButton(
+//               onPressed: () {},
+//               child: Text('Save'),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//     if (confirmed == null) return;
+//     // await _updateIcon();
+//     // await settings.setIconColor(newColor!.value);
+//   }
 }
 
 /// Confirm with the user before adding .desktop and icon files.

@@ -98,4 +98,12 @@ class Settings {
     final file = File('PORTABLE');
     return await file.exists();
   }
+
+  static const int _defaultIconColor = 2617291775;
+
+  int get iconColor => prefs!.getInt('iconColor') ?? _defaultIconColor;
+
+  Future<void> setIconColor(int color) async {
+    await prefs!.setInt('iconColor', color);
+  }
 }

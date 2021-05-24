@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   args: ^2.1.0
+  flex_color_picker: ^2.0.1
   http: ^0.13.3
   logging: ^1.0.1
   path_provider: ^2.0.1
