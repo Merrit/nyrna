@@ -146,11 +146,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           _sectionPadding,
           Text('About'),
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: Text('Nyrna version'),
-            subtitle: Text(Globals.version),
-          ),
+          // Hide version if `VERSION` file not found.
+          // Definitely the case for the Snap version on Linux.
+          if (Globals.version != 'Unknown')
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: Text('Nyrna version'),
+              subtitle: Text(Globals.version),
+            ),
           ListTile(
             leading: const Icon(Icons.launch),
             title: Text('Nyrna homepage'),
