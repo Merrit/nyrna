@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0.0...HEAD)
 
+**Closed issues:**
+
+- \[Feature Request\] Suspend by pid [\#32](https://github.com/Merrit/nyrna/issues/32)
+
 **Merged pull requests:**
 
 - null-safety [\#38](https://github.com/Merrit/nyrna/pull/38) ([Merrit](https://github.com/Merrit))
