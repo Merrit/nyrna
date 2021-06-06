@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- \[Feature Request\] Notifications [\#21](https://github.com/Merrit/nyrna/issues/21)
 - \[Feature Request\] Auto-suspend on minimize [\#16](https://github.com/Merrit/nyrna/issues/16)
 
 **Closed issues:**
