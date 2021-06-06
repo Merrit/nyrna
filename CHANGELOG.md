@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0.0...HEAD)
 
+**Implemented enhancements:**
+
+- \[Feature Request\] Auto-suspend on minimize [\#16](https://github.com/Merrit/nyrna/issues/16)
+
 **Closed issues:**
 
 - \[Feature Request\] Suspend by pid [\#32](https://github.com/Merrit/nyrna/issues/32)
