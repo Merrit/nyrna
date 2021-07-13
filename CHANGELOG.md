@@ -15,6 +15,7 @@
 
 **Merged pull requests:**
 
+- Bump addressable from 2.7.0 to 2.8.0 in /docs [\#43](https://github.com/Merrit/nyrna/pull/43) ([dependabot[bot]](https://github.com/apps/dependabot))
 - null-safety [\#38](https://github.com/Merrit/nyrna/pull/38) ([Merrit](https://github.com/Merrit))
 
 ## [v2.0.0](https://github.com/Merrit/nyrna/tree/v2.0.0) (2021-05-23)
