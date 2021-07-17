@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/components/input_dialog.dart';
 import 'package:nyrna/globals.dart';
 import 'package:nyrna/logger/log_screen.dart';
@@ -138,6 +140,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
           _sectionPadding,
+          ThemeSettings(),
+          _sectionPadding,
           Text('Troubleshooting'),
           ListTile(
             leading: const Icon(Icons.article_outlined),
@@ -270,4 +274,42 @@ void _confirmAddToLauncher(BuildContext context) {
       );
     },
   );
+}
+
+class ThemeSettings extends StatelessWidget {
+  const ThemeSettings({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Theme'),
+            RadioListTile<AppTheme>(
+              title: Text('Dark'),
+              groupValue: state.appTheme,
+              value: AppTheme.dark,
+              onChanged: (value) => themeCubit.changeTheme(value!),
+            ),
+            RadioListTile<AppTheme>(
+              title: Text('Pitch Black'),
+              groupValue: state.appTheme,
+              value: AppTheme.pitchBlack,
+              onChanged: (value) => themeCubit.changeTheme(value!),
+            ),
+            RadioListTile<AppTheme>(
+              title: Text('Light'),
+              groupValue: state.appTheme,
+              value: AppTheme.light,
+              onChanged: (value) => themeCubit.changeTheme(value!),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

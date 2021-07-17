@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:logging/logging.dart';
+import 'package:nyrna/application/theme/enums/app_theme.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -105,5 +106,21 @@ class Settings {
 
   Future<void> setIconColor(int color) async {
     await prefs!.setInt('iconColor', color);
+  }
+
+  AppTheme get appTheme {
+    final savedTheme = prefs?.getString('appTheme');
+    switch (savedTheme) {
+      case null:
+        return AppTheme.dark;
+      case 'light':
+        return AppTheme.light;
+      case 'dark':
+        return AppTheme.dark;
+      case 'pitchBlack':
+        return AppTheme.pitchBlack;
+      default:
+        return AppTheme.dark;
+    }
   }
 }

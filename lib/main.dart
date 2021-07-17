@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/logger/log_file.dart';
@@ -11,9 +12,10 @@ import 'package:nyrna/screens/apps_screen.dart';
 import 'package:nyrna/screens/loading_screen.dart';
 import 'package:nyrna/settings/screens/settings_screen.dart';
 import 'package:nyrna/settings/settings.dart';
-import 'package:nyrna/theme.dart';
 import 'package:nyrna/window/active_window.dart';
 import 'package:provider/provider.dart';
+
+import 'application/theme/cubit/theme_cubit.dart';
 
 Future<void> main(List<String> args) async {
   await parseArgs(args);
@@ -24,8 +26,16 @@ Future<void> main(List<String> args) async {
   // `-t` or `--toggle` flag detected.
   if (Config.toggle) await toggleActiveWindow();
 
-  // Run main GUI interface.
-  runApp(MyApp());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ThemeCubit(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 /// Parse command-line arguments.
@@ -86,17 +96,21 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<Nyrna>(create: (_) => Nyrna()),
       ],
-      child: MaterialApp(
-        title: 'Nyrna',
-        theme: NyrnaTheme.dark,
-        routes: {
-          LoadingScreen.id: (context) => LoadingScreen(),
-          LogScreen.id: (context) => LogScreen(),
-          RunningAppsScreen.id: (context) => RunningAppsScreen(),
-          SettingsScreen.id: (conext) => SettingsScreen(),
+      child: BlocBuilder<ThemeCubit, ThemeState>(
+        builder: (context, state) {
+          return MaterialApp(
+            title: 'Nyrna',
+            theme: state.themeData,
+            routes: {
+              LoadingScreen.id: (context) => LoadingScreen(),
+              LogScreen.id: (context) => LogScreen(),
+              RunningAppsScreen.id: (context) => RunningAppsScreen(),
+              SettingsScreen.id: (conext) => SettingsScreen(),
+            },
+            home: LoadingScreen(),
+            debugShowCheckedModeBanner: false,
+          );
         },
-        home: LoadingScreen(),
-        debugShowCheckedModeBanner: false,
       ),
     );
   }

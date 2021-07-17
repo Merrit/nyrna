@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
+import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/components/window_tile.dart';
 import 'package:nyrna/globals.dart';
 import 'package:nyrna/nyrna.dart';
@@ -74,7 +76,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
       floatingActionButton:
           ((_settings.autoRefresh && _settings.refreshInterval > 5) ||
                   !_settings.autoRefresh)
-              ? _floatingActionButton()
+              ? _FloatingActionButton()
               : null,
     );
   }
@@ -168,12 +170,24 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
       },
     );
   }
+}
 
-  /// FAB allows for manually refreshing the list of windows & their status.
-  FloatingActionButton _floatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () => nyrna.fetchData(),
-      child: const Icon(Icons.refresh),
+class _FloatingActionButton extends StatelessWidget {
+  _FloatingActionButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final nyrna = Provider.of<Nyrna>(context);
+
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, state) {
+        return FloatingActionButton(
+          backgroundColor:
+              (state.appTheme == AppTheme.pitchBlack) ? Colors.black : null,
+          onPressed: () => nyrna.fetchData(),
+          child: const Icon(Icons.refresh),
+        );
+      },
     );
   }
 }
