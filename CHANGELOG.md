@@ -4,8 +4,18 @@
 
 [Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0.0...HEAD)
 
+**Implemented enhancements:**
+
+- \[Feature Request\] Notifications [\#21](https://github.com/Merrit/nyrna/issues/21)
+- \[Feature Request\] Auto-suspend on minimize [\#16](https://github.com/Merrit/nyrna/issues/16)
+
+**Closed issues:**
+
+- \[Feature Request\] Suspend by pid [\#32](https://github.com/Merrit/nyrna/issues/32)
+
 **Merged pull requests:**
 
+- Bump addressable from 2.7.0 to 2.8.0 in /docs [\#43](https://github.com/Merrit/nyrna/pull/43) ([dependabot[bot]](https://github.com/apps/dependabot))
 - null-safety [\#38](https://github.com/Merrit/nyrna/pull/38) ([Merrit](https://github.com/Merrit))
 
 ## [v2.0.0](https://github.com/Merrit/nyrna/tree/v2.0.0) (2021-05-23)
