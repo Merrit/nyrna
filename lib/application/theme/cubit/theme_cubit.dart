@@ -14,6 +14,7 @@ class ThemeCubit extends Cubit<ThemeState> {
   }
 
   void changeTheme(AppTheme appTheme) {
+    Settings.instance.appTheme = appTheme;
     emit(state.copyWith(appTheme: appTheme));
   }
 }

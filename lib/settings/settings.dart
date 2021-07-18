@@ -113,14 +113,18 @@ class Settings {
     switch (savedTheme) {
       case null:
         return AppTheme.dark;
-      case 'light':
+      case 'AppTheme.light':
         return AppTheme.light;
-      case 'dark':
+      case 'AppTheme.dark':
         return AppTheme.dark;
-      case 'pitchBlack':
+      case 'AppTheme.pitchBlack':
         return AppTheme.pitchBlack;
       default:
         return AppTheme.dark;
     }
+  }
+
+  set appTheme(AppTheme appTheme) {
+    prefs?.setString('appTheme', appTheme.toString());
   }
 }
