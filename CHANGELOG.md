@@ -1,8 +1,12 @@
 # Changelog
 
-## [Unreleased](https://github.com/Merrit/nyrna/tree/HEAD)
+## [v2.1.0-beta.1](https://github.com/Merrit/nyrna/tree/v2.1.0-beta.1) (2021-07-17)
 
-[Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0.0...HEAD)
+[Full Changelog](https://github.com/Merrit/nyrna/compare/v2.1.0-beta.2...v2.1.0-beta.1)
+
+## [v2.1.0-beta.2](https://github.com/Merrit/nyrna/tree/v2.1.0-beta.2) (2021-07-13)
+
+[Full Changelog](https://github.com/Merrit/nyrna/compare/v2.0.0...v2.1.0-beta.2)
 
 **Implemented enhancements:**
 
