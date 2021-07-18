@@ -1,7 +1,6 @@
 name: Build Win32
 on:
   workflow_dispatch:
-  push:
   pull_request:
   release:
     types:

@@ -1,7 +1,6 @@
 name: Build Linux AppImage
 on:
   workflow_dispatch:
-  push:
   pull_request:
   release:
     types:
