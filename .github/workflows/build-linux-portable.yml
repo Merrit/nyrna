@@ -1,5 +1,11 @@
 name: Build Linux portable version on release
-on: [push, pull_request, release, workflow_dispatch]
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+  release:
+    types:
+      - created
 jobs:
   build_and_preview:
     runs-on: ubuntu-latest
