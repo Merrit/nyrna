@@ -1,4 +1,4 @@
-name: Build Linux portable version on release
+name: Build Linux portable
 on:
   workflow_dispatch:
   push:

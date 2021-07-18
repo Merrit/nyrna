@@ -1,4 +1,4 @@
-name: Build AppImage on new release
+name: Build Linux AppImage
 on:
   workflow_dispatch:
   push:

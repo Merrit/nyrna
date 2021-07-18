@@ -1,4 +1,4 @@
-name: Build Win32 versions on release
+name: Build Win32
 on:
   workflow_dispatch:
   push:
