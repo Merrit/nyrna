@@ -10,16 +10,13 @@ import 'package:nyrna/logger/log_file.dart';
 ///
 /// Both options available with `-tl`.
 class ArgumentParser {
-  ArgumentParser(this.args);
+  ArgumentParser(this.args) {
+    _setFlags();
+  }
 
   final List<String> args;
 
   final _parser = ArgParser();
-
-  Future<void> init() async {
-    _setFlags();
-    await _parse();
-  }
 
   void _setFlags() {
     // Toggle flag means Nyrna should toggle the suspend / resume state of the
@@ -41,7 +38,7 @@ class ArgumentParser {
 
   late ArgResults _results;
 
-  Future<void> _parse() async {
+  Future<void> parse() async {
     _parseArgs();
     _checkToggleFlag();
     await _checkLogFlag();

@@ -6,15 +6,18 @@ import 'package:logging/logging.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/logger/log_file.dart';
 import 'package:nyrna/logger/log_screen.dart';
-import 'package:nyrna/arguments/argument_parser.dart';
 import 'package:nyrna/presentation/app_widget.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/window/active_window.dart';
 
 import 'application/theme/cubit/theme_cubit.dart';
+import 'domain/arguments/argument_parser.dart';
 
 Future<void> main(List<String> args) async {
-  await parseArgs(args);
+  // Parse command-line arguments.
+  final parser = ArgumentParser(args);
+  await parser.parse();
+
   await initSettings();
 
   initLogger();
@@ -32,12 +35,6 @@ Future<void> main(List<String> args) async {
       child: AppWidget(),
     ),
   );
-}
-
-/// Parse command-line arguments.
-Future<void> parseArgs(List<String> args) async {
-  final parser = ArgumentParser(args);
-  await parser.init();
 }
 
 /// Initialize the singleton Settings instance in settings.dart
