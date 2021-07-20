@@ -1,5 +1,10 @@
-name: Build AppImage on new release
-on: [push, pull_request, release, workflow_dispatch]
+name: Build Linux AppImage
+on:
+  workflow_dispatch:
+  pull_request:
+  release:
+    types:
+      - created
 jobs:
   build-appimage:
     runs-on: Ubuntu-20.04

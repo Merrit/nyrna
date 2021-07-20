@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:logging/logging.dart';
+import 'package:nyrna/application/theme/enums/app_theme.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,8 +95,36 @@ class Settings {
 
   /// Check for `PORTABLE` file in the Nyrna directory, which should only be
   /// present for the portable build on Linux.
-  Future<bool> isPortable() async {
+  Future<bool> get isPortable async {
     final file = File('PORTABLE');
     return await file.exists();
+  }
+
+  static const int _defaultIconColor = 2617291775;
+
+  int get iconColor => prefs!.getInt('iconColor') ?? _defaultIconColor;
+
+  Future<void> setIconColor(int color) async {
+    await prefs!.setInt('iconColor', color);
+  }
+
+  AppTheme get appTheme {
+    final savedTheme = prefs?.getString('appTheme');
+    switch (savedTheme) {
+      case null:
+        return AppTheme.dark;
+      case 'AppTheme.light':
+        return AppTheme.light;
+      case 'AppTheme.dark':
+        return AppTheme.dark;
+      case 'AppTheme.pitchBlack':
+        return AppTheme.pitchBlack;
+      default:
+        return AppTheme.dark;
+    }
+  }
+
+  set appTheme(AppTheme appTheme) {
+    prefs?.setString('appTheme', appTheme.toString());
   }
 }
