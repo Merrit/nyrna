@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:args/args.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/logger/log_file.dart';
@@ -50,6 +52,7 @@ class ArgumentParser {
       _results = _parser.parse(args);
     } on ArgParserException catch (e) {
       print('Unknown argument: $e');
+      exit(1);
     }
   }
 
