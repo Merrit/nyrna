@@ -6,14 +6,10 @@ import 'package:logging/logging.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/logger/log_file.dart';
 import 'package:nyrna/logger/log_screen.dart';
-import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/arguments/argument_parser.dart';
-import 'package:nyrna/screens/apps_screen.dart';
-import 'package:nyrna/screens/loading_screen.dart';
-import 'package:nyrna/settings/screens/settings_screen.dart';
+import 'package:nyrna/presentation/app_widget.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/window/active_window.dart';
-import 'package:provider/provider.dart';
 
 import 'application/theme/cubit/theme_cubit.dart';
 
@@ -33,7 +29,7 @@ Future<void> main(List<String> args) async {
           create: (context) => ThemeCubit(),
         ),
       ],
-      child: MyApp(),
+      child: AppWidget(),
     ),
   );
 }
@@ -86,32 +82,4 @@ Future<void> toggleActiveWindow() async {
   if (Config.log) await LogFile.instance.write();
   // Not yet possible to run without GUI, so we just exit after toggling.
   exit(0);
-}
-
-/// The entrance to the main Nyrna app.
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<Nyrna>(create: (_) => Nyrna()),
-      ],
-      child: BlocBuilder<ThemeCubit, ThemeState>(
-        builder: (context, state) {
-          return MaterialApp(
-            title: 'Nyrna',
-            theme: state.themeData,
-            routes: {
-              LoadingScreen.id: (context) => LoadingScreen(),
-              LogScreen.id: (context) => LogScreen(),
-              RunningAppsScreen.id: (context) => RunningAppsScreen(),
-              SettingsScreen.id: (conext) => SettingsScreen(),
-            },
-            home: LoadingScreen(),
-            debugShowCheckedModeBanner: false,
-          );
-        },
-      ),
-    );
-  }
 }
