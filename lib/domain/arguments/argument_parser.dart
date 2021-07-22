@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:nyrna/config.dart';
-import 'package:nyrna/logger/log_file.dart';
+import 'package:nyrna/infrastructure/logger/log_file.dart';
 
 /// Parse command-line arguments.
 ///

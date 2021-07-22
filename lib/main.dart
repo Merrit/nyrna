@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nyrna/config.dart';
-import 'package:nyrna/logger/log_file.dart';
-import 'package:nyrna/logger/log_screen.dart';
+import 'package:nyrna/presentation/logs/pages/log_page.dart';
 import 'package:nyrna/presentation/app_widget.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/window/active_window.dart';
 
 import 'application/theme/cubit/theme_cubit.dart';
 import 'domain/arguments/argument_parser.dart';
+import 'infrastructure/logger/log_file.dart';
 
 Future<void> main(List<String> args) async {
   // Parse command-line arguments.
@@ -47,7 +47,7 @@ Future<void> initSettings() async {
 }
 
 /// Print log messages & add them to a Queue so they can be referenced, for
-/// example from the [LogScreen].
+/// example from the [LogPage].
 void initLogger() {
   final logQueue = LogFile.logs;
   Logger.root.onRecord.listen((record) {

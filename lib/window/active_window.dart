@@ -1,7 +1,7 @@
 import 'dart:io' as io;
 
 import 'package:logging/logging.dart';
-import 'package:nyrna/logger/log_file.dart';
+import 'package:nyrna/infrastructure/logger/log_file.dart';
 import 'package:nyrna/platform/native_platform.dart';
 import 'package:nyrna/process/process.dart';
 import 'package:nyrna/settings/settings.dart';

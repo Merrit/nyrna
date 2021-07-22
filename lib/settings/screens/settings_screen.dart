@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/components/input_dialog.dart';
 import 'package:nyrna/globals.dart';
-import 'package:nyrna/logger/log_screen.dart';
+import 'package:nyrna/presentation/logs/pages/log_page.dart';
 import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:provider/provider.dart';
@@ -146,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             leading: const Icon(Icons.article_outlined),
             title: Text('Logs'),
-            onTap: () => Navigator.pushNamed(context, LogScreen.id),
+            onTap: () => Navigator.pushNamed(context, LogPage.id),
           ),
           _sectionPadding,
           Text('About'),

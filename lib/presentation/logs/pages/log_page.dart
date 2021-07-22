@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
-import 'package:nyrna/logger/log_file.dart';
+import 'package:nyrna/infrastructure/logger/log_file.dart';
 
 /// Display Nyrna's logs.
-class LogScreen extends StatefulWidget {
+class LogPage extends StatefulWidget {
   static final id = 'LogScreen';
 
   @override
-  _LogScreenState createState() => _LogScreenState();
+  _LogPageState createState() => _LogPageState();
 }
 
-class _LogScreenState extends State<LogScreen> {
+class _LogPageState extends State<LogPage> {
   /// The level of logs to show, changed with the DropdownButton.
   Level level = Level.INFO;
 
