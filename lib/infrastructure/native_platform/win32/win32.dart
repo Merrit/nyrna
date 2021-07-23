@@ -1,12 +1,13 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
-import 'package:nyrna/platform/win32/dwmapi.dart';
 import 'package:nyrna/process/win32_process.dart';
 // import 'package:nyrna/platform/win32/user32.dart';
-import 'package:nyrna/platform/native_platform.dart';
+import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:nyrna/window/window.dart';
 import 'package:win32/win32.dart';
+
+import 'ffi/dwmapi.dart';
 
 /// Interact with the native win32 operating system.
 ///

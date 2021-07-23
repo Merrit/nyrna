@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nyrna/platform/native_platform.dart';
+import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 
 void main() {
   NativePlatform? nativePlatform;

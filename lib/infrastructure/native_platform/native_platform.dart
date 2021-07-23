@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:nyrna/platform/linux.dart';
-import 'package:nyrna/platform/win32/win32.dart';
+import 'package:nyrna/infrastructure/native_platform/linux/linux.dart';
 import 'package:nyrna/window/window.dart';
+
+import 'win32/win32.dart';
 
 /// Interact with the native operating system.
 ///
