@@ -1,5 +1,7 @@
 import 'dart:io' as io;
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nyrna/infrastructure/logger/log_file.dart';
 import 'package:nyrna/platform/native_platform.dart';
@@ -7,6 +9,8 @@ import 'package:nyrna/process/process.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/window/window_controls.dart';
 import 'package:win32/win32.dart';
+
+import '../config.dart';
 
 /// Represents the active, foreground window on the system.
 ///
@@ -27,6 +31,7 @@ class ActiveWindow {
 
   late int pid;
 
+  @visibleForTesting
   Future<void> initialize() async {
     pid = await _nativePlatform.activeWindowPid;
     await _verifyPid();
@@ -37,7 +42,7 @@ class ActiveWindow {
   ///
   /// Necessary when using the toggle active window feature,
   /// until Flutter has a way to run without GUI.
-  Future<void> hideNyrna() async {
+  Future<void> _hideNyrna() async {
     switch (io.Platform.operatingSystem) {
       case 'linux':
         await _hideLinux();
@@ -84,7 +89,7 @@ class ActiveWindow {
     final savedProcess = Process(savedPid);
     final exists = await savedProcess.exists();
     if (!exists) {
-      await removeSavedProcess();
+      await _removeSavedProcess();
       _log.warning('Saved pid no longer exists, removed.');
       await LogFile.instance.write();
       io.exit(0);
@@ -92,7 +97,7 @@ class ActiveWindow {
   }
 
   /// Toggle the suspend / resume state of the given process.
-  Future<bool> toggle() async {
+  Future<bool> _toggleProcess() async {
     if (_settings.savedProcess != 0) {
       final successful = await _resume();
       return successful;
@@ -109,12 +114,12 @@ class ActiveWindow {
     final process = Process(pid);
     final _status = await process.status;
     if (_status == ProcessStatus.unknown) {
-      await removeSavedProcess();
+      await _removeSavedProcess();
       _log.warning('Issue getting status, removed saved process.');
     }
     if (_status == ProcessStatus.suspended) {
       successful = await process.toggle();
-      await removeSavedProcess();
+      await _removeSavedProcess();
       if (!successful) {
         _log.warning('Failed to resume PID: $pid');
         return successful;
@@ -124,7 +129,7 @@ class ActiveWindow {
     return successful;
   }
 
-  Future<void> removeSavedProcess() async {
+  Future<void> _removeSavedProcess() async {
     await _settings.setSavedProcess(0);
     await _settings.setSavedWindowId(0);
   }
@@ -145,5 +150,22 @@ class ActiveWindow {
       _log.warning('Failed to suspend PID: $pid');
     }
     return successful;
+  }
+
+  /// Toggle suspend / resume for the active, foreground window.
+  Future<void> toggle() async {
+    final _log = Logger('toggleActiveWindow');
+    _log.info('toggleActiveWindow beginning');
+    await _hideNyrna();
+    await initialize();
+    final successful = await _toggleProcess();
+    if (!successful) {
+      await _removeSavedProcess();
+      _log.warning('Failed to toggle active window. Cleared saved pid.');
+    }
+    _log.info('Finished toggle window, exiting.');
+    if (Config.log) await LogFile.instance.write();
+    // Not yet possible to run without GUI, so we just exit after toggling.
+    exit(0);
   }
 }
