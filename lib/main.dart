@@ -18,8 +18,8 @@ Future<void> main(List<String> args) async {
   final parser = ArgumentParser(args);
   await parser.parse();
 
-  final settings = Preferences.instance;
-  await settings.initialize();
+  final prefs = Preferences.instance;
+  await prefs.initialize();
 
   AppLogger().initialize();
 
