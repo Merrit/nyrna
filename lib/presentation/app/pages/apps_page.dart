@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nyrna/application/theme/theme.dart';
-import 'package:nyrna/components/window_tile.dart';
+import 'package:nyrna/presentation/app/widgets/window_tile.dart';
 import 'package:nyrna/globals.dart';
 import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/process/process.dart';
@@ -17,14 +17,14 @@ import 'package:url_launcher/url_launcher.dart';
 /// The main screen for Nyrna.
 ///
 /// Shows a ListView with tiles for each open window on the current desktop.
-class RunningAppsScreen extends StatefulWidget {
+class AppsPage extends StatefulWidget {
   static const id = 'running_apps_screen';
 
   @override
-  _RunningAppsScreenState createState() => _RunningAppsScreenState();
+  _AppsPageState createState() => _AppsPageState();
 }
 
-class _RunningAppsScreenState extends State<RunningAppsScreen> {
+class _AppsPageState extends State<AppsPage> {
   late Nyrna nyrna;
 
   /// Whether or not a newer version of Nyrna is available.
@@ -156,7 +156,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
               onPressed: () {
                 notifier.ignoreVersion(latestVersion);
                 setState(() {
-                  Navigator.pushReplacementNamed(context, RunningAppsScreen.id);
+                  Navigator.pushReplacementNamed(context, AppsPage.id);
                 });
               },
               child: const Text('Dismiss'),

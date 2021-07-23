@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nyrna/nyrna.dart';
-import 'package:nyrna/screens/apps_screen.dart';
+
+import 'app/app.dart';
 
 /// Intermediate loading screen while verifying that Nyrna's dependencies are
 /// available. If they are not an error message is shown, preventing a crash.
-class LoadingScreen extends StatefulWidget {
+class LoadingPage extends StatefulWidget {
   static const id = 'loading_screen';
 
   @override
-  _LoadingScreenState createState() => _LoadingScreenState();
+  _LoadingPageState createState() => _LoadingPageState();
 }
 
-class _LoadingScreenState extends State<LoadingScreen> {
+class _LoadingPageState extends State<LoadingPage> {
   static final _log = Logger('LoadingScreen');
   late Nyrna nyrna;
 
@@ -36,7 +37,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 // Slight delay required so we don't push the main
                 // screen while the build method is still executing.
                 Future.microtask(() {
-                  Navigator.pushReplacementNamed(context, RunningAppsScreen.id);
+                  Navigator.pushReplacementNamed(context, AppsPage.id);
                 });
               } else {
                 return Card(

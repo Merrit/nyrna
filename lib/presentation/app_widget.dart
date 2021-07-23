@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/presentation/logs/pages/log_page.dart';
-import 'package:nyrna/screens/apps_screen.dart';
-import 'package:nyrna/screens/loading_screen.dart';
+import 'package:nyrna/presentation/loading_page.dart';
 import 'package:nyrna/presentation/preferences/pages/preferences_page.dart';
 import 'package:provider/provider.dart';
 
 import '../nyrna.dart';
+import 'app/app.dart';
 
 class AppWidget extends StatelessWidget {
   @override
@@ -23,12 +23,12 @@ class AppWidget extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: state.themeData,
             routes: {
-              LoadingScreen.id: (context) => LoadingScreen(),
+              LoadingPage.id: (context) => LoadingPage(),
               LogPage.id: (context) => LogPage(),
-              RunningAppsScreen.id: (context) => RunningAppsScreen(),
+              AppsPage.id: (context) => AppsPage(),
               PreferencesPage.id: (conext) => PreferencesPage(),
             },
-            home: LoadingScreen(),
+            home: LoadingPage(),
           );
         },
       ),
