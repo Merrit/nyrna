@@ -1,5 +1,4 @@
 import 'dart:io' as io;
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
@@ -10,7 +9,7 @@ import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/window/window_controls.dart';
 import 'package:win32/win32.dart';
 
-import '../config.dart';
+import '../../config.dart';
 
 /// Represents the active, foreground window on the system.
 ///
@@ -166,6 +165,6 @@ class ActiveWindow {
     _log.info('Finished toggle window, exiting.');
     if (Config.log) await LogFile.instance.write();
     // Not yet possible to run without GUI, so we just exit after toggling.
-    exit(0);
+    io.exit(0);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
-import 'package:nyrna/window/active_window.dart';
+import 'package:nyrna/application/active_window/active_window.dart';
 
 Future<void> main() async {
   final settings = Preferences.instance;

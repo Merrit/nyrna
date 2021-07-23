@@ -4,7 +4,7 @@ import 'package:nyrna/config.dart';
 import 'package:nyrna/infrastructure/logger/app_logger.dart';
 import 'package:nyrna/presentation/app_widget.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
-import 'package:nyrna/window/active_window.dart';
+import 'package:nyrna/application/active_window/active_window.dart';
 
 import 'application/theme/cubit/theme_cubit.dart';
 import 'domain/arguments/argument_parser.dart';
