@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nyrna/config.dart';
-import 'package:nyrna/presentation/logs/pages/log_page.dart';
+import 'package:nyrna/infrastructure/logger/app_logger.dart';
 import 'package:nyrna/presentation/app_widget.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/window/active_window.dart';
@@ -20,7 +20,7 @@ Future<void> main(List<String> args) async {
 
   await initSettings();
 
-  initLogger();
+  AppLogger().initialize();
 
   // `-t` or `--toggle` flag detected.
   if (Config.toggle) await toggleActiveWindow();
@@ -44,23 +44,6 @@ Future<void> main(List<String> args) async {
 Future<void> initSettings() async {
   final settings = Settings.instance;
   await settings.initialize();
-}
-
-/// Print log messages & add them to a Queue so they can be referenced, for
-/// example from the [LogPage].
-void initLogger() {
-  final logQueue = LogFile.logs;
-  Logger.root.onRecord.listen((record) {
-    var msg = '${record.level.name}: ${record.time}: '
-        '${record.loggerName}: ${record.message}';
-    if (record.error != null) msg += '\nError: ${record.error}';
-    print(msg);
-    logQueue.addLast(record);
-    // In case the log grows too crazy, prune for sanity.
-    while (logQueue.length > 100) {
-      logQueue.removeFirst();
-    }
-  });
 }
 
 /// Toggle suspend / resume for the active, foreground window.
