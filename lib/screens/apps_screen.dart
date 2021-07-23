@@ -8,8 +8,8 @@ import 'package:nyrna/components/window_tile.dart';
 import 'package:nyrna/globals.dart';
 import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/process/process.dart';
-import 'package:nyrna/settings/screens/settings_screen.dart';
-import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/presentation/preferences/pages/preferences_page.dart';
+import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/settings/update_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,7 +32,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
 
   static final _log = Logger('RunningAppsScreen');
 
-  final _settings = Settings.instance;
+  final _settings = Preferences.instance;
 
   @override
   void initState() {
@@ -100,7 +100,7 @@ class _RunningAppsScreenState extends State<RunningAppsScreen> {
           icon: const Icon(Icons.settings),
           onPressed: () {
             _log.info('User clicked settings button');
-            Navigator.pushNamed(context, SettingsScreen.id);
+            Navigator.pushNamed(context, PreferencesPage.id);
           },
         ),
       ],

@@ -7,10 +7,10 @@ import 'package:nyrna/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Manages settings & preferences.
-class Settings {
+class Preferences {
   // Settings is a singleton.
-  Settings._privateConstructor();
-  static final Settings instance = Settings._privateConstructor();
+  Preferences._privateConstructor();
+  static final Preferences instance = Preferences._privateConstructor();
 
   static final _log = Logger('Settings');
 

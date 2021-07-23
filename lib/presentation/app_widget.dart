@@ -4,7 +4,7 @@ import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/presentation/logs/pages/log_page.dart';
 import 'package:nyrna/screens/apps_screen.dart';
 import 'package:nyrna/screens/loading_screen.dart';
-import 'package:nyrna/settings/screens/settings_screen.dart';
+import 'package:nyrna/presentation/preferences/pages/preferences_page.dart';
 import 'package:provider/provider.dart';
 
 import '../nyrna.dart';
@@ -26,7 +26,7 @@ class AppWidget extends StatelessWidget {
               LoadingScreen.id: (context) => LoadingScreen(),
               LogPage.id: (context) => LogPage(),
               RunningAppsScreen.id: (context) => RunningAppsScreen(),
-              SettingsScreen.id: (conext) => SettingsScreen(),
+              PreferencesPage.id: (conext) => PreferencesPage(),
             },
             home: LoadingScreen(),
           );

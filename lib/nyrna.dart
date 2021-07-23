@@ -3,7 +3,7 @@ import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
 import 'package:nyrna/platform/native_platform.dart';
-import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/window/window.dart';
 
 /// Represents Nyrna, its state, and interactions.
@@ -28,7 +28,7 @@ class Nyrna extends ChangeNotifier {
 
   final _nativePlatform = NativePlatform();
 
-  final _settings = Settings.instance;
+  final _settings = Preferences.instance;
 
   int? _currentDesktop;
 

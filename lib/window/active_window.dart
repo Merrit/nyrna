@@ -4,7 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:nyrna/infrastructure/logger/log_file.dart';
 import 'package:nyrna/platform/native_platform.dart';
 import 'package:nyrna/process/process.dart';
-import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/window/window_controls.dart';
 import 'package:win32/win32.dart';
 
@@ -18,7 +18,7 @@ class ActiveWindow {
 
   static final _log = Logger('ActiveWindow');
 
-  final _settings = Settings.instance;
+  final _settings = Preferences.instance;
 
   /// Nyrna's own PID.
   final int nyrnaPid = io.pid;

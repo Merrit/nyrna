@@ -1,10 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'package:nyrna/globals.dart';
-import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/infrastructure/preferences/preferences.dart';
 
 /// Check if updates to Nyrna are available.
 class UpdateNotifier {
-  final _settings = Settings.instance;
+  final _settings = Preferences.instance;
 
   /// If update is available returns true.
   Future<bool> updateAvailable() async {

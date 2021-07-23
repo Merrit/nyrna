@@ -6,7 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:nyrna/config.dart';
 import 'package:nyrna/infrastructure/logger/app_logger.dart';
 import 'package:nyrna/presentation/app_widget.dart';
-import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/window/active_window.dart';
 
 import 'application/theme/cubit/theme_cubit.dart';
@@ -18,7 +18,8 @@ Future<void> main(List<String> args) async {
   final parser = ArgumentParser(args);
   await parser.parse();
 
-  await initSettings();
+  final settings = Preferences.instance;
+  await settings.initialize();
 
   AppLogger().initialize();
 
@@ -35,15 +36,6 @@ Future<void> main(List<String> args) async {
       child: AppWidget(),
     ),
   );
-}
-
-/// Initialize the singleton Settings instance in settings.dart
-///
-/// Needed early both because it runs syncronously and would block UI,
-/// as well as because the toggle feature checks for a saved process.
-Future<void> initSettings() async {
-  final settings = Settings.instance;
-  await settings.initialize();
 }
 
 /// Toggle suspend / resume for the active, foreground window.

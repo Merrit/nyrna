@@ -7,21 +7,21 @@ import 'package:nyrna/components/input_dialog.dart';
 import 'package:nyrna/globals.dart';
 import 'package:nyrna/presentation/logs/pages/log_page.dart';
 import 'package:nyrna/nyrna.dart';
-import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../launcher.dart';
+import '../../../settings/launcher.dart';
 
 /// Screen with configuration settings for Nyrna.
-class SettingsScreen extends StatefulWidget {
+class PreferencesPage extends StatefulWidget {
   static const id = 'settings_screen';
 
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  _PreferencesPageState createState() => _PreferencesPageState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _PreferencesPageState extends State<PreferencesPage> {
   late Nyrna nyrna;
 
   final _divider = const Divider(
@@ -32,7 +32,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   /// Adds a little space between sections.
   final _sectionPadding = const SizedBox(height: 50);
 
-  Settings settings = Settings.instance;
+  Preferences settings = Preferences.instance;
 
   late final _warningChip = ActionChip(
     label: Text(

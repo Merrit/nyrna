@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nyrna/globals.dart';
-import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/settings/update_notifier.dart';
 
 void main() {
-  Settings? _settings;
+  Preferences? _settings;
 
   setUp(() async {
-    _settings = Settings.instance;
+    _settings = Preferences.instance;
     await _settings!.initialize();
   });
 

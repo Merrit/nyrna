@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/window/active_window.dart';
 
 Future<void> main() async {
-  final settings = Settings.instance;
+  final settings = Preferences.instance;
   await settings.initialize();
 
   ActiveWindow? activeWindow;
