@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nyrna/config.dart';
 import 'package:nyrna/infrastructure/logger/app_logger.dart';
 import 'package:nyrna/presentation/app_widget.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
@@ -22,7 +21,7 @@ Future<void> main(List<String> args) async {
   AppLogger().initialize();
 
   // `-t` or `--toggle` flag detected.
-  if (Config.toggle) await ActiveWindow().toggle();
+  if (parser.toggleFlagged) await ActiveWindow().toggle();
 
   runApp(
     MultiBlocProvider(

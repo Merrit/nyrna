@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:io';
 import 'package:logging/logging.dart';
-import 'package:nyrna/config.dart';
 import 'package:path_provider/path_provider.dart' as p;
 
 /// Log debug messages to a temp file.
@@ -50,12 +49,10 @@ class LogFile {
 
   /// Flush the log to ensure it has been written to disk before exiting.
   Future<void> write() async {
-    if (Config.log) {
-      await _logFile!.writeAsString(
-        logs.toString(),
-        mode: FileMode.append,
-        flush: true,
-      );
-    }
+    await _logFile!.writeAsString(
+      logs.toString(),
+      mode: FileMode.append,
+      flush: true,
+    );
   }
 }

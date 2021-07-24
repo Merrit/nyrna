@@ -1,29 +1,23 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nyrna/config.dart';
 import 'package:nyrna/domain/arguments/argument_parser.dart';
 
 void main() {
-  setUp(() {
-    Config.log = false;
-    Config.toggle = false;
-  });
-
   test('With no flags log is false', () async {
     final parser = ArgumentParser([]);
     await parser.parse();
-    expect(Config.log, false);
+    expect(parser.toggleFlagged, false);
   });
 
   test('Config.log is true with -l flag', () async {
     final parser = ArgumentParser(['-l']);
     await parser.parse();
-    expect(Config.log, true);
+    expect(ArgumentParser.logToFile, true);
   });
 
   test('Config.log is true with --log flag', () async {
     final parser = ArgumentParser(['--log']);
     await parser.parse();
-    expect(Config.log, true);
+    expect(ArgumentParser.logToFile, true);
   });
 
   test(
@@ -31,7 +25,7 @@ void main() {
     () async {
       final parser = ArgumentParser([]);
       await parser.parse();
-      expect(Config.toggle, false);
+      expect(parser.toggleFlagged, false);
     },
   );
   test(
@@ -39,7 +33,7 @@ void main() {
     () async {
       final parser = ArgumentParser(['--toggle']);
       await parser.parse();
-      expect(Config.toggle, true);
+      expect(parser.toggleFlagged, true);
     },
   );
 
@@ -48,7 +42,7 @@ void main() {
     () async {
       final parser = ArgumentParser(['-t']);
       await parser.parse();
-      expect(Config.toggle, true);
+      expect(parser.toggleFlagged, true);
     },
   );
 
@@ -57,8 +51,8 @@ void main() {
     () async {
       final parser = ArgumentParser(['-tl']);
       await parser.parse();
-      expect(Config.toggle, true);
-      expect(Config.log, true);
+      expect(parser.toggleFlagged, true);
+      expect(ArgumentParser.logToFile, true);
     },
   );
 }

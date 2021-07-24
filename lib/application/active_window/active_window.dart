@@ -2,14 +2,13 @@ import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
+import 'package:nyrna/domain/arguments/argument_parser.dart';
 import 'package:nyrna/infrastructure/logger/log_file.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:nyrna/process/process.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/window/window_controls.dart';
 import 'package:win32/win32.dart';
-
-import '../../config.dart';
 
 /// Represents the active, foreground window on the system.
 ///
@@ -76,7 +75,7 @@ class ActiveWindow {
     // just not running the GUI for now. Sanity check: don't suspend self.
     if (pid == nyrnaPid) {
       _log.severe("Active window PID was Nyrna's own, exiting.");
-      await LogFile.instance.write();
+      if (ArgumentParser.logToFile) await LogFile.instance.write();
       io.exit(1);
     }
     if (_settings.savedProcess != 0) await _checkStillExists();
@@ -90,7 +89,7 @@ class ActiveWindow {
     if (!exists) {
       await _removeSavedProcess();
       _log.warning('Saved pid no longer exists, removed.');
-      await LogFile.instance.write();
+      if (ArgumentParser.logToFile) await LogFile.instance.write();
       io.exit(0);
     }
   }
@@ -163,7 +162,7 @@ class ActiveWindow {
       _log.warning('Failed to toggle active window. Cleared saved pid.');
     }
     _log.info('Finished toggle window, exiting.');
-    if (Config.log) await LogFile.instance.write();
+    if (ArgumentParser.logToFile) await LogFile.instance.write();
     // Not yet possible to run without GUI, so we just exit after toggling.
     io.exit(0);
   }

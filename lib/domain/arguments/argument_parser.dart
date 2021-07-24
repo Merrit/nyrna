@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:nyrna/config.dart';
 import 'package:nyrna/infrastructure/logger/log_file.dart';
 
 /// Parse command-line arguments.
@@ -42,7 +41,6 @@ class ArgumentParser {
 
   Future<void> parse() async {
     _parseArgs();
-    _checkToggleFlag();
     await _checkLogFlag();
   }
 
@@ -57,20 +55,22 @@ class ArgumentParser {
   }
 
   /// Check if `toggle` flag was received.
-  void _checkToggleFlag() {
-    final toggle = _results.wasParsed('toggle');
-    if (toggle) Config.toggle = true;
-  }
+  ///
+  /// If toggle is true => toggle suspend for active window,
+  /// do not load GUI.
+  bool get toggleFlagged => _results.wasParsed('toggle');
+
+  static bool _logToFile = false;
+
+  static bool get logToFile => _logToFile;
 
   /// Check if `log` flag was received.
   Future<void> _checkLogFlag() async {
-    final logger = _results.wasParsed('log');
-    if (logger) {
-      // Set environment variable.
-      Config.log = true;
+    final flagReceived = _results.wasParsed('log');
+    if (flagReceived) {
+      _logToFile = true;
       // One-time initialization of the logger.
-      final logFile = LogFile.instance;
-      await logFile.init();
+      await LogFile.instance.init();
     }
   }
 }
