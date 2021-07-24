@@ -5,7 +5,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
+import 'package:nyrna/infrastructure/versions/versions.dart';
 import 'package:nyrna/window/window.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 part 'app_state.dart';
 
@@ -27,6 +29,7 @@ class AppCubit extends Cubit<AppState> {
   Future<void> _initialize() async {
     _setAutoRefresh();
     await _fetchDesktop();
+    await _fetchVersionData();
   }
 
   Timer? _timer;
@@ -79,5 +82,26 @@ class AppCubit extends Cubit<AppState> {
       if (!windows.containsKey(pid)) windows[pid] = window;
     });
     emit(state.copyWith(windows: windows));
+  }
+
+  Future<void> _fetchVersionData() async {
+    final versionRepo = Versions();
+    final runningVersion = await versionRepo.runningVersion();
+    final latestVersion = await versionRepo.latestVersion();
+    final ignoredUpdate = Preferences.instance.getString('ignoredUpdate');
+    final updateHasBeenIgnored = (latestVersion == ignoredUpdate);
+    final updateAvailable =
+        (updateHasBeenIgnored) ? false : await versionRepo.updateAvailable();
+    emit(state.copyWith(
+      runningVersion: runningVersion,
+      updateVersion: latestVersion,
+      updateAvailable: updateAvailable,
+    ));
+  }
+
+  Future<void> launchURL(String url) async {
+    await canLaunch(url)
+        ? await launch(url)
+        : throw 'Could not launch url: $url';
   }
 }

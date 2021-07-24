@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nyrna/application/app/cubit/app_cubit.dart';
 import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 import 'package:nyrna/application/theme/theme.dart';
-import 'package:nyrna/globals.dart';
 import 'package:nyrna/presentation/core/core.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/presentation/logs/logs.dart';
@@ -139,14 +138,15 @@ class _PreferencesPageState extends State<PreferencesPage> {
           ),
           _sectionPadding,
           Text('About'),
-          // Hide version if `VERSION` file not found.
-          // Definitely the case for the Snap version on Linux.
-          if (Globals.version != 'Unknown')
-            ListTile(
-              leading: const Icon(Icons.info_outline),
-              title: Text('Nyrna version'),
-              subtitle: Text(Globals.version),
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: Text('Nyrna version'),
+            subtitle: BlocBuilder<AppCubit, AppState>(
+              builder: (context, state) {
+                return Text(state.runningVersion);
+              },
             ),
+          ),
           ListTile(
             leading: const Icon(Icons.launch),
             title: Text('Nyrna homepage'),

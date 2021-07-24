@@ -33,6 +33,7 @@ Future<void> main(List<String> args) async {
         ),
         BlocProvider(
           create: (context) => PreferencesCubit(),
+          lazy: false,
         ),
         BlocProvider(
           create: (context) => ThemeCubit(),

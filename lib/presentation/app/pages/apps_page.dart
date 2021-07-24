@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nyrna/application/app/app.dart';
+import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/presentation/app/widgets/window_tile.dart';
-import 'package:nyrna/globals.dart';
 import 'package:nyrna/process/process.dart';
 import 'package:nyrna/presentation/preferences/pages/preferences_page.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
-import 'package:nyrna/settings/update_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,9 +24,6 @@ class AppsPage extends StatefulWidget {
 }
 
 class _AppsPageState extends State<AppsPage> {
-  /// Whether or not a newer version of Nyrna is available.
-  Future<bool> updateAvailable = UpdateNotifier().updateAvailable();
-
   static final _log = Logger('RunningAppsScreen');
 
   final _settings = Preferences.instance;
@@ -104,32 +100,30 @@ class _AppsPageState extends State<AppsPage> {
   }
 
   /// Show an icon if a newer version of Nyrna is available.
-  FutureBuilder<bool> _updateIcon() {
-    return FutureBuilder<bool>(
-        future: updateAvailable,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return snapshot.data!
-                ? IconButton(
-                    icon: Icon(
-                      Icons.notifications_active,
-                      color: Colors.pink[400],
-                    ),
-                    onPressed: () => _showUpdateDialog(),
-                  )
-                : Container();
-          }
-          return Container();
-        });
+  Widget _updateIcon() {
+    return BlocBuilder<AppCubit, AppState>(
+      builder: (context, state) {
+        return state.updateAvailable
+            ? IconButton(
+                icon: Icon(
+                  Icons.notifications_active,
+                  color: Colors.pink[400],
+                ),
+                onPressed: () => _showUpdateDialog(),
+              )
+            : Container();
+      },
+    );
   }
 
   /// Inform user about new version of Nyrna, download link, etc.
   Future<void> _showUpdateDialog() async {
-    final notifier = UpdateNotifier();
-    final latestVersion = await notifier.latestVersion();
+    final state = appCubit.state;
+    final currentVersion = state.runningVersion;
+    final latestVersion = state.updateVersion;
     const url = 'https://nyrna.merritt.codes/download';
     var _message = 'An update for Nyrna is available!\n\n'
-        'Current version: ${Globals.version}\n'
+        'Current version: $currentVersion\n'
         'Latest version: $latestVersion';
     await showDialog(
       context: context,
@@ -150,7 +144,7 @@ class _AppsPageState extends State<AppsPage> {
             ),
             TextButton(
               onPressed: () {
-                notifier.ignoreVersion(latestVersion);
+                preferencesCubit.ignoreUpdate(latestVersion);
                 setState(() {
                   Navigator.pushReplacementNamed(context, AppsPage.id);
                 });

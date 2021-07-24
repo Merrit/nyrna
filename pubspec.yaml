@@ -17,10 +17,12 @@ dependencies:
   logging: ^1.0.1
   path_provider: ^2.0.1
   provider: ^5.0.0
+  pub_semver: ^2.0.0
   shared_preferences: ^2.0.5
   url_launcher: ^6.0.4
   win32: ^2.1.1
   win32_suspend_process: ^1.0.0
+  yaml: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -33,3 +35,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/
+    - pubspec.yaml
