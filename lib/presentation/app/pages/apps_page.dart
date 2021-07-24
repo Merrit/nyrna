@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
+import 'package:nyrna/application/app/app.dart';
 import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/presentation/app/widgets/window_tile.dart';
 import 'package:nyrna/globals.dart';
-import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/process/process.dart';
 import 'package:nyrna/presentation/preferences/pages/preferences_page.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
@@ -25,8 +25,6 @@ class AppsPage extends StatefulWidget {
 }
 
 class _AppsPageState extends State<AppsPage> {
-  late Nyrna nyrna;
-
   /// Whether or not a newer version of Nyrna is available.
   Future<bool> updateAvailable = UpdateNotifier().updateAvailable();
 
@@ -41,32 +39,30 @@ class _AppsPageState extends State<AppsPage> {
   }
 
   @override
-  void didChangeDependencies() {
-    nyrna = Provider.of<Nyrna>(context);
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(context),
       body: Center(
         child: Container(
           width: MediaQuery.of(context).size.width / 1.20,
-          child: ListView.builder(
-            padding: const EdgeInsets.only(top: 40),
-            itemCount: nyrna.windows.length,
-            itemBuilder: (context, index) {
-              if (nyrna.windows.isEmpty) return Container();
-              var keys = nyrna.windows.keys.toList();
-              var window = nyrna.windows[keys[index]]!;
-              return ChangeNotifierProvider<Process>(
-                key: ValueKey('${window.pid}${window.title}'),
-                create: (context) => Process(window.pid),
-                child: WindowTile(
-                  key: ValueKey('${window.pid}${window.title}'),
-                  window: window,
-                ),
+          child: BlocBuilder<AppCubit, AppState>(
+            builder: (context, state) {
+              return ListView.builder(
+                padding: const EdgeInsets.only(top: 40),
+                itemCount: state.windows.length,
+                itemBuilder: (context, index) {
+                  if (state.windows.isEmpty) return Container();
+                  var keys = state.windows.keys.toList();
+                  var window = state.windows[keys[index]]!;
+                  return ChangeNotifierProvider<Process>(
+                    key: ValueKey('${window.pid}${window.title}'),
+                    create: (context) => Process(window.pid),
+                    child: WindowTile(
+                      key: ValueKey('${window.pid}${window.title}'),
+                      window: window,
+                    ),
+                  );
+                },
               );
             },
           ),
@@ -88,9 +84,9 @@ class _AppsPageState extends State<AppsPage> {
       // GetWindowDesktopId() with FFI.
       // https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ivirtualdesktopmanager-getwindowdesktopid
       title: (Platform.isLinux)
-          ? Consumer<Nyrna>(
-              builder: (context, nyrna, widget) {
-                return Text('Current Desktop: ${nyrna.currentDesktop}');
+          ? BlocBuilder<AppCubit, AppState>(
+              builder: (context, state) {
+                return Text('Current Desktop: ${state.currentDesktop}');
               },
             )
           : null,
@@ -177,14 +173,12 @@ class _FloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nyrna = Provider.of<Nyrna>(context);
-
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
         return FloatingActionButton(
           backgroundColor:
               (state.appTheme == AppTheme.pitchBlack) ? Colors.black : null,
-          onPressed: () => nyrna.fetchData(),
+          onPressed: () => appCubit.fetchData(),
           child: const Icon(Icons.refresh),
         );
       },

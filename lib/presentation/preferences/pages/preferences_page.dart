@@ -2,16 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nyrna/application/app/cubit/app_cubit.dart';
+import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/globals.dart';
 import 'package:nyrna/presentation/core/core.dart';
-import 'package:nyrna/nyrna.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/presentation/logs/logs.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../settings/launcher.dart';
 
 /// Screen with configuration settings for Nyrna.
 class PreferencesPage extends StatefulWidget {
@@ -22,8 +20,6 @@ class PreferencesPage extends StatefulWidget {
 }
 
 class _PreferencesPageState extends State<PreferencesPage> {
-  late Nyrna nyrna;
-
   final _divider = const Divider(
     indent: 20,
     endIndent: 20,
@@ -63,12 +59,6 @@ class _PreferencesPageState extends State<PreferencesPage> {
   );
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    nyrna = Provider.of<Nyrna>(context, listen: false);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
@@ -94,9 +84,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
             trailing: Switch(
               value: settings.autoRefresh,
               onChanged: (value) {
-                setState(() {
-                  settings.autoRefresh = value;
-                  nyrna.setRefresh();
+                setState(() async {
+                  await appCubit.updateAutoRefresh(value);
                 });
               },
             ),
@@ -189,7 +178,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
     final newInterval = int.tryParse(result);
     if (newInterval == null) return;
     setState(() => settings.refreshInterval = newInterval);
-    nyrna.setRefresh();
+    await appCubit.updateAutoRefresh();
   }
 
 //   Future<void> _pickIconColor() async {
@@ -267,7 +256,10 @@ void _confirmAddToLauncher(BuildContext context) {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Launcher.add(context),
+            onPressed: () async {
+              await preferencesCubit.createLauncher();
+              Navigator.pop(context);
+            },
             child: const Text('Continue'),
           ),
         ],

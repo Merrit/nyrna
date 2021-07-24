@@ -1,8 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:nyrna/globals.dart';
-import 'package:nyrna/nyrna.dart';
+import 'package:path_provider/path_provider.dart' as pp;
 
 /// Manage launcher entry.
 ///
@@ -12,9 +10,8 @@ import 'package:nyrna/nyrna.dart';
 /// Currently only for the portable version on Linux.
 class Launcher {
   /// Add a launcher entry for Nyrna with icon.
-  static Future<void> add(BuildContext context) async {
+  static Future<void> add() async {
     await _addLauncher();
-    Navigator.pop(context);
   }
 
   static Future<void> _addLauncher() async {
@@ -27,6 +24,35 @@ class Launcher {
       default:
         break;
     }
+  }
+
+  static String? _executablePath;
+
+  /// Absolute path to Nyrna's executable.
+  static String get executablePath {
+    if (_executablePath != null) return _executablePath!;
+    _executablePath = Platform.resolvedExecutable;
+    return _executablePath!;
+  }
+
+  static String? _nyrnaDir;
+
+  /// Absolute path to Nyrna's install directory.
+  static String get directory {
+    if (_nyrnaDir != null) return _nyrnaDir!;
+    final nyrnaPath = executablePath.substring(0, (executablePath.length - 5));
+    _nyrnaDir = nyrnaPath;
+    return nyrnaPath;
+  }
+
+  static String? _iconPath;
+
+  /// Absolute path to Nyrna's bundled icon asset.
+  static String? get iconPath {
+    if (_iconPath != null) return _iconPath;
+    final _ending = (Platform.isLinux) ? 'png' : 'ico';
+    _iconPath = '${directory}data/flutter_assets/assets/icons/nyrna.$_ending';
+    return _iconPath;
   }
 }
 
@@ -46,7 +72,7 @@ class _LinuxLauncher {
     try {
       await Process.run(
         'xdg-icon-resource',
-        ['install', '--novendor', '--size', '256', '${Nyrna.iconPath}'],
+        ['install', '--novendor', '--size', '256', '${Launcher.iconPath}'],
       );
     } catch (err) {
       // TODO: Error handling.
@@ -60,7 +86,8 @@ class _LinuxLauncher {
   /// https://portland.freedesktop.org/xdg-utils-1.1.0-rc1/scripts/html/xdg-desktop-menu.html
   static Future<void> _addDesktopFile() async {
     // Write .desktop file to disk in the temp directory.
-    final tempDir = await Globals.tempPath;
+
+    final tempDir = await pp.getTemporaryDirectory();
     final desktopFile = File('$tempDir/nyrna.desktop');
     await desktopFile.writeAsString(_desktopFileContent);
     // Install to xdg location.
@@ -80,7 +107,7 @@ final String _desktopFileContent = '''
 Type=Application
 Name=Nyrna
 Comment=Suspend games & applications
-Exec=${Nyrna.executablePath}
+Exec=${Launcher.executablePath}
 Icon=nyrna
 Terminal=false
 StartupNotify=false

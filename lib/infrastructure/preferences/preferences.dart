@@ -61,8 +61,8 @@ class Preferences {
     return prefs!.getBool('autoRefresh') ?? defaultValue;
   }
 
-  set autoRefresh(bool shouldRefresh) {
-    prefs!.setBool('autoRefresh', shouldRefresh);
+  Future<void> setAutoRefresh(bool shouldRefresh) async {
+    await prefs?.setBool('autoRefresh', shouldRefresh);
   }
 
   /// How often to automatically refresh the list of open windows, in seconds.
