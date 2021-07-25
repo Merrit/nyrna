@@ -1,7 +1,8 @@
 import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
-import 'package:nyrna/process/process.dart';
+
+import '../process.dart';
 
 class LinuxProcess with ChangeNotifier implements Process {
   LinuxProcess(this.pid);

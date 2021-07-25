@@ -1,7 +1,7 @@
 import 'dart:io' as io;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nyrna/process/process.dart';
+import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 
 void main() {
   final pid = io.pid; // Dart or Nyrna's own pid.

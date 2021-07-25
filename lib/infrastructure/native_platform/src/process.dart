@@ -1,8 +1,9 @@
 import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
-import 'package:nyrna/process/linux_process.dart';
-import 'package:nyrna/process/win32_process.dart';
+
+import 'linux/linux_process.dart';
+import 'win32/win32.dart';
 
 /// Represents the running state of a process.
 enum ProcessStatus {

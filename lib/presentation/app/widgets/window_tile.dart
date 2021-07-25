@@ -1,7 +1,7 @@
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:flutter/material.dart';
-import 'package:nyrna/process/process.dart';
+import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:nyrna/window/window.dart';
 import 'package:provider/provider.dart';
 
@@ -104,7 +104,9 @@ class _WindowTileState extends State<WindowTile> {
     await window!.minimize();
     // Small delay on Win32 to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
-    if (Platform.isWindows) await Future.delayed(Duration(milliseconds: 500));
+    if (io.Platform.isWindows) {
+      await Future.delayed(Duration(milliseconds: 500));
+    }
     final successful = await process.toggle();
     if (!successful) await _showSnackError(_ToggleError.Suspend);
   }

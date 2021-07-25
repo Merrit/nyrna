@@ -4,9 +4,10 @@ import 'dart:io' as io;
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
-import 'package:nyrna/process/process.dart';
 import 'package:win32/win32.dart';
 import 'package:win32_suspend_process/win32_suspend_process.dart' as w32proc;
+
+import '../process.dart';
 
 class Win32Process with ChangeNotifier implements Process {
   Win32Process(this.pid);
