@@ -1,8 +1,7 @@
 import 'dart:io';
 
-import 'package:nyrna/window/window.dart';
-
 import '../native_platform.dart';
+import '../window.dart';
 
 /// Interact with the native Linux operating system.
 class Linux implements NativePlatform {

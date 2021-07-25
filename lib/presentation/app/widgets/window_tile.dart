@@ -2,7 +2,6 @@ import 'dart:io' as io;
 
 import 'package:flutter/material.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
-import 'package:nyrna/window/window.dart';
 import 'package:provider/provider.dart';
 
 /// Represents a visible window on the desktop, running state and actions.

@@ -1,4 +1,7 @@
-import 'package:nyrna/window/window_controls.dart';
+import 'dart:io';
+
+import 'linux/linux_window.dart';
+import 'win32/win32_window.dart';
 
 /// Represents a visible window on the current desktop.
 class Window {
@@ -26,4 +29,21 @@ class Window {
 
   /// Restore (un-minimize) this window.
   Future<void> restore() async => await _windowControls.restore(id);
+}
+
+/// Provides window actions like [minimize] & [restore].
+abstract class WindowControls {
+  factory WindowControls() {
+    if (Platform.isLinux) {
+      return LinuxWindowControls();
+    } else {
+      return Win32WindowControls();
+    }
+  }
+
+  /// Minimize the window associated with the given [id].
+  Future<void> minimize(int? id);
+
+  /// Restore (un-minimize) the window associated with the given [id].
+  Future<void> restore(int? id);
 }

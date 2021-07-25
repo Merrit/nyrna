@@ -6,7 +6,6 @@ import 'package:equatable/equatable.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/infrastructure/versions/versions.dart';
-import 'package:nyrna/window/window.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'app_state.dart';

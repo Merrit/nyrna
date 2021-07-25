@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:nyrna/window/window.dart';
+import 'package:nyrna/infrastructure/native_platform/src/window.dart';
 
 import 'linux/linux.dart';
 import 'win32/win32.dart';
