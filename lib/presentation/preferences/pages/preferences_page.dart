@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// Screen with configuration settings for Nyrna.
 class PreferencesPage extends StatelessWidget {
-  static const id = 'settings_screen';
+  static const id = 'preferences_page';
 
   final _divider = const Divider(
     indent: 20,
