@@ -39,14 +39,6 @@ class Preferences {
   /// Remove a value from stored preferences.
   Future<bool> remove(String key) async => await _prefs!.remove(key);
 
-  static const int _defaultIconColor = 2617291775;
-
-  int get iconColor => _prefs!.getInt('iconColor') ?? _defaultIconColor;
-
-  Future<void> setIconColor(int color) async {
-    await _prefs!.setInt('iconColor', color);
-  }
-
   AppTheme get appTheme {
     final savedTheme = _prefs?.getString('appTheme');
     switch (savedTheme) {
