@@ -13,11 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 class PreferencesPage extends StatelessWidget {
   static const id = 'preferences_page';
 
-  final _divider = const Divider(
-    indent: 20,
-    endIndent: 20,
-  );
-
   /// Adds a little space between sections.
   final _sectionPadding = const SizedBox(height: 50);
 
@@ -55,7 +50,6 @@ class PreferencesPage extends StatelessWidget {
               },
             ),
           ),
-          _divider,
           BlocBuilder<PreferencesCubit, PreferencesState>(
             builder: (context, state) {
               return ListTile(
