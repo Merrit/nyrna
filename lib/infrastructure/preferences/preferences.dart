@@ -39,9 +39,6 @@ class Preferences {
   /// Remove a value from stored preferences.
   Future<bool> remove(String key) async => await _prefs!.remove(key);
 
-  /// If user has ignored an update that version number is saved here.
-  String? get ignoredUpdate => _prefs!.getString('ignoredUpdate');
-
   static const int _defaultIconColor = 2617291775;
 
   int get iconColor => _prefs!.getInt('iconColor') ?? _defaultIconColor;
