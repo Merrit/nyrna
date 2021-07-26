@@ -6,7 +6,7 @@ import 'package:nyrna/application/app/cubit/app_cubit.dart';
 import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/presentation/core/core.dart';
-import 'package:nyrna/infrastructure/preferences/preferences.dart';
+// import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/presentation/logs/logs.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,7 +27,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   /// Adds a little space between sections.
   final _sectionPadding = const SizedBox(height: 50);
 
-  Preferences settings = Preferences.instance;
+  // Preferences settings = Preferences.instance;
 
   late final _warningChip = ActionChip(
     label: Text(
@@ -80,22 +80,28 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 if (Platform.isWindows) _warningChip,
               ],
             ),
-            trailing: Switch(
-              value: settings.autoRefresh,
-              onChanged: (value) {
-                setState(() async {
-                  await appCubit.updateAutoRefresh(value);
-                });
+            trailing: BlocBuilder<PreferencesCubit, PreferencesState>(
+              builder: (context, state) {
+                return Switch(
+                  value: state.autoRefresh,
+                  onChanged: (value) async {
+                    await preferencesCubit.updateAutoRefresh(value);
+                  },
+                );
               },
             ),
           ),
           _divider,
-          ListTile(
-            leading: const Icon(Icons.timelapse),
-            title: Text('Auto Refresh Interval'),
-            trailing: Text('${settings.refreshInterval} seconds'),
-            enabled: settings.autoRefresh,
-            onTap: () => _refreshIntervalDialog(),
+          BlocBuilder<PreferencesCubit, PreferencesState>(
+            builder: (context, state) {
+              return ListTile(
+                leading: const Icon(Icons.timelapse),
+                title: Text('Auto Refresh Interval'),
+                trailing: Text('${state.refreshInterval} seconds'),
+                enabled: state.autoRefresh,
+                onTap: () => _refreshIntervalDialog(),
+              );
+            },
           ),
           // _divider,
           // ListTile(
@@ -106,25 +112,23 @@ class _PreferencesPageState extends State<PreferencesPage> {
           // ),
           // Add shortcuts and icons for portable builds.
           if (Platform.isLinux) // TODO: Add integration function for Windows.
-            FutureBuilder<bool>(
-              future: settings.isPortable,
-              builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data!) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _sectionPadding,
-                      Text('System Integration'),
-                      const SizedBox(height: 8),
-                      ListTile(
-                        leading: Icon(Icons.add_circle_outline),
-                        title: Text('Add Nyrna to launcher'),
-                        onTap: () => _confirmAddToLauncher(context),
-                      ),
-                    ],
-                  );
-                }
-                return const SizedBox();
+            BlocBuilder<AppCubit, AppState>(
+              builder: (context, state) {
+                return state.isPortable
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _sectionPadding,
+                          Text('System Integration'),
+                          const SizedBox(height: 8),
+                          ListTile(
+                            leading: Icon(Icons.add_circle_outline),
+                            title: Text('Add Nyrna to launcher'),
+                            onTap: () => _confirmAddToLauncher(context),
+                          ),
+                        ],
+                      )
+                    : const SizedBox();
               },
             ),
           _sectionPadding,
@@ -172,13 +176,13 @@ class _PreferencesPageState extends State<PreferencesPage> {
       context: context,
       type: InputDialogs.onlyInt,
       title: 'Auto Refresh Interval',
-      initialValue: settings.refreshInterval.toString(),
+      initialValue: preferencesCubit.state.refreshInterval.toString(),
     );
     if (result == null) return;
     final newInterval = int.tryParse(result);
     if (newInterval == null) return;
-    setState(() => settings.refreshInterval = newInterval);
-    await appCubit.updateAutoRefresh();
+    await preferencesCubit.setRefreshInterval(newInterval);
+    await preferencesCubit.updateAutoRefresh();
   }
 
 //   Future<void> _pickIconColor() async {

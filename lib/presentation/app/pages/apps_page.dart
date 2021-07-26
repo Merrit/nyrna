@@ -9,7 +9,6 @@ import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/presentation/app/widgets/window_tile.dart';
 import 'package:nyrna/presentation/preferences/pages/preferences_page.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
-import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,8 +24,6 @@ class AppsPage extends StatefulWidget {
 
 class _AppsPageState extends State<AppsPage> {
   static final _log = Logger('RunningAppsScreen');
-
-  final _settings = Preferences.instance;
 
   @override
   void initState() {
@@ -65,11 +62,7 @@ class _AppsPageState extends State<AppsPage> {
         ),
       ),
       // We don't show a manual refresh button with a short auto-refresh.
-      floatingActionButton:
-          ((_settings.autoRefresh && _settings.refreshInterval > 5) ||
-                  !_settings.autoRefresh)
-              ? _FloatingActionButton()
-              : null,
+      floatingActionButton: _FloatingActionButton(),
     );
   }
 
@@ -167,14 +160,26 @@ class _FloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeState>(
+    return BlocBuilder<PreferencesCubit, PreferencesState>(
       builder: (context, state) {
-        return FloatingActionButton(
-          backgroundColor:
-              (state.appTheme == AppTheme.pitchBlack) ? Colors.black : null,
-          onPressed: () => appCubit.fetchData(),
-          child: const Icon(Icons.refresh),
-        );
+        final autoRefresh = state.autoRefresh;
+        final refreshIntervalSufficient = (state.refreshInterval > 5);
+        final showFloatingActionButton =
+            ((autoRefresh && refreshIntervalSufficient) || !autoRefresh);
+
+        return showFloatingActionButton
+            ? BlocBuilder<ThemeCubit, ThemeState>(
+                builder: (context, state) {
+                  return FloatingActionButton(
+                    backgroundColor: (state.appTheme == AppTheme.pitchBlack)
+                        ? Colors.black
+                        : null,
+                    onPressed: () => appCubit.fetchData(),
+                    child: const Icon(Icons.refresh),
+                  );
+                },
+              )
+            : Container();
       },
     );
   }

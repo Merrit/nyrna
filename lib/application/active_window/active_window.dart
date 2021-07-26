@@ -68,6 +68,17 @@ class ActiveWindow {
     ShowWindow(id, SW_FORCEMINIMIZE);
   }
 
+  int? _getSavedProcess() => Preferences.instance.getInt('savedProcess');
+
+  Future<void> _setSavedProcess(int pid) async {
+    await Preferences.instance.setInt(key: 'savedProcess', value: pid);
+  }
+
+  Future<void> _removeSavedProcess() async {
+    await Preferences.instance.remove('savedProcess');
+    await _settings.setSavedWindowId(0);
+  }
+
   Future<void> _verifyPid() async {
     // Verify active window wasn't Nyrna.
     // This _could_ happen because we have to hide Nyrna's window instead of
@@ -77,12 +88,12 @@ class ActiveWindow {
       if (ArgumentParser.logToFile) await LogFile.instance.write();
       io.exit(1);
     }
-    if (_settings.savedProcess != 0) await _checkStillExists();
+    final savedProcess = _getSavedProcess();
+    if (savedProcess != null) await _checkStillExists(savedProcess);
   }
 
   /// Check that saved process still exists.
-  Future<void> _checkStillExists() async {
-    final savedPid = _settings.savedProcess;
+  Future<void> _checkStillExists(int savedPid) async {
     final savedProcess = Process(savedPid);
     final exists = await savedProcess.exists();
     if (!exists) {
@@ -95,8 +106,9 @@ class ActiveWindow {
 
   /// Toggle the suspend / resume state of the given process.
   Future<bool> _toggleProcess() async {
-    if (_settings.savedProcess != 0) {
-      final successful = await _resume();
+    final savedProcess = _getSavedProcess();
+    if (savedProcess != null) {
+      final successful = await _resume(pid: savedProcess);
       return successful;
     } else {
       final successful = await _suspend();
@@ -104,9 +116,10 @@ class ActiveWindow {
     }
   }
 
-  Future<bool> _resume() async {
+  Future<bool> _resume({
+    required int pid,
+  }) async {
     var successful = false;
-    pid = _settings.savedProcess;
     id = _settings.savedWindowId;
     final process = Process(pid);
     final _status = await process.status;
@@ -126,11 +139,6 @@ class ActiveWindow {
     return successful;
   }
 
-  Future<void> _removeSavedProcess() async {
-    await _settings.setSavedProcess(0);
-    await _settings.setSavedWindowId(0);
-  }
-
   Future<bool> _suspend() async {
     var successful = false;
     final process = Process(pid);
@@ -141,7 +149,7 @@ class ActiveWindow {
       await Future.delayed(Duration(milliseconds: 500));
     }
     successful = await process.toggle();
-    await _settings.setSavedProcess(pid);
+    await _setSavedProcess(pid);
     await _settings.setSavedWindowId(id!);
     if (!successful) {
       _log.warning('Failed to suspend PID: $pid');

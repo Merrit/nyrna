@@ -31,7 +31,7 @@ Future<void> main(List<String> args) async {
           lazy: false,
         ),
         BlocProvider(
-          create: (context) => PreferencesCubit(),
+          create: (context) => PreferencesCubit(prefs),
           lazy: false,
         ),
         BlocProvider(

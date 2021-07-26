@@ -3,6 +3,7 @@ import 'dart:io' as io;
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/infrastructure/versions/versions.dart';
@@ -26,20 +27,33 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> _initialize() async {
-    _setAutoRefresh();
+    await _checkIsPortable();
+    setAutoRefresh(
+      autoRefresh: preferencesCubit.state.autoRefresh,
+      refreshInterval: preferencesCubit.state.refreshInterval,
+    );
     await _fetchDesktop();
     await _fetchVersionData();
+  }
+
+  Future<void> _checkIsPortable() async {
+    final file = io.File('PORTABLE');
+    final isPortable = await file.exists();
+    emit(state.copyWith(isPortable: isPortable));
   }
 
   Timer? _timer;
 
   /// The timer which auto-refreshes the list of open windows.
-  void _setAutoRefresh() {
+  void setAutoRefresh({
+    required bool autoRefresh,
+    required int refreshInterval,
+  }) {
     fetchData();
-    if (_timer != null) _timer!.cancel();
-    if (prefs.autoRefresh) {
+    if (_timer != null) _timer?.cancel();
+    if (autoRefresh) {
       _timer = Timer.periodic(
-        Duration(seconds: prefs.refreshInterval),
+        Duration(seconds: refreshInterval),
         (timer) => fetchData(),
       );
     }
@@ -53,11 +67,6 @@ class AppCubit extends Cubit<AppState> {
   Future<void> _fetchDesktop() async {
     final currentDesktop = await nativePlatform.currentDesktop;
     emit(state.copyWith(currentDesktop: currentDesktop));
-  }
-
-  Future<void> updateAutoRefresh([bool? autoEnabled]) async {
-    if (autoEnabled != null) await prefs.setAutoRefresh(autoEnabled);
-    _setAutoRefresh();
   }
 
   /// Check for which windows are open.

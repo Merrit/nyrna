@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:nyrna/application/theme/enums/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,78 +8,57 @@ class Preferences {
   static final Preferences instance = Preferences._privateConstructor();
 
   /// Instance of SharedPreferences for getting and setting preferences.
-  SharedPreferences? prefs;
+  SharedPreferences? _prefs;
 
   /// Initialize should only need to be called once, in main().
   Future<void> initialize() async {
-    if (prefs != null) return;
-    prefs = await SharedPreferences.getInstance();
+    if (_prefs != null) return;
+    _prefs = await SharedPreferences.getInstance();
   }
+
+  Future<void> setBool({required String key, required bool value}) async {
+    await _prefs?.setBool(key, value);
+  }
+
+  bool? getBool(String key) => _prefs?.getBool(key);
+
+  Future<void> setInt({required String key, required int value}) async {
+    await _prefs?.setInt(key, value);
+  }
+
+  int? getInt(String key) => _prefs?.getInt(key);
 
   Future<void> setString({required String key, required String value}) async {
     assert(key != '');
     assert(value != '');
-    await prefs?.setString(key, value);
+    await _prefs?.setString(key, value);
   }
 
-  String? getString(String key) => prefs?.getString(key);
+  String? getString(String key) => _prefs?.getString(key);
 
-  /// Whether or not to automatically refresh the list of open windows.
-  bool get autoRefresh {
-    bool defaultValue;
-    defaultValue = (Platform.isWindows) ? false : true;
-    return prefs!.getBool('autoRefresh') ?? defaultValue;
-  }
-
-  Future<void> setAutoRefresh(bool shouldRefresh) async {
-    await prefs?.setBool('autoRefresh', shouldRefresh);
-  }
-
-  /// How often to automatically refresh the list of open windows, in seconds.
-  int get refreshInterval => prefs!.getInt('refreshInterval') ?? 5;
-
-  set refreshInterval(int interval) {
-    if (interval > 0) {
-      prefs!.setInt('refreshInterval', interval);
-    }
-  }
-
-  /// The PID of the process Nyrna suspended via [ActiveWindow.toggle()].
-  ///
-  /// Returns 0 if Nyrna hasn't suspended anything in this fashion.
-  int get savedProcess => prefs!.getInt('savedProcess') ?? 0;
-
-  Future<void> setSavedProcess(int pid) async {
-    await prefs!.setInt('savedProcess', pid);
-  }
+  /// Remove a value from stored preferences.
+  Future<bool> remove(String key) async => await _prefs!.remove(key);
 
   /// The unique hex ID of the window suspended via [ActiveWindow.toggle()].
-  int? get savedWindowId => prefs!.getInt('savedWindowId');
+  int? get savedWindowId => _prefs!.getInt('savedWindowId');
 
   Future<void> setSavedWindowId(int id) async {
-    await prefs!.setInt('savedWindowId', id);
+    await _prefs!.setInt('savedWindowId', id);
   }
 
   /// If user has ignored an update that version number is saved here.
-  String? get ignoredUpdate => prefs!.getString('ignoredUpdate');
-
-  /// Check for `PORTABLE` file in the Nyrna directory, which should only be
-  /// present for the portable build on Linux.
-  Future<bool> get isPortable async {
-    final file = File('PORTABLE');
-    return await file.exists();
-  }
+  String? get ignoredUpdate => _prefs!.getString('ignoredUpdate');
 
   static const int _defaultIconColor = 2617291775;
 
-  int get iconColor => prefs!.getInt('iconColor') ?? _defaultIconColor;
+  int get iconColor => _prefs!.getInt('iconColor') ?? _defaultIconColor;
 
   Future<void> setIconColor(int color) async {
-    await prefs!.setInt('iconColor', color);
+    await _prefs!.setInt('iconColor', color);
   }
 
   AppTheme get appTheme {
-    final savedTheme = prefs?.getString('appTheme');
+    final savedTheme = _prefs?.getString('appTheme');
     switch (savedTheme) {
       case null:
         return AppTheme.dark;
@@ -97,6 +74,6 @@ class Preferences {
   }
 
   set appTheme(AppTheme appTheme) {
-    prefs?.setString('appTheme', appTheme.toString());
+    _prefs?.setString('appTheme', appTheme.toString());
   }
 }
