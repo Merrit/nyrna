@@ -19,7 +19,7 @@ class ActiveWindow {
 
   static final _log = Logger('ActiveWindow');
 
-  final _prefs = Preferences.instance;
+  final _prefs = Preferences();
 
   /// Nyrna's own PID.
   final int nyrnaPid = io.pid;

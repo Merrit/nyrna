@@ -1,10 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/application/active_window/active_window.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
-  final settings = Preferences.instance;
-  await settings.initialize();
+  final sharedPreferences = await SharedPreferences.getInstance();
+  // ignore: unused_local_variable
+  final prefs = Preferences(sharedPreferences);
 
   ActiveWindow? activeWindow;
 

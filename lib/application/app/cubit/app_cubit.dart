@@ -16,11 +16,11 @@ late AppCubit appCubit;
 
 class AppCubit extends Cubit<AppState> {
   final NativePlatform nativePlatform;
-  final Preferences prefs;
+  final Preferences _prefs;
 
-  AppCubit()
+  AppCubit(Preferences prefs)
       : nativePlatform = NativePlatform(),
-        prefs = Preferences.instance,
+        _prefs = prefs,
         super(AppState.initial()) {
     appCubit = this;
     _initialize();
@@ -96,7 +96,7 @@ class AppCubit extends Cubit<AppState> {
     final versionRepo = Versions();
     final runningVersion = await versionRepo.runningVersion();
     final latestVersion = await versionRepo.latestVersion();
-    final ignoredUpdate = Preferences.instance.getString('ignoredUpdate');
+    final ignoredUpdate = _prefs.getString('ignoredUpdate');
     final updateHasBeenIgnored = (latestVersion == ignoredUpdate);
     final updateAvailable =
         (updateHasBeenIgnored) ? false : await versionRepo.updateAvailable();

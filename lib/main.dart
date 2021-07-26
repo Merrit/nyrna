@@ -4,6 +4,7 @@ import 'package:nyrna/infrastructure/logger/app_logger.dart';
 import 'package:nyrna/presentation/app_widget.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/application/active_window/active_window.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'application/app/app.dart';
 import 'application/preferences/cubit/preferences_cubit.dart';
@@ -15,8 +16,8 @@ Future<void> main(List<String> args) async {
   final parser = ArgumentParser(args);
   await parser.parse();
 
-  final prefs = Preferences.instance;
-  await prefs.initialize();
+  final sharedPreferences = await SharedPreferences.getInstance();
+  final prefs = Preferences(sharedPreferences);
 
   AppLogger().initialize();
 
@@ -27,7 +28,7 @@ Future<void> main(List<String> args) async {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AppCubit(),
+          create: (context) => AppCubit(prefs),
           lazy: false,
         ),
         BlocProvider(
