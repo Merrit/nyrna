@@ -35,7 +35,7 @@ Future<void> main(List<String> args) async {
           lazy: false,
         ),
         BlocProvider(
-          create: (context) => ThemeCubit(),
+          create: (context) => ThemeCubit(prefs),
         ),
       ],
       child: AppWidget(),

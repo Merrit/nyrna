@@ -1,4 +1,3 @@
-import 'package:nyrna/application/theme/enums/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Manages settings & preferences.
@@ -38,24 +37,4 @@ class Preferences {
 
   /// Remove a value from stored preferences.
   Future<bool> remove(String key) async => await _prefs!.remove(key);
-
-  AppTheme get appTheme {
-    final savedTheme = _prefs?.getString('appTheme');
-    switch (savedTheme) {
-      case null:
-        return AppTheme.dark;
-      case 'AppTheme.light':
-        return AppTheme.light;
-      case 'AppTheme.dark':
-        return AppTheme.dark;
-      case 'AppTheme.pitchBlack':
-        return AppTheme.pitchBlack;
-      default:
-        return AppTheme.dark;
-    }
-  }
-
-  set appTheme(AppTheme appTheme) {
-    _prefs?.setString('appTheme', appTheme.toString());
-  }
 }
