@@ -39,13 +39,6 @@ class Preferences {
   /// Remove a value from stored preferences.
   Future<bool> remove(String key) async => await _prefs!.remove(key);
 
-  /// The unique hex ID of the window suspended via [ActiveWindow.toggle()].
-  int? get savedWindowId => _prefs!.getInt('savedWindowId');
-
-  Future<void> setSavedWindowId(int id) async {
-    await _prefs!.setInt('savedWindowId', id);
-  }
-
   /// If user has ignored an update that version number is saved here.
   String? get ignoredUpdate => _prefs!.getString('ignoredUpdate');
 

@@ -74,9 +74,16 @@ class ActiveWindow {
     await Preferences.instance.setInt(key: 'savedProcess', value: pid);
   }
 
+  /// The unique hex ID of the window suspended via [ActiveWindow.toggle()].
+  int? _getSavedWindowId() => Preferences.instance.getInt('savedWindowId');
+
+  Future<void> _setSavedWindowId(int id) async {
+    await Preferences.instance.setInt(key: 'savedWindowId', value: id);
+  }
+
   Future<void> _removeSavedProcess() async {
     await Preferences.instance.remove('savedProcess');
-    await _settings.setSavedWindowId(0);
+    await Preferences.instance.remove('savedWindowId');
   }
 
   Future<void> _verifyPid() async {
@@ -107,8 +114,12 @@ class ActiveWindow {
   /// Toggle the suspend / resume state of the given process.
   Future<bool> _toggleProcess() async {
     final savedProcess = _getSavedProcess();
-    if (savedProcess != null) {
-      final successful = await _resume(pid: savedProcess);
+    final savedWindowId = _getSavedWindowId();
+    if ((savedProcess != null) && (savedWindowId != null)) {
+      final successful = await _resume(
+        pid: savedProcess,
+        id: savedWindowId,
+      );
       return successful;
     } else {
       final successful = await _suspend();
@@ -118,9 +129,9 @@ class ActiveWindow {
 
   Future<bool> _resume({
     required int pid,
+    required int id,
   }) async {
     var successful = false;
-    id = _settings.savedWindowId;
     final process = Process(pid);
     final _status = await process.status;
     if (_status == ProcessStatus.unknown) {
@@ -150,7 +161,7 @@ class ActiveWindow {
     }
     successful = await process.toggle();
     await _setSavedProcess(pid);
-    await _settings.setSavedWindowId(id!);
+    await _setSavedWindowId(id!);
     if (!successful) {
       _log.warning('Failed to suspend PID: $pid');
     }
