@@ -10,14 +10,9 @@ import 'package:nyrna/presentation/logs/logs.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Screen with configuration settings for Nyrna.
-class PreferencesPage extends StatefulWidget {
+class PreferencesPage extends StatelessWidget {
   static const id = 'settings_screen';
 
-  @override
-  _PreferencesPageState createState() => _PreferencesPageState();
-}
-
-class _PreferencesPageState extends State<PreferencesPage> {
   final _divider = const Divider(
     indent: 20,
     endIndent: 20,
@@ -68,7 +63,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                 title: Text('Auto Refresh Interval'),
                 trailing: Text('${state.refreshInterval} seconds'),
                 enabled: state.autoRefresh,
-                onTap: () => _refreshIntervalDialog(),
+                onTap: () => _refreshIntervalDialog(context),
               );
             },
           ),
@@ -140,7 +135,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
   }
 
   /// Allow user to choose reset interval.
-  void _refreshIntervalDialog() async {
+  void _refreshIntervalDialog(BuildContext context) async {
     final result = await showInputDialog(
       context: context,
       type: InputDialogs.onlyInt,
