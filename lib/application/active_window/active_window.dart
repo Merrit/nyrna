@@ -19,7 +19,7 @@ class ActiveWindow {
 
   static final _log = Logger('ActiveWindow');
 
-  final _settings = Preferences.instance;
+  final _prefs = Preferences.instance;
 
   /// Nyrna's own PID.
   final int nyrnaPid = io.pid;
@@ -68,22 +68,22 @@ class ActiveWindow {
     ShowWindow(id, SW_FORCEMINIMIZE);
   }
 
-  int? _getSavedProcess() => Preferences.instance.getInt('savedProcess');
+  int? _getSavedProcess() => _prefs.getInt('savedProcess');
 
   Future<void> _setSavedProcess(int pid) async {
-    await Preferences.instance.setInt(key: 'savedProcess', value: pid);
+    await _prefs.setInt(key: 'savedProcess', value: pid);
   }
 
   /// The unique hex ID of the window suspended via [ActiveWindow.toggle()].
-  int? _getSavedWindowId() => Preferences.instance.getInt('savedWindowId');
+  int? _getSavedWindowId() => _prefs.getInt('savedWindowId');
 
   Future<void> _setSavedWindowId(int id) async {
-    await Preferences.instance.setInt(key: 'savedWindowId', value: id);
+    await _prefs.setInt(key: 'savedWindowId', value: id);
   }
 
   Future<void> _removeSavedProcess() async {
-    await Preferences.instance.remove('savedProcess');
-    await Preferences.instance.remove('savedWindowId');
+    await _prefs.remove('savedProcess');
+    await _prefs.remove('savedWindowId');
   }
 
   Future<void> _verifyPid() async {
