@@ -6,7 +6,6 @@ import 'package:nyrna/application/app/cubit/app_cubit.dart';
 import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 import 'package:nyrna/application/theme/theme.dart';
 import 'package:nyrna/presentation/core/core.dart';
-// import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/presentation/logs/logs.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,36 +25,6 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
   /// Adds a little space between sections.
   final _sectionPadding = const SizedBox(height: 50);
-
-  // Preferences settings = Preferences.instance;
-
-  late final _warningChip = ActionChip(
-    label: Text(
-      'Caution',
-      style: TextStyle(color: Colors.red[800]),
-    ),
-    backgroundColor: Colors.yellow,
-    onPressed: () {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text(
-              'Note: Auto refresh can cause issues with memory consumption on '
-              'Windows at the moment. Until the problem is resolved, consider '
-              'keeping auto refresh off if you experience issues.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Close'),
-              ),
-            ],
-          );
-        },
-      );
-    },
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +46,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
               children: [
                 Text('Update window & process info automatically'),
                 const SizedBox(height: 5),
-                if (Platform.isWindows) _warningChip,
+                if (Platform.isWindows) _WarningChip(),
               ],
             ),
             trailing: BlocBuilder<PreferencesCubit, PreferencesState>(
@@ -304,6 +273,41 @@ class ThemeSettings extends StatelessWidget {
               onChanged: (value) => themeCubit.changeTheme(value!),
             ),
           ],
+        );
+      },
+    );
+  }
+}
+
+class _WarningChip extends StatelessWidget {
+  const _WarningChip({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+      label: Text(
+        'Caution',
+        style: TextStyle(color: Colors.red[800]),
+      ),
+      backgroundColor: Colors.yellow,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: const Text(
+                'Note: Auto refresh can cause issues with memory consumption on '
+                'Windows at the moment. Until the problem is resolved, consider '
+                'keeping auto refresh off if you experience issues.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
