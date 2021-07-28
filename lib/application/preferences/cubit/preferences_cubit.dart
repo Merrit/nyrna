@@ -17,13 +17,17 @@ class PreferencesCubit extends Cubit<PreferencesState> {
       : _prefs = prefs,
         super(
           PreferencesState(
-            autoRefresh: prefs.getBool('autoRefresh') ?? (Platform.isWindows)
-                ? false
-                : true,
+            autoRefresh: _checkAutoRefresh(prefs),
             refreshInterval: prefs.getInt('refreshInterval') ?? 5,
           ),
         ) {
     preferencesCubit = this;
+  }
+
+  static bool _checkAutoRefresh(Preferences prefs) {
+    bool? enabled = prefs.getBool('autoRefresh');
+    enabled ??= (Platform.isWindows) ? false : true;
+    return enabled;
   }
 
   Future<void> createLauncher() async {
