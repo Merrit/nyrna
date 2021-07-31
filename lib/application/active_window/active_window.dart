@@ -3,10 +3,11 @@ import 'dart:io' as io;
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nyrna/domain/arguments/argument_parser.dart';
+import 'package:nyrna/domain/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/logger/log_file.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
-import 'package:nyrna/infrastructure/native_platform/src/process.dart';
+import 'package:nyrna/infrastructure/native_platform/src/native_process.dart';
 import 'package:win32/win32.dart';
 
 /// Represents the active, foreground window on the system.
@@ -14,8 +15,6 @@ import 'package:win32/win32.dart';
 /// Initialize() must be called before anything else.
 class ActiveWindow {
   final _nativePlatform = NativePlatform();
-
-  final _windowControls = WindowControls();
 
   static final _log = Logger('ActiveWindow');
 
@@ -101,7 +100,7 @@ class ActiveWindow {
 
   /// Check that saved process still exists.
   Future<void> _checkStillExists(int savedPid) async {
-    final savedProcess = Process(savedPid);
+    final savedProcess = NativeProcess(savedPid);
     final exists = await savedProcess.exists();
     if (!exists) {
       await _removeSavedProcess();
@@ -132,7 +131,7 @@ class ActiveWindow {
     required int id,
   }) async {
     var successful = false;
-    final process = Process(pid);
+    final process = NativeProcess(pid);
     final _status = await process.status;
     if (_status == ProcessStatus.unknown) {
       await _removeSavedProcess();
@@ -145,15 +144,15 @@ class ActiveWindow {
         _log.warning('Failed to resume PID: $pid');
         return successful;
       }
-      await _windowControls.restore(id);
+      await NativePlatform().restoreWindow(id);
     }
     return successful;
   }
 
   Future<bool> _suspend() async {
     var successful = false;
-    final process = Process(pid);
-    await _windowControls.minimize(id);
+    final process = NativeProcess(pid);
+    await NativePlatform().minimizeWindow(id!);
     // Small delay on Windows to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
     if (io.Platform.isWindows) {

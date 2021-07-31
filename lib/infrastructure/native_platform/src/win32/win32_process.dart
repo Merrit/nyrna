@@ -2,14 +2,14 @@ import 'dart:ffi';
 import 'dart:io' as io;
 
 import 'package:ffi/ffi.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
+import 'package:nyrna/domain/native_platform/native_platform.dart';
 import 'package:win32/win32.dart';
 import 'package:win32_suspend_process/win32_suspend_process.dart' as w32proc;
 
-import '../process.dart';
+import '../native_process.dart';
 
-class Win32Process with ChangeNotifier implements Process {
+class Win32Process implements NativeProcess {
   Win32Process(this.pid);
 
   @override
@@ -107,6 +107,12 @@ class Win32Process with ChangeNotifier implements Process {
     }
     return _success;
   }
+
+  @override
+  Future<bool> suspend() async => w32proc.Win32Process(pid).suspend();
+
+  @override
+  Future<bool> resume() async => w32proc.Win32Process(pid).resume();
 
   // If the pid doesn't exist this won't be able to return the exe name.
   @override

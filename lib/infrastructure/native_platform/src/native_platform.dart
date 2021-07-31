@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:nyrna/infrastructure/native_platform/src/window.dart';
+import 'package:nyrna/domain/native_platform/native_platform.dart';
 
 import 'linux/linux.dart';
 import 'win32/win32.dart';
@@ -22,9 +22,14 @@ abstract class NativePlatform {
   /// Returns the index of the currently active virtual desktop.
   Future<int> get currentDesktop;
 
-  /// Returns a Map where the keys are the `pid` and the values are [Window]
-  /// objects, based on the reported open application windows.
-  Future<Map<String, Window>> get windows;
+  /// The PID associated with a window.
+  Future<int> windowPid(int windowId);
+
+  /// The process associated with a window.
+  Future<Process> windowProcess(int windowId);
+
+  /// List of [Window] objects for every visible window with title text.
+  Future<List<Window>> windows();
 
   /// Returns the pid associated with the active window.
   Future<int> get activeWindowPid;
@@ -34,4 +39,8 @@ abstract class NativePlatform {
 
   /// Verify dependencies are present on the system.
   Future<bool> checkDependencies();
+
+  Future<bool> minimizeWindow(int windowId);
+
+  Future<bool> restoreWindow(int windowId);
 }

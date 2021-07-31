@@ -1,134 +1,122 @@
-import 'dart:io' as io;
-
 import 'package:flutter/material.dart';
-import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nyrna/application/window/cubit/window_cubit.dart';
+import 'package:nyrna/domain/native_platform/native_platform.dart';
 
 /// Represents a visible window on the desktop, running state and actions.
-class WindowTile extends StatefulWidget {
-  WindowTile({this.window, this.key});
-
-  /// Key is overridden to ensure unique, non-double entries.
-  @override
-  final Key? key;
-
-  /// The visible window.
-  final Window? window;
-
-  @override
-  _WindowTileState createState() => _WindowTileState();
-}
-
-class _WindowTileState extends State<WindowTile> {
-  /// The process associated with the window.
-  late Process process;
-
-  /// The visible window.
-  Window? window;
-
-  @override
-  void initState() {
-    super.initState();
-    window = widget.window;
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      process = Provider.of<Process>(context, listen: false);
-    });
-  }
+class WindowTile extends StatelessWidget {
+  const WindowTile({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: _statusWidget(),
-        title: Text(window!.title),
-        subtitle: _executableNameWidget(),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 2,
-          horizontal: 20,
+    return BlocListener<WindowCubit, WindowState>(
+      listener: (context, state) {
+        if (state.toggleError == ToggleError.Suspend) {
+          _showSnackError(context, ToggleError.Suspend);
+        } else if (state.toggleError == ToggleError.Resume) {
+          _showSnackError(context, ToggleError.Resume);
+        }
+      },
+      child: Card(
+        child: ListTile(
+          leading: _StatusWidget(),
+          title: _TitleWidget(),
+          subtitle: _DetailsWidget(),
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 2,
+            horizontal: 20,
+          ),
+          onTap: () => context.read<WindowCubit>().toggle(),
         ),
-        onTap: () => _toggle(),
       ),
     );
   }
 
-  /// Show the process' suspend status. Green = normal, orange = suspended.
-  Widget _statusWidget() {
-    return Consumer<Process>(
-      builder: (context, process, widget) {
-        return FutureBuilder(
-          future: process.status,
-          builder: (context, snapshot) {
-            return Container(
-              height: 20,
-              width: 20,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: (snapshot.data == ProcessStatus.suspended)
-                    ? Colors.orange[700]
-                    : Colors.green,
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  /// Executable name, for example 'firefox' or 'firefox-bin'.
-  Widget _executableNameWidget() {
-    return FutureBuilder<String>(
-      future: Provider.of<Process>(context, listen: false).executable,
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        final executable = snapshot.data ?? '';
-        if (snapshot.hasData) {
-          return Text(executable);
-        }
-        return const Text('');
-      },
-    );
-  }
-
-  /// Toggle suspend / resume for the process associated with the given window.
-  Future<void> _toggle() async {
-    final _status = await process.status;
-    if (_status == ProcessStatus.suspended) {
-      await _resume();
-    } else {
-      await _suspend();
-    }
-  }
-
-  Future<void> _suspend() async {
-    // Minimize the window before suspending or it might not minimize.
-    await window!.minimize();
-    // Small delay on Win32 to ensure the window actually minimizes.
-    // Doesn't seem to be necessary on Linux.
-    if (io.Platform.isWindows) {
-      await Future.delayed(Duration(milliseconds: 500));
-    }
-    final successful = await process.toggle();
-    if (!successful) await _showSnackError(_ToggleError.Suspend);
-  }
-
-  Future<void> _resume() async {
-    final successful = await process.toggle();
-    if (!successful) await _showSnackError(_ToggleError.Resume);
-    // Restore the window _after_ resuming or it might not restore.
-    await window!.restore();
-  }
-
-  Future<void> _showSnackError(_ToggleError errorType) async {
-    final name = await process.executable;
+  Future<void> _showSnackError(
+    BuildContext context,
+    ToggleError errorType,
+  ) async {
+    final state = context.read<WindowCubit>().state;
+    final name = state.executable;
     final suspendMessage = 'There was a problem suspending $name';
     final resumeMessage = 'There was a problem resuming $name';
     final message =
-        (errorType == _ToggleError.Suspend) ? suspendMessage : resumeMessage;
+        (errorType == ToggleError.Suspend) ? suspendMessage : resumeMessage;
     final snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
-enum _ToggleError {
-  Suspend,
-  Resume,
+class _StatusWidget extends StatelessWidget {
+  const _StatusWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<WindowCubit, WindowState>(
+      builder: (context, state) {
+        Color _color;
+        switch (state.processStatus) {
+          case ProcessStatus.normal:
+            _color = Colors.green;
+            break;
+          case ProcessStatus.suspended:
+            _color = Colors.orange[700]!;
+            break;
+          case ProcessStatus.unknown:
+            _color = Colors.grey;
+        }
+
+        return Container(
+          height: 20,
+          width: 20,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _color,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _TitleWidget extends StatelessWidget {
+  const _TitleWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<WindowCubit, WindowState>(
+      builder: (context, state) {
+        return Text(state.title);
+      },
+    );
+  }
+}
+
+class _DetailsWidget extends StatelessWidget {
+  const _DetailsWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BlocBuilder<WindowCubit, WindowState>(
+          builder: (context, state) {
+            return Text('PID: ${state.pid}');
+          },
+        ),
+        BlocBuilder<WindowCubit, WindowState>(
+          builder: (context, state) {
+            return Text(state.executable);
+          },
+        ),
+      ],
+    );
+  }
 }

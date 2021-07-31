@@ -1,10 +1,10 @@
 import 'dart:io' as io;
 
-import 'package:flutter/foundation.dart';
+import 'package:nyrna/domain/native_platform/native_platform.dart';
 
-import '../process.dart';
+import '../native_process.dart';
 
-class LinuxProcess with ChangeNotifier implements Process {
+class LinuxProcess implements NativeProcess {
   LinuxProcess(this.pid);
 
   @override
@@ -52,7 +52,6 @@ class LinuxProcess with ChangeNotifier implements Process {
         ? io.ProcessSignal.sigstop
         : io.ProcessSignal.sigcont;
     final successful = io.Process.killPid(pid, signal);
-    notifyListeners();
     return successful;
   }
 
@@ -64,5 +63,15 @@ class LinuxProcess with ChangeNotifier implements Process {
     );
     final checkedPid = int.tryParse(result.stdout.toString().trim());
     return (checkedPid == pid) ? true : false;
+  }
+
+  @override
+  Future<bool> resume() async {
+    return io.Process.killPid(pid, io.ProcessSignal.sigcont);
+  }
+
+  @override
+  Future<bool> suspend() async {
+    return io.Process.killPid(pid, io.ProcessSignal.sigstop);
   }
 }

@@ -4,6 +4,7 @@ import 'dart:io' as io;
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
+import 'package:nyrna/domain/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/infrastructure/versions/versions.dart';
@@ -15,11 +16,13 @@ part 'app_state.dart';
 late AppCubit appCubit;
 
 class AppCubit extends Cubit<AppState> {
-  final NativePlatform nativePlatform;
+  final NativePlatform _nativePlatform;
   final Preferences _prefs;
 
-  AppCubit(Preferences prefs)
-      : nativePlatform = NativePlatform(),
+  AppCubit({
+    required NativePlatform nativePlatform,
+    required Preferences prefs,
+  })  : _nativePlatform = nativePlatform,
         _prefs = prefs,
         super(AppState.initial()) {
     appCubit = this;
@@ -61,34 +64,24 @@ class AppCubit extends Cubit<AppState> {
 
   Future<void> fetchData() async {
     await _fetchDesktop();
-    await fetchWindows();
+    await _fetchWindows();
   }
 
   Future<void> _fetchDesktop() async {
-    final currentDesktop = await nativePlatform.currentDesktop;
+    final currentDesktop = await _nativePlatform.currentDesktop;
     emit(state.copyWith(currentDesktop: currentDesktop));
   }
 
-  /// Check for which windows are open.
-  Future<void> fetchWindows() async {
-    final newWindows = await nativePlatform.windows;
-    final windows = Map<String, Window>.from(state.windows);
-    // Remove if window no longer present, or title has changed.
-    windows.removeWhere((pid, window) {
-      if (!newWindows.containsKey(pid) || // Window no longer present.
-          (newWindows[pid]!.title != window.title)) // Window title changed.
-      {
-        return true;
-      } else {
-        return false;
-      }
+  /// Populate the list of visible windows.
+  Future<void> _fetchWindows() async {
+    final windows = await _nativePlatform.windows();
+    await Future.forEach<Window>(windows, (window) async {
+      final process = await _nativePlatform.windowProcess(window.id);
+      window.process = process;
     });
-    // Filter out Nyrna's own window / process.
-    newWindows.removeWhere((pid, window) => pid == io.pid.toString());
-    // Add new windows (and those whose title changed).
-    newWindows.forEach((pid, window) {
-      if (!windows.containsKey(pid)) windows[pid] = window;
-    });
+    windows.removeWhere(
+      (window) => _filteredWindows.contains(window.process!.executable),
+    );
     emit(state.copyWith(windows: windows));
   }
 
@@ -113,3 +106,19 @@ class AppCubit extends Cubit<AppState> {
         : throw 'Could not launch url: $url';
   }
 }
+
+/// System-level or non-app executables. Nyrna shouldn't show these.
+List<String> _filteredWindows = [
+  'nyrna.exe',
+  'ApplicationFrameHost.exe', // Manages UWP (Universal Windows Platform) apps
+  'explorer.exe', // Windows File Explorer
+  'googledrivesync.exe',
+  'LogiOverlay.exe', // Logitech Options
+  'PenTablet.exe', // XP-PEN driver
+  'perfmon.exe', // Resource Monitor
+  'Rainmeter.exe',
+  'SystemSettings.exe', // Windows system settings
+  'Taskmgr.exe', // Windows Task Manager
+  'TextInputHost.exe', // Microsoft Text Input Application
+  'WinStore.App.exe', // Windows Store
+];

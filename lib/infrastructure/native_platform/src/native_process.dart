@@ -1,27 +1,20 @@
 import 'dart:io' as io;
 
-import 'package:flutter/foundation.dart';
+import 'package:nyrna/domain/native_platform/native_platform.dart';
 
 import 'linux/linux_process.dart';
 import 'win32/win32.dart';
-
-/// Represents the running state of a process.
-enum ProcessStatus {
-  normal,
-  suspended,
-  unknown,
-}
 
 /// Represents a process including its metadata and controls.
 ///
 /// Abstract class bridges types for specific operating systems.
 /// Used by [LinuxProcess] and [Win32Process].
-abstract class Process with ChangeNotifier {
+abstract class NativeProcess {
   // ignore: unused_element
-  Process._unused(this.pid);
+  NativeProcess._unused(this.pid);
 
   // Return correct subtype depending on the current operating system.
-  factory Process(int pid) {
+  factory NativeProcess(int pid) {
     if (io.Platform.isLinux) {
       return LinuxProcess(pid);
     } else {
@@ -48,4 +41,8 @@ abstract class Process with ChangeNotifier {
   ///
   /// ActiveWindow uses this to check a saved pid is still around.
   Future<bool> exists();
+
+  Future<bool> suspend();
+
+  Future<bool> resume();
 }

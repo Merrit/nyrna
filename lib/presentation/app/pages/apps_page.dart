@@ -6,10 +6,10 @@ import 'package:logging/logging.dart';
 import 'package:nyrna/application/app/app.dart';
 import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 import 'package:nyrna/application/theme/theme.dart';
+import 'package:nyrna/application/window/cubit/window_cubit.dart';
 import 'package:nyrna/presentation/app/widgets/window_tile.dart';
 import 'package:nyrna/presentation/preferences/pages/preferences_page.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// The main screen for Nyrna.
@@ -40,22 +40,22 @@ class _AppsPageState extends State<AppsPage> {
           width: MediaQuery.of(context).size.width / 1.20,
           child: BlocBuilder<AppCubit, AppState>(
             builder: (context, state) {
-              return ListView.builder(
+              return ListView(
                 padding: const EdgeInsets.only(top: 40),
-                itemCount: state.windows.length,
-                itemBuilder: (context, index) {
-                  if (state.windows.isEmpty) return Container();
-                  var keys = state.windows.keys.toList();
-                  var window = state.windows[keys[index]]!;
-                  return ChangeNotifierProvider<Process>(
-                    key: ValueKey('${window.pid}${window.title}'),
-                    create: (context) => Process(window.pid),
-                    child: WindowTile(
-                      key: ValueKey('${window.pid}${window.title}'),
-                      window: window,
-                    ),
-                  );
-                },
+                children: [
+                  ...state.windows
+                      .map(
+                        (window) => BlocProvider(
+                          create: (context) => WindowCubit(
+                            appCubit: appCubit,
+                            nativePlatform: NativePlatform(),
+                            window: window,
+                          ),
+                          child: WindowTile(key: ValueKey(window.id)),
+                        ),
+                      )
+                      .toList(),
+                ],
               );
             },
           ),

@@ -1,17 +1,18 @@
 import 'dart:io' as io;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nyrna/domain/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 
 void main() {
   final pid = io.pid; // Dart or Nyrna's own pid.
-  Process? process;
+  NativeProcess? process;
 
-  setUp(() => process = Process(pid));
+  setUp(() => process = NativeProcess(pid));
   tearDown(() => process = null);
 
   test('Can instantiate Process', () {
-    expect(process, isA<Process>());
+    expect(process, isA<NativeProcess>());
   });
 
   group('pid', () {

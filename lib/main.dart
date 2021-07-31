@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nyrna/application/bloc_observer.dart';
 import 'package:nyrna/infrastructure/logger/app_logger.dart';
+import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:nyrna/presentation/app_widget.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/application/active_window/active_window.dart';
@@ -27,11 +28,16 @@ Future<void> main(List<String> args) async {
 
   Bloc.observer = AppBlocObserver();
 
+  final nativePlatform = NativePlatform();
+
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AppCubit(prefs),
+          create: (context) => AppCubit(
+            nativePlatform: nativePlatform,
+            prefs: prefs,
+          ),
           lazy: false,
         ),
         BlocProvider(

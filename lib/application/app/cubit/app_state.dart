@@ -12,7 +12,7 @@ class AppState extends Equatable {
   /// The index of the currently active virtual desktop.
   final int currentDesktop;
 
-  final Map<String, Window> windows;
+  final List<Window> windows;
 
   const AppState({
     required this.isPortable,
@@ -30,7 +30,7 @@ class AppState extends Equatable {
       updateVersion: '',
       updateAvailable: false,
       currentDesktop: 0,
-      windows: <String, Window>{},
+      windows: <Window>[],
     );
   }
 
@@ -52,7 +52,7 @@ class AppState extends Equatable {
     String? updateVersion,
     bool? updateAvailable,
     int? currentDesktop,
-    Map<String, Window>? windows,
+    List<Window>? windows,
   }) {
     return AppState(
       isPortable: isPortable ?? this.isPortable,

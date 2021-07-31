@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
-// import 'package:nyrna/platform/win32/user32.dart';
+import 'package:nyrna/domain/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:win32/win32.dart';
 
@@ -19,19 +19,21 @@ class Win32 implements NativePlatform {
   Future<int> get currentDesktop async => 0;
 
   @override
-  Future<Map<String, Window>> get windows async {
-    // Clear the map to ensure we are starting fresh each time.
-    WindowBuilder.windows.clear();
+  Future<List<Window>> windows() async {
     // Process open windows.
     EnumWindows(WindowBuilder.callback, 0);
-    return WindowBuilder.windows;
+    final windows = List<Window>.from(WindowBuilder.windows);
+    // Clear the map to ensure we are starting fresh each time.
+    WindowBuilder.windows.clear();
+    return windows;
   }
 
   late int _windowPid;
 
   /// Takes the window handle as an argument and returns the
   /// pid of the associated process.
-  int getWindowPid(int windowId) {
+  @override
+  Future<int> windowPid(int windowId) async {
     // GetWindowThreadProcessId will assign the PID to this pointer.
     final _pid = calloc<Uint32>();
     // Populate the `_pid` pointer.
@@ -46,7 +48,7 @@ class Win32 implements NativePlatform {
   @override
   Future<int> get activeWindowPid async {
     final windowId = await activeWindowId;
-    return getWindowPid(windowId);
+    return windowPid(windowId);
   }
 
   @override
@@ -55,6 +57,28 @@ class Win32 implements NativePlatform {
   // No external dependencies for Win32, so always return true.
   @override
   Future<bool> checkDependencies() async => true;
+
+  @override
+  Future<Process> windowProcess(int windowId) async {
+    final pid = await windowPid(windowId);
+    final win32Process = Win32Process(pid);
+    final executable = await win32Process.executable;
+    final status = await win32Process.status;
+    final process = Process(executable: executable, pid: pid, status: status);
+    return process;
+  }
+
+  @override
+  Future<bool> minimizeWindow(int windowId) async {
+    ShowWindow(windowId, SW_FORCEMINIMIZE);
+    return true; // [ShowWindow] return value doesn't confirm success.
+  }
+
+  @override
+  Future<bool> restoreWindow(int windowId) async {
+    ShowWindow(windowId, SW_RESTORE);
+    return true; // [ShowWindow] return value doesn't confirm success.
+  }
 }
 
 // Static methods required because the win32 callback is required to be static.
@@ -117,30 +141,10 @@ class WindowBuilder {
     return (cloakedReason == 0) ? false : true;
   }
 
-  static Map<String, Window> windows = {};
+  static List<Window> windows = [];
 
   /// Called during the callback for every window to map the data.
   static Future<void> _buildWindowMap(int windowId, String title) async {
-    final pid = Win32().getWindowPid(windowId);
-    final process = Win32Process(pid);
-    final executable = await process.executable;
-    if (!_filterWindows.contains(executable)) {
-      windows[pid.toString()] = Window(
-        title: title,
-        id: windowId,
-        pid: pid,
-      );
-    }
+    windows.add(Window(id: windowId, title: title));
   }
 }
-
-/// System-level executables. Nyrna shouldn't show these.
-List<String> _filterWindows = [
-  'ApplicationFrameHost.exe', // Manages UWP (Universal Windows Platform) apps
-  'explorer.exe', // Windows File Explorer
-  'perfmon.exe', // Resource Monitor
-  'SystemSettings.exe', // Windows system settings
-  'Taskmgr.exe', // Windows Task Manager
-  'TextInputHost.exe', // Microsoft Text Input Application
-  'WinStore.App.exe', // Windows Store
-];
