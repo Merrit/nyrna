@@ -19,18 +19,13 @@ class ThemeState extends Equatable {
       backgroundColor: isPitchBlack ? pitchBlack : null,
     );
     final cardColor = isPitchBlack ? pitchBlack : null;
-    final colorScheme = ThemeData().colorScheme.copyWith(
-          brightness: brightness,
-          secondary: Colors.lightBlueAccent,
-        );
     final scaffoldBackgroundColor = isPitchBlack ? pitchBlack : null;
-
     final toggleableActiveColor =
         isPitchBlack ? Colors.blue[900] : Colors.lightBlueAccent;
     return ThemeData(
       appBarTheme: appBarTheme,
+      brightness: brightness,
       cardColor: cardColor,
-      colorScheme: colorScheme,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
       toggleableActiveColor: toggleableActiveColor,
     );
