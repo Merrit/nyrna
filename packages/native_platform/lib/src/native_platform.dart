@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:nyrna/domain/native_platform/native_platform.dart';
-
 import 'linux/linux.dart';
+import 'native_process.dart';
 import 'win32/win32.dart';
+import 'window.dart';
 
 /// Interact with the native operating system.
 ///
@@ -26,7 +26,7 @@ abstract class NativePlatform {
   Future<int> windowPid(int windowId);
 
   /// The process associated with a window.
-  Future<Process> windowProcess(int windowId);
+  Future<NativeProcess> windowProcess(int windowId);
 
   /// List of [Window] objects for every visible window with title text.
   Future<List<Window>> windows();

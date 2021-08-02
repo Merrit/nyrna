@@ -1,8 +1,7 @@
 import 'dart:io' as io;
 
-import 'package:nyrna/domain/native_platform/native_platform.dart';
-
 import 'linux/linux_process.dart';
+import 'process.dart';
 import 'win32/win32.dart';
 
 /// Represents a process including its metadata and controls.

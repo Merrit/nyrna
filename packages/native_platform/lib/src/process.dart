@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 enum ProcessStatus {
   normal,
@@ -7,6 +7,7 @@ enum ProcessStatus {
   unknown,
 }
 
+/// Friendly representation of a running process.
 @immutable
 class Process extends Equatable {
   final String executable;

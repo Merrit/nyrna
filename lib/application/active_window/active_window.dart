@@ -2,12 +2,10 @@ import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
+import 'package:native_platform/native_platform.dart';
 import 'package:nyrna/domain/arguments/argument_parser.dart';
-import 'package:nyrna/domain/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/logger/log_file.dart';
-import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
-import 'package:nyrna/infrastructure/native_platform/src/native_process.dart';
 import 'package:win32/win32.dart';
 
 /// Represents the active, foreground window on the system.

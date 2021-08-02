@@ -1,9 +1,10 @@
 import 'dart:io' as io;
 
-import 'package:nyrna/domain/native_platform/native_platform.dart';
-import 'package:nyrna/infrastructure/native_platform/src/linux/linux_process.dart';
-
 import '../native_platform.dart';
+import '../native_process.dart';
+import '../process.dart';
+import '../window.dart';
+import 'linux_process.dart';
 
 /// Interact with the native Linux operating system.
 class Linux implements NativePlatform {
@@ -30,7 +31,7 @@ class Linux implements NativePlatform {
     // 0x03600041  1 1459   SHODAN Inbox - Unified Folders - Mozilla Thunderbird
     // windowId, desktopId, pid, user, window title
     final lines = result.stdout.toString().split('\n');
-    lines.forEach((line) {
+    lines.forEach((line) async {
       final parts = line.split(' ');
       parts.removeWhere((part) => part == ''); // Happens with multiple spaces.
       if (parts.length > 1) {
@@ -40,10 +41,21 @@ class Linux implements NativePlatform {
           final pid = int.tryParse(parts[2]);
           final id = int.tryParse(parts[0]);
           if ((pid == null) || (id == null)) return;
-          windows.add(Window(
-            id: id,
-            title: parts.sublist(4).join(' '),
-          ));
+          final linuxProcess = LinuxProcess(pid);
+          final executable = await linuxProcess.executable;
+          final status = await linuxProcess.status;
+          final process = Process(
+            executable: executable,
+            pid: pid,
+            status: status,
+          );
+          windows.add(
+            Window(
+              id: id,
+              process: process,
+              title: parts.sublist(4).join(' '),
+            ),
+          );
         }
       }
     });
@@ -96,12 +108,9 @@ class Linux implements NativePlatform {
   }
 
   @override
-  Future<Process> windowProcess(int windowId) async {
+  Future<NativeProcess> windowProcess(int windowId) async {
     final pid = await windowPid(windowId);
-    final linuxProcess = LinuxProcess(pid);
-    final executable = await linuxProcess.executable;
-    final status = await linuxProcess.status;
-    final process = Process(executable: executable, pid: pid, status: status);
+    final process = LinuxProcess(pid);
     return process;
   }
 

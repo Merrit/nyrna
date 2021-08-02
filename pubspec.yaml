@@ -9,7 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  native_platform:
+    path: packages/native_platform
   args: ^2.1.0
+  bloc_test: ^8.1.0
   equatable: ^2.0.3
   flex_color_picker: ^2.0.1
   flutter_bloc: ^7.1.0

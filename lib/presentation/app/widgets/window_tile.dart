@@ -1,121 +1,108 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nyrna/application/window/cubit/window_cubit.dart';
-import 'package:nyrna/domain/native_platform/native_platform.dart';
+import 'package:native_platform/native_platform.dart';
+import 'package:nyrna/application/app/app.dart';
 
 /// Represents a visible window on the desktop, running state and actions.
 class WindowTile extends StatelessWidget {
+  final Window window;
+
   const WindowTile({
     Key? key,
+    required this.window,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<WindowCubit, WindowState>(
-      listener: (context, state) {
-        if (state.toggleError == ToggleError.Suspend) {
-          _showSnackError(context, ToggleError.Suspend);
-        } else if (state.toggleError == ToggleError.Resume) {
-          _showSnackError(context, ToggleError.Resume);
-        }
-      },
-      child: Card(
-        child: ListTile(
-          leading: _StatusWidget(),
-          title: _TitleWidget(),
-          subtitle: _DetailsWidget(),
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 2,
-            horizontal: 20,
-          ),
-          onTap: () => context.read<WindowCubit>().toggle(),
+    return Card(
+      child: ListTile(
+        leading: _StatusWidget(window: window),
+        title: _TitleWidget(window: window),
+        subtitle: _DetailsWidget(window: window),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 2,
+          horizontal: 20,
         ),
+        onTap: () async {
+          final success = await context.read<AppCubit>().toggle(window);
+          if (!success) await _showSnackError(context);
+        },
       ),
     );
   }
 
   Future<void> _showSnackError(
     BuildContext context,
-    ToggleError errorType,
   ) async {
-    final state = context.read<WindowCubit>().state;
-    final name = state.executable;
-    final suspendMessage = 'There was a problem suspending $name';
-    final resumeMessage = 'There was a problem resuming $name';
-    final message =
-        (errorType == ToggleError.Suspend) ? suspendMessage : resumeMessage;
+    final name = window.process.executable;
+    final message = 'There was a problem interacting with $name';
     final snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
 class _StatusWidget extends StatelessWidget {
+  final Window window;
+
   const _StatusWidget({
     Key? key,
+    required this.window,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WindowCubit, WindowState>(
-      builder: (context, state) {
-        Color _color;
-        switch (state.processStatus) {
-          case ProcessStatus.normal:
-            _color = Colors.green;
-            break;
-          case ProcessStatus.suspended:
-            _color = Colors.orange[700]!;
-            break;
-          case ProcessStatus.unknown:
-            _color = Colors.grey;
-        }
+    Color _color;
+    switch (window.process.status) {
+      case ProcessStatus.normal:
+        _color = Colors.green;
+        break;
+      case ProcessStatus.suspended:
+        _color = Colors.orange[700]!;
+        break;
+      case ProcessStatus.unknown:
+        _color = Colors.grey;
+    }
 
-        return Container(
-          height: 20,
-          width: 20,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _color,
-          ),
-        );
-      },
+    return Container(
+      height: 20,
+      width: 20,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: _color,
+      ),
     );
   }
 }
 
 class _TitleWidget extends StatelessWidget {
+  final Window window;
+
   const _TitleWidget({
     Key? key,
+    required this.window,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WindowCubit, WindowState>(
-      builder: (context, state) {
-        return Text(state.title);
-      },
-    );
+    return Text(window.title);
   }
 }
 
 class _DetailsWidget extends StatelessWidget {
-  const _DetailsWidget({Key? key}) : super(key: key);
+  final Window window;
+
+  const _DetailsWidget({
+    Key? key,
+    required this.window,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BlocBuilder<WindowCubit, WindowState>(
-          builder: (context, state) {
-            return Text('PID: ${state.pid}');
-          },
-        ),
-        BlocBuilder<WindowCubit, WindowState>(
-          builder: (context, state) {
-            return Text(state.executable);
-          },
-        ),
+        Text('PID: ${window.process.pid}'),
+        Text(window.process.executable),
       ],
     );
   }

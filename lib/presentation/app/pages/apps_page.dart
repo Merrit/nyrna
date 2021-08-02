@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nyrna/application/app/app.dart';
 import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 import 'package:nyrna/application/theme/theme.dart';
-import 'package:nyrna/application/window/cubit/window_cubit.dart';
-import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 
 import '../app.dart';
 
@@ -28,13 +26,9 @@ class AppsPage extends StatelessWidget {
                 children: [
                   ...state.windows
                       .map(
-                        (window) => BlocProvider(
-                          create: (context) => WindowCubit(
-                            appCubit: appCubit,
-                            nativePlatform: NativePlatform(),
-                            window: window,
-                          ),
-                          child: WindowTile(key: ValueKey(window.id)),
+                        (window) => WindowTile(
+                          key: ValueKey(window),
+                          window: window,
                         ),
                       )
                       .toList(),

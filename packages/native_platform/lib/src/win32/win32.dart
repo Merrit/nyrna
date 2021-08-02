@@ -1,11 +1,12 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
-import 'package:nyrna/domain/native_platform/native_platform.dart';
-import 'package:nyrna/infrastructure/native_platform/native_platform.dart';
 import 'package:win32/win32.dart';
 
-import 'ffi/dwmapi.dart';
+import '../native_platform.dart';
+import '../native_process.dart';
+import '../process.dart';
+import '../window.dart';
 import 'win32_process.dart';
 
 export 'win32_process.dart';
@@ -20,11 +21,17 @@ class Win32 implements NativePlatform {
 
   @override
   Future<List<Window>> windows() async {
-    // Process open windows.
-    EnumWindows(WindowBuilder.callback, 0);
-    final windows = List<Window>.from(WindowBuilder.windows);
     // Clear the map to ensure we are starting fresh each time.
     WindowBuilder.windows.clear();
+    // Process open windows.
+    /// [EnumWindows] returns 0 for failure.
+    final result = EnumWindows(WindowBuilder.callback, 0);
+    if (result == 0) {
+      print('Error from EnumWindows getting open windows');
+      return [];
+    }
+    final windowMap = WindowBuilder.windows;
+    final windows = await buildWindows(windowMap);
     return windows;
   }
 
@@ -59,12 +66,9 @@ class Win32 implements NativePlatform {
   Future<bool> checkDependencies() async => true;
 
   @override
-  Future<Process> windowProcess(int windowId) async {
+  Future<NativeProcess> windowProcess(int windowId) async {
     final pid = await windowPid(windowId);
-    final win32Process = Win32Process(pid);
-    final executable = await win32Process.executable;
-    final status = await win32Process.status;
-    final process = Process(executable: executable, pid: pid, status: status);
+    final process = Win32Process(pid);
     return process;
   }
 
@@ -78,6 +82,34 @@ class Win32 implements NativePlatform {
   Future<bool> restoreWindow(int windowId) async {
     ShowWindow(windowId, SW_RESTORE);
     return true; // [ShowWindow] return value doesn't confirm success.
+  }
+
+  Future<List<Window>> buildWindows(List<Map<int, String>> windowMaps) async {
+    final windows = <Window>[];
+    await Future.forEach(
+      windowMaps,
+      (Map<int, String> window) async {
+        final windowId = window.keys.first;
+        final title = window.values.first;
+        final win32Process = await windowProcess(windowId);
+        final executable = await win32Process.executable;
+        final pid = win32Process.pid;
+        final status = await win32Process.status;
+        final process = Process(
+          executable: executable,
+          pid: pid,
+          status: status,
+        );
+        windows.add(
+          Window(
+            id: windowId,
+            process: process,
+            title: title,
+          ),
+        );
+      },
+    );
+    return windows;
   }
 }
 
@@ -129,6 +161,7 @@ class WindowBuilder {
     // Initialize memory for the result pointer.
     final result = calloc<Uint32>();
     // Populate into the `result` pointer.
+    const DWMWA_CLOAKED = 14;
     DwmGetWindowAttribute(hWnd, DWMWA_CLOAKED, result, sizeOf<Uint32>());
     // Pull the value from the pointer.
     var cloakedReason = result.value;
@@ -141,10 +174,12 @@ class WindowBuilder {
     return (cloakedReason == 0) ? false : true;
   }
 
-  static List<Window> windows = [];
+  static List<Map<int, String>> windows = [];
 
   /// Called during the callback for every window to map the data.
-  static Future<void> _buildWindowMap(int windowId, String title) async {
-    windows.add(Window(id: windowId, title: title));
+  static void _buildWindowMap(int windowId, String title) {
+    windows.add({
+      windowId: title,
+    });
   }
 }
