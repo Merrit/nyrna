@@ -16,35 +16,58 @@ class AppsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
-      body: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width / 1.20,
-          child: BlocBuilder<AppCubit, AppState>(
-            builder: (context, state) {
-              return (state == AppState.initial())
-                  ? Transform.scale(
-                      scale: 2,
-                      child: Center(child: CircularProgressIndicator()),
-                    )
-                  : ListView(
-                      padding: const EdgeInsets.only(top: 40),
-                      children: [
-                        ...state.windows
-                            .map(
-                              (window) => WindowTile(
-                                key: ValueKey(window),
-                                window: window,
-                              ),
-                            )
-                            .toList(),
-                      ],
-                    );
-            },
-          ),
-        ),
+      body: BlocBuilder<AppCubit, AppState>(
+        builder: (context, state) {
+          return Stack(
+            children: [
+              Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 1.20,
+                  child: ListView(
+                    padding: const EdgeInsets.only(top: 40),
+                    children: [
+                      ...state.windows
+                          .map(
+                            (window) => WindowTile(
+                              key: ValueKey(window),
+                              window: window,
+                            ),
+                          )
+                          .toList(),
+                    ],
+                  ),
+                ),
+              ),
+              _ProgressOverlay(),
+            ],
+          );
+        },
       ),
       // We don't show a manual refresh button with a short auto-refresh.
       floatingActionButton: _FloatingActionButton(),
+    );
+  }
+}
+
+class _ProgressOverlay extends StatelessWidget {
+  const _ProgressOverlay({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AppCubit, AppState>(
+      builder: (context, state) {
+        return (state.loading)
+            ? Stack(
+                children: [
+                  ModalBarrier(color: Colors.grey.withOpacity(0.1)),
+                  Transform.scale(
+                    scale: 2,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                ],
+              )
+            : const SizedBox();
+      },
     );
   }
 }
@@ -68,7 +91,7 @@ class _FloatingActionButton extends StatelessWidget {
                     backgroundColor: (state.appTheme == AppTheme.pitchBlack)
                         ? Colors.black
                         : null,
-                    onPressed: () => appCubit.fetchData(),
+                    onPressed: () => appCubit.manualRefresh(),
                     child: const Icon(Icons.refresh),
                   );
                 },

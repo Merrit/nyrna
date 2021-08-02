@@ -37,6 +37,7 @@ class AppCubit extends Cubit<AppState> {
 
   Future<void> _initialize() async {
     await fetchData();
+    emit(state.copyWith(loading: false));
     await _checkIsPortable();
     setAutoRefresh(
       autoRefresh: _prefsCubit.state.autoRefresh,
@@ -84,6 +85,12 @@ class AppCubit extends Cubit<AppState> {
       (window) => _filteredWindows.contains(window.process.executable),
     );
     emit(state.copyWith(windows: windows));
+  }
+
+  Future<void> manualRefresh() async {
+    emit(state.copyWith(loading: true));
+    await fetchData();
+    emit(state.copyWith(loading: false));
   }
 
   @visibleForTesting

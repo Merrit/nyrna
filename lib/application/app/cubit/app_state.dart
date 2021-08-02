@@ -5,6 +5,8 @@ class AppState extends Equatable {
   /// present for the portable build on Linux.
   final bool isPortable;
 
+  final bool loading;
+
   final String runningVersion;
   final String updateVersion;
   final bool updateAvailable;
@@ -16,6 +18,7 @@ class AppState extends Equatable {
 
   const AppState({
     required this.isPortable,
+    required this.loading,
     required this.runningVersion,
     required this.updateVersion,
     required this.updateAvailable,
@@ -26,6 +29,7 @@ class AppState extends Equatable {
   factory AppState.initial() {
     return AppState(
       isPortable: false,
+      loading: true,
       runningVersion: '',
       updateVersion: '',
       updateAvailable: false,
@@ -38,6 +42,7 @@ class AppState extends Equatable {
   List<Object> get props {
     return [
       isPortable,
+      loading,
       runningVersion,
       updateVersion,
       updateAvailable,
@@ -48,6 +53,7 @@ class AppState extends Equatable {
 
   AppState copyWith({
     bool? isPortable,
+    bool? loading,
     String? runningVersion,
     String? updateVersion,
     bool? updateAvailable,
@@ -56,6 +62,7 @@ class AppState extends Equatable {
   }) {
     return AppState(
       isPortable: isPortable ?? this.isPortable,
+      loading: loading ?? this.loading,
       runningVersion: runningVersion ?? this.runningVersion,
       updateVersion: updateVersion ?? this.updateVersion,
       updateAvailable: updateAvailable ?? this.updateAvailable,
