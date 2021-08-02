@@ -36,12 +36,12 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> _initialize() async {
+    await fetchData();
     await _checkIsPortable();
     setAutoRefresh(
       autoRefresh: _prefsCubit.state.autoRefresh,
       refreshInterval: _prefsCubit.state.refreshInterval,
     );
-    await _fetchDesktop();
     await fetchVersionData();
   }
 
@@ -58,7 +58,6 @@ class AppCubit extends Cubit<AppState> {
     required bool autoRefresh,
     required int refreshInterval,
   }) {
-    fetchData();
     if (_timer != null) _timer?.cancel();
     if (autoRefresh) {
       _timer = Timer.periodic(

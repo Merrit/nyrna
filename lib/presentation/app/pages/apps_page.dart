@@ -21,19 +21,24 @@ class AppsPage extends StatelessWidget {
           width: MediaQuery.of(context).size.width / 1.20,
           child: BlocBuilder<AppCubit, AppState>(
             builder: (context, state) {
-              return ListView(
-                padding: const EdgeInsets.only(top: 40),
-                children: [
-                  ...state.windows
-                      .map(
-                        (window) => WindowTile(
-                          key: ValueKey(window),
-                          window: window,
-                        ),
-                      )
-                      .toList(),
-                ],
-              );
+              return (state == AppState.initial())
+                  ? Transform.scale(
+                      scale: 2,
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  : ListView(
+                      padding: const EdgeInsets.only(top: 40),
+                      children: [
+                        ...state.windows
+                            .map(
+                              (window) => WindowTile(
+                                key: ValueKey(window),
+                                window: window,
+                              ),
+                            )
+                            .toList(),
+                      ],
+                    );
             },
           ),
         ),
