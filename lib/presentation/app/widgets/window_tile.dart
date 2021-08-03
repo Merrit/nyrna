@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_platform/native_platform.dart';
+
 import 'package:nyrna/application/app/app.dart';
 
 /// Represents a visible window on the desktop, running state and actions.
-class WindowTile extends StatelessWidget {
+class WindowTile extends StatefulWidget {
   final Window window;
 
   const WindowTile({
@@ -13,20 +14,35 @@ class WindowTile extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<WindowTile> createState() => _WindowTileState();
+}
+
+class _WindowTileState extends State<WindowTile> {
+  bool loading = false;
+
+  @override
   Widget build(BuildContext context) {
+    final window = widget.window;
+
     return Card(
-      child: ListTile(
-        leading: _StatusWidget(window: window),
-        title: _TitleWidget(window: window),
-        subtitle: _DetailsWidget(window: window),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 2,
-          horizontal: 20,
-        ),
-        onTap: () async {
-          final success = await context.read<AppCubit>().toggle(window);
-          if (!success) await _showSnackError(context);
-        },
+      child: Stack(
+        children: [
+          ListTile(
+            leading: _StatusWidget(loading: loading, window: window),
+            title: _TitleWidget(window: window),
+            subtitle: _DetailsWidget(window: window),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 2,
+              horizontal: 20,
+            ),
+            onTap: () async {
+              setState(() => loading = true);
+              final success = await context.read<AppCubit>().toggle(window);
+              if (!success) await _showSnackError(context);
+              setState(() => loading = false);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -34,7 +50,7 @@ class WindowTile extends StatelessWidget {
   Future<void> _showSnackError(
     BuildContext context,
   ) async {
-    final name = window.process.executable;
+    final name = widget.window.process.executable;
     final message = 'There was a problem interacting with $name';
     final snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -43,10 +59,12 @@ class WindowTile extends StatelessWidget {
 
 class _StatusWidget extends StatelessWidget {
   final Window window;
+  final bool loading;
 
   const _StatusWidget({
     Key? key,
     required this.window,
+    required this.loading,
   }) : super(key: key);
 
   @override
@@ -64,12 +82,13 @@ class _StatusWidget extends StatelessWidget {
     }
 
     return Container(
-      height: 20,
-      width: 20,
+      height: 25,
+      width: 25,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: _color,
+        color: (loading) ? null : _color,
       ),
+      child: (loading) ? CircularProgressIndicator() : null,
     );
   }
 }
