@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' as io;
 
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:native_platform/native_platform.dart';
@@ -80,11 +81,41 @@ class AppCubit extends Cubit<AppState> {
 
   /// Populate the list of visible windows.
   Future<void> _fetchWindows() async {
-    final windows = await _nativePlatform.windows();
+    var windows = await _nativePlatform.windows();
     windows.removeWhere(
       (window) => _filteredWindows.contains(window.process.executable),
     );
+    windows = await _checkWindowStatuses(windows);
     emit(state.copyWith(windows: windows));
+  }
+
+  Future<ProcessStatus> _getProcessStatus(int pid) async {
+    final process = NativeProcess(pid);
+    final status = await process.status;
+    return status;
+  }
+
+  Future<List<Window>> _checkWindowStatuses(List<Window> windows) async {
+    final processedWindows = <Window>[];
+    for (var window in windows) {
+      final existingWindow = state.windows.singleWhereOrNull(
+        (stateWindow) => stateWindow.id == window.id,
+      );
+      if (existingWindow != null) {
+        processedWindows.add(
+          window.copyWith(process: existingWindow.process),
+        );
+      } else {
+        final pid = window.process.pid;
+        final status = await _getProcessStatus(pid);
+        processedWindows.add(
+          window.copyWith(
+            process: window.process.copyWith(status: status),
+          ),
+        );
+      }
+    }
+    return processedWindows;
   }
 
   Future<void> manualRefresh() async {
@@ -110,12 +141,25 @@ class AppCubit extends Cubit<AppState> {
 
   /// Toggle suspend / resume for the process associated with the given window.
   Future<bool> toggle(Window window) async {
+    final pid = window.process.pid;
+    ProcessStatus status = await _getProcessStatus(pid);
     bool success;
-    if (window.process.status == ProcessStatus.suspended) {
+    if (status == ProcessStatus.suspended) {
       success = await _resume(window);
+      status = await _getProcessStatus(pid);
+      if (status != ProcessStatus.normal) success = false;
     } else {
       success = await _suspend(window);
+      status = await _getProcessStatus(pid);
+      if (status != ProcessStatus.suspended) success = false;
     }
+    final updatedWindow = window.copyWith(
+      process: window.process.copyWith(status: status),
+    );
+    final windows = List<Window>.from(state.windows);
+    windows.removeWhere((e) => e.id == window.id);
+    windows.add(updatedWindow);
+    emit(state.copyWith(windows: windows));
     return success;
   }
 
@@ -124,7 +168,6 @@ class AppCubit extends Cubit<AppState> {
     final success = await nativeProcess.resume();
     // Restore the window _after_ resuming or it might not restore.
     await _nativePlatform.restoreWindow(window.id);
-    await fetchData();
     return (success) ? true : false;
   }
 
@@ -138,7 +181,6 @@ class AppCubit extends Cubit<AppState> {
     }
     final nativeProcess = NativeProcess(window.process.pid);
     final success = await nativeProcess.suspend();
-    await fetchData();
     return (success) ? true : false;
   }
 

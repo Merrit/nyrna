@@ -94,11 +94,10 @@ class Win32 implements NativePlatform {
         final win32Process = await windowProcess(windowId);
         final executable = await win32Process.executable;
         final pid = win32Process.pid;
-        final status = await win32Process.status;
         final process = Process(
           executable: executable,
           pid: pid,
-          status: status,
+          status: ProcessStatus.unknown,
         );
         windows.add(
           Window(
