@@ -1,0 +1,11 @@
+name: ntstatus
+description: Bindings to `ntstatus.h`.
+output: 'example/ntstatus/ntstatus.dart'
+headers:
+  entry-points:
+    - 'example/ntstatus/_ntstatus.h'
+  include-directives: # include only these header files and necessary structs from other header files
+    - '**ntstatus.h'
+size-map:
+  long: 4
+  unsigned long: 4

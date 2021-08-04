@@ -1,0 +1,21 @@
+name: winternl
+description: Bindings to `winternl.h`.
+output: 'example/ntdll/_winternl.dart'
+headers:
+  entry-points:
+    - 'example/ntdll/_winternl.h'
+  include-directives: # include only these header files and necessary structs from other header files
+    - '**winternl.h'
+functions:
+  expose-typedefs:
+    include:
+      - 'NtQuerySystemInformation'
+structs:
+  rename:
+    '_SYSTEM_(.*)': 'SYSTEM_$1' # FIXME: https://github.com/dart-lang/ffigen/issues/233
+enums:
+  rename:
+    '_SYSTEM_(.*)': 'SYSTEM_$1' # FIXME: https://github.com/dart-lang/ffigen/issues/233
+size-map:
+  long: 4
+  unsigned long: 4
