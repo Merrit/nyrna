@@ -1,0 +1,6 @@
+C:\Users\Merritt\Dev\process_status_dll\process_status_dll\bin\Debug\process_status_dll.dll
+C:\Users\Merritt\Dev\process_status_dll\process_status_dll\bin\Debug\process_status_dll.pdb
+C:\Users\Merritt\Dev\process_status_dll\process_status_dll\obj\Debug\process_status_dll.csprojAssemblyReference.cache
+C:\Users\Merritt\Dev\process_status_dll\process_status_dll\obj\Debug\process_status_dll.csproj.CoreCompileInputs.cache
+C:\Users\Merritt\Dev\process_status_dll\process_status_dll\obj\Debug\process_status_dll.dll
+C:\Users\Merritt\Dev\process_status_dll\process_status_dll\obj\Debug\process_status_dll.pdb
