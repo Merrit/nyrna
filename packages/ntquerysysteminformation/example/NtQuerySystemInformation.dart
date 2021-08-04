@@ -1,4 +1,4 @@
-// ignore_for_file: omit_local_variable_types
+// ignore_for_file: omit_local_variable_types, unused_local_variable
 
 import 'dart:ffi';
 
@@ -27,8 +27,9 @@ void main() {
         pBuffer.cast(),
         pNeedSize.value,
         nullptr);
-    if (status < 0)
+    if (status < 0) {
       throw Exception('Query SystemProcessInformation error: $status');
+    }
 
     var address = pBuffer.address;
     var nextEntryOffset = 0;
