@@ -79,6 +79,12 @@ class AppCubit extends Cubit<AppState> {
     emit(state.copyWith(currentDesktop: currentDesktop));
   }
 
+  List<Window> _sortWindows(List<Window> windows) {
+    return windows.sortedBy(
+      (window) => window.process.executable.toLowerCase(),
+    );
+  }
+
   /// Populate the list of visible windows.
   Future<void> _fetchWindows() async {
     var windows = await _nativePlatform.windows();
@@ -86,7 +92,8 @@ class AppCubit extends Cubit<AppState> {
       (window) => _filteredWindows.contains(window.process.executable),
     );
     windows = await _checkWindowStatuses(windows);
-    emit(state.copyWith(windows: windows));
+    final sortedWindows = _sortWindows(windows);
+    emit(state.copyWith(windows: sortedWindows));
   }
 
   Future<ProcessStatus> _getProcessStatus(int pid) async {
@@ -159,7 +166,8 @@ class AppCubit extends Cubit<AppState> {
     final windows = List<Window>.from(state.windows);
     windows.removeWhere((e) => e.id == window.id);
     windows.add(updatedWindow);
-    emit(state.copyWith(windows: windows));
+    final sortedWindows = _sortWindows(windows);
+    emit(state.copyWith(windows: sortedWindows));
     return success;
   }
 
