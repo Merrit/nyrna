@@ -20,6 +20,8 @@ jobs:
         uses: egor-tensin/vs-shell@v2
         with:
           arch: x64
+      - name: Install AutoHotkey
+        run: choco install autohotkey
       - name: Build Nyrna portable
         run: |
           flutter config --enable-windows-desktop
