@@ -29,11 +29,14 @@ jobs:
           xcopy C:\Windows\System32\vcruntime140.dll build\Nyrna
           xcopy C:\Windows\System32\vcruntime140_1.dll build\Nyrna
 
-          dart compile exe .\packages\active_window\bin\toggle_active_window.dart
-          editbin.exe /subsystem:windows .\packages\active_window\bin\toggle_active_window.exe
-          xcopy .\packages\active_window\bin\toggle_active_window.exe .\build\Nyrna
+          cd .\packages\active_window
+          dart pub get
+          dart compile exe .\bin\toggle_active_window.dart
+          editbin.exe /subsystem:windows .\bin\toggle_active_window.exe
+          xcopy .\bin\toggle_active_window.exe ..\..\build\Nyrna
           
-          Ahk2Exe.exe /in .\packages\active_window\hotkey\toggle_active_hotkey.ahk /out .\build\Nyrna\toggle_active_hotkey.exe
+          Ahk2Exe.exe /in .\hotkey\toggle_active_hotkey.ahk /out ..\..\build\Nyrna\toggle_active_hotkey.exe
+          cd ..\..
       - name: Package with Inno Setup
         run: |
           iscc packaging\win32\inno_setup_script.iss
