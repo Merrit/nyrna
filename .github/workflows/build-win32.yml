@@ -16,6 +16,10 @@ jobs:
       - name: Read VERSION file
         id: getversion
         run: echo "::set-output name=version::$(cat VERSION)"
+      - name: Set up Visual Studio shell
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
       - name: Build Nyrna portable
         run: |
           flutter config --enable-windows-desktop
