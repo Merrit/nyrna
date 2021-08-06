@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:win32/win32.dart';
 
+import '../active_window.dart';
 import '../native_platform.dart';
 import '../native_process.dart';
 import '../process.dart';
@@ -50,6 +51,20 @@ class Win32 implements NativePlatform {
     // Free the pointer memory.
     calloc.free(_pid);
     return _windowPid;
+  }
+
+  @override
+  Future<NativeActiveWindow> activeWindow() async {
+    final windowId = await activeWindowId;
+    final pid = await windowPid(windowId);
+    final win32Process = Win32Process(pid);
+    final activeWindow = NativeActiveWindow(
+      NativePlatform(),
+      win32Process,
+      id: windowId,
+      pid: pid,
+    );
+    return activeWindow;
   }
 
   @override

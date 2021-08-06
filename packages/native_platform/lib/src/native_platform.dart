@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'active_window.dart';
 import 'linux/linux.dart';
 import 'native_process.dart';
 import 'win32/win32.dart';
@@ -30,6 +31,8 @@ abstract class NativePlatform {
 
   /// List of [Window] objects for every visible window with title text.
   Future<List<Window>> windows();
+
+  Future<NativeActiveWindow> activeWindow();
 
   /// Returns the pid associated with the active window.
   Future<int> get activeWindowPid;

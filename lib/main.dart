@@ -6,7 +6,6 @@ import 'package:nyrna/infrastructure/logger/app_logger.dart';
 import 'package:nyrna/infrastructure/versions/versions.dart';
 import 'package:nyrna/presentation/app_widget.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
-import 'package:nyrna/application/active_window/active_window.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'application/app/app.dart';
@@ -23,9 +22,6 @@ Future<void> main(List<String> args) async {
   final prefs = Preferences(sharedPreferences);
 
   AppLogger().initialize();
-
-  // `-t` or `--toggle` flag detected.
-  if (parser.toggleFlagged) await ActiveWindow().toggle();
 
   Bloc.observer = AppBlocObserver();
 

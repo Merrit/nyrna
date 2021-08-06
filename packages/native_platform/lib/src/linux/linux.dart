@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import '../active_window.dart';
 import '../native_platform.dart';
 import '../native_process.dart';
 import '../process.dart';
@@ -60,6 +61,20 @@ class Linux implements NativePlatform {
       }
     });
     return windows;
+  }
+
+  @override
+  Future<NativeActiveWindow> activeWindow() async {
+    final windowId = await activeWindowId;
+    final pid = await windowPid(windowId);
+    final linuxProcess = LinuxProcess(pid);
+    final activeWindow = NativeActiveWindow(
+      NativePlatform(),
+      linuxProcess,
+      id: windowId,
+      pid: pid,
+    );
+    return activeWindow;
   }
 
   // Returns the PID of the active window as reported by xdotool.

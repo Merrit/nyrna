@@ -5,11 +5,7 @@ import 'package:nyrna/infrastructure/logger/log_file.dart';
 
 /// Parse command-line arguments.
 ///
-/// `Toggle` flag available with `-t` or `--toggle`.
-///
 /// `Logger` flag available with `-l` or `--log`.
-///
-/// Both options available with `-tl`.
 class ArgumentParser {
   ArgumentParser(this.args) {
     _setFlags();
@@ -20,15 +16,6 @@ class ArgumentParser {
   final _parser = ArgParser();
 
   void _setFlags() {
-    // Toggle flag means Nyrna should toggle the suspend / resume state of the
-    // active application and then exit. Needed as a workaround since Flutter
-    // doesn't currently support a global hotkey. Not reliable if Nyrna is
-    // already running.
-    _parser.addFlag(
-      'toggle',
-      abbr: 't',
-      defaultsTo: false,
-    );
     // Log flag is to enable conditional use of the Logger() class for debug.
     _parser.addFlag(
       'log',
@@ -53,12 +40,6 @@ class ArgumentParser {
       exit(1);
     }
   }
-
-  /// Check if `toggle` flag was received.
-  ///
-  /// If toggle is true => toggle suspend for active window,
-  /// do not load GUI.
-  bool get toggleFlagged => _results.wasParsed('toggle');
 
   static bool _logToFile = false;
 

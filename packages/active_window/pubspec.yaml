@@ -1,0 +1,16 @@
+name: active_window
+description: Toggle the suspend state of the active window
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies: 
+  hive: ^2.0.4
+  native_platform:
+    path: ../native_platform
+
+dev_dependencies:
+  lints: ^1.0.0
+  pedantic: ^1.11.1

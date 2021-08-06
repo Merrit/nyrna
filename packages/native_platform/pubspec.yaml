@@ -6,6 +6,7 @@ environment:
 
 dependencies:
   equatable: ^2.0.3
+  logging: ^1.0.1
   win32: ^2.2.5
   win32_suspend_process: ^1.0.0
 

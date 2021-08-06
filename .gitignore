@@ -1,5 +1,6 @@
 # Packaging output
 *.AppImage
+*.exe
 *.snap
 *.zsync
 appimage-builder-cache
