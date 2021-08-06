@@ -23,7 +23,7 @@ jobs:
       - name: Install AutoHotkey
         run: choco install autohotkey
       - name: Add AutoHotkey to path
-        run: echo "C:\Program Files\AutoHotkey\Compiler" >> $GITHUB_PATH
+        run: echo "C:\Program Files\AutoHotkey\Compiler" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - name: Build Nyrna portable
         run: |
           flutter config --enable-windows-desktop
