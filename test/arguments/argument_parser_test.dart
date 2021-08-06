@@ -5,7 +5,7 @@ void main() {
   test('With no flags log is false', () async {
     final parser = ArgumentParser([]);
     await parser.parse();
-    expect(parser.toggleFlagged, false);
+    expect(ArgumentParser.logToFile, false);
   });
 
   test('Config.log is true with -l flag', () async {
@@ -19,40 +19,4 @@ void main() {
     await parser.parse();
     expect(ArgumentParser.logToFile, true);
   });
-
-  test(
-    'With no flags toggle is false',
-    () async {
-      final parser = ArgumentParser([]);
-      await parser.parse();
-      expect(parser.toggleFlagged, false);
-    },
-  );
-  test(
-    '--toggle sets Config.toggle to true',
-    () async {
-      final parser = ArgumentParser(['--toggle']);
-      await parser.parse();
-      expect(parser.toggleFlagged, true);
-    },
-  );
-
-  test(
-    '-t sets Config.toggle to true',
-    () async {
-      final parser = ArgumentParser(['-t']);
-      await parser.parse();
-      expect(parser.toggleFlagged, true);
-    },
-  );
-
-  test(
-    'With log and toggle flags log and toggle are true',
-    () async {
-      final parser = ArgumentParser(['-tl']);
-      await parser.parse();
-      expect(parser.toggleFlagged, true);
-      expect(ArgumentParser.logToFile, true);
-    },
-  );
 }
