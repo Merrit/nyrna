@@ -20,11 +20,16 @@ class AppsPage extends StatelessWidget {
         builder: (context, state) {
           return Stack(
             children: [
-              Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 1.20,
-                  child: ListView(
-                    padding: const EdgeInsets.only(top: 40),
+              LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  final width = constraints.maxWidth;
+                  final horizontalPadding = width / 6;
+
+                  return ListView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: horizontalPadding,
+                      vertical: 40,
+                    ),
                     children: [
                       ...state.windows
                           .map(
@@ -35,8 +40,8 @@ class AppsPage extends StatelessWidget {
                           )
                           .toList(),
                     ],
-                  ),
-                ),
+                  );
+                },
               ),
               _ProgressOverlay(),
             ],
