@@ -25,21 +25,24 @@ class AppsPage extends StatelessWidget {
                   final width = constraints.maxWidth;
                   final horizontalPadding = width / 6;
 
-                  return ListView(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: horizontalPadding,
-                      vertical: 40,
+                  return Scrollbar(
+                    isAlwaysShown: true,
+                    child: ListView(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: horizontalPadding,
+                        vertical: 40,
+                      ),
+                      children: [
+                        ...state.windows
+                            .map(
+                              (window) => WindowTile(
+                                key: ValueKey(window),
+                                window: window,
+                              ),
+                            )
+                            .toList(),
+                      ],
                     ),
-                    children: [
-                      ...state.windows
-                          .map(
-                            (window) => WindowTile(
-                              key: ValueKey(window),
-                              window: window,
-                            ),
-                          )
-                          .toList(),
-                    ],
                   );
                 },
               ),
