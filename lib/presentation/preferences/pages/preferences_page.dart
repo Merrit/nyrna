@@ -11,28 +11,31 @@ class PreferencesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Preferences')),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(
-          vertical: 30,
-          horizontal: 130,
-        ),
-        children: [
-          const Donate(),
-          Spacers.verticalLarge,
-          const BehaviourSection(),
-          Spacers.verticalMedium,
-          const ThemeSection(),
-          const IntegrationSection(),
-          Spacers.verticalMedium,
-          const Text('Troubleshooting'),
-          ListTile(
-            leading: const Icon(Icons.article_outlined),
-            title: const Text('Logs'),
-            onTap: () => Navigator.pushNamed(context, LogPage.id),
+      body: Scrollbar(
+        isAlwaysShown: true,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(
+            vertical: 30,
+            horizontal: 130,
           ),
-          Spacers.verticalMedium,
-          const AboutSection(),
-        ],
+          children: [
+            const Donate(),
+            Spacers.verticalLarge,
+            const BehaviourSection(),
+            Spacers.verticalMedium,
+            const ThemeSection(),
+            const IntegrationSection(),
+            Spacers.verticalMedium,
+            const Text('Troubleshooting'),
+            ListTile(
+              leading: const Icon(Icons.article_outlined),
+              title: const Text('Logs'),
+              onTap: () => Navigator.pushNamed(context, LogPage.id),
+            ),
+            Spacers.verticalMedium,
+            const AboutSection(),
+          ],
+        ),
       ),
     );
   }
