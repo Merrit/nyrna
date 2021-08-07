@@ -10,6 +10,7 @@ abstract class Spacers {
   static const verticalXtraSmall = SizedBox(height: 10);
   static const verticalSmall = SizedBox(height: 20);
   static const verticalMedium = SizedBox(height: 30);
+  static const verticalLarge = SizedBox(height: 40);
 }
 
 class TextStyles {

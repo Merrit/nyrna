@@ -17,6 +17,8 @@ class PreferencesPage extends StatelessWidget {
           horizontal: 130,
         ),
         children: [
+          const Donate(),
+          Spacers.verticalLarge,
           const BehaviourSection(),
           Spacers.verticalMedium,
           const ThemeSection(),
