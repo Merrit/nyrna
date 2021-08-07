@@ -23,7 +23,6 @@ class Donate extends StatelessWidget {
                       style: TextStyle(color: Colors.lightBlueAccent),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          print('tap');
                           appCubit.launchURL('https://merritt.codes/');
                         },
                     ),
