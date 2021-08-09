@@ -26,6 +26,13 @@ jobs:
           mv build/linux/x64/release/bundle nyrna
           touch nyrna/PORTABLE
           cp VERSION nyrna/VERSION
+      - name: Build toggle_active_window
+        run: |
+          cd packages/active_window
+          dart pub get
+          dart compile exe bin/toggle_active_window.dart
+          cp bin/toggle_active_window ../../build/Nyrna
+          cd ../..
       - uses: actions/upload-artifact@v2
         with:
           name: nyrna-linux-portable
