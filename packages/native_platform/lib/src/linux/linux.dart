@@ -66,7 +66,9 @@ class Linux implements NativePlatform {
   @override
   Future<NativeActiveWindow> activeWindow() async {
     final windowId = await activeWindowId;
+    if (windowId == 0) throw (Exception('No window id'));
     final pid = await windowPid(windowId);
+    if (pid == 0) throw (Exception('No pid'));
     final linuxProcess = LinuxProcess(pid);
     final activeWindow = NativeActiveWindow(
       NativePlatform(),
