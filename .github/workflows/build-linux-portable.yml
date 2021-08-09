@@ -30,8 +30,7 @@ jobs:
         run: |
           cd packages/active_window
           dart pub get
-          dart compile exe bin/toggle_active_window.dart
-          tree
+          dart compile exe bin/toggle_active_window.dart -o bin/toggle_active_window
           cp bin/toggle_active_window ../../build/Nyrna
           cd ../..
       - uses: actions/upload-artifact@v2
