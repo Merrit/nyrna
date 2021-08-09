@@ -118,7 +118,7 @@ class Linux implements NativePlatform {
   Future<int> windowPid(int windowId) async {
     final result = await io.Process.run(
       'xdotool',
-      ['$windowId', 'getwindowpid'],
+      ['getwindowpid', '$windowId'],
     );
     final _pid = int.tryParse(result.stdout.toString().trim());
     return _pid ?? 0;
