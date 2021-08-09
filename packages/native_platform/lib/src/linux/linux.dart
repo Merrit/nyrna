@@ -32,7 +32,7 @@ class Linux implements NativePlatform {
     // 0x03600041  1 1459   SHODAN Inbox - Unified Folders - Mozilla Thunderbird
     // windowId, desktopId, pid, user, window title
     final lines = result.stdout.toString().split('\n');
-    lines.forEach((line) async {
+    await Future.forEach(lines, (String line) async {
       final parts = line.split(' ');
       parts.removeWhere((part) => part == ''); // Happens with multiple spaces.
       if (parts.length > 1) {
