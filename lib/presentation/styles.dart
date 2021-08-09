@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+abstract class AppColors {
+  static const defaultIconColor = 0xFF00B3FF;
+}
+
 abstract class BorderRadii {
   static BorderRadius gentlyRounded = BorderRadius.circular(10);
 }

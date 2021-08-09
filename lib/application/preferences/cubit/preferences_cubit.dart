@@ -1,10 +1,15 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:nyrna/application/app/app.dart';
+import 'package:nyrna/infrastructure/icon_manager/icon_manager.dart';
 import 'package:nyrna/infrastructure/launcher/launcher.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
+import 'package:nyrna/presentation/styles.dart';
 
 part 'preferences_state.dart';
 
@@ -19,6 +24,9 @@ class PreferencesCubit extends Cubit<PreferencesState> {
           PreferencesState(
             autoRefresh: _checkAutoRefresh(prefs),
             refreshInterval: prefs.getInt('refreshInterval') ?? 5,
+            trayIconColor: Color(
+              prefs.getInt('trayIconColor') ?? AppColors.defaultIconColor,
+            ),
           ),
         ) {
     preferencesCubit = this;
@@ -54,6 +62,20 @@ class PreferencesCubit extends Cubit<PreferencesState> {
         refreshInterval: state.refreshInterval,
       );
       emit(state.copyWith(autoRefresh: autoEnabled));
+    }
+  }
+
+  Future<Uint8List> iconBytes() async {
+    final iconManager = IconManager();
+    final iconBytes = await iconManager.iconBytes();
+    return iconBytes;
+  }
+
+  Future<void> updateIconColor(Color newColor) async {
+    final successful = await IconManager().updateIconColor(newColor);
+    if (successful) {
+      await _prefs.setInt(key: 'trayIconColor', value: newColor.value);
+      emit(state.copyWith(trayIconColor: newColor));
     }
   }
 }
