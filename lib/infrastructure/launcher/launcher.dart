@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart' as pp;
 
+import 'src/hotkey.dart';
+
 /// Manage launcher entry.
 ///
 /// Enables system integration for Nyrna to provide a shortcut in the user's
@@ -9,6 +11,8 @@ import 'package:path_provider/path_provider.dart' as pp;
 ///
 /// Currently only for the portable version on Linux.
 class Launcher {
+  static Hotkey get hotkey => Hotkey();
+
   /// Add a launcher entry for Nyrna with icon.
   static Future<void> add() async {
     await _addLauncher();

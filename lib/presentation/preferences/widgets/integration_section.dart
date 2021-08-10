@@ -7,33 +7,74 @@ import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 
 import '../../styles.dart';
 
-/// Add shortcuts and icons for portable builds.
+/// Add shortcuts and icons for portable builds or autostart.
 class IntegrationSection extends StatelessWidget {
   const IntegrationSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return (!Platform.isLinux) // TODO: Add integration function for Windows.
-        ? const SizedBox()
-        : BlocBuilder<AppCubit, AppState>(
+    if (Platform.isWindows) {
+      return const _WindowsIntegration();
+    } else {
+      return const _LinuxIntegration();
+    }
+  }
+}
+
+class _WindowsIntegration extends StatelessWidget {
+  const _WindowsIntegration({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Spacers.verticalMedium,
+        const Text('System Integration'),
+        Spacers.verticalXtraSmall,
+        ListTile(
+          title: const Text('Start hotkey automatically at system startup'),
+          leading: const Icon(Icons.add_circle_outline),
+          trailing: BlocBuilder<PreferencesCubit, PreferencesState>(
             builder: (context, state) {
-              return state.isPortable
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Spacers.verticalMedium,
-                        const Text('System Integration'),
-                        const SizedBox(height: 8),
-                        ListTile(
-                          leading: const Icon(Icons.add_circle_outline),
-                          title: const Text('Add Nyrna to launcher'),
-                          onTap: () => _confirmAddToLauncher(context),
-                        ),
-                      ],
-                    )
-                  : const SizedBox();
+              return Switch(
+                value: state.autoStartHotkey,
+                onChanged: (value) async {
+                  await preferencesCubit.updateAutoStartHotkey(value);
+                },
+              );
             },
-          );
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LinuxIntegration extends StatelessWidget {
+  const _LinuxIntegration({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AppCubit, AppState>(
+      builder: (context, state) {
+        return state.isPortable
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Spacers.verticalMedium,
+                  const Text('System Integration'),
+                  Spacers.verticalXtraSmall,
+                  ListTile(
+                    leading: const Icon(Icons.add_circle_outline),
+                    title: const Text('Add Nyrna to launcher'),
+                    onTap: () => _confirmAddToLauncher(context),
+                  ),
+                ],
+              )
+            : const SizedBox();
+      },
+    );
   }
 
   /// Confirm with the user before adding .desktop and icon files.

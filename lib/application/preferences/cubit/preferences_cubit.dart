@@ -22,6 +22,7 @@ class PreferencesCubit extends Cubit<PreferencesState> {
       : _prefs = prefs,
         super(
           PreferencesState(
+            autoStartHotkey: prefs.getBool('autoStartHotkey') ?? false,
             autoRefresh: _checkAutoRefresh(prefs),
             refreshInterval: prefs.getInt('refreshInterval') ?? 5,
             trayIconColor: Color(
@@ -52,6 +53,14 @@ class PreferencesCubit extends Cubit<PreferencesState> {
       await _prefs.setInt(key: 'refreshInterval', value: interval);
       emit(state.copyWith(refreshInterval: interval));
     }
+  }
+
+  Future<bool> updateAutoStartHotkey(bool value) async {
+    final successful = await Launcher.hotkey.autoStart(value);
+    if (!successful) return false;
+    await _prefs.setBool(key: 'autoStartHotkey', value: value);
+    emit(state.copyWith(autoStartHotkey: value));
+    return true;
   }
 
   Future<void> updateAutoRefresh([bool? autoEnabled]) async {
