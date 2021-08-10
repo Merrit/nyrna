@@ -49,7 +49,7 @@ jobs:
         run: |
           iscc packaging\win32\inno_setup_script.iss
       - name: Add PORTABLE file
-        run: type NUL > build\Nyrna\PORTABLE
+        run: New-Item -Path .\build\Nyrna\ -Name "PORTABLE" -ItemType "file"
       - uses: actions/upload-artifact@v2
         with:
           name: nyrna-windows-portable
