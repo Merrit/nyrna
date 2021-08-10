@@ -34,9 +34,7 @@ class PreferencesCubit extends Cubit<PreferencesState> {
   }
 
   static bool _checkAutoRefresh(Preferences prefs) {
-    bool? enabled = prefs.getBool('autoRefresh');
-    enabled ??= (Platform.isWindows) ? false : true;
-    return enabled;
+    return prefs.getBool('autoRefresh') ?? true;
   }
 
   Future<void> createLauncher() async {
