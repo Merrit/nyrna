@@ -135,21 +135,17 @@ class Linux implements NativePlatform {
   Future<bool> minimizeWindow(int windowId) async {
     final result = await io.Process.run(
       'xdotool',
-      ['windowminimize', '$windowId', '--sync'],
+      ['windowminimize', '$windowId'],
     );
-    return true;
-    // TODO: Check for possible stderr for meaningful return value.
-    // result.stderr
+    return (result.stderr == '') ? true : false;
   }
 
   @override
   Future<bool> restoreWindow(int windowId) async {
     final result = await io.Process.run(
       'xdotool',
-      ['windowactivate', '$windowId', '--sync'],
+      ['windowactivate', '$windowId'],
     );
-    return true;
-    // TODO: Check for possible stderr for meaningful return value.
-    // result.stderr
+    return (result.stderr == '') ? true : false;
   }
 }
