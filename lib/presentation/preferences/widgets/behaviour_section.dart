@@ -20,14 +20,7 @@ class BehaviourSection extends StatelessWidget {
         ListTile(
           title: const Text('Auto Refresh'),
           leading: const Icon(Icons.refresh),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Update window & process info automatically'),
-              const SizedBox(height: 5),
-              if (Platform.isWindows) const _WarningChip(),
-            ],
-          ),
+          subtitle: const Text('Update window & process info automatically'),
           trailing: BlocBuilder<PreferencesCubit, PreferencesState>(
             builder: (context, state) {
               return Switch(
@@ -67,40 +60,5 @@ class BehaviourSection extends StatelessWidget {
     if (newInterval == null) return;
     await preferencesCubit.setRefreshInterval(newInterval);
     await preferencesCubit.updateAutoRefresh();
-  }
-}
-
-class _WarningChip extends StatelessWidget {
-  const _WarningChip({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ActionChip(
-      label: Text(
-        'Caution',
-        style: TextStyle(color: Colors.red[800]),
-      ),
-      backgroundColor: Colors.yellow,
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: const Text(
-                'Note: Auto refresh can cause issues with memory consumption on '
-                'Windows at the moment. Until the problem is resolved, consider '
-                'keeping auto refresh off if you experience issues.',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Close'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
   }
 }
