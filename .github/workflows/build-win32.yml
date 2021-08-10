@@ -48,6 +48,8 @@ jobs:
       - name: Package with Inno Setup
         run: |
           iscc packaging\win32\inno_setup_script.iss
+      - name: Add PORTABLE file
+        run: type NUL > build\Nyrna\PORTABLE
       - uses: actions/upload-artifact@v2
         with:
           name: nyrna-windows-portable
