@@ -17,6 +17,11 @@ jobs:
         uses: egor-tensin/vs-shell@v2
         with:
           arch: x64
+      - name: Populate version environment variable
+        run: |
+          choco install yq
+          VER=$(yq -r .version < pubspec.yaml)
+          echo "VERSION=$VER" >> $GITHUB_ENV
       - name: Install AutoHotkey
         run: choco install autohotkey
       - name: Add AutoHotkey to path
@@ -43,7 +48,7 @@ jobs:
           cd ..\..
       - name: Package with Inno Setup
         run: |
-          iscc packaging\win32\inno_setup_script.iss
+          iscc /dMyAppVersion=${{ env.VERSION }} packaging\win32\inno_setup_script.iss
       - name: Add PORTABLE file
         run: New-Item -Path .\build\Nyrna\ -Name "PORTABLE" -ItemType "file"
       - uses: actions/upload-artifact@v2

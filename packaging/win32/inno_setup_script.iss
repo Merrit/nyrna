@@ -2,7 +2,6 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Nyrna"
-#define MyAppVersion "2.0.0-beta.2"
 #define MyAppPublisher "Kristen McWilliam"
 #define MyAppURL "https://nyrna.merritt.codes"
 #define MyAppExeName "nyrna.exe"
