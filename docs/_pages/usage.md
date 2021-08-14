@@ -32,14 +32,25 @@ permalink: /usage
 
 ## Toggle active window
 
-Nyrna can be used to toggle the suspend / resume state of one active window by
-setting a hotkey to launch Nyrna with the `-t` or `--toggle` flag.
+Nyrna can be used to toggle the suspend / resume state of one active window:
 
-Once the hotkey is set, simply press that key to have the window of your
+- Linux
+  - Set a hotkey in system settings to run the `toggle_active_window` executable
+    from the Nyrna directory
+
+- Windows
+  - Run the `toggle_active_window.exe` file from the Nyrna directory to add an
+    icon to the system tray that will listen for the `Pause` key to be pressed.
+    - Optionally, from Nyrna's settings you can set this hotkey monitor to run
+      automatically at boot.
+
+Now simply press the hotkey on your keyboard to have the window of your
 currently active application suspended. A subsequent press will resume that
 application.
 
-*Note: Not reliable if Nyrna is already running.*
+**Tip:** You can use something like
+[AntiMicro](https://github.com/AntiMicro/antimicro) to trigger this hotkey with
+your gamepad, allowing you to suspend/resume your game with just your controller.
 
 
 **Linux Example**
@@ -50,7 +61,7 @@ application.
   - Edit ->
     - New ->
       - Global Shortcut
-        - Action: `/path/to/nyrna -t`
+        - Action: `/path/to/nyrna/toggle_active_window`
 
 ![KDE custom shortcut](assets/images/custom-shortcut-linux-kde.png)
 {% endcapture %}
@@ -58,23 +69,4 @@ application.
 <div class="notice--info">
   <h4 class="no_toc">KDE System Settings:</h4>
   {{ linux-example-text | markdownify }}
-</div>
-
-
-**Windows Example**
-
-{% capture windows-example-text %}
-- Right click shortcut -> Properties
-- Shortcut tab
-  - Target -> Edit ending to include `-t` or `--toggle`, like: 
-    `C:\Nyrna\nyrna.exe -t`
-  - Shortcut key -> Choose key to trigger the toggle function
-    - Apply
-
-![Windows custom shortcut](assets/images/custom-shortcut-windows.png)
-{% endcapture %}
-
-<div class="notice--info">
-  <h4 class="no_toc">Create or edit Nyrna shortcut:</h4>
-  {{ windows-example-text | markdownify }}
 </div>

@@ -42,7 +42,8 @@ Source: "..\..\build\Nyrna\*"; DestDir: "{app}"; Flags: ignoreversion recursesub
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autoprograms}\{#MyAppName}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{autoprograms}\{#MyAppName}\{#MyAppName} Hotkey"; Filename: "{app}\toggle_active_hotkey.exe"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]

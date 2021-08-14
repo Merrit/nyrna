@@ -1,0 +1,16 @@
+C:\Users\Merritt\Dev\process_status_dll\tester\bin\Debug\netcoreapp3.1\tester.exe
+C:\Users\Merritt\Dev\process_status_dll\tester\bin\Debug\netcoreapp3.1\tester.deps.json
+C:\Users\Merritt\Dev\process_status_dll\tester\bin\Debug\netcoreapp3.1\tester.runtimeconfig.json
+C:\Users\Merritt\Dev\process_status_dll\tester\bin\Debug\netcoreapp3.1\tester.runtimeconfig.dev.json
+C:\Users\Merritt\Dev\process_status_dll\tester\bin\Debug\netcoreapp3.1\tester.dll
+C:\Users\Merritt\Dev\process_status_dll\tester\bin\Debug\netcoreapp3.1\tester.pdb
+C:\Users\Merritt\Dev\process_status_dll\tester\bin\Debug\netcoreapp3.1\process_status_dll.dll
+C:\Users\Merritt\Dev\process_status_dll\tester\bin\Debug\netcoreapp3.1\process_status_dll.pdb
+C:\Users\Merritt\Dev\process_status_dll\tester\obj\Debug\netcoreapp3.1\tester.csprojAssemblyReference.cache
+C:\Users\Merritt\Dev\process_status_dll\tester\obj\Debug\netcoreapp3.1\tester.AssemblyInfoInputs.cache
+C:\Users\Merritt\Dev\process_status_dll\tester\obj\Debug\netcoreapp3.1\tester.AssemblyInfo.cs
+C:\Users\Merritt\Dev\process_status_dll\tester\obj\Debug\netcoreapp3.1\tester.csproj.CoreCompileInputs.cache
+C:\Users\Merritt\Dev\process_status_dll\tester\obj\Debug\netcoreapp3.1\tester.csproj.CopyComplete
+C:\Users\Merritt\Dev\process_status_dll\tester\obj\Debug\netcoreapp3.1\tester.dll
+C:\Users\Merritt\Dev\process_status_dll\tester\obj\Debug\netcoreapp3.1\tester.pdb
+C:\Users\Merritt\Dev\process_status_dll\tester\obj\Debug\netcoreapp3.1\tester.genruntimeconfig.cache

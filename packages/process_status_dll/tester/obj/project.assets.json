@@ -1,0 +1,89 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "process_status_dll/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/process_status_dll.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/process_status_dll.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "process_status_dll/1.0.0": {
+      "type": "project",
+      "path": "../process_status_dll/process_status_dll.csproj",
+      "msbuildProject": "../process_status_dll/process_status_dll.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETCoreApp,Version=v3.1": [
+      "process_status_dll >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\Merritt\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\Merritt\\Dev\\process_status_dll\\tester\\tester.csproj",
+      "projectName": "tester",
+      "projectPath": "C:\\Users\\Merritt\\Dev\\process_status_dll\\tester\\tester.csproj",
+      "packagesPath": "C:\\Users\\Merritt\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Merritt\\Dev\\process_status_dll\\tester\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\Merritt\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "netcoreapp3.1"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "projectReferences": {
+            "C:\\Users\\Merritt\\Dev\\process_status_dll\\process_status_dll\\process_status_dll.csproj": {
+              "projectPath": "C:\\Users\\Merritt\\Dev\\process_status_dll\\process_status_dll\\process_status_dll.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
