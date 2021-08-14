@@ -20,7 +20,7 @@ jobs:
       - name: Populate version environment variable
         run: |
           choco install yq
-          VER=$(yq -r .version < pubspec.yaml)
+          $VER = yq e .version pubspec.yaml
           echo "VERSION=$VER" >> $GITHUB_ENV
       - name: Install AutoHotkey
         run: choco install autohotkey
