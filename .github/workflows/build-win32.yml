@@ -21,7 +21,7 @@ jobs:
         run: |
           choco install yq
           $VER = yq e .version pubspec.yaml
-          echo "VERSION=$VER" >> $GITHUB_ENV
+          echo "VERSION=$VER" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       - name: Install AutoHotkey
         run: choco install autohotkey
       - name: Add AutoHotkey to path
