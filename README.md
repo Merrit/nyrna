@@ -6,6 +6,8 @@
 
 **Suspend games and applications.**
 
+![Nyrna interface](assets/../docs/assets/images/nyrna-window.png)
+
 Similar to the incredibly useful sleep/suspend function found in consoles like the Nintendo Switch and Sony PlayStation; suspend your game (and its resource usage) at any time, and resume whenever you wish - at the push of a button.
 
 Nyrna can be used to suspend normal, non-game applications as well. For example:
