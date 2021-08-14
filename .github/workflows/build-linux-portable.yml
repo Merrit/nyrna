@@ -16,16 +16,12 @@ jobs:
         with:
           channel: beta
       - run: |
-          VER=$(cat VERSION)
-          echo "VERSION=$VER" >> $GITHUB_ENV
-
           flutter config --enable-linux-desktop
           flutter pub get
           flutter build linux
           
           mv build/linux/x64/release/bundle nyrna
           touch nyrna/PORTABLE
-          cp VERSION nyrna/VERSION
       - name: Build toggle_active_window
         run: |
           cd packages/active_window

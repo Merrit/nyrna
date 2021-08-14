@@ -13,9 +13,6 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: beta
-      - name: Read VERSION file
-        id: getversion
-        run: echo "::set-output name=version::$(cat VERSION)"
       - name: Set up Visual Studio shell
         uses: egor-tensin/vs-shell@v2
         with:
@@ -32,7 +29,6 @@ jobs:
 
           move build\windows\runner\Release build\Nyrna
 
-          copy VERSION build\Nyrna
           xcopy C:\Windows\System32\msvcp140.dll build\Nyrna
           xcopy C:\Windows\System32\vcruntime140.dll build\Nyrna
           xcopy C:\Windows\System32\vcruntime140_1.dll build\Nyrna
