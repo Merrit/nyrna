@@ -82,3 +82,7 @@ Windows
 ## Portable
 
 [Download Windows portable](https://github.com/Merrit/nyrna/releases/latest/download/nyrna-windows-portable.zip){: .btn .btn--info}
+
+## winget
+
+`winget install nyrna`
