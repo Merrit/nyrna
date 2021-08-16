@@ -20,31 +20,21 @@ class AppsPage extends StatelessWidget {
         builder: (context, state) {
           return Stack(
             children: [
-              LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  final width = constraints.maxWidth;
-                  final horizontalPadding = width / 6;
-
-                  return Scrollbar(
-                    isAlwaysShown: true,
-                    child: ListView(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: horizontalPadding,
-                        vertical: 40,
-                      ),
-                      children: [
-                        ...state.windows
-                            .map(
-                              (window) => WindowTile(
-                                key: ValueKey(window),
-                                window: window,
-                              ),
-                            )
-                            .toList(),
-                      ],
-                    ),
-                  );
-                },
+              Scrollbar(
+                isAlwaysShown: true,
+                child: ListView(
+                  padding: const EdgeInsets.all(10),
+                  children: [
+                    ...state.windows
+                        .map(
+                          (window) => WindowTile(
+                            key: ValueKey(window),
+                            window: window,
+                          ),
+                        )
+                        .toList(),
+                  ],
+                ),
               ),
               _ProgressOverlay(),
             ],
