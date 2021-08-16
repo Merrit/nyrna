@@ -2,7 +2,7 @@ Id: merrittcodes.nyrna
 Publisher: MerrittCodes
 Name: Nyrna
 AppMoniker: nyrna
-Version: 2.0-beta.1
+Version: 2.2.0
 License: GPL-3.0
 LicenseUrl: https://github.com/Merrit/nyrna/blob/master/LICENSE
 MinOSVersion: 10.0.0.0
@@ -19,6 +19,6 @@ ProductCode: "{38E9E039-D0B7-4ED0-98A5-4ECBD3E24222}"
 InstallerType: inno
 Installers:
   - Arch: x64
-    Url: https://github.com/Merrit/nyrna/releases/download/v2.0-beta.1/nyrna-windows-installer-2.0-beta.1.exe
-    Sha256: f3c2d5b6d868660798f03cb1a713d4f52197657aaa318609493692174a33b75f
+    Url: https://github.com/Merrit/nyrna/releases/download/v2.2.0/nyrna-windows-installer.exe
+    Sha256: 9073E71788990C29D27763B051BE3FEE5AFE5A3206B3568CA0ED2E310D3DF8FC
 ManifestVersion: 0.1.0

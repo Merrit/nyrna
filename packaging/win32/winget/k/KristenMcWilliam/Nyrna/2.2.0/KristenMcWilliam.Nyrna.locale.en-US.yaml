@@ -1,0 +1,28 @@
+# Created using YamlCreate.ps1 v1.1.6
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.0.0.schema.json
+
+PackageIdentifier: KristenMcWilliam.Nyrna
+PackageVersion: 2.2.0
+PackageLocale: en-US
+Publisher: Kristen McWilliam
+PublisherUrl: https://merritt.codes
+#PublisherSupportUrl: 
+#PrivacyUrl: 
+Author: Kristen McWilliam
+PackageName: Nyrna
+PackageUrl: https://nyrna.merritt.codes
+License: GPL 3
+#LicenseUrl: 
+#Copyright: 
+#CopyrightUrl: 
+ShortDescription: Suspend games and applications
+Description: Similar to the incredibly useful sleep/suspend function found in consoles like the Nintendo Switch and Sony PlayStation; suspend your game (and its resource usage) at any time, and resume whenever you wish - at the push of a button.
+Moniker: Nyrna
+Tags:
+- suspend
+- resume
+- games
+- tool
+ManifestType: defaultLocale
+ManifestVersion: 1.0.0
+
