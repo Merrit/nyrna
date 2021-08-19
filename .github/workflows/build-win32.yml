@@ -48,8 +48,8 @@ jobs:
           cd ..\..
       - name: Add README
         run: |
-          cat docs/_pages/usage.md >> README.md
-          xcopy README.md nyrna/README.md
+          cat docs\_pages\usage.md >> README.md
+          xcopy README.md nyrna\README.md
           tree
       - name: Package with Inno Setup
         run: |
