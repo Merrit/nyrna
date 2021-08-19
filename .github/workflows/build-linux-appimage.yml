@@ -35,7 +35,7 @@ jobs:
       - name: Add README
         run: |
           cat docs/_pages/usage.md >> README.md
-          cp README.md nyrna/README.md
+          cp README.md build/linux/x64/release/bundle/README.md
       - name: Build AppImage
         uses: docker://appimagecrafters/appimage-builder:0.8.5
         env:
