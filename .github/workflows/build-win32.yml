@@ -48,9 +48,8 @@ jobs:
           cd ..\..
       - name: Add README
         run: |
-          cat docs\_pages\usage.md >> README.md
-          xcopy README.md nyrna\README.md
-          tree
+          cat .\docs\_pages\usage.md >> .\README.md
+          xcopy .\README.md .\build\Nyrna\
       - name: Package with Inno Setup
         run: |
           iscc /dMyAppVersion=${{ env.VERSION }} packaging\win32\inno_setup_script.iss
