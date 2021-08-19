@@ -8,21 +8,23 @@ permalink: /usage
 <br>
 
 
-# Games
+# Video examples
+
+## Games
 
 **Dark Souls**  
-*Not letting me pause is not a difficulty, its user-hostile!*  
-{% include video id="9OESJGBEmOY" provider="youtube" %}
+*No pause feature? What if I need to answer the phone?*  
+[![Dark Souls example](../assets/images/demo-dark-souls.jpg)](https://www.youtube.com/watch?v=9OESJGBEmOY)
 
 
 <br>
 
 
-# Applications
+## Applications
 
 **Blender**  
-*Ah geez, I have a Zoom meeting and my system is bogged down with a render..*  
-{% include video id="Q2Pn1VA-2YA" provider="youtube" %}
+*Time for my Zoom meeting and my system is bogged down with a render..*  
+[![Blender example](../assets/images/demo-blender.jpg)](https://www.youtube.com/watch?v=Q2Pn1VA-2YA)
 
 
 <br>
@@ -63,7 +65,8 @@ your gamepad, allowing you to suspend/resume your game with just your controller
       - Global Shortcut
         - Action: `/path/to/nyrna/toggle_active_window`
 
-![KDE custom shortcut](assets/images/custom-shortcut-linux-kde.png)
+![KDE custom shortcut](../assets/images/custom-shortcut-linux-kde.png)
+
 {% endcapture %}
 
 <div class="notice--info">
