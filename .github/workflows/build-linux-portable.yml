@@ -22,6 +22,10 @@ jobs:
           
           mv build/linux/x64/release/bundle nyrna
           touch nyrna/PORTABLE
+      - name: Add README
+        run: |
+          cat docs/_pages/usage.md >> README.md
+          cp README.md nyrna/README.md
       - name: Build toggle_active_window
         run: |
           cd packages/active_window
