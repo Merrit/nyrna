@@ -37,7 +37,7 @@ permalink: /usage
 Nyrna can be used to toggle the suspend / resume state of one active window:
 
 - Linux
-  - Set a hotkey in system settings to run the `toggle_active_window` executable
+  - Set a hotkey in system settings to run the `nyrna_toggle_active_window` executable
     from the Nyrna directory
 
 - Windows
@@ -63,7 +63,7 @@ your gamepad, allowing you to suspend/resume your game with just your controller
   - Edit ->
     - New ->
       - Global Shortcut
-        - Action: `/path/to/nyrna/toggle_active_window`
+        - Action: `/path/to/nyrna/nyrna_toggle_active_window`
 
 ![KDE custom shortcut](../assets/images/custom-shortcut-linux-kde.png)
 
