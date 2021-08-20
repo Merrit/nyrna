@@ -25,6 +25,7 @@ class AppsPage extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.all(10),
                   children: [
+                    if (state.windows.isEmpty) const _NoWindowsCard(),
                     ...state.windows
                         .map(
                           (window) => WindowTile(
@@ -43,6 +44,24 @@ class AppsPage extends StatelessWidget {
       ),
       // We don't show a manual refresh button with a short auto-refresh.
       floatingActionButton: _FloatingActionButton(),
+    );
+  }
+}
+
+class _NoWindowsCard extends StatelessWidget {
+  const _NoWindowsCard({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text('No windows that can be suspended'),
+        ),
+      ),
     );
   }
 }
