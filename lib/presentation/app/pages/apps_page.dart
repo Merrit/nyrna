@@ -25,7 +25,8 @@ class AppsPage extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.all(10),
                   children: [
-                    if (state.windows.isEmpty) const _NoWindowsCard(),
+                    if (!state.loading && state.windows.isEmpty)
+                      const _NoWindowsCard(),
                     ...state.windows
                         .map(
                           (window) => WindowTile(
