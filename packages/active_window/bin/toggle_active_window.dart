@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:active_window/active_window.dart';
+import 'package:args/args.dart';
 import 'package:hive/hive.dart';
 import 'package:native_platform/native_platform.dart';
 
@@ -23,10 +24,30 @@ import 'package:native_platform/native_platform.dart';
 /// - Restore / unminimize the associated window
 /// - Delete the file containing the PID & window id so next call will suspend.
 
-Future<void> main(List<String> arguments) async {
-  if (arguments.isNotEmpty) {
-    if (arguments[0] == 'log') Logger.shouldLog = true;
+void parseArgs(List<String> args) {
+  final argparser = ArgParser();
+  argparser.addFlag(
+    'log',
+    abbr: 'l',
+    defaultsTo: false,
+  );
+  ArgResults argResults;
+  try {
+    argResults = argparser.parse(args);
+    final gotLog = argResults.wasParsed('log');
+    if (gotLog) Logger.shouldLog = true;
+  } catch (_) {
+    print('Nyrna\'s toggle executable only accepts one argument: --log'
+        '\n'
+        'Use this for debugging issues, otherwise call this executable '
+        'without any arguments from a keyboard hotkey to '
+        'suspend / resume the active window.');
+    exit(0);
   }
+}
+
+Future<void> main(List<String> args) async {
+  parseArgs(args);
 
   Hive.init(Directory.systemTemp.path);
 
