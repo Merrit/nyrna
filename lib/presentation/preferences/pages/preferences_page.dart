@@ -16,7 +16,7 @@ class PreferencesPage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.symmetric(
             vertical: 30,
-            horizontal: 130,
+            horizontal: 30,
           ),
           children: [
             const Donate(),
