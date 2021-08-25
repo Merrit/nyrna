@@ -24,7 +24,7 @@ class Linux implements NativePlatform {
 
   // Gets all open windows as reported by wmctrl.
   @override
-  Future<List<Window>> windows() async {
+  Future<List<Window>> windows({required bool showHidden}) async {
     await currentDesktop;
     final windows = <Window>[];
     final result = await io.Process.run('bash', ['-c', 'wmctrl -lp']);
@@ -38,7 +38,8 @@ class Linux implements NativePlatform {
       if (parts.length > 1) {
         // Which virtual desktop this window is on.
         final windowDesktop = int.tryParse(parts[1]);
-        if (windowDesktop == _desktop) {
+        final windowOnCurrentDesktop = (windowDesktop == _desktop);
+        if (windowOnCurrentDesktop || showHidden) {
           final pid = int.tryParse(parts[2]);
           final id = int.tryParse(parts[0]);
           if ((pid == null) || (id == null)) return;

@@ -87,7 +87,8 @@ class AppCubit extends Cubit<AppState> {
 
   /// Populate the list of visible windows.
   Future<void> _fetchWindows() async {
-    var windows = await _nativePlatform.windows();
+    final showHidden = _prefsCubit.state.showHiddenWindows;
+    var windows = await _nativePlatform.windows(showHidden: showHidden);
     windows.removeWhere(
       (window) => _filteredWindows.contains(window.process.executable),
     );

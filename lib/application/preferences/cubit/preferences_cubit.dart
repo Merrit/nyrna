@@ -24,6 +24,7 @@ class PreferencesCubit extends Cubit<PreferencesState> {
             autoStartHotkey: prefs.getBool('autoStartHotkey') ?? false,
             autoRefresh: _checkAutoRefresh(prefs),
             refreshInterval: prefs.getInt('refreshInterval') ?? 5,
+            showHiddenWindows: prefs.getBool('showHiddenWindows') ?? false,
             trayIconColor: Color(
               prefs.getInt('trayIconColor') ?? AppColors.defaultIconColor,
             ),
@@ -83,5 +84,10 @@ class PreferencesCubit extends Cubit<PreferencesState> {
       await _prefs.setInt(key: 'trayIconColor', value: newColor.value);
       emit(state.copyWith(trayIconColor: newColor));
     }
+  }
+
+  Future<void> updateShowHiddenWindows(bool value) async {
+    await _prefs.setBool(key: 'showHiddenWindows', value: value);
+    emit(state.copyWith(showHiddenWindows: value));
   }
 }
