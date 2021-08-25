@@ -202,6 +202,7 @@ class AppCubit extends Cubit<AppState> {
 
 /// System-level or non-app executables. Nyrna shouldn't show these.
 List<String> _filteredWindows = [
+  'nyrna',
   'nyrna.exe',
   'ApplicationFrameHost.exe', // Manages UWP (Universal Windows Platform) apps
   'explorer.exe', // Windows File Explorer
