@@ -41,6 +41,7 @@ class BehaviourSection extends StatelessWidget {
             );
           },
         ),
+        const ShowHiddenTile(),
       ],
     );
   }
@@ -58,5 +59,47 @@ class BehaviourSection extends StatelessWidget {
     if (newInterval == null) return;
     await preferencesCubit.setRefreshInterval(newInterval);
     await preferencesCubit.updateAutoRefresh();
+  }
+}
+
+class ShowHiddenTile extends StatelessWidget {
+  const ShowHiddenTile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      // title: const Text('Show hidden windows'),
+      title: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(text: 'Show hidden windows   '),
+            WidgetSpan(
+              child: Tooltip(
+                message: 'Includes windows from other virtual desktops '
+                    'and special windows that are not normally detected.',
+                // textStyle: TextStyle(fontSize: 16),
+                child: Icon(
+                  Icons.help_outline,
+                  size: 18,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      leading: const Icon(Icons.refresh),
+      // subtitle: const Text('Includes windows from other virtual desktops '
+      //     'and special windows that are not normally detected'),
+      trailing: BlocBuilder<PreferencesCubit, PreferencesState>(
+        builder: (context, state) {
+          return Switch(
+            value: state.showHiddenWindows,
+            onChanged: (value) async {
+              await preferencesCubit.updateShowHiddenWindows(value);
+            },
+          );
+        },
+      ),
+    );
   }
 }

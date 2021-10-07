@@ -40,12 +40,16 @@ jobs:
 
           cd .\packages\active_window
           dart pub get
-          dart compile exe .\bin\toggle_active_window.dart
-          editbin.exe /subsystem:windows .\bin\toggle_active_window.exe
-          xcopy .\bin\toggle_active_window.exe ..\..\build\Nyrna
+          dart compile exe -o .\bin\nyrna_toggle_active_window.exe .\bin\toggle_active_window.dart
+          editbin.exe /subsystem:windows .\bin\nyrna_toggle_active_window.exe
+          xcopy .\bin\nyrna_toggle_active_window.exe ..\..\build\Nyrna
           
           Ahk2Exe.exe /in .\hotkey\toggle_active_hotkey.ahk /out ..\..\build\Nyrna\toggle_active_hotkey.exe
           cd ..\..
+      - name: Add README
+        run: |
+          cat .\docs\_pages\usage.md >> .\README.md
+          xcopy .\README.md .\build\Nyrna\
       - name: Package with Inno Setup
         run: |
           iscc /dMyAppVersion=${{ env.VERSION }} packaging\win32\inno_setup_script.iss

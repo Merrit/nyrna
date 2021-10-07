@@ -21,9 +21,10 @@ class Win32 implements NativePlatform {
   Future<int> get currentDesktop async => 0;
 
   @override
-  Future<List<Window>> windows() async {
+  Future<List<Window>> windows({required bool showHidden}) async {
     // Clear the map to ensure we are starting fresh each time.
     WindowBuilder.windows.clear();
+    WindowBuilder.showHiddenWindows = showHidden;
     // Process open windows.
     /// [EnumWindows] returns 0 for failure.
     final result = EnumWindows(WindowBuilder.callback, 0);
@@ -131,6 +132,8 @@ class Win32 implements NativePlatform {
 //
 /// Generates the list of visible windows on the user's desktop.
 class WindowBuilder {
+  static bool showHiddenWindows = false;
+
   /// Persistant callback because:
   /// "The pointer returned will remain alive for the
   /// duration of the current isolate's lifetime."
@@ -142,8 +145,10 @@ class WindowBuilder {
   static int enumWindowsCallback(int hWnd, int lParam) {
     // Only enumerate windows that are marked WS_VISIBLE.
     if (IsWindowVisible(hWnd) == FALSE) return TRUE;
-    // Only enumerate windows that aren't `cloaked`.
-    if (_isDwmCloaked(hWnd)) return TRUE;
+    if (!showHiddenWindows) {
+      // Only enumerate windows that aren't `cloaked`.
+      if (_isDwmCloaked(hWnd)) return TRUE;
+    }
     final length = GetWindowTextLength(hWnd);
     // Only enumerate windows with title text.
     if (length == 0) return TRUE;

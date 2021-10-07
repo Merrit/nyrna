@@ -15,8 +15,7 @@ import 'domain/arguments/argument_parser.dart';
 
 Future<void> main(List<String> args) async {
   // Parse command-line arguments.
-  final parser = ArgumentParser(args);
-  await parser.parse();
+  ArgumentParser(args);
 
   final sharedPreferences = await SharedPreferences.getInstance();
   final prefs = Preferences(sharedPreferences);

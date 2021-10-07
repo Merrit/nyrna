@@ -30,7 +30,10 @@ abstract class NativePlatform {
   Future<NativeProcess> windowProcess(int windowId);
 
   /// List of [Window] objects for every visible window with title text.
-  Future<List<Window>> windows();
+  ///
+  /// Setting [showHidden] to `true` will list windows from every
+  /// virtual desktop, as well as some that might be mistakenly cloaked.
+  Future<List<Window>> windows({required bool showHidden});
 
   Future<NativeActiveWindow> activeWindow();
 

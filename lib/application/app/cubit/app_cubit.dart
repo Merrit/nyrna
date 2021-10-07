@@ -87,7 +87,8 @@ class AppCubit extends Cubit<AppState> {
 
   /// Populate the list of visible windows.
   Future<void> _fetchWindows() async {
-    var windows = await _nativePlatform.windows();
+    final showHidden = _prefsCubit.state.showHiddenWindows;
+    var windows = await _nativePlatform.windows(showHidden: showHidden);
     windows.removeWhere(
       (window) => _filteredWindows.contains(window.process.executable),
     );
@@ -201,6 +202,7 @@ class AppCubit extends Cubit<AppState> {
 
 /// System-level or non-app executables. Nyrna shouldn't show these.
 List<String> _filteredWindows = [
+  'nyrna',
   'nyrna.exe',
   'ApplicationFrameHost.exe', // Manages UWP (Universal Windows Platform) apps
   'explorer.exe', // Windows File Explorer

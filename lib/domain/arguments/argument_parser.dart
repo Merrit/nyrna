@@ -1,57 +1,28 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:nyrna/infrastructure/logger/log_file.dart';
 
 /// Parse command-line arguments.
-///
-/// `Logger` flag available with `-l` or `--log`.
 class ArgumentParser {
-  ArgumentParser(this.args) {
-    _setFlags();
-  }
-
   final List<String> args;
+  final ArgResults _results;
 
-  final _parser = ArgParser();
+  ArgumentParser(this.args) : _results = _parseArgs(args);
 
-  void _setFlags() {
-    // Log flag is to enable conditional use of the Logger() class for debug.
-    _parser.addFlag(
-      'log',
-      abbr: 'l',
-      defaultsTo: false,
-    );
-  }
-
-  late ArgResults _results;
-
-  Future<void> parse() async {
-    _parseArgs();
-    await _checkLogFlag();
-  }
+  static final _parser = ArgParser();
 
   /// Parse received arguments.
-  void _parseArgs() {
+  static ArgResults _parseArgs(List<String> args) {
     try {
-      _results = _parser.parse(args);
-    } on ArgParserException catch (e) {
-      print('Unknown argument: $e');
-      exit(1);
+      return _parser.parse(args);
+    } on ArgParserException {
+      stdout.writeln("Nyrna doesn't currently accept any arguments.\n"
+          '\n'
+          'For usage instructions refer to the README.md included with Nyrna, '
+          'or see them online at https://nyrna.merritt.codes/usage');
+      exit(0);
     }
   }
 
-  static bool _logToFile = false;
-
-  static bool get logToFile => _logToFile;
-
-  /// Check if `log` flag was received.
-  Future<void> _checkLogFlag() async {
-    final flagReceived = _results.wasParsed('log');
-    if (flagReceived) {
-      _logToFile = true;
-      // One-time initialization of the logger.
-      await LogFile.instance.init();
-    }
-  }
+  bool argWasReceived(String arg) => _results.wasParsed(arg);
 }

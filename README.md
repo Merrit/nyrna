@@ -29,10 +29,6 @@ Nyrna works on Linux with X11 and Microsoft Windows (tested on Windows 10).
 [Nyrna Website](https://nyrna.merritt.codes)
 
 
-<!-- Still showing v1.3 as green. How to trigger update?
-[![Packaging status](https://repology.org/badge/vertical-allrepos/nyrna.svg)](https://repology.org/project/nyrna/versions) -->
-
-
 # Disclaimer
 
 I have not had any issues using Nyrna, however keep in mind it is possible
