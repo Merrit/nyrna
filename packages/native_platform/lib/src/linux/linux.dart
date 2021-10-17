@@ -13,7 +13,7 @@ class Linux implements NativePlatform {
 
   // Active virtual desktop as reported by wmctrl.
   @override
-  Future<int> get currentDesktop async {
+  Future<int> currentDesktop() async {
     final result = await io.Process.run('wmctrl', ['-d']);
     final lines = result.stdout.toString().split('\n');
     lines.forEach((line) {
@@ -25,7 +25,7 @@ class Linux implements NativePlatform {
   // Gets all open windows as reported by wmctrl.
   @override
   Future<List<Window>> windows({required bool showHidden}) async {
-    await currentDesktop;
+    await currentDesktop();
     final windows = <Window>[];
     final result = await io.Process.run('bash', ['-c', 'wmctrl -lp']);
     // Each line from wmctrl will be something like:

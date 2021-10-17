@@ -18,7 +18,7 @@ export 'win32_process.dart';
 class Win32 implements NativePlatform {
   // Not available on Windows, so just return 0 always.
   @override
-  Future<int> get currentDesktop async => 0;
+  Future<int> currentDesktop() async => 0;
 
   @override
   Future<List<Window>> windows({required bool showHidden}) async {
