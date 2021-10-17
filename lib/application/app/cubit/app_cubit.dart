@@ -75,7 +75,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> _fetchDesktop() async {
-    final currentDesktop = await _nativePlatform.currentDesktop;
+    final currentDesktop = await _nativePlatform.currentDesktop();
     emit(state.copyWith(currentDesktop: currentDesktop));
   }
 
