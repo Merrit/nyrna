@@ -3,6 +3,8 @@ on:
   workflow_dispatch:
   pull_request:
   push:
+    branches:
+      - master
 jobs:
   test:
     name: Test on ${{ matrix.os }}
