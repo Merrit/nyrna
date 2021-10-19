@@ -1,13 +1,13 @@
 import '../native_platform.dart';
 
-class NativeActiveWindow {
+class ActiveWindow {
   final NativePlatform _nativePlatform;
   final NativeProcess _nativeProcess;
 
   final int id;
   final int pid;
 
-  const NativeActiveWindow(
+  const ActiveWindow(
     this._nativePlatform,
     this._nativeProcess, {
     required this.id,

@@ -55,11 +55,11 @@ class Win32 implements NativePlatform {
   }
 
   @override
-  Future<NativeActiveWindow> activeWindow() async {
+  Future<ActiveWindow> activeWindow() async {
     final windowId = await activeWindowId;
     final pid = await windowPid(windowId);
     final win32Process = Win32Process(pid);
-    final activeWindow = NativeActiveWindow(
+    final activeWindow = ActiveWindow(
       NativePlatform(),
       win32Process,
       id: windowId,

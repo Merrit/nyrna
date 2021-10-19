@@ -5,10 +5,10 @@ import 'package:native_platform/native_platform.dart';
 
 import 'logger.dart';
 
-class ActiveWindow {
+class ActiveWindowHandler {
   final NativePlatform _nativePlatform;
 
-  const ActiveWindow(this._nativePlatform);
+  const ActiveWindowHandler(this._nativePlatform);
 
   /// Get a value from Hive.
   Future<int?> _getSavedValue(String key) async {
