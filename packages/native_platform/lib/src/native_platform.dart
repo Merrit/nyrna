@@ -37,12 +37,6 @@ abstract class NativePlatform {
 
   Future<ActiveWindow> activeWindow();
 
-  /// Returns the pid associated with the active window.
-  Future<int> get activeWindowPid;
-
-  /// Returns the unique hex id for the active window.
-  Future<int> get activeWindowId;
-
   /// Verify dependencies are present on the system.
   Future<bool> checkDependencies();
 

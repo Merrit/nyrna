@@ -68,13 +68,11 @@ class Win32 implements NativePlatform {
     return activeWindow;
   }
 
-  @override
   Future<int> get activeWindowPid async {
     final windowId = await activeWindowId;
     return windowPid(windowId);
   }
 
-  @override
   Future<int> get activeWindowId async => GetForegroundWindow();
 
   // No external dependencies for Win32, so always return true.

@@ -81,7 +81,6 @@ class Linux implements NativePlatform {
   }
 
   // Returns the PID of the active window as reported by xdotool.
-  @override
   Future<int> get activeWindowPid async {
     final result = await io.Process.run(
       'xdotool',
@@ -92,7 +91,6 @@ class Linux implements NativePlatform {
   }
 
   // Returns the unique hex ID of the active window as reported by xdotool.
-  @override
   Future<int> get activeWindowId async {
     final result = await io.Process.run('xdotool', ['getactivewindow']);
     final _windowId = int.tryParse(result.stdout.toString().trim());
