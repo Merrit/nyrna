@@ -35,7 +35,7 @@ abstract class NativePlatform {
   /// virtual desktop, as well as some that might be mistakenly cloaked.
   Future<List<Window>> windows({required bool showHidden});
 
-  Future<NativeActiveWindow> activeWindow();
+  Future<ActiveWindow> activeWindow();
 
   /// Returns the pid associated with the active window.
   Future<int> get activeWindowPid;

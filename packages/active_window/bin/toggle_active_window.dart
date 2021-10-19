@@ -53,7 +53,7 @@ Future<void> main(List<String> args) async {
 
   final nativePlatform = NativePlatform();
 
-  final activeWindow = ActiveWindow(nativePlatform);
+  final activeWindow = ActiveWindowHandler(nativePlatform);
 
   final savedPid = await activeWindow.savedPid();
 
