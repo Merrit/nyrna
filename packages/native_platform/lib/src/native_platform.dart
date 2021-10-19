@@ -20,7 +20,7 @@ abstract class NativePlatform {
     }
   }
 
-  /// Returns the index of the currently active virtual desktop.
+  /// The index of the currently active virtual desktop.
   Future<int> currentDesktop();
 
   /// The PID associated with a window.
