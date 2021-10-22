@@ -1,7 +1,6 @@
 import 'dart:io' as io;
 
 import 'package:native_platform/native_platform.dart';
-import 'package:native_platform/src/native_process.dart';
 import 'package:test/test.dart';
 
 void main() {
