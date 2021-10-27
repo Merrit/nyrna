@@ -205,6 +205,7 @@ List<String> _filteredWindows = [
   'nyrna',
   'nyrna.exe',
   'ApplicationFrameHost.exe', // Manages UWP (Universal Windows Platform) apps
+  'dwm.exe', // Win32's compositing window manager
   'explorer.exe', // Windows File Explorer
   'googledrivesync.exe',
   'LogiOverlay.exe', // Logitech Options
