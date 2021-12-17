@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart' as pp;
 
 import 'src/hotkey.dart';
@@ -67,6 +68,8 @@ class _LinuxLauncher {
     await _addDesktopFile();
   }
 
+  static final _log = Logger('_LinuxLauncher');
+
   /// Install Nyrna's icon according to the XDG specification.
   ///
   /// (Likely ~/.local/share/icons/hicolor/256x256/apps/nyrna.png)
@@ -79,7 +82,8 @@ class _LinuxLauncher {
         ['install', '--novendor', '--size', '256', '${Launcher.iconPath}'],
       );
     } catch (err) {
-      // TODO: Error handling.
+      _log.severe('Issue adding icon: \n'
+          '$err');
     }
   }
 
@@ -101,7 +105,8 @@ class _LinuxLauncher {
         ['install', '--novendor', '${desktopFile.path}'],
       );
     } catch (err) {
-      // TODO: Error handling.
+      _log.severe('Issue adding desktop file: \n'
+          '$err');
     }
   }
 }
