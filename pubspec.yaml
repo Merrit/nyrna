@@ -8,12 +8,12 @@ environment:
 
 dependencies:
   args: ^2.2.0
-  bloc_test: ^8.1.0
+  bloc_test: ^9.0.1
   equatable: ^2.0.3
   flex_color_picker: ^2.0.1
   flutter:
     sdk: flutter
-  flutter_bloc: ^7.3.0
+  flutter_bloc: ^8.0.0
   http: ^0.13.3
   image: ^3.0.2
   logging: ^1.0.1

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_platform/native_platform.dart';
-import 'package:nyrna/application/bloc_observer.dart';
 import 'package:nyrna/infrastructure/logger/app_logger.dart';
 import 'package:nyrna/infrastructure/versions/versions.dart';
 import 'package:nyrna/presentation/app_widget.dart';
@@ -21,8 +20,6 @@ Future<void> main(List<String> args) async {
   final prefs = Preferences(sharedPreferences);
 
   AppLogger().initialize();
-
-  Bloc.observer = AppBlocObserver();
 
   final nativePlatform = NativePlatform();
 
