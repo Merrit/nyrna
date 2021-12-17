@@ -49,7 +49,15 @@ static void my_application_activate(GApplication* application) {
   }
 
   gtk_window_set_default_size(window, 530, 600);
-  gtk_widget_show(GTK_WIDGET(window));
+  
+  /* --------------------------------- Custom --------------------------------- */
+  /// Hide window by default so we can manipulate size, frame, etc and 
+  /// then show the window when we are ready.
+  ///
+  /// `gtk_widget_realize` will create the window without showing it, 
+  /// then the Dart code can call `window_size.setWindowVisibility(visible: true);`.
+  // gtk_widget_show(GTK_WIDGET(window));   <-- Previous implementation.
+  gtk_widget_realize(GTK_WIDGET(window));
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(project, self->dart_entrypoint_arguments);
