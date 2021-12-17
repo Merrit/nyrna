@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_platform/native_platform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:window_size/window_size.dart' as window;
 
 import 'application/app/app.dart';
 import 'application/preferences/cubit/preferences_cubit.dart';
@@ -50,4 +51,6 @@ Future<void> main(List<String> args) async {
       ),
     ),
   );
+
+  window.setWindowVisibility(visible: true);
 }

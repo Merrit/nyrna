@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   url_launcher_windows
+  window_size
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
