@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:active_window/active_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_platform/native_platform.dart';
@@ -15,7 +18,15 @@ import 'presentation/app_widget.dart';
 
 Future<void> main(List<String> args) async {
   // Parse command-line arguments.
-  ArgumentParser(args);
+  final argParser = ArgumentParser();
+  argParser.parseArgs(args);
+
+  // If we receive the toggle argument, suspend or resume the active
+  // window and then exit without showing the GUI.
+  if (argParser.toggleActiveWindow) {
+    await toggleActiveWindow(logToFile: argParser.logToFile);
+    exit(0);
+  }
 
   final sharedPreferences = await SharedPreferences.getInstance();
   final prefs = Preferences(sharedPreferences);

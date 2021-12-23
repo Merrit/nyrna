@@ -2,27 +2,56 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 
+/// Message to be displayed if Nyrna is called with an unknown argument.
+const _helpTextGreeting = '''
+Nyrna - Suspend games and applications.
+
+
+Run Nyrna without any arguments to launch the GUI.
+
+Supported arguments:
+
+''';
+
 /// Parse command-line arguments.
 class ArgumentParser {
-  final List<String> args;
-  final ArgResults _results;
+  bool logToFile = false;
+  bool toggleActiveWindow = false;
 
-  ArgumentParser(this.args) : _results = _parseArgs(args);
-
-  static final _parser = ArgParser();
+  final _parser = ArgParser(usageLineLength: 80);
 
   /// Parse received arguments.
-  static ArgResults _parseArgs(List<String> args) {
+  void parseArgs(List<String> args) {
+    _parser
+      ..addFlag(
+        'toggle',
+        abbr: 't',
+        negatable: false,
+        callback: (bool value) => toggleActiveWindow = value,
+        help: 'Toggle the suspend / resume state for the active window. \n'
+            '❗Please note this will immediately suspend the active window, and '
+            'is intended to be used with a hotkey - be sure not to run this '
+            'from a terminal and accidentally suspend your terminal! ❗',
+      )
+      ..addFlag(
+        'log',
+        abbr: 'l',
+        negatable: false,
+        callback: (bool value) => logToFile = value,
+        help: 'Log events to a temporary file for debug purposes.',
+      );
+
+    final _helpText = _helpTextGreeting + _parser.usage + '\n\n';
+
     try {
-      return _parser.parse(args);
+      final result = _parser.parse(args);
+      if (result.rest.isNotEmpty) {
+        stdout.writeln(_helpText);
+        exit(0);
+      }
     } on ArgParserException {
-      stdout.writeln("Nyrna doesn't currently accept any arguments.\n"
-          '\n'
-          'For usage instructions refer to the README.md included with Nyrna, '
-          'or see them online at https://nyrna.merritt.codes/usage');
+      stdout.writeln(_helpText);
       exit(0);
     }
   }
-
-  bool argWasReceived(String arg) => _results.wasParsed(arg);
 }

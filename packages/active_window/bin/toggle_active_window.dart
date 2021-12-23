@@ -2,68 +2,67 @@ import 'dart:io';
 
 import 'package:active_window/active_window.dart';
 import 'package:args/args.dart';
-import 'package:hive/hive.dart';
-import 'package:native_platform/native_platform.dart';
 
-/// The portion of Nyrna that will act as a toggle to
-/// suspend / resume the active, foreground window.
-///
-/// It is a self-contained executable, and should be bound to a hotkey
-/// using the operating system's default methods on Linux, or by using
-/// the included `toggle_active_hotkey.exe` on Windows which sits in the
-/// system tray and listens for the `Pause` keyboard key to activate.
-///
-/// When the hotkey launches the executable it will:
-/// - Find the active, foreground window
-/// - Minimize the window
-/// - Suspend the process that owns the window
-/// - Save the PID of said process & window id to a file
-///
-/// On subsequent launch when the file with a saved PID is found:
-/// - Resume the suspended process
-/// - Restore / unminimize the associated window
-/// - Delete the file containing the PID & window id so next call will suspend.
+/// This is a self-contained executable, and should be used as a hotkey
+/// on Windows systems by using the included `toggle_active_hotkey.exe`
+/// which sits in the system tray and listens for
+/// the `Pause` keyboard key to activate. This helper executable is
+/// necessary because unlike Linux, where the application can take an
+/// argument and start hidden and find the active window, when hidden GUI windows
+/// are created on Win32 systems they steal focus from the active application.
 
-void parseArgs(List<String> args) {
-  final argparser = ArgParser();
-  argparser.addFlag(
-    'log',
-    abbr: 'l',
-    defaultsTo: false,
-  );
-  ArgResults argResults;
-  try {
-    argResults = argparser.parse(args);
-    final gotLog = argResults.wasParsed('log');
-    if (gotLog) Logger.shouldLog = true;
-  } catch (_) {
-    print('Nyrna\'s toggle executable only accepts one argument: --log'
-        '\n'
-        'Use this for debugging issues, otherwise call this executable '
-        'without any arguments from a keyboard hotkey to '
-        'suspend / resume the active window.');
-    exit(0);
+/// Message to be displayed if called in terminal.
+const _helpText = '''
+This Nyrna executable is for Win32 systems to toggle the 
+suspend / resume state of the active, foreground window.
+
+This executable should be called by the included hotkey program 
+"toggle_active_hotkey.exe" and not manually.
+''';
+
+/// Parse command-line arguments.
+class ArgumentParser {
+  final _parser = ArgParser(usageLineLength: 80);
+
+  bool logToFile = false;
+  bool shouldToggleActiveWindow = false;
+
+  /// Parse received arguments.
+  void parseArgs(List<String> args) {
+    _parser
+      ..addFlag(
+        'toggle',
+        abbr: 't',
+        negatable: false,
+        callback: (bool value) => shouldToggleActiveWindow = value,
+        help: 'Toggle the suspend / resume state for the active window.',
+      )
+      ..addFlag(
+        'log',
+        abbr: 'l',
+        negatable: false,
+        callback: (bool value) => logToFile = value,
+        help: 'Log events to a temporary file for debug purposes.',
+      );
+
+    try {
+      final result = _parser.parse(args);
+      if (result.rest.isNotEmpty) {
+        stdout.writeln(_helpText);
+        exit(0);
+      }
+    } on ArgParserException {
+      stdout.writeln(_helpText);
+      exit(0);
+    }
   }
 }
 
 Future<void> main(List<String> args) async {
-  parseArgs(args);
+  final argParser = ArgumentParser();
+  argParser.parseArgs(args);
 
-  Hive.init(Directory.systemTemp.path);
-
-  final nativePlatform = NativePlatform();
-
-  final activeWindow = ActiveWindowHandler(nativePlatform);
-
-  final savedPid = await activeWindow.savedPid();
-
-  if (savedPid != null) {
-    final successful = await activeWindow.resume(savedPid);
-    if (!successful) await Logger.log('Failed to resume successfully.');
-  } else {
-    final successful = await activeWindow.suspend();
-    if (!successful) await Logger.log('Failed to suspend successfully.');
+  if (argParser.shouldToggleActiveWindow) {
+    await toggleActiveWindow(logToFile: argParser.logToFile);
   }
-
-  await Hive.close();
 }
