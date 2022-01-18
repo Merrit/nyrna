@@ -34,7 +34,7 @@ A package is available as [nyrna](https://github.com/BlueManCZ/edgets/tree/maste
 
 ## AppImage
 
-[Download AppImage](https://github.com/Merrit/nyrna/releases/latest/download/Nyrna-latest-x86_64.AppImage){: .btn .btn--info}
+[Download AppImage](https://github.com/Merrit/nyrna/releases/latest/download/Nyrna-Linux.AppImage){: .btn .btn--info}
 
 ## Snap
 
@@ -59,7 +59,7 @@ Example (Debian / Ubuntu):
 </div>
 
 <!-- TODO: Figure out how to populate the version info for links automatically. -->
-[Download Linux portable](https://github.com/Merrit/nyrna/releases/latest/download/nyrna-linux-portable.zip){: .btn .btn--info}
+[Download Linux portable](https://github.com/Merrit/nyrna/releases/latest/download/Nyrna-Linux-Portable.tar.gz){: .btn .btn--info}
 
 <br>
 
@@ -69,7 +69,7 @@ Windows
 
 ## Installer
 
-[Download Installer exe](https://github.com/Merrit/nyrna/releases/latest/download/nyrna-windows-installer.exe){: .btn .btn--info}
+[Download Installer exe](https://github.com/Merrit/nyrna/releases/latest/download/Nyrna-Windows-Installer.exe){: .btn .btn--info}
 
 <!--                # Chocolatey needs updating for Nyrna 2.0
 ## Chocolatey
@@ -81,7 +81,7 @@ Windows
 
 ## Portable
 
-[Download Windows portable](https://github.com/Merrit/nyrna/releases/latest/download/nyrna-windows-portable.zip){: .btn .btn--info}
+[Download Windows portable](https://github.com/Merrit/nyrna/releases/latest/download/Nyrna-Windows-Portable.zip){: .btn .btn--info}
 
 ## winget
 
