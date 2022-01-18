@@ -9,8 +9,40 @@ import '../app.dart';
 /// The main screen for Nyrna.
 ///
 /// Shows a ListView with tiles for each open window on the current desktop.
-class AppsPage extends StatelessWidget {
+class AppsPage extends StatefulWidget {
   static const id = 'running_apps_screen';
+
+  @override
+  State<AppsPage> createState() => _AppsPageState();
+}
+
+class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
+  /// Tracks the current window size.
+  late Size _appWindowSize;
+
+  @override
+  void initState() {
+    super.initState();
+    _appWindowSize = WidgetsBinding.instance!.window.physicalSize;
+    // Listen for changes to the application's window size.
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final updatedWindowSize = WidgetsBinding.instance!.window.physicalSize;
+    if (_appWindowSize != updatedWindowSize) {
+      _appWindowSize = updatedWindowSize;
+      preferencesCubit.saveWindowSize();
+    }
+    super.didChangeMetrics();
+  }
 
   @override
   Widget build(BuildContext context) {
