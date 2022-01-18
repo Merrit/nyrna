@@ -35,13 +35,13 @@ Future<void> main(List<String> args) async {
 
   final nativePlatform = NativePlatform();
 
+  // Created outside runApp so it can be accessed for window settings below.
+  final prefsCubit = PreferencesCubit(prefs);
+
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => PreferencesCubit(prefs),
-          lazy: false,
-        ),
+        BlocProvider.value(value: prefsCubit),
         BlocProvider(
           create: (context) => ThemeCubit(prefs),
         ),
@@ -63,5 +63,9 @@ Future<void> main(List<String> args) async {
     ),
   );
 
+  final savedWindowSize = await preferencesCubit.savedWindowSize();
+  if (savedWindowSize != null) {
+    window.setWindowFrame(savedWindowSize);
+  }
   window.setWindowVisibility(visible: true);
 }

@@ -9,6 +9,9 @@ import 'package:nyrna/infrastructure/icon_manager/icon_manager.dart';
 import 'package:nyrna/infrastructure/launcher/launcher.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/presentation/styles.dart';
+import 'package:window_size/window_size.dart' as window;
+
+import '../../helpers/json_converters.dart';
 
 part 'preferences_state.dart';
 
@@ -89,5 +92,20 @@ class PreferencesCubit extends Cubit<PreferencesState> {
   Future<void> updateShowHiddenWindows(bool value) async {
     await _prefs.setBool(key: 'showHiddenWindows', value: value);
     emit(state.copyWith(showHiddenWindows: value));
+  }
+
+  /// Save the current window size & position to storage.
+  Future<void> saveWindowSize() async {
+    final windowInfo = await window.getWindowInfo();
+    final rectJson = windowInfo.frame.toJson();
+    await _prefs.setString(key: 'windowSize', value: rectJson);
+  }
+
+  /// Returns if available the last window size and position.
+  Future<Rect?> savedWindowSize() async {
+    final rectJson = _prefs.getString('windowSize');
+    if (rectJson == null) return null;
+    final windowRect = RectConverter.fromJson(rectJson);
+    return windowRect;
   }
 }
