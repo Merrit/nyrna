@@ -1,0 +1,235 @@
+name: Build & Release
+on:
+  # Enable manual run
+  workflow_dispatch:
+  # Verify builds succeed on pull requests
+  pull_request:
+  # Build & deploy for tag events matching v*, i.e. v1.0.0, v20.15.10
+  push:
+    tags:
+      - "v*"
+
+env:
+  project-name: "Nyrna"
+  # Use "enabled" instead of bool because GitHub is having issues.
+  # https://github.com/actions/runner/issues/1483
+  enable-appimage: "enabled"
+
+jobs:
+  # --------------------------------- Configure -------------------------------- #
+  create-build:
+    name: Create ${{ matrix.target }} build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        target: [Windows, Linux]
+        # target: [macOS, Windows, Linux, Android]
+        include:
+          # - os: macos-10.15 # Catalina
+          #   target: macOS
+          #   build_target: macos
+          #   build_path: build/macos/Build/Products/Release
+          #   asset_extension: .zip
+          #   asset_content_type: application/zip
+          - os: windows-2019
+            target: Windows
+            build_target: windows
+            build_path: build\windows\runner\Release
+            asset_extension: .zip
+            asset_content_type: application/zip
+          - os: ubuntu-20.04
+            target: Linux
+            build_target: linux
+            build_path: build/linux/x64/release/bundle
+            asset_extension: .tar.gz
+            asset_content_type: application/gzip
+          # - os: ubuntu-20.04
+          #   target: Android
+          #   build_target: apk
+          #   build_path: build/app/outputs/flutter-apk
+          #   asset_extension: .apk
+          #   asset_content_type: application/vnd.android.package-archive
+      # Disable fail-fast as we want results from all even if one fails.
+      fail-fast: false
+
+    # ----------------------------------- Setup ---------------------------------- #
+    steps:
+      # Set up Flutter.
+      - name: Clone Flutter repository
+        uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8
+        with:
+          channel: beta
+
+      - name: Install Linux dependencies
+        if: matrix.target == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev
+          # Install AppImage dependencies
+          sudo apt-get install -y jq python3 zsync
+          # yq gets the version from pubspec.yaml
+          pip install yq
+
+      - name: Install Windows dependencies
+        if: matrix.target == 'Windows'
+        run: |
+          choco install yq                # Gets the version from pubspec.yaml
+          choco install autohotkey        # Builds the hotkey executable
+          # Add autohotkey to path
+          echo "C:\Program Files\AutoHotkey\Compiler" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Install Android dependencies
+        if: matrix.target == 'Android'
+        uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+
+      - name: Enable desktop support
+        if: matrix.target != 'Android'
+        run: |
+          flutter config --enable-linux-desktop
+          flutter config --enable-macos-desktop
+          flutter config --enable-windows-desktop
+
+      - run: flutter doctor -v
+
+      # Checkout code, recreate missing files, and get packages.
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - run: flutter upgrade
+      - run: flutter pub get
+
+      - name: Assign version variable on Linux
+        if: matrix.target == 'Linux'
+        run: |
+          VER=$(yq -r .version < pubspec.yaml)
+          echo "VERSION=$VER" >> $GITHUB_ENV
+
+      - name: Assign version variable on Windows
+        if: matrix.target == 'Windows'
+        run: |
+          $VER = yq e .version pubspec.yaml
+          echo "VERSION=$VER" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+
+      - name: Verify pubspec version has been updated to match tag for release
+        if: |
+          github.event_name != 'pull_request' && 
+          github.event_name != 'workflow_dispatch' && 
+          (contains(github.ref_name, env.VERSION) == false)
+        run: |
+          echo Mismatch for pubspec version and tag version
+          echo Has the pubspec's version been updated for this release?
+          echo Pubspec version is: ${{ env.VERSION }}
+          echo Tag is: ${{ github.ref_name }}
+          exit 1
+
+      - name: Configure Keystore for Android
+        if: matrix.target == 'Android'
+        run: |
+          echo "$PLAY_STORE_UPLOAD_KEY" | base64 --decode > app/upload-keystore.jks
+          echo "storeFile=upload-keystore.jks" >> key.properties
+          echo "keyAlias=$KEYSTORE_KEY_ALIAS" >> key.properties
+          echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> key.properties
+          echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> key.properties
+        env:
+          PLAY_STORE_UPLOAD_KEY: ${{ secrets.PLAY_STORE_UPLOAD_KEY }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
+          KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_STORE_PASSWORD }}
+        working-directory: android
+
+      # ----------------------------------- Build ---------------------------------- #
+      - run: flutter build -v ${{ matrix.build_target }} --release
+
+      # ---------------------------------- Package --------------------------------- #
+      - name: Create output directory
+        run: |
+          mkdir output
+
+      - name: Add README to release directory
+        if: matrix.target != 'Android'
+        run: |
+          cat docs/_pages/usage.md >> README.md
+          cp README.md ${{ matrix.build_path }}/README.md
+
+      - name: Copy VC redistributables to build directory for Windows
+        if: matrix.target == 'Windows'
+        run: |
+          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\msvcp140.dll') .
+          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140.dll') .
+          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140_1.dll') .
+        working-directory: ${{ matrix.build_path }}
+
+      - name: Rename build for Android
+        if: matrix.target == 'Android'
+        run: mv app-release.apk ${{ env.project-name }}_${{ matrix.target }}.apk
+        working-directory: ${{ matrix.build_path }}
+
+      - name: Compress build for Linux
+        if: matrix.target == 'Linux'
+        run: |
+          touch PORTABLE
+          tar czf ${{ env.project-name }}-${{ matrix.target }}-Portable.tar.gz *
+          mv *.tar.gz ${{ github.workspace }}/output/
+          rm PORTABLE
+        working-directory: ${{ matrix.build_path }}
+
+      - name: Compress build for macOS
+        if: matrix.target == 'macOS'
+        run: ditto -c -k --sequesterRsrc --keepParent Flutter\ ${{ env.project-name }}.app ${{ env.project-name }}_${{ matrix.target }}.zip
+        working-directory: ${{ matrix.build_path }}
+
+      - name: Compress build for Windows
+        if: matrix.target == 'Windows'
+        run: |
+          New-Item -Name "PORTABLE" -ItemType "file"
+          compress-archive -Path * -DestinationPath ${{ env.project-name }}-${{ matrix.target }}-Portable.zip
+          mv *.zip ${{ github.workspace }}\output\
+          rm PORTABLE
+        working-directory: ${{ matrix.build_path }}
+
+      - name: Create installer for Windows
+        if: matrix.target == 'Windows'
+        run: |
+          cp ${{ github.workspace }}\packaging\win32\inno_setup_script.iss .
+          iscc /dMyAppVersion=${{ env.VERSION }} /dWorkspaceRoot=${{ github.workspace }} .\inno_setup_script.iss
+          # iscc /dMyAppVersion=${{ env.VERSION }} ${{ github.workspace }}\packaging\win32\inno_setup_script.iss
+          mv .\Output\*.exe ${{ github.workspace }}\output\
+        working-directory: ${{ matrix.build_path }}
+
+      - name: Build AppImage
+        if: ${{ success() && matrix.target == 'Linux' && env.enable-appimage == 'enabled' }}
+        uses: docker://appimagecrafters/appimage-builder:0.8.5
+        env:
+          APP_VERSION: ${{ env.VERSION }}
+        with:
+          entrypoint: appimage-builder
+          args: --recipe packaging/linux/appimage/AppImageBuilder.yml --skip-test
+
+      - name: Package AppImage
+        if: ${{ success() && matrix.target == 'Linux' && env.enable-appimage == 'enabled' }}
+        run: |
+          mv *.AppImage ${{ github.workspace }}/output/${{ env.project-name }}-Linux.AppImage
+          mv *.zsync ${{ github.workspace }}/output/${{ env.project-name }}-Linux.AppImage.zsync
+
+      # ---------------------------------- Upload ---------------------------------- #
+      # Upload artifacts to draft release.
+      - name: Upload artifacts to draft release
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          prerelease: false
+          fail_on_unmatched_files: false
+          name: ${{ github.ref_name }}
+          files: |
+            output/*
+
+      - name: Upload artifacts to workflow if not for tag / release
+        if: |
+          github.event_name == 'pull_request' || 
+          github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.project-name }}-artifacts
+          path: output/*
