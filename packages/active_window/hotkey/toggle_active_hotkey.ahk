@@ -11,7 +11,7 @@ Menu, Tray, Tip, Nyrna - Toggle Active Hotkey
 Menu, Tray, Icon, data\flutter_assets\assets\icons\nyrna.ico
 
 Pause::
-    Run, nyrna_toggle_active_window.exe --toggle
+    Run, toggle_active_window.exe --toggle
 Return
 
 Exit:

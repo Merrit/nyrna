@@ -78,6 +78,12 @@ jobs:
           # Add autohotkey to path
           echo "C:\Program Files\AutoHotkey\Compiler" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
+        # Needed to run editbin on the hotkey listener down below.
+      - name: Set up Visual Studio shell
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
+
       - name: Install Android dependencies
         if: matrix.target == 'Android'
         uses: actions/setup-java@v1
@@ -141,10 +147,23 @@ jobs:
       # ----------------------------------- Build ---------------------------------- #
       - run: flutter build -v ${{ matrix.build_target }} --release
 
+      - name: Build hotkey listener for Windows
+        if: matrix.target == 'Windows'
+        run: |
+          cd ${{ github.workspace }}\packages\active_window
+          dart pub get
+          dart compile exe .\bin\toggle_active_window.dart
+          editbin.exe /subsystem:windows .\bin\toggle_active_window.exe
+          xcopy .\bin\toggle_active_window.exe ${{ github.workspace }}\${{ matrix.build_path }}\
+
+          Ahk2Exe.exe /in .\hotkey\toggle_active_hotkey.ahk /out ${{ github.workspace }}\${{ matrix.build_path }}\toggle_active_hotkey.exe
+          cd ${{ github.workspace }}
+
       # ---------------------------------- Package --------------------------------- #
       - name: Create output directory
         run: |
           mkdir output
+        working-directory: ${{ github.workspace }}
 
       - name: Add README to release directory
         if: matrix.target != 'Android'
