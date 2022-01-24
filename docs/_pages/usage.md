@@ -37,8 +37,9 @@ permalink: /usage
 Nyrna can be used to toggle the suspend / resume state of one active window:
 
 - Linux
-  - Set a hotkey in system settings to run the `nyrna_toggle_active_window` executable
-    from the Nyrna directory
+  - Set a hotkey in system settings to run the nyrna executable with the
+    `--toggle` flag, example:
+    > ~/Applications/Nyrna/nyrna --toggle
 
 - Windows
   - Run the `toggle_active_hotkey.exe` file from the Nyrna directory to add an
