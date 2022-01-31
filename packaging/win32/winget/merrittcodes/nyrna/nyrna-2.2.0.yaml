@@ -4,9 +4,9 @@ Name: Nyrna
 AppMoniker: nyrna
 Version: 2.2.0
 License: GPL-3.0
-LicenseUrl: https://github.com/Merrit/nyrna/blob/master/LICENSE
+LicenseUrl: https://github.com/Merrit/nyrna/blob/main/LICENSE
 MinOSVersion: 10.0.0.0
-Description:
+Description: |
   Suspend games and applications.
 
   Similar to the incredibly useful sleep/suspend function found in
