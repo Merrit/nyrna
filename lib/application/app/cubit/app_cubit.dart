@@ -22,15 +22,20 @@ class AppCubit extends Cubit<AppState> {
   final PreferencesCubit _prefsCubit;
   final Versions _versionRepo;
 
+  /// Will be true if running under a unit test.
+  final bool _testing;
+
   AppCubit({
     required NativePlatform nativePlatform,
     required Preferences prefs,
     required PreferencesCubit prefsCubit,
     required Versions versionRepository,
+    bool testing = false,
   })  : _nativePlatform = nativePlatform,
         _prefs = prefs,
         _prefsCubit = prefsCubit,
         _versionRepo = versionRepository,
+        _testing = testing,
         super(AppState.initial()) {
     appCubit = this;
     _initialize();
@@ -103,25 +108,18 @@ class AppCubit extends Cubit<AppState> {
     return status;
   }
 
+  /// Update the ProcessStatus for the given [windows].
   Future<List<Window>> _checkWindowStatuses(List<Window> windows) async {
     final processedWindows = <Window>[];
     for (var window in windows) {
-      final existingWindow = state.windows.singleWhereOrNull(
-        (stateWindow) => stateWindow.id == window.id,
+      final pid = window.process.pid;
+      final status =
+          (_testing) ? window.process.status : await _getProcessStatus(pid);
+      processedWindows.add(
+        window.copyWith(
+          process: window.process.copyWith(status: status),
+        ),
       );
-      if (existingWindow != null) {
-        processedWindows.add(
-          window.copyWith(process: existingWindow.process),
-        );
-      } else {
-        final pid = window.process.pid;
-        final status = await _getProcessStatus(pid);
-        processedWindows.add(
-          window.copyWith(
-            process: window.process.copyWith(status: status),
-          ),
-        );
-      }
     }
     return processedWindows;
   }
