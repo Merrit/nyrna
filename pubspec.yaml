@@ -10,7 +10,6 @@ dependencies:
   active_window:
     path: packages/active_window
   args: ^2.2.0
-  bloc_test: ^9.0.1
   equatable: ^2.0.3
   flex_color_picker: ^2.0.1
   flutter:
@@ -39,7 +38,9 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+  mocktail: ^0.2.0
   pedantic: ^1.11.0
+  test: ^1.19.5
 
 flutter:
   uses-material-design: true
