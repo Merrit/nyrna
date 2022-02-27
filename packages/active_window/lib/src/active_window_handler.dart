@@ -34,7 +34,9 @@ class ActiveWindowHandler {
 
   Future<bool> resume(int pid) async {
     await Logger.log('resuming, pid: $pid');
-    final process = NativeProcess(pid);
+    final window = await _nativePlatform.activeWindow();
+    final executable = window.executable;
+    final process = Process(pid: pid, executable: executable);
     final resumed = await process.resume();
     if (!resumed) {
       await Logger.log('Failed to resume! Try resuming process manually?');
@@ -60,7 +62,7 @@ class ActiveWindowHandler {
       // Once in a blue moon on Windows we get "explorer.exe" as the active
       // window, even when no file explorer windows are open / the desktop
       // is not the active element, etc. So we filter it just in case.
-      final executable = await activeWindow.executable();
+      final executable = activeWindow.executable;
       if (executable == 'explorer.exe') {
         await Logger.log('Only got explorer as active window!');
         return false;

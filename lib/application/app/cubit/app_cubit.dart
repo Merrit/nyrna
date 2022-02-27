@@ -102,24 +102,13 @@ class AppCubit extends Cubit<AppState> {
     emit(state.copyWith(windows: sortedWindows));
   }
 
-  Future<ProcessStatus> _getProcessStatus(int pid) async {
-    final process = NativeProcess(pid);
-    final status = await process.status;
-    return status;
-  }
-
   /// Update the ProcessStatus for the given [windows].
   Future<List<Window>> _checkWindowStatuses(List<Window> windows) async {
+    if (_testing) return windows;
     final processedWindows = <Window>[];
     for (var window in windows) {
-      final pid = window.process.pid;
-      final status =
-          (_testing) ? window.process.status : await _getProcessStatus(pid);
-      processedWindows.add(
-        window.copyWith(
-          process: window.process.copyWith(status: status),
-        ),
-      );
+      await window.process.refreshStatus();
+      processedWindows.add(window);
     }
     return processedWindows;
   }
@@ -147,35 +136,30 @@ class AppCubit extends Cubit<AppState> {
 
   /// Toggle suspend / resume for the process associated with the given window.
   Future<bool> toggle(Window window) async {
-    final pid = window.process.pid;
-    ProcessStatus status = await _getProcessStatus(pid);
+    ProcessStatus status = await window.process.refreshStatus();
     bool success;
     if (status == ProcessStatus.suspended) {
       success = await _resume(window);
-      status = await _getProcessStatus(pid);
+      status = await window.process.refreshStatus();
       if (status != ProcessStatus.normal) success = false;
     } else {
       success = await _suspend(window);
-      status = await _getProcessStatus(pid);
+      status = await window.process.refreshStatus();
       if (status != ProcessStatus.suspended) success = false;
     }
-    final updatedWindow = window.copyWith(
-      process: window.process.copyWith(status: status),
-    );
     final windows = List<Window>.from(state.windows);
     windows.removeWhere((e) => e.id == window.id);
-    windows.add(updatedWindow);
+    windows.add(window);
     final sortedWindows = _sortWindows(windows);
     emit(state.copyWith(windows: sortedWindows));
     return success;
   }
 
   Future<bool> _resume(Window window) async {
-    final nativeProcess = NativeProcess(window.process.pid);
-    final success = await nativeProcess.resume();
+    final success = await window.process.resume();
     // Restore the window _after_ resuming or it might not restore.
-    await _nativePlatform.restoreWindow(window.id);
-    return (success) ? true : false;
+    if (success) await _nativePlatform.restoreWindow(window.id);
+    return success;
   }
 
   Future<bool> _suspend(Window window) async {
@@ -186,9 +170,9 @@ class AppCubit extends Cubit<AppState> {
     if (io.Platform.isWindows) {
       await Future.delayed(Duration(milliseconds: 500));
     }
-    final nativeProcess = NativeProcess(window.process.pid);
-    final success = await nativeProcess.suspend();
-    return (success) ? true : false;
+    final success = await window.process.suspend();
+    // TODO: If suspend failed, restore window & alert user.
+    return success;
   }
 
   Future<void> launchURL(String url) async {

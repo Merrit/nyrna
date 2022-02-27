@@ -1,50 +1,28 @@
-import 'dart:ffi';
 import 'dart:io' as io;
 
-import 'package:ffi/ffi.dart';
 import 'package:logging/logging.dart';
-import 'package:win32/win32.dart';
+import 'package:native_platform/src/win32/win32.dart';
 import 'package:win32_suspend_process/win32_suspend_process.dart' as w32proc;
 
-import '../native_process.dart';
 import '../process.dart';
 
-class Win32Process implements NativeProcess {
-  Win32Process(this.pid);
+class Win32Process implements Process {
+  @override
+  final String executable;
 
   @override
   final int pid;
 
+  final Win32 _win32;
+
+  Win32Process(this._win32, {required this.executable, required this.pid});
+
   static final _log = Logger('Win32Process');
 
-  String? _executable;
+  ProcessStatus _status = ProcessStatus.unknown;
 
   @override
-  Future<String> get executable async {
-    if (_executable != null) return _executable!;
-    final processHandle =
-        OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
-    // Pointer that will be populated with the full executable path.
-    final path = calloc<Uint16>(MAX_PATH).cast<Utf16>();
-    // If the GetModuleFileNameEx function succeeds, the return value specifies
-    // the length of the string copied to the buffer.
-    // If the function fails, the return value is zero.
-    final result = GetModuleFileNameEx(processHandle, NULL, path, MAX_PATH);
-    if (result == 0) {
-      _log.warning('Error getting executable name: ${GetLastError()}');
-      return '';
-    }
-    // Pull the value from the pointer.
-    // Discard all of path except the executable name.
-    _executable = path.toDartString().split('\\').last;
-    // Free the pointer's memory.
-    calloc.free(path);
-    final handleClosed = CloseHandle(processHandle);
-    if (handleClosed == 0) {
-      _log.severe('get executable failed to close the process handle.');
-    }
-    return _executable!;
-  }
+  ProcessStatus get status => _status;
 
   // Get process suspended status from .NET calls through Powershell.
   //
@@ -60,7 +38,7 @@ class Win32Process implements NativeProcess {
   // complicated, at threat of being depreciated, and since it has to
   // enumerate every process likely not much better performance-wise anyway.
   @override
-  Future<ProcessStatus> get status async {
+  Future<ProcessStatus> refreshStatus() async {
     final result = await io.Process.run(
       'powershell',
       [
@@ -74,6 +52,7 @@ class Win32Process implements NativeProcess {
     );
     if (result.stderr != '') {
       _log.warning('Unable to get process status', result.stderr);
+      _status = ProcessStatus.unknown;
       return ProcessStatus.unknown;
     }
     var threads = result.stdout.toString().trim().split('\n');
@@ -88,15 +67,17 @@ class Win32Process implements NativeProcess {
           : suspended.add(false);
     });
     // If every thread has the `Suspended` status, process is suspended.
-    return suspended.contains(false)
+    final updatedStatus = suspended.contains(false)
         ? ProcessStatus.normal
         : ProcessStatus.suspended;
+    _status = updatedStatus;
+    return _status;
   }
 
   // Use the w32_suspend_process library to suspend & resume.
   @override
   Future<bool> toggle() async {
-    final _status = await status;
+    final _status = await refreshStatus();
     if (_status == ProcessStatus.unknown) return false;
     final _process = w32proc.Win32Process(pid);
     bool _success;
@@ -117,7 +98,7 @@ class Win32Process implements NativeProcess {
   // If the pid doesn't exist this won't be able to return the exe name.
   @override
   Future<bool> exists() async {
-    final name = await executable;
+    final name = await _win32.getExecutableName(pid);
     return (name == '') ? false : true;
   }
 }

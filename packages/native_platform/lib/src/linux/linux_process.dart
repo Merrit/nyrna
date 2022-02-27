@@ -1,27 +1,23 @@
 import 'dart:io' as io;
 
-import '../native_process.dart';
 import '../process.dart';
 
-class LinuxProcess implements NativeProcess {
-  LinuxProcess(this.pid);
+class LinuxProcess implements Process {
+  @override
+  final String executable;
 
   @override
   final int pid;
 
-  String? _executable;
+  LinuxProcess({required this.executable, required this.pid});
+
+  ProcessStatus _status = ProcessStatus.unknown;
 
   @override
-  Future<String> get executable async {
-    if (_executable != null) return _executable!;
-    final result = await io.Process.run('readlink', ['/proc/$pid/exe']);
-    _executable = result.stdout.toString().split('/').last.trim();
-    return _executable!;
-  }
+  ProcessStatus get status => _status;
 
   @override
-  Future<ProcessStatus> get status async {
-    ProcessStatus _status;
+  Future<ProcessStatus> refreshStatus() async {
     final result = await io.Process.run('ps', ['-o', 's=', '-p', '$pid']);
     // For OSX you need to use `state=` in this command.
     switch (result.stdout.trim()) {
@@ -46,7 +42,7 @@ class LinuxProcess implements NativeProcess {
   // Use built-in method  from dart:io to suspend & resume.
   @override
   Future<bool> toggle() async {
-    var _status = await status;
+    var _status = await refreshStatus();
     final signal = (_status == ProcessStatus.normal)
         ? io.ProcessSignal.sigstop
         : io.ProcessSignal.sigcont;

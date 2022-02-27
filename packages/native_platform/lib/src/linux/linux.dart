@@ -2,8 +2,6 @@ import 'dart:io' as io;
 
 import '../active_window.dart';
 import '../native_platform.dart';
-import '../native_process.dart';
-import '../process.dart';
 import '../window.dart';
 import 'linux_process.dart';
 
@@ -43,18 +41,12 @@ class Linux implements NativePlatform {
           final pid = int.tryParse(parts[2]);
           final id = int.tryParse(parts[0]);
           if ((pid == null) || (id == null)) return;
-          final linuxProcess = LinuxProcess(pid);
-          final executable = await linuxProcess.executable;
-          final status = await linuxProcess.status;
-          final process = Process(
-            executable: executable,
-            pid: pid,
-            status: status,
-          );
+          final executable = await _getExecutableName(pid);
+          final linuxProcess = LinuxProcess(executable: executable, pid: pid);
           windows.add(
             Window(
               id: id,
-              process: process,
+              process: linuxProcess,
               title: parts.sublist(4).join(' '),
             ),
           );
@@ -64,13 +56,20 @@ class Linux implements NativePlatform {
     return windows;
   }
 
+  Future<String> _getExecutableName(int pid) async {
+    final result = await io.Process.run('readlink', ['/proc/$pid/exe']);
+    final executable = result.stdout.toString().split('/').last.trim();
+    return executable;
+  }
+
   @override
   Future<ActiveWindow> activeWindow() async {
     final windowId = await activeWindowId;
     if (windowId == 0) throw (Exception('No window id'));
     final pid = await windowPid(windowId);
     if (pid == 0) throw (Exception('No pid'));
-    final linuxProcess = LinuxProcess(pid);
+    final executable = await _getExecutableName(pid);
+    final linuxProcess = LinuxProcess(pid: pid, executable: executable);
     final activeWindow = ActiveWindow(
       NativePlatform(),
       linuxProcess,
@@ -121,13 +120,6 @@ class Linux implements NativePlatform {
     );
     final _pid = int.tryParse(result.stdout.toString().trim());
     return _pid ?? 0;
-  }
-
-  @override
-  Future<NativeProcess> windowProcess(int windowId) async {
-    final pid = await windowPid(windowId);
-    final process = LinuxProcess(pid);
-    return process;
   }
 
   @override

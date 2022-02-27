@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'active_window.dart';
 import 'linux/linux.dart';
-import 'native_process.dart';
 import 'win32/win32.dart';
 import 'window.dart';
 
@@ -25,9 +24,6 @@ abstract class NativePlatform {
 
   /// The PID associated with the given [windowId].
   Future<int> windowPid(int windowId);
-
-  /// The process associated with the given [windowId].
-  Future<NativeProcess> windowProcess(int windowId);
 
   /// List of [Window] objects for every visible window with title text.
   ///
