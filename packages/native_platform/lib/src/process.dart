@@ -1,5 +1,7 @@
-import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
+import 'dart:io' as io;
+
+import 'package:native_platform/src/linux/linux_process.dart';
+import 'package:native_platform/src/win32/win32.dart';
 
 enum ProcessStatus {
   normal,
@@ -7,31 +9,46 @@ enum ProcessStatus {
   unknown,
 }
 
-/// Friendly representation of a running process.
-@immutable
-class Process extends Equatable {
-  final String executable;
-  final int pid;
-  final ProcessStatus status;
+/// Represents a process including its metadata and controls.
+///
+/// Abstract class bridges types for specific operating systems.
+/// Used by [LinuxProcess] and [Win32Process].
+abstract class Process {
+  // ignore: unused_element
+  const Process._(this.executable, this.pid);
 
-  Process({
-    required this.executable,
-    required this.pid,
-    required this.status,
-  });
-
-  @override
-  List<Object> get props => [executable, pid, status];
-
-  Process copyWith({
-    String? executable,
-    int? pid,
-    ProcessStatus? status,
-  }) {
-    return Process(
-      executable: executable ?? this.executable,
-      pid: pid ?? this.pid,
-      status: status ?? this.status,
-    );
+  // Return correct subtype depending on the current operating system.
+  factory Process({required String executable, required int pid}) {
+    if (io.Platform.isLinux) {
+      return LinuxProcess(executable: executable, pid: pid);
+    } else {
+      return Win32Process(Win32(), executable: executable, pid: pid);
+    }
   }
+
+  /// The Process ID (PID) of the given process.
+  final int pid;
+
+  /// Name of the executable, for example 'firefox' or 'firefox-bin'.
+  final String executable;
+
+  /// Status will be one of [ProcessStatus.normal],
+  /// [ProcessStatus.suspended] or [ProcessStatus.unknown].
+  ProcessStatus get status;
+
+  Future<ProcessStatus> refreshStatus();
+
+  /// Toggle the suspend / resume state of the given process.
+  ///
+  /// Returns true for success or false for failure.
+  Future<bool> toggle();
+
+  /// Whether or not a process with the given pid currently exists.
+  ///
+  /// ActiveWindow uses this to check a saved pid is still around.
+  Future<bool> exists();
+
+  Future<bool> suspend();
+
+  Future<bool> resume();
 }

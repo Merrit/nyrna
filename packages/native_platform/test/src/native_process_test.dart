@@ -5,53 +5,41 @@ import 'package:test/test.dart';
 
 void main() {
   final pid = io.pid; // Dart or Nyrna's own pid.
-  NativeProcess? process;
+  late Process process;
 
-  setUp(() => process = NativeProcess(pid));
-  tearDown(() => process = null);
+  setUp(() => process = Process(executable: 'nyrna', pid: pid));
 
   test('Can instantiate Process', () {
-    expect(process, isA<NativeProcess>());
+    expect(process, isA<Process>());
   });
 
   group('pid', () {
-    test('pid is not null', () {
-      expect(process!.pid, isA<int>());
+    test('is not null', () {
+      expect(process.pid, isA<int>());
     });
 
-    test('pid is not 0', () {
-      expect(process!.pid, isNonZero);
-    });
-  });
-
-  group('executable', () {
-    test('executable is a String', () async {
-      print('pid: $pid');
-      var executable = await process!.executable;
-      print('executable name: $executable');
-      expect(executable, isA<String>());
-    });
-
-    test('executable name is not empty', () async {
-      var executable = await process!.executable;
-      expect(executable, isNotEmpty);
+    test('is not 0', () {
+      expect(process.pid, isNonZero);
     });
   });
 
   group('status', () {
-    test('status is a ProcessStatus', () async {
-      var status = await process!.status;
+    late ProcessStatus status;
+
+    setUp(() async {
+      status = await process.refreshStatus();
+    });
+
+    test('is a ProcessStatus', () {
       expect(status, isA<ProcessStatus>());
     });
 
-    test('status is not null', () async {
-      var status = await process!.status;
+    test('is not null', () {
       expect(status, isNotNull);
     });
 
-    test('status is normal', () async {
+    test('is normal', () {
       // Because this is the current process, it really should be..
-      var status = await process!.status;
       expect(status, ProcessStatus.normal);
     });
   });

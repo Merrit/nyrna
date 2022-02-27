@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
@@ -34,6 +33,36 @@ class MockNativePlatform extends Mock implements NativePlatform {
   Future<int> currentDesktop() async => 0;
 }
 
+class MockWindow extends Mock implements Window {
+  @override
+  final MockProcess process;
+
+  MockWindow({
+    required int id,
+    required this.process,
+    required String title,
+  });
+}
+
+class MockProcess extends Mock implements Process {
+  MockProcess({required String executable, required int pid})
+      : _executable = executable,
+        _pid = pid;
+
+  final String _executable;
+
+  @override
+  String get executable => _executable;
+
+  final int _pid;
+
+  @override
+  int get pid => _pid;
+
+  @override
+  ProcessStatus status = ProcessStatus.normal;
+}
+
 class MockVersions implements Versions {
   @override
   Future<String> latestVersion() async => '2.3.0';
@@ -45,12 +74,11 @@ class MockVersions implements Versions {
   Future<bool> updateAvailable() async => false;
 }
 
-final msPaintWindow = Window(
+final msPaintWindow = MockWindow(
   id: 132334,
-  process: Process(
+  process: MockProcess(
     executable: 'mspaint.exe',
     pid: 3716,
-    status: ProcessStatus.normal,
   ),
   title: 'Untitled - Paint',
 );
@@ -86,9 +114,7 @@ void main() {
       final numStartingWindows = _appCubit.state.windows.length;
 
       when(() => _nativePlatform.windows(showHidden: false)).thenAnswer(
-        (_) async => [
-          msPaintWindow,
-        ],
+        (_) async => [msPaintWindow],
       );
 
       await _appCubit.manualRefresh();
@@ -110,14 +136,10 @@ void main() {
       expect(window.process.status, ProcessStatus.normal);
 
       // Simulate the process being suspended outside Nyrna.
+      final updatedWindow = msPaintWindow;
+      updatedWindow.process.status = ProcessStatus.suspended;
       when(() => _nativePlatform.windows(showHidden: false)).thenAnswer(
-        (_) async => [
-          msPaintWindow.copyWith(
-            process: msPaintWindow.process.copyWith(
-              status: ProcessStatus.suspended,
-            ),
-          ),
-        ],
+        (_) async => [updatedWindow],
       );
 
       // Verify we pick up this status change.

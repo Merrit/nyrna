@@ -2,10 +2,10 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:win32/win32.dart';
+import 'package:logging/logging.dart';
 
 import '../active_window.dart';
 import '../native_platform.dart';
-import '../native_process.dart';
 import '../process.dart';
 import '../window.dart';
 import 'win32_process.dart';
@@ -16,6 +16,8 @@ export 'win32_process.dart';
 ///
 /// Requires many syscalls to the win32 API.
 class Win32 implements NativePlatform {
+  static final _log = Logger('Win32');
+
   // Not available on Windows, so just return 0 always.
   @override
   Future<int> currentDesktop() async => 0;
@@ -58,7 +60,8 @@ class Win32 implements NativePlatform {
   Future<ActiveWindow> activeWindow() async {
     final windowId = await activeWindowId;
     final pid = await windowPid(windowId);
-    final win32Process = Win32Process(pid);
+    final executable = await getExecutableName(pid);
+    final win32Process = Win32Process(this, pid: pid, executable: executable);
     final activeWindow = ActiveWindow(
       NativePlatform(),
       win32Process,
@@ -79,10 +82,10 @@ class Win32 implements NativePlatform {
   @override
   Future<bool> checkDependencies() async => true;
 
-  @override
-  Future<NativeProcess> windowProcess(int windowId) async {
+  Future<Process> windowProcess(int windowId) async {
     final pid = await windowPid(windowId);
-    final process = Win32Process(pid);
+    final executable = await getExecutableName(pid);
+    final process = Win32Process(this, pid: pid, executable: executable);
     return process;
   }
 
@@ -98,6 +101,31 @@ class Win32 implements NativePlatform {
     return true; // [ShowWindow] return value doesn't confirm success.
   }
 
+  Future<String> getExecutableName(int pid) async {
+    final processHandle =
+        OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+    // Pointer that will be populated with the full executable path.
+    final path = calloc<Uint16>(MAX_PATH).cast<Utf16>();
+    // If the GetModuleFileNameEx function succeeds, the return value specifies
+    // the length of the string copied to the buffer.
+    // If the function fails, the return value is zero.
+    final result = GetModuleFileNameEx(processHandle, NULL, path, MAX_PATH);
+    if (result == 0) {
+      _log.warning('Error getting executable name: ${GetLastError()}');
+      return '';
+    }
+    // Pull the value from the pointer.
+    // Discard all of path except the executable name.
+    final _executable = path.toDartString().split('\\').last;
+    // Free the pointer's memory.
+    calloc.free(path);
+    final handleClosed = CloseHandle(processHandle);
+    if (handleClosed == 0) {
+      _log.severe('get executable failed to close the process handle.');
+    }
+    return _executable;
+  }
+
   Future<List<Window>> buildWindows(List<Map<int, String>> windowMaps) async {
     final windows = <Window>[];
     await Future.forEach(
@@ -106,13 +134,9 @@ class Win32 implements NativePlatform {
         final windowId = window.keys.first;
         final title = window.values.first;
         final win32Process = await windowProcess(windowId);
-        final executable = await win32Process.executable;
+        final executable = win32Process.executable;
         final pid = win32Process.pid;
-        final process = Process(
-          executable: executable,
-          pid: pid,
-          status: ProcessStatus.unknown,
-        );
+        final process = Process(pid: pid, executable: executable);
         windows.add(
           Window(
             id: windowId,
