@@ -11,7 +11,7 @@ void main() {
 
   final window = Window(id: fakeId, process: fakeProcess, title: fakeTitle);
 
-  group('Window', () {
+  group('Window:', () {
     test('can instantiate', () {
       expect(window.runtimeType, Window);
     });

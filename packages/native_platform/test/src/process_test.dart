@@ -7,40 +7,45 @@ void main() {
   final pid = io.pid; // Dart or Nyrna's own pid.
   late Process process;
 
-  setUp(() => process = Process(executable: 'nyrna', pid: pid));
+  group('Process:', () {
+    setUp(() => process = Process(executable: 'nyrna', pid: pid));
 
-  test('Can instantiate Process', () {
-    expect(process, isA<Process>());
-  });
-
-  group('pid', () {
-    test('is not null', () {
-      expect(process.pid, isA<int>());
+    test('Can instantiate', () {
+      expect(process, isA<Process>());
     });
 
-    test('is not 0', () {
-      expect(process.pid, isNonZero);
-    });
-  });
+    group('pid', () {
+      setUp(() => process = Process(executable: 'nyrna', pid: pid));
 
-  group('status', () {
-    late ProcessStatus status;
+      test('is not null', () {
+        expect(process.pid, isA<int>());
+      });
 
-    setUp(() async {
-      status = await process.refreshStatus();
-    });
-
-    test('is a ProcessStatus', () {
-      expect(status, isA<ProcessStatus>());
+      test('is not 0', () {
+        expect(process.pid, isNonZero);
+      });
     });
 
-    test('is not null', () {
-      expect(status, isNotNull);
-    });
+    group('status', () {
+      late ProcessStatus status;
 
-    test('is normal', () {
-      // Because this is the current process, it really should be..
-      expect(status, ProcessStatus.normal);
+      setUp(() async {
+        process = Process(executable: 'nyrna', pid: pid);
+        status = await process.refreshStatus();
+      });
+
+      test('is a ProcessStatus', () {
+        expect(status, isA<ProcessStatus>());
+      });
+
+      test('is not null', () {
+        expect(status, isNotNull);
+      });
+
+      test('is normal', () {
+        // Because this is the current process, it really should be..
+        expect(status, ProcessStatus.normal);
+      });
     });
   });
 }
