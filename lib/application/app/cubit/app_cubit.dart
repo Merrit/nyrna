@@ -170,9 +170,11 @@ class AppCubit extends Cubit<AppState> {
     if (io.Platform.isWindows) {
       await Future.delayed(Duration(milliseconds: 500));
     }
-    final success = await window.process.suspend();
-    // TODO: If suspend failed, restore window & alert user.
-    return success;
+    final successful = await window.process.suspend();
+    if (!successful) {
+      await _nativePlatform.restoreWindow(window.id);
+    }
+    return successful;
   }
 
   Future<void> launchURL(String url) async {
