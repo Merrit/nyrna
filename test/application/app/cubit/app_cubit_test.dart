@@ -84,7 +84,7 @@ final msPaintWindow = MockWindow(
 );
 
 void main() {
-  group('AppCubit', () {
+  group('AppCubit:', () {
     final _nativePlatform = MockNativePlatform();
     final _prefs = MockPreferences();
     final _prefsCubit = MockPreferencesCubit();
