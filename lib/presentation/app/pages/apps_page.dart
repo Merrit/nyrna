@@ -53,7 +53,7 @@ class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
           return Stack(
             children: [
               Scrollbar(
-                isAlwaysShown: true,
+                thumbVisibility: true,
                 child: ListView(
                   padding: const EdgeInsets.all(10),
                   children: [
