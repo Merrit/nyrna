@@ -31,6 +31,12 @@ class MockPrefsCubitState extends Mock implements PreferencesState {}
 class MockNativePlatform extends Mock implements NativePlatform {
   @override
   Future<int> currentDesktop() async => 0;
+
+  /// Mocks aren't working, this allows us to mock manually. 🤷‍♀️
+  List<Window> mockWindows = [];
+
+  @override
+  Future<List<Window>> windows({required bool showHidden}) async => mockWindows;
 }
 
 class MockWindow extends Mock implements Window {
@@ -101,9 +107,7 @@ void main() {
         testing: true,
       );
 
-      // Start with empty window list.
-      when(() => _nativePlatform.windows(showHidden: false))
-          .thenAnswer((_) async => []);
+      _nativePlatform.mockWindows = [];
     });
 
     test('Initial state has no windows', () {
@@ -113,9 +117,7 @@ void main() {
     test('New window is added to state', () async {
       final numStartingWindows = _appCubit.state.windows.length;
 
-      when(() => _nativePlatform.windows(showHidden: false)).thenAnswer(
-        (_) async => [msPaintWindow],
-      );
+      _nativePlatform.mockWindows = [msPaintWindow];
 
       await _appCubit.manualRefresh();
       final numUpdatedWindows = _appCubit.state.windows.length;
@@ -123,9 +125,7 @@ void main() {
     });
 
     test('ProcessStatus changing externally updates state', () async {
-      when(() => _nativePlatform.windows(showHidden: false)).thenAnswer(
-        (_) async => [msPaintWindow],
-      );
+      _nativePlatform.mockWindows = [msPaintWindow];
 
       await _appCubit.manualRefresh();
 
@@ -138,9 +138,7 @@ void main() {
       // Simulate the process being suspended outside Nyrna.
       final updatedWindow = msPaintWindow;
       updatedWindow.process.status = ProcessStatus.suspended;
-      when(() => _nativePlatform.windows(showHidden: false)).thenAnswer(
-        (_) async => [updatedWindow],
-      );
+      _nativePlatform.mockWindows = [updatedWindow];
 
       // Verify we pick up this status change.
       await _appCubit.manualRefresh();
