@@ -1,10 +1,6 @@
 part of 'app_cubit.dart';
 
 class AppState extends Equatable {
-  /// Check for `PORTABLE` file in the Nyrna directory, which should only be
-  /// present for the portable build on Linux.
-  final bool isPortable;
-
   final bool loading;
 
   final String runningVersion;
@@ -17,7 +13,6 @@ class AppState extends Equatable {
   final List<Window> windows;
 
   const AppState({
-    required this.isPortable,
     required this.loading,
     required this.runningVersion,
     required this.updateVersion,
@@ -28,7 +23,6 @@ class AppState extends Equatable {
 
   factory AppState.initial() {
     return AppState(
-      isPortable: false,
       loading: true,
       runningVersion: '',
       updateVersion: '',
@@ -41,7 +35,6 @@ class AppState extends Equatable {
   @override
   List<Object> get props {
     return [
-      isPortable,
       loading,
       runningVersion,
       updateVersion,
@@ -52,7 +45,6 @@ class AppState extends Equatable {
   }
 
   AppState copyWith({
-    bool? isPortable,
     bool? loading,
     String? runningVersion,
     String? updateVersion,
@@ -61,7 +53,6 @@ class AppState extends Equatable {
     List<Window>? windows,
   }) {
     return AppState(
-      isPortable: isPortable ?? this.isPortable,
       loading: loading ?? this.loading,
       runningVersion: runningVersion ?? this.runningVersion,
       updateVersion: updateVersion ?? this.updateVersion,

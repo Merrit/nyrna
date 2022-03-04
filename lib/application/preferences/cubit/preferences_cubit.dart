@@ -6,11 +6,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:nyrna/application/app/app.dart';
 import 'package:nyrna/infrastructure/icon_manager/icon_manager.dart';
-import 'package:nyrna/infrastructure/launcher/launcher.dart';
 import 'package:nyrna/infrastructure/preferences/preferences.dart';
 import 'package:nyrna/presentation/styles.dart';
 import 'package:window_size/window_size.dart' as window;
 
+import '../../../infrastructure/launcher/src/hotkey.dart';
 import '../../helpers/json_converters.dart';
 
 part 'preferences_state.dart';
@@ -40,10 +40,6 @@ class PreferencesCubit extends Cubit<PreferencesState> {
     return prefs.getBool('autoRefresh') ?? true;
   }
 
-  Future<void> createLauncher() async {
-    await Launcher.add();
-  }
-
   /// If user wishes to ignore this update, save to SharedPreferences.
   Future<void> ignoreUpdate(String version) async {
     await _prefs.setString(key: 'ignoredUpdate', value: version);
@@ -57,7 +53,7 @@ class PreferencesCubit extends Cubit<PreferencesState> {
   }
 
   Future<bool> updateAutoStartHotkey(bool value) async {
-    final successful = await Launcher.hotkey.autoStart(value);
+    final successful = await Hotkey().autoStart(value);
     if (!successful) return false;
     await _prefs.setBool(key: 'autoStartHotkey', value: value);
     emit(state.copyWith(autoStartHotkey: value));

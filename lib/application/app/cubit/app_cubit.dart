@@ -44,18 +44,11 @@ class AppCubit extends Cubit<AppState> {
   Future<void> _initialize() async {
     await fetchData();
     emit(state.copyWith(loading: false));
-    await _checkIsPortable();
     setAutoRefresh(
       autoRefresh: _prefsCubit.state.autoRefresh,
       refreshInterval: _prefsCubit.state.refreshInterval,
     );
     await fetchVersionData();
-  }
-
-  Future<void> _checkIsPortable() async {
-    final file = io.File('PORTABLE');
-    final isPortable = await file.exists();
-    emit(state.copyWith(isPortable: isPortable));
   }
 
   Timer? _timer;
