@@ -68,13 +68,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> fetchData() async {
-    await _fetchDesktop();
     await _fetchWindows();
-  }
-
-  Future<void> _fetchDesktop() async {
-    final currentDesktop = await _nativePlatform.currentDesktop();
-    emit(state.copyWith(currentDesktop: currentDesktop));
   }
 
   List<Window> _sortWindows(List<Window> windows) {

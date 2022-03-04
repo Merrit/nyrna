@@ -18,17 +18,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      // Display the current desktop index, only for Linux.
-      // For Win32 this would require wrapping something like
-      // GetWindowDesktopId() with FFI.
-      // https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ivirtualdesktopmanager-getwindowdesktopid
-      title: (Platform.isLinux)
-          ? BlocBuilder<AppCubit, AppState>(
-              builder: (context, state) {
-                return Text('Current Desktop: ${state.currentDesktop}');
-              },
-            )
-          : null,
       actions: [
         BlocBuilder<AppCubit, AppState>(
           builder: (context, state) {
