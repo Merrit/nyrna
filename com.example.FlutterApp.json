@@ -1,0 +1,60 @@
+{
+  "app-id": "com.example.FlutterApp",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "21.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "nyrna",
+  "separate-locales": false,
+  "finish-args": [
+    "--share=ipc",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--socket=pulseaudio",
+    "--share=network",
+    "--filesystem=/proc"
+  ],
+  "modules": [
+    {
+      "name": "nyrna",
+      "buildsystem": "simple",
+      "only-arches": [
+        "x86_64"
+      ],
+      "build-commands": [
+        "mkdir -p FlutterApp",
+        "tar -xf FlutterApp-Linux-Portable.tar.gz -C FlutterApp",
+        "cp -r FlutterApp /app/",
+        "chmod +x /app/FlutterApp/nyrna",
+        "mkdir -p /app/bin",
+        "ln -s /app/FlutterApp/nyrna /app/bin/nyrna",
+        "mkdir -p /app/share/metainfo",
+        "cp -r com.example.FlutterApp.metainfo.xml /app/share/metainfo/",
+        "mkdir -p /app/share/icons/hicolor/scalable/apps",
+        "cp -r icon.png /app/share/icons/hicolor/scalable/apps/com.example.FlutterApp.png",
+        "mkdir -p /app/share/applications",
+        "cp -r codes.merritt.Nyrna.desktop /app/share/applications/",
+        "mkdir -p /app/share/appdata",
+        "cp -r com.example.FlutterApp.metainfo.xml /app/share/appdata/"
+      ],
+      "sources": [
+        {
+          "type": "file",
+          "path": "com.example.FlutterApp.metainfo.xml"
+        },
+        {
+          "type": "file",
+          "path": "codes.merritt.Nyrna.desktop"
+        },
+        {
+          "type": "file",
+          "path": "icon.png"
+        },
+        {
+          "type": "file",
+          "path": "FlutterApp-Linux-Portable.tar.gz"
+        }
+      ]
+    }
+  ]
+}

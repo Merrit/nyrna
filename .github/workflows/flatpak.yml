@@ -1,0 +1,98 @@
+name: Publish Flatpak
+
+on:
+  # Enable manual run
+  workflow_dispatch:
+  pull_request:
+  # Build & deploy for published releases
+  release:
+    types:
+      - published
+
+# ${{ secrets.FLATHUB_TOKEN }} is a Personal Access Token to grant push access.
+
+env:
+  project-id: codes.merritt.Nyrna
+
+jobs:
+  update-recipe:
+    name: Update Flatpak recipe files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: code
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder appstream-util
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install -y org.freedesktop.Sdk/x86_64/21.08
+          sudo flatpak install -y org.freedesktop.Platform/x86_64/21.08
+          sudo apt-get install -y libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Clone Flutter repository
+        uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8
+        with:
+          channel: beta
+
+      - name: Enable desktop support
+        run: flutter config --enable-linux-desktop
+
+      - name: Build
+        run: |
+          flutter pub get
+          flutter build linux
+          tar -C build/linux/x64/release/bundle -cvf FlutterApp-Linux-Portable.tar.gz .
+          flatpak-builder --force-clean --repo=repo build-dir com.example.FlutterApp.json
+          flatpak build-bundle repo com.example.FlutterApp.flatpak com.example.FlutterApp
+
+      - name: Upload flatpak artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: flatpak-artifact
+          path: com.example.FlutterApp.flatpak
+
+      # - name: Setup Dart SDK
+      #   uses: dart-lang/setup-dart@v1.3
+      #   with:
+      #     sdk: beta
+
+      # - name: pub get
+      #   working-directory: ${{ github.workspace }}/code/packaging/linux/flatpak/update_flatpak_recipe
+      #   run: dart pub get
+
+      # - name: Update recipe files
+      #   working-directory: ${{ github.workspace }}/code/packaging/linux/flatpak
+      #   run: bash update-flatpak-recipe.sh
+
+      # - name: Verify Flatpak builds successfully
+      #   working-directory: ${{ github.workspace }}/code/packaging/linux/flatpak
+      #   run: flatpak-builder --force-clean build-dir ${{ env.project-id }}.json
+
+      # - name: Checkout flathub repository
+      #   uses: actions/checkout@v2
+      #   with:
+      #     repository: flathub/${{ env.project-id }}
+      #     path: flathub
+      #     token: ${{ secrets.FLATHUB_TOKEN }}
+
+      # - name: Push updated recipe to Flathub
+      #   working-directory: ${{ github.workspace }}
+      #   env:
+      #     REPO_KEY: ${{ secrets.FLATHUB_TOKEN }}
+      #     USERNAME: merrit
+      #   run: |
+      #     cd ${{ github.workspace }}/flathub
+      #     cp -r ${{ github.workspace }}/code/packaging/linux/flatpak/${{ env.project-id }}.json .
+      #     cp -r ${{ github.workspace }}/code/packaging/linux/flatpak/${{ env.project-id }}.metainfo.xml .
+      #     git config --local user.name "Kristen McWilliam"
+      #     git config --local user.email "9575627+Merrit@users.noreply.github.com"
+      #     git add -A
+      #     git commit -m "Update flatpak for new release"
+      #     git push https://$USERNAME:$REPO_KEY@github.com/flathub/${{ env.project-id }}.git
