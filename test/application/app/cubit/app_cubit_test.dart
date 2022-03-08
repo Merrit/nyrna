@@ -1,91 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:native_platform/native_platform.dart';
 import 'package:test/test.dart';
 
-import 'package:native_platform/native_platform.dart';
 import 'package:nyrna/application/app/app.dart';
 import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
-import 'package:nyrna/infrastructure/preferences/preferences.dart';
-import 'package:nyrna/infrastructure/versions/versions.dart';
 
-class MockPreferences extends Mock implements Preferences {}
+import '../../../fake_versions.dart';
+import '../../../mock_native_platform.dart';
+import '../../../mock_preferences.dart';
+import '../../../mock_preferences_cubit.dart';
+import '../../../mock_process.dart';
 
-class MockPreferencesCubit extends Mock implements PreferencesCubit {
-  MockPreferencesCubit()
-      : _state = PreferencesState(
-          autoRefresh: false,
-          autoStartHotkey: false,
-          refreshInterval: 5,
-          showHiddenWindows: false,
-          trayIconColor: Colors.amber,
-        );
+final msPaintProcess = MockProcess(
+  executable: 'mspaint.exe',
+  pid: 3716,
+);
 
-  final PreferencesState _state;
-
-  @override
-  PreferencesState get state => _state;
-}
-
-class MockPrefsCubitState extends Mock implements PreferencesState {}
-
-class MockNativePlatform extends Mock implements NativePlatform {
-  @override
-  Future<int> currentDesktop() async => 0;
-
-  /// Mocks aren't working, this allows us to mock manually. 🤷‍♀️
-  List<Window> mockWindows = [];
-
-  @override
-  Future<List<Window>> windows({required bool showHidden}) async => mockWindows;
-}
-
-class MockWindow extends Mock implements Window {
-  @override
-  final MockProcess process;
-
-  MockWindow({
-    required int id,
-    required this.process,
-    required String title,
-  });
-}
-
-class MockProcess extends Mock implements Process {
-  MockProcess({required String executable, required int pid})
-      : _executable = executable,
-        _pid = pid;
-
-  final String _executable;
-
-  @override
-  String get executable => _executable;
-
-  final int _pid;
-
-  @override
-  int get pid => _pid;
-
-  @override
-  ProcessStatus status = ProcessStatus.normal;
-}
-
-class MockVersions implements Versions {
-  @override
-  Future<String> latestVersion() async => '2.3.0';
-
-  @override
-  Future<String> runningVersion() async => '2.3.0';
-
-  @override
-  Future<bool> updateAvailable() async => false;
-}
-
-final msPaintWindow = MockWindow(
+final msPaintWindow = Window(
   id: 132334,
-  process: MockProcess(
-    executable: 'mspaint.exe',
-    pid: 3716,
-  ),
+  process: msPaintProcess,
   title: 'Untitled - Paint',
 );
 
@@ -94,9 +28,24 @@ void main() {
     final _nativePlatform = MockNativePlatform();
     final _prefs = MockPreferences();
     final _prefsCubit = MockPreferencesCubit();
-    final _versions = MockVersions();
+    final _versions = FakeVersions();
 
     late AppCubit _appCubit;
+
+    when(() => _prefs.getString('ignoredUpdate')).thenReturn(null);
+
+    when(() => _prefsCubit.state).thenReturn(
+      PreferencesState(
+        autoStartHotkey: false,
+        autoRefresh: false,
+        refreshInterval: 5,
+        showHiddenWindows: false,
+        trayIconColor: Colors.blue,
+      ),
+    );
+
+    when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
+        .thenAnswer((_) async => []);
 
     setUp(() {
       _appCubit = AppCubit(
@@ -106,46 +55,42 @@ void main() {
         versionRepository: _versions,
         testing: true,
       );
-
-      _nativePlatform.mockWindows = [];
     });
 
-    test('Initial state has no windows', () {
+    test('initial state has no windows', () {
       expect(_appCubit.state.windows.length, 0);
     });
 
-    test('New window is added to state', () async {
-      final numStartingWindows = _appCubit.state.windows.length;
+    test('new window is added to state', () async {
+      expect(_appCubit.state.windows.length, 0);
 
-      _nativePlatform.mockWindows = [msPaintWindow];
+      when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
+          .thenAnswer((_) async => [msPaintWindow]);
 
       await _appCubit.manualRefresh();
-      final numUpdatedWindows = _appCubit.state.windows.length;
-      expect(numUpdatedWindows, numStartingWindows + 1);
+      expect(_appCubit.state.windows.length, 1);
     });
 
-    test('ProcessStatus changing externally updates state', () async {
-      _nativePlatform.mockWindows = [msPaintWindow];
+    test('process changed externally updates state', () async {
+      when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
+          .thenAnswer((_) async => [msPaintWindow]);
+      when(() => msPaintProcess.status).thenReturn(ProcessStatus.normal);
 
       await _appCubit.manualRefresh();
 
       // Verify we have one window, and it has a normal status.
       var windows = _appCubit.state.windows;
       expect(windows.length, 1);
-      var window = windows[0];
-      expect(window.process.status, ProcessStatus.normal);
+      expect(windows[0].process.status, ProcessStatus.normal);
 
       // Simulate the process being suspended outside Nyrna.
-      final updatedWindow = msPaintWindow;
-      updatedWindow.process.status = ProcessStatus.suspended;
-      _nativePlatform.mockWindows = [updatedWindow];
+      when(() => msPaintProcess.status).thenReturn(ProcessStatus.suspended);
 
       // Verify we pick up this status change.
       await _appCubit.manualRefresh();
       windows = _appCubit.state.windows;
       expect(windows.length, 1);
-      window = windows[0];
-      expect(window.process.status, ProcessStatus.suspended);
+      expect(windows[0].process.status, ProcessStatus.suspended);
     });
   });
 }
