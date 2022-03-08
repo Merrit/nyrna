@@ -9,6 +9,7 @@
             "name": "Test current file",
             "type": "dart",
             "request": "launch",
+            "program": "${file}"
         },
         // Debug
         {
