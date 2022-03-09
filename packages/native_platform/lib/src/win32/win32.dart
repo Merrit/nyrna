@@ -40,7 +40,7 @@ class Win32 implements NativePlatform {
   Future<int> currentDesktop() async => 0;
 
   @override
-  Future<List<Window>> windows({required bool showHidden}) async {
+  Future<List<Window>> windows({bool showHidden = false}) async {
     // Clear the map to ensure we are starting fresh each time.
     WindowBuilder.windows.clear();
     WindowBuilder.showHiddenWindows = showHidden;

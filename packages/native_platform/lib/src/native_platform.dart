@@ -29,7 +29,7 @@ abstract class NativePlatform {
   ///
   /// Setting [showHidden] to `true` will list windows from every
   /// virtual desktop, as well as some that might be mistakenly cloaked.
-  Future<List<Window>> windows({required bool showHidden});
+  Future<List<Window>> windows({bool showHidden});
 
   /// The active, foreground window.
   Future<ActiveWindow> activeWindow();
