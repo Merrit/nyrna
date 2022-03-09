@@ -30,12 +30,12 @@ class AppCubit extends Cubit<AppState> {
     required NativePlatform nativePlatform,
     required Preferences prefs,
     required PreferencesCubit prefsCubit,
-    required AppVersion versionRepository,
+    required AppVersion appVersion,
     bool testing = false,
   })  : _nativePlatform = nativePlatform,
         _prefs = prefs,
         _prefsCubit = prefsCubit,
-        _appVersion = versionRepository,
+        _appVersion = appVersion,
         _testing = testing,
         super(AppState.initial()) {
     appCubit = this;
