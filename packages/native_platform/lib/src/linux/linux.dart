@@ -5,6 +5,11 @@ import '../native_platform.dart';
 import '../window.dart';
 import 'linux_process.dart';
 
+/// System-level or non-app executables. Nyrna shouldn't show these.
+const List<String> _filteredWindows = [
+  'nyrna',
+];
+
 /// Interact with the native Linux operating system.
 class Linux implements NativePlatform {
   int? _desktop;
@@ -42,6 +47,7 @@ class Linux implements NativePlatform {
           final id = int.tryParse(parts[0]);
           if ((pid == null) || (id == null)) return;
           final executable = await _getExecutableName(pid);
+          if (_filteredWindows.contains(executable)) return;
           final linuxProcess = LinuxProcess(executable: executable, pid: pid);
           windows.add(
             Window(

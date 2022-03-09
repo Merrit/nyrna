@@ -12,6 +12,23 @@ import 'win32_process.dart';
 
 export 'win32_process.dart';
 
+/// System-level or non-app executables. Nyrna shouldn't show these.
+const List<String> _filteredWindows = [
+  'nyrna.exe',
+  'ApplicationFrameHost.exe', // Manages UWP (Universal Windows Platform) apps
+  'dwm.exe', // Win32's compositing window manager
+  'explorer.exe', // Windows File Explorer
+  'googledrivesync.exe',
+  'LogiOverlay.exe', // Logitech Options
+  'PenTablet.exe', // XP-PEN driver
+  'perfmon.exe', // Resource Monitor
+  'Rainmeter.exe',
+  'SystemSettings.exe', // Windows system settings
+  'Taskmgr.exe', // Windows Task Manager
+  'TextInputHost.exe', // Microsoft Text Input Application
+  'WinStore.App.exe', // Windows Store
+];
+
 /// Interact with the native win32 operating system.
 ///
 /// Requires many syscalls to the win32 API.
@@ -135,6 +152,7 @@ class Win32 implements NativePlatform {
         final title = window.values.first;
         final win32Process = await windowProcess(windowId);
         final executable = win32Process.executable;
+        if (_filteredWindows.contains(executable)) return;
         final pid = win32Process.pid;
         final process = Process(pid: pid, executable: executable);
         windows.add(
