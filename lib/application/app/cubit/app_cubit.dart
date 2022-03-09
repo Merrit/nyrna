@@ -81,9 +81,6 @@ class AppCubit extends Cubit<AppState> {
   Future<void> _fetchWindows() async {
     final showHidden = _prefsCubit.state.showHiddenWindows;
     var windows = await _nativePlatform.windows(showHidden: showHidden);
-    windows.removeWhere(
-      (window) => _filteredWindows.contains(window.process.executable),
-    );
     windows = await _checkWindowStatuses(windows);
     final sortedWindows = _sortWindows(windows);
     emit(state.copyWith(windows: sortedWindows));
@@ -170,21 +167,3 @@ class AppCubit extends Cubit<AppState> {
         : throw 'Could not launch url: $url';
   }
 }
-
-/// System-level or non-app executables. Nyrna shouldn't show these.
-List<String> _filteredWindows = [
-  'nyrna',
-  'nyrna.exe',
-  'ApplicationFrameHost.exe', // Manages UWP (Universal Windows Platform) apps
-  'dwm.exe', // Win32's compositing window manager
-  'explorer.exe', // Windows File Explorer
-  'googledrivesync.exe',
-  'LogiOverlay.exe', // Logitech Options
-  'PenTablet.exe', // XP-PEN driver
-  'perfmon.exe', // Resource Monitor
-  'Rainmeter.exe',
-  'SystemSettings.exe', // Windows system settings
-  'Taskmgr.exe', // Windows Task Manager
-  'TextInputHost.exe', // Microsoft Text Input Application
-  'WinStore.App.exe', // Windows Store
-];
