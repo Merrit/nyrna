@@ -52,28 +52,6 @@ class AppCubit extends Cubit<AppState> {
     await fetchVersionData();
   }
 
-  Timer? _timer;
-
-  /// The timer which auto-refreshes the list of open windows.
-  void setAutoRefresh({
-    required bool autoRefresh,
-    required int refreshInterval,
-  }) {
-    if (_timer != null) _timer?.cancel();
-    if (autoRefresh) {
-      _timer = Timer.periodic(
-        Duration(seconds: refreshInterval),
-        (timer) => _fetchWindows(),
-      );
-    }
-  }
-
-  List<Window> _sortWindows(List<Window> windows) {
-    return windows.sortedBy(
-      (window) => window.process.executable.toLowerCase(),
-    );
-  }
-
   /// Populate the list of visible windows.
   Future<void> _fetchWindows() async {
     final showHidden = _prefsCubit.state.showHiddenWindows;
@@ -94,10 +72,26 @@ class AppCubit extends Cubit<AppState> {
     return processedWindows;
   }
 
-  Future<void> manualRefresh() async {
-    emit(state.copyWith(loading: true));
-    await _fetchWindows();
-    emit(state.copyWith(loading: false));
+  List<Window> _sortWindows(List<Window> windows) {
+    return windows.sortedBy(
+      (window) => window.process.executable.toLowerCase(),
+    );
+  }
+
+  Timer? _timer;
+
+  /// The timer which auto-refreshes the list of open windows.
+  void setAutoRefresh({
+    required bool autoRefresh,
+    required int refreshInterval,
+  }) {
+    if (_timer != null) _timer?.cancel();
+    if (autoRefresh) {
+      _timer = Timer.periodic(
+        Duration(seconds: refreshInterval),
+        (timer) => _fetchWindows(),
+      );
+    }
   }
 
   @visibleForTesting
@@ -113,6 +107,12 @@ class AppCubit extends Cubit<AppState> {
       updateVersion: latestVersion,
       updateAvailable: updateAvailable,
     ));
+  }
+
+  Future<void> manualRefresh() async {
+    emit(state.copyWith(loading: true));
+    await _fetchWindows();
+    emit(state.copyWith(loading: false));
   }
 
   /// Toggle suspend / resume for the process associated with the given window.
