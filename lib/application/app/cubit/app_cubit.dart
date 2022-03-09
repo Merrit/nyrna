@@ -8,8 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:native_platform/native_platform.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../infrastructure/app_version/app_version.dart';
 import '../../../infrastructure/preferences/preferences.dart';
-import '../../../infrastructure/versions/versions.dart';
 import '../../preferences/cubit/preferences_cubit.dart';
 
 part 'app_state.dart';
@@ -21,7 +21,7 @@ class AppCubit extends Cubit<AppState> {
   final NativePlatform _nativePlatform;
   final Preferences _prefs;
   final PreferencesCubit _prefsCubit;
-  final Versions _versionRepo;
+  final AppVersion _appVersion;
 
   /// Will be true if running under a unit test.
   final bool _testing;
@@ -30,12 +30,12 @@ class AppCubit extends Cubit<AppState> {
     required NativePlatform nativePlatform,
     required Preferences prefs,
     required PreferencesCubit prefsCubit,
-    required Versions versionRepository,
+    required AppVersion versionRepository,
     bool testing = false,
   })  : _nativePlatform = nativePlatform,
         _prefs = prefs,
         _prefsCubit = prefsCubit,
-        _versionRepo = versionRepository,
+        _appVersion = versionRepository,
         _testing = testing,
         super(AppState.initial()) {
     appCubit = this;
@@ -94,14 +94,15 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
+  /// Fetch version data so we can notify user of updates.
   @visibleForTesting
   Future<void> fetchVersionData() async {
-    final runningVersion = await _versionRepo.runningVersion();
-    final latestVersion = await _versionRepo.latestVersion();
+    final runningVersion = _appVersion.running();
+    final latestVersion = await _appVersion.latest();
     final ignoredUpdate = _prefs.getString('ignoredUpdate');
     final updateHasBeenIgnored = (latestVersion == ignoredUpdate);
     final updateAvailable =
-        (updateHasBeenIgnored) ? false : await _versionRepo.updateAvailable();
+        (updateHasBeenIgnored) ? false : await _appVersion.updateAvailable();
     emit(state.copyWith(
       runningVersion: runningVersion,
       updateVersion: latestVersion,
