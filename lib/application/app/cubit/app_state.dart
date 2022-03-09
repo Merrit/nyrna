@@ -1,6 +1,8 @@
 part of 'app_cubit.dart';
 
 class AppState extends Equatable {
+  /// True when the app should communicate when work is being done,
+  /// such as when the user requests a manual refresh.
   final bool loading;
 
   final String runningVersion;
