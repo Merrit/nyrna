@@ -43,7 +43,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> _initialize() async {
-    await fetchData();
+    await _fetchWindows();
     emit(state.copyWith(loading: false));
     setAutoRefresh(
       autoRefresh: _prefsCubit.state.autoRefresh,
@@ -63,13 +63,9 @@ class AppCubit extends Cubit<AppState> {
     if (autoRefresh) {
       _timer = Timer.periodic(
         Duration(seconds: refreshInterval),
-        (timer) => fetchData(),
+        (timer) => _fetchWindows(),
       );
     }
-  }
-
-  Future<void> fetchData() async {
-    await _fetchWindows();
   }
 
   List<Window> _sortWindows(List<Window> windows) {
@@ -100,7 +96,7 @@ class AppCubit extends Cubit<AppState> {
 
   Future<void> manualRefresh() async {
     emit(state.copyWith(loading: true));
-    await fetchData();
+    await _fetchWindows();
     emit(state.copyWith(loading: false));
   }
 
