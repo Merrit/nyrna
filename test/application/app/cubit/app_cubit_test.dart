@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'package:nyrna/application/app/app.dart';
 import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 
-import '../../../fake_app_version.dart';
+import '../../../mock_app_version.dart';
 import '../../../mock_native_platform.dart';
 import '../../../mock_preferences.dart';
 import '../../../mock_preferences_cubit.dart';
@@ -28,7 +28,7 @@ void main() {
     final _nativePlatform = MockNativePlatform();
     final _prefs = MockPreferences();
     final _prefsCubit = MockPreferencesCubit();
-    final _versions = FakeAppVersion();
+    final _appVersion = MockAppVersion();
 
     late AppCubit _appCubit;
 
@@ -48,11 +48,14 @@ void main() {
         .thenAnswer((_) async => []);
 
     setUp(() {
+      when(() => _appVersion.latest()).thenAnswer((_) async => '1.0.0');
+      when(() => _appVersion.updateAvailable()).thenAnswer((_) async => false);
+
       _appCubit = AppCubit(
         nativePlatform: _nativePlatform,
         prefs: _prefs,
         prefsCubit: _prefsCubit,
-        versionRepository: _versions,
+        appVersion: _appVersion,
         testing: true,
       );
     });
@@ -91,6 +94,27 @@ void main() {
       windows = _appCubit.state.windows;
       expect(windows.length, 1);
       expect(windows[0].process.status, ProcessStatus.suspended);
+    });
+
+    test('app version information populates to cubit', () async {
+      // Verify initial state is unpopulated.
+      expect(_appCubit.state.runningVersion, '');
+      expect(_appCubit.state.updateVersion, '');
+      expect(_appCubit.state.updateAvailable, false);
+
+      // Stubbed data propogates.
+      await _appCubit.fetchVersionData();
+      expect(_appCubit.state.runningVersion, '1.0.0');
+      expect(_appCubit.state.updateVersion, '1.0.0');
+      expect(_appCubit.state.updateAvailable, false);
+
+      // Simulate an update being available.
+      when(() => _appVersion.latest()).thenAnswer((_) async => '1.0.1');
+      when(() => _appVersion.updateAvailable()).thenAnswer((_) async => true);
+      await _appCubit.fetchVersionData();
+      expect(_appCubit.state.runningVersion, '1.0.0');
+      expect(_appCubit.state.updateVersion, '1.0.1');
+      expect(_appCubit.state.updateAvailable, true);
     });
   });
 }

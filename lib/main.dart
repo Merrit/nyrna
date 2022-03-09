@@ -59,7 +59,7 @@ Future<void> main(List<String> args) async {
               nativePlatform: nativePlatform,
               prefs: prefs,
               prefsCubit: context.read<PreferencesCubit>(),
-              versionRepository: AppVersion(packageInfo),
+              appVersion: AppVersion(packageInfo),
             ),
             lazy: false,
             child: AppWidget(),
