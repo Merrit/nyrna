@@ -116,5 +116,32 @@ void main() {
       expect(_appCubit.state.updateVersion, '1.0.1');
       expect(_appCubit.state.updateAvailable, true);
     });
+
+    test('windows are sorted', () async {
+      when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
+          .thenAnswer((_) async => [
+                Window(
+                  id: 7363,
+                  process: MockProcess(executable: 'kate', pid: 836482),
+                  title: 'Kate',
+                ),
+                Window(
+                  id: 29347,
+                  process: MockProcess(executable: 'evince', pid: 94847),
+                  title: 'Evince',
+                ),
+                Window(
+                  id: 89374,
+                  process: MockProcess(executable: 'ark', pid: 9374623),
+                  title: 'Ark',
+                ),
+              ]);
+
+      await _appCubit.manualRefresh();
+      final windows = _appCubit.state.windows;
+      expect(windows[0].process.executable, 'ark');
+      expect(windows[1].process.executable, 'evince');
+      expect(windows[2].process.executable, 'kate');
+    });
   });
 }
