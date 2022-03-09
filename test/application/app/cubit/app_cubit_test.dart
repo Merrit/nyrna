@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 import 'package:nyrna/application/app/app.dart';
 import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 
-import '../../../fake_versions.dart';
+import '../../../fake_app_version.dart';
 import '../../../mock_native_platform.dart';
 import '../../../mock_preferences.dart';
 import '../../../mock_preferences_cubit.dart';
@@ -28,7 +28,7 @@ void main() {
     final _nativePlatform = MockNativePlatform();
     final _prefs = MockPreferences();
     final _prefsCubit = MockPreferencesCubit();
-    final _versions = FakeVersions();
+    final _versions = FakeAppVersion();
 
     late AppCubit _appCubit;
 
