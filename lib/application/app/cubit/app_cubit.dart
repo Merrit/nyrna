@@ -6,10 +6,11 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:native_platform/native_platform.dart';
-import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
-import 'package:nyrna/infrastructure/preferences/preferences.dart';
-import 'package:nyrna/infrastructure/versions/versions.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../infrastructure/preferences/preferences.dart';
+import '../../../infrastructure/versions/versions.dart';
+import '../../preferences/cubit/preferences_cubit.dart';
 
 part 'app_state.dart';
 
