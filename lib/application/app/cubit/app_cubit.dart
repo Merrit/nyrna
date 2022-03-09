@@ -57,8 +57,8 @@ class AppCubit extends Cubit<AppState> {
     final showHidden = _prefsCubit.state.showHiddenWindows;
     var windows = await _nativePlatform.windows(showHidden: showHidden);
     windows = await _checkWindowStatuses(windows);
-    final sortedWindows = _sortWindows(windows);
-    emit(state.copyWith(windows: sortedWindows));
+    windows.sortWindows();
+    emit(state.copyWith(windows: windows));
   }
 
   /// Update the ProcessStatus for the given [windows].
@@ -70,12 +70,6 @@ class AppCubit extends Cubit<AppState> {
       processedWindows.add(window);
     }
     return processedWindows;
-  }
-
-  List<Window> _sortWindows(List<Window> windows) {
-    return windows.sortedBy(
-      (window) => window.process.executable.toLowerCase(),
-    );
   }
 
   Timer? _timer;
@@ -132,8 +126,8 @@ class AppCubit extends Cubit<AppState> {
     final windows = List<Window>.from(state.windows);
     windows.removeWhere((e) => e.id == window.id);
     windows.add(window);
-    final sortedWindows = _sortWindows(windows);
-    emit(state.copyWith(windows: sortedWindows));
+    windows.sortWindows();
+    emit(state.copyWith(windows: windows));
     return success;
   }
 
@@ -163,5 +157,12 @@ class AppCubit extends Cubit<AppState> {
     await canLaunch(url)
         ? await launch(url)
         : throw 'Could not launch url: $url';
+  }
+}
+
+extension on List<Window> {
+  /// Sort the windows by executable name.
+  void sortWindows() {
+    sortBy((window) => window.process.executable.toLowerCase());
   }
 }
