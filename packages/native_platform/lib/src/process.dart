@@ -36,7 +36,8 @@ abstract class Process {
   /// [ProcessStatus.suspended] or [ProcessStatus.unknown].
   ProcessStatus get status;
 
-  Future<ProcessStatus> refreshStatus();
+  /// Re-checks the process and updates [status].
+  Future<void> refreshStatus();
 
   /// Toggle the suspend / resume state of the given process.
   ///

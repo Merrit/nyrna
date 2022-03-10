@@ -38,7 +38,7 @@ class Win32Process implements Process {
   // complicated, at threat of being depreciated, and since it has to
   // enumerate every process likely not much better performance-wise anyway.
   @override
-  Future<ProcessStatus> refreshStatus() async {
+  Future<void> refreshStatus() async {
     final result = await io.Process.run(
       'powershell',
       [
@@ -53,7 +53,6 @@ class Win32Process implements Process {
     if (result.stderr != '') {
       _log.warning('Unable to get process status', result.stderr);
       _status = ProcessStatus.unknown;
-      return ProcessStatus.unknown;
     }
     var threads = result.stdout.toString().trim().split('\n');
     // Strip out the column headers
@@ -71,13 +70,12 @@ class Win32Process implements Process {
         ? ProcessStatus.normal
         : ProcessStatus.suspended;
     _status = updatedStatus;
-    return _status;
   }
 
   // Use the w32_suspend_process library to suspend & resume.
   @override
   Future<bool> toggle() async {
-    final _status = await refreshStatus();
+    await refreshStatus();
     if (_status == ProcessStatus.unknown) return false;
     final _process = w32proc.Win32Process(pid);
     bool _success;

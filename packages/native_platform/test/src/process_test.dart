@@ -31,7 +31,8 @@ void main() {
 
       setUp(() async {
         process = Process(executable: 'nyrna', pid: pid);
-        status = await process.refreshStatus();
+        await process.refreshStatus();
+        status = process.status;
       });
 
       test('is a ProcessStatus', () {

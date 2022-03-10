@@ -105,16 +105,16 @@ class AppCubit extends Cubit<AppState> {
 
   /// Toggle suspend / resume for the process associated with the given window.
   Future<bool> toggle(Window window) async {
-    ProcessStatus status = await window.process.refreshStatus();
+    await window.process.refreshStatus();
     bool success;
-    if (status == ProcessStatus.suspended) {
+    if (window.process.status == ProcessStatus.suspended) {
       success = await _resume(window);
-      status = await window.process.refreshStatus();
-      if (status != ProcessStatus.normal) success = false;
+      await window.process.refreshStatus();
+      if (window.process.status != ProcessStatus.normal) success = false;
     } else {
       success = await _suspend(window);
-      status = await window.process.refreshStatus();
-      if (status != ProcessStatus.suspended) success = false;
+      await window.process.refreshStatus();
+      if (window.process.status != ProcessStatus.suspended) success = false;
     }
     final windows = List<Window>.from(state.windows);
     windows.removeWhere((e) => e.id == window.id);

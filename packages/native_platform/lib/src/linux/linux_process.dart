@@ -17,7 +17,7 @@ class LinuxProcess implements Process {
   ProcessStatus get status => _status;
 
   @override
-  Future<ProcessStatus> refreshStatus() async {
+  Future<void> refreshStatus() async {
     final result = await io.Process.run('ps', ['-o', 's=', '-p', '$pid']);
     // For OSX you need to use `state=` in this command.
     switch (result.stdout.trim()) {
@@ -36,13 +36,12 @@ class LinuxProcess implements Process {
       default:
         _status = ProcessStatus.unknown;
     }
-    return _status;
   }
 
   // Use built-in method  from dart:io to suspend & resume.
   @override
   Future<bool> toggle() async {
-    var _status = await refreshStatus();
+    await refreshStatus();
     final signal = (_status == ProcessStatus.normal)
         ? io.ProcessSignal.sigstop
         : io.ProcessSignal.sigcont;
