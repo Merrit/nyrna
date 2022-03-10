@@ -61,11 +61,21 @@ class LinuxProcess implements Process {
 
   @override
   Future<bool> resume() async {
-    return io.Process.killPid(pid, io.ProcessSignal.sigcont);
+    var successful = io.Process.killPid(pid, io.ProcessSignal.sigcont);
+    if (!successful) return false;
+
+    await refreshStatus();
+
+    return (status == ProcessStatus.normal) ? true : false;
   }
 
   @override
   Future<bool> suspend() async {
-    return io.Process.killPid(pid, io.ProcessSignal.sigstop);
+    var successful = io.Process.killPid(pid, io.ProcessSignal.sigstop);
+    if (!successful) return false;
+
+    await refreshStatus();
+
+    return (status == ProcessStatus.suspended) ? true : false;
   }
 }

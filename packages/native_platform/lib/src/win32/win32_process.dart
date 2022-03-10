@@ -88,10 +88,24 @@ class Win32Process implements Process {
   }
 
   @override
-  Future<bool> suspend() async => w32proc.Win32Process(pid).suspend();
+  Future<bool> resume() async {
+    var successful = w32proc.Win32Process(pid).resume();
+    if (!successful) return false;
+
+    await refreshStatus();
+
+    return (status == ProcessStatus.normal) ? true : false;
+  }
 
   @override
-  Future<bool> resume() async => w32proc.Win32Process(pid).resume();
+  Future<bool> suspend() async {
+    var successful = w32proc.Win32Process(pid).suspend();
+    if (!successful) return false;
+
+    await refreshStatus();
+
+    return (status == ProcessStatus.suspended) ? true : false;
+  }
 
   // If the pid doesn't exist this won't be able to return the exe name.
   @override

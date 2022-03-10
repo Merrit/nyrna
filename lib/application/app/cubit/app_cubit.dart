@@ -106,43 +106,47 @@ class AppCubit extends Cubit<AppState> {
   /// Toggle suspend / resume for the process associated with the given window.
   Future<bool> toggle(Window window) async {
     await window.process.refreshStatus();
-    bool success;
+    bool successful;
+
     if (window.process.status == ProcessStatus.suspended) {
-      success = await _resume(window);
-      await window.process.refreshStatus();
-      if (window.process.status != ProcessStatus.normal) success = false;
+      successful = await _resume(window);
     } else {
-      success = await _suspend(window);
-      await window.process.refreshStatus();
-      if (window.process.status != ProcessStatus.suspended) success = false;
+      successful = await _suspend(window);
     }
+
     final windows = List<Window>.from(state.windows);
     windows.removeWhere((e) => e.id == window.id);
     windows.add(window);
     windows.sortWindows();
     emit(state.copyWith(windows: windows));
-    return success;
+    return successful;
   }
 
   Future<bool> _resume(Window window) async {
-    final success = await window.process.resume();
+    final successful = await window.process.resume();
+
     // Restore the window _after_ resuming or it might not restore.
-    if (success) await _nativePlatform.restoreWindow(window.id);
-    return success;
+    if (successful) await _nativePlatform.restoreWindow(window.id);
+
+    return successful;
   }
 
   Future<bool> _suspend(Window window) async {
     // Minimize the window before suspending or it might not minimize.
     await _nativePlatform.minimizeWindow(window.id);
+
     // Small delay on Win32 to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
     if (io.Platform.isWindows) {
       await Future.delayed(Duration(milliseconds: 500));
     }
+
     final successful = await window.process.suspend();
-    if (!successful) {
-      await _nativePlatform.restoreWindow(window.id);
-    }
+
+    // If suspend failed, restore the window so the user won't mistakenly
+    // think that the suspend was successful.
+    if (!successful) await _nativePlatform.restoreWindow(window.id);
+
     return successful;
   }
 
