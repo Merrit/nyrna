@@ -23,9 +23,6 @@ class AppCubit extends Cubit<AppState> {
   final PreferencesCubit _prefsCubit;
   final AppVersion _appVersion;
 
-  /// Will be true if running under a unit test.
-  final bool _testing;
-
   AppCubit({
     required NativePlatform nativePlatform,
     required Preferences prefs,
@@ -36,7 +33,6 @@ class AppCubit extends Cubit<AppState> {
         _prefs = prefs,
         _prefsCubit = prefsCubit,
         _appVersion = appVersion,
-        _testing = testing,
         super(AppState.initial()) {
     appCubit = this;
     _initialize();
