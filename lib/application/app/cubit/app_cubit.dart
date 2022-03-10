@@ -70,6 +70,8 @@ class AppCubit extends Cubit<AppState> {
   Timer? _timer;
 
   /// The timer which auto-refreshes the list of open windows.
+  ///
+  /// [refreshInterval] is how often to refresh data, in seconds.
   void setAutoRefresh({
     required bool autoRefresh,
     required int refreshInterval,
