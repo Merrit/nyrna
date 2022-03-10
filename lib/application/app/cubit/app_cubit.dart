@@ -54,22 +54,17 @@ class AppCubit extends Cubit<AppState> {
 
   /// Populate the list of visible windows.
   Future<void> _fetchWindows() async {
-    final showHidden = _prefsCubit.state.showHiddenWindows;
-    var windows = await _nativePlatform.windows(showHidden: showHidden);
-    windows = await _checkWindowStatuses(windows);
-    windows.sortWindows();
-    emit(state.copyWith(windows: windows));
-  }
+    var windows = await _nativePlatform.windows(
+      showHidden: _prefsCubit.state.showHiddenWindows,
+    );
 
-  /// Update the ProcessStatus for the given [windows].
-  Future<List<Window>> _checkWindowStatuses(List<Window> windows) async {
-    if (_testing) return windows;
-    final processedWindows = <Window>[];
     for (var window in windows) {
       await window.process.refreshStatus();
-      processedWindows.add(window);
     }
-    return processedWindows;
+
+    windows.sortWindows();
+
+    emit(state.copyWith(windows: windows));
   }
 
   Timer? _timer;
