@@ -20,7 +20,10 @@ class ActiveWindow {
 
   Future<bool> restore() async => await _nativePlatform.restoreWindow(id);
 
-  Future<ProcessStatus> status() async => await _process.refreshStatus();
+  Future<ProcessStatus> status() async {
+    await _process.refreshStatus();
+    return _process.status;
+  }
 
   Future<bool> suspend() async => await _process.suspend();
 
