@@ -114,11 +114,14 @@ class AppCubit extends Cubit<AppState> {
       successful = await _suspend(window);
     }
 
-    final windows = List<Window>.from(state.windows);
-    windows.removeWhere((e) => e.id == window.id);
-    windows.add(window);
-    windows.sortWindows();
+    final windows = state.windows;
+    await windows
+        .singleWhereOrNull((element) => element.id == window.id)
+        ?.process
+        .refreshStatus();
+
     emit(state.copyWith(windows: windows));
+
     return successful;
   }
 
