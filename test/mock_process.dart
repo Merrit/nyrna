@@ -12,4 +12,7 @@ class MockProcess extends Mock implements Process {
     required this.pid,
     required this.executable,
   });
+
+  @override
+  Future<ProcessStatus> refreshStatus() async => ProcessStatus.normal;
 }
