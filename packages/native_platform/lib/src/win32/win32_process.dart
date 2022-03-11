@@ -50,46 +50,51 @@ class Win32Process implements Process {
         '\$threads | select Id,ThreadState,WaitReason',
       ],
     );
+
     if (result.stderr != '') {
       _log.warning('Unable to get process status', result.stderr);
       _status = ProcessStatus.unknown;
+      return;
     }
+
     var threads = result.stdout.toString().trim().split('\n');
     // Strip out the column headers
     threads = threads.sublist(2);
+
     final suspended = <bool>[];
     // Check each thread's status, track in [suspended] variable.
     threads.forEach((thread) {
       final threadWaitReason = thread.split(' ').last.trim();
-      (threadWaitReason == 'Suspended')
-          ? suspended.add(true)
-          : suspended.add(false);
+      if (threadWaitReason == 'Suspended') {
+        suspended.add(true);
+      } else {
+        suspended.add(false);
+      }
     });
+
     // If every thread has the `Suspended` status, process is suspended.
-    final updatedStatus = suspended.contains(false)
+    _status = suspended.contains(false)
         ? ProcessStatus.normal
         : ProcessStatus.suspended;
-    _status = updatedStatus;
   }
 
   // Use the w32_suspend_process library to suspend & resume.
   @override
   Future<bool> toggle() async {
     await refreshStatus();
+
     if (_status == ProcessStatus.unknown) return false;
-    final _process = w32proc.Win32Process(pid);
-    bool _success;
-    if (_status == ProcessStatus.suspended) {
-      _success = _process.resume();
-    } else {
-      _success = _process.suspend();
-    }
-    return _success;
+
+    final successful = (_status == ProcessStatus.normal) //
+        ? await suspend()
+        : await resume();
+
+    return successful;
   }
 
   @override
   Future<bool> resume() async {
-    var successful = w32proc.Win32Process(pid).resume();
+    final successful = w32proc.Win32Process(pid).resume();
     if (!successful) return false;
 
     await refreshStatus();
@@ -99,7 +104,7 @@ class Win32Process implements Process {
 
   @override
   Future<bool> suspend() async {
-    var successful = w32proc.Win32Process(pid).suspend();
+    final successful = w32proc.Win32Process(pid).suspend();
     if (!successful) return false;
 
     await refreshStatus();
