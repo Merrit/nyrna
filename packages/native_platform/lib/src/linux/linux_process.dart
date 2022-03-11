@@ -20,6 +20,8 @@ class LinuxProcess implements Process {
   Future<void> refreshStatus() async {
     final result = await io.Process.run('ps', ['-o', 's=', '-p', '$pid']);
     // For OSX you need to use `state=` in this command.
+    // Just incase we ever add support for OSX.
+
     switch (result.stdout.trim()) {
       case 'I':
         _status = ProcessStatus.normal;
@@ -38,14 +40,15 @@ class LinuxProcess implements Process {
     }
   }
 
-  // Use built-in method  from dart:io to suspend & resume.
+  // Use built-in method from dart:io to suspend & resume.
   @override
   Future<bool> toggle() async {
     await refreshStatus();
-    final signal = (_status == ProcessStatus.normal)
-        ? io.ProcessSignal.sigstop
-        : io.ProcessSignal.sigcont;
-    final successful = io.Process.killPid(pid, signal);
+
+    final successful = (_status == ProcessStatus.normal) //
+        ? await suspend()
+        : await resume();
+
     return successful;
   }
 
@@ -55,13 +58,15 @@ class LinuxProcess implements Process {
       'ps',
       ['-q', '$pid', '-o', 'pid='],
     );
-    final checkedPid = int.tryParse(result.stdout.toString().trim());
-    return (checkedPid == pid) ? true : false;
+
+    final resultPid = int.tryParse(result.stdout.toString().trim());
+
+    return (resultPid == pid) ? true : false;
   }
 
   @override
   Future<bool> resume() async {
-    var successful = io.Process.killPid(pid, io.ProcessSignal.sigcont);
+    final successful = io.Process.killPid(pid, io.ProcessSignal.sigcont);
     if (!successful) return false;
 
     await refreshStatus();
@@ -71,7 +76,7 @@ class LinuxProcess implements Process {
 
   @override
   Future<bool> suspend() async {
-    var successful = io.Process.killPid(pid, io.ProcessSignal.sigstop);
+    final successful = io.Process.killPid(pid, io.ProcessSignal.sigstop);
     if (!successful) return false;
 
     await refreshStatus();
