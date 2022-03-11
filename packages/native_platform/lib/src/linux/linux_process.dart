@@ -53,15 +53,13 @@ class LinuxProcess implements Process {
   }
 
   @override
-  Future<bool> exists() async {
-    final result = await io.Process.run(
-      'ps',
-      ['-q', '$pid', '-o', 'pid='],
-    );
+  Future<bool> suspend() async {
+    final successful = io.Process.killPid(pid, io.ProcessSignal.sigstop);
+    if (!successful) return false;
 
-    final resultPid = int.tryParse(result.stdout.toString().trim());
+    await refreshStatus();
 
-    return (resultPid == pid) ? true : false;
+    return (status == ProcessStatus.suspended) ? true : false;
   }
 
   @override
@@ -75,12 +73,14 @@ class LinuxProcess implements Process {
   }
 
   @override
-  Future<bool> suspend() async {
-    final successful = io.Process.killPid(pid, io.ProcessSignal.sigstop);
-    if (!successful) return false;
+  Future<bool> exists() async {
+    final result = await io.Process.run(
+      'ps',
+      ['-q', '$pid', '-o', 'pid='],
+    );
 
-    await refreshStatus();
+    final resultPid = int.tryParse(result.stdout.toString().trim());
 
-    return (status == ProcessStatus.suspended) ? true : false;
+    return (resultPid == pid) ? true : false;
   }
 }

@@ -44,12 +44,12 @@ abstract class Process {
   /// Returns true for success or false for failure.
   Future<bool> toggle();
 
+  Future<bool> suspend();
+
+  Future<bool> resume();
+
   /// Whether or not a process with the given pid currently exists.
   ///
   /// ActiveWindow uses this to check a saved pid is still around.
   Future<bool> exists();
-
-  Future<bool> suspend();
-
-  Future<bool> resume();
 }
