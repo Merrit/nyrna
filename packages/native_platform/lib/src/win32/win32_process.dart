@@ -93,16 +93,6 @@ class Win32Process implements Process {
   }
 
   @override
-  Future<bool> resume() async {
-    final successful = w32proc.Win32Process(pid).resume();
-    if (!successful) return false;
-
-    await refreshStatus();
-
-    return (status == ProcessStatus.normal) ? true : false;
-  }
-
-  @override
   Future<bool> suspend() async {
     final successful = w32proc.Win32Process(pid).suspend();
     if (!successful) return false;
@@ -110,6 +100,16 @@ class Win32Process implements Process {
     await refreshStatus();
 
     return (status == ProcessStatus.suspended) ? true : false;
+  }
+
+  @override
+  Future<bool> resume() async {
+    final successful = w32proc.Win32Process(pid).resume();
+    if (!successful) return false;
+
+    await refreshStatus();
+
+    return (status == ProcessStatus.normal) ? true : false;
   }
 
   // If the pid doesn't exist this won't be able to return the exe name.
