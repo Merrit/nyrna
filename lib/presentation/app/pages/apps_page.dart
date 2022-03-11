@@ -12,6 +12,8 @@ import '../app.dart';
 class AppsPage extends StatefulWidget {
   static const id = 'running_apps_screen';
 
+  const AppsPage({Key? key}) : super(key: key);
+
   @override
   State<AppsPage> createState() => _AppsPageState();
 }
@@ -47,7 +49,7 @@ class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(),
       body: BlocBuilder<AppCubit, AppState>(
         builder: (context, state) {
           return Stack(
@@ -70,13 +72,13 @@ class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
                   ],
                 ),
               ),
-              _ProgressOverlay(),
+              const _ProgressOverlay(),
             ],
           );
         },
       ),
       // We don't show a manual refresh button with a short auto-refresh.
-      floatingActionButton: _FloatingActionButton(),
+      floatingActionButton: const _FloatingActionButton(),
     );
   }
 }
@@ -112,7 +114,7 @@ class _ProgressOverlay extends StatelessWidget {
                   ModalBarrier(color: Colors.grey.withOpacity(0.1)),
                   Transform.scale(
                     scale: 2,
-                    child: Center(child: CircularProgressIndicator()),
+                    child: const Center(child: CircularProgressIndicator()),
                   ),
                 ],
               )
@@ -123,7 +125,7 @@ class _ProgressOverlay extends StatelessWidget {
 }
 
 class _FloatingActionButton extends StatelessWidget {
-  _FloatingActionButton({Key? key}) : super(key: key);
+  const _FloatingActionButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

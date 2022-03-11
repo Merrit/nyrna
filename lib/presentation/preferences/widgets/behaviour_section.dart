@@ -69,7 +69,7 @@ class ShowHiddenTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       // title: const Text('Show hidden windows'),
-      title: Text.rich(
+      title: const Text.rich(
         TextSpan(
           children: [
             TextSpan(text: 'Show hidden windows   '),

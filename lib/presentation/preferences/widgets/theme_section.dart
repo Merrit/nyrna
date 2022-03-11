@@ -71,7 +71,7 @@ class _IconCustomizer extends StatelessWidget {
           leading: ColorIndicator(
             color: state.trayIconColor,
           ),
-          title: Text('System tray icon color'),
+          title: const Text('System tray icon color'),
           onTap: () => _pickIconColor(
             context: context,
             currentColor: state.trayIconColor,
@@ -102,8 +102,8 @@ class _IconCustomizer extends StatelessWidget {
                     onColorChanged: (Color color) {
                       setState(() => iconColor = color);
                     },
-                    heading: Text('Select color'),
-                    subheading: Text('Select color shade'),
+                    heading: const Text('Select color'),
+                    subheading: const Text('Select color shade'),
                     pickersEnabled: const <ColorPickerType, bool>{
                       ColorPickerType.primary: true,
                       ColorPickerType.accent: false,
@@ -122,14 +122,14 @@ class _IconCustomizer extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () async {
                 await preferencesCubit.updateIconColor(iconColor);
                 Navigator.pop(context);
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );

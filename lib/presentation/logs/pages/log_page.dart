@@ -6,7 +6,9 @@ import 'package:nyrna/application/log/cubit/log_cubit.dart';
 
 /// Display Nyrna's logs.
 class LogPage extends StatelessWidget {
-  static final id = 'log_page';
+  static const id = 'log_page';
+
+  const LogPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class LogPage extends StatelessWidget {
                       );
                     },
                   ),
-                  Spacer(),
+                  const Spacer(),
                   BlocBuilder<LogCubit, LogState>(
                     builder: (context, state) {
                       return ElevatedButton(

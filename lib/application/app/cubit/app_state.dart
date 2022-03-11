@@ -20,7 +20,7 @@ class AppState extends Equatable {
   });
 
   factory AppState.initial() {
-    return AppState(
+    return const AppState(
       loading: true,
       runningVersion: '',
       updateVersion: '',

@@ -141,7 +141,7 @@ class AppCubit extends Cubit<AppState> {
     // Small delay on Win32 to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
     if (io.Platform.isWindows) {
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
     }
 
     final successful = await window.process.suspend();

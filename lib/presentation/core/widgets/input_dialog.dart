@@ -71,6 +71,7 @@ Future<String?> showInputDialog({
 
 class InputDialog extends StatelessWidget {
   InputDialog({
+    Key? key,
     this.context,
     this.type,
     this.title,
@@ -78,7 +79,8 @@ class InputDialog extends StatelessWidget {
     this.keyboardType,
     this.formatter,
     required String initialValue,
-  }) : maxLines = (type == InputDialogs.multiLine) ? 5 : 1 {
+  })  : maxLines = (type == InputDialogs.multiLine) ? 5 : 1,
+        super(key: key) {
     controller.text = initialValue;
     controller.selection = TextSelection(
       baseOffset: 0,
@@ -122,11 +124,11 @@ class InputDialog extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, controller.text),
-            child: Text('Confirm'),
+            child: const Text('Confirm'),
           ),
         ],
       ),

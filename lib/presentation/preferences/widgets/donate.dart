@@ -17,16 +17,17 @@ class Donate extends StatelessWidget {
               Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(text: 'Nyrna is free software, made with 💙 by '),
+                    const TextSpan(
+                        text: 'Nyrna is free software, made with 💙 by '),
                     TextSpan(
                       text: 'Kristen McWilliam',
-                      style: TextStyle(color: Colors.lightBlueAccent),
+                      style: const TextStyle(color: Colors.lightBlueAccent),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           appCubit.launchURL('https://merritt.codes/');
                         },
                     ),
-                    TextSpan(text: '.'),
+                    const TextSpan(text: '.'),
                   ],
                 ),
               ),
@@ -35,11 +36,11 @@ class Donate extends StatelessWidget {
                 onPressed: () {
                   appCubit.launchURL('https://merritt.codes/support');
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.favorite,
                   color: Colors.red,
                 ),
-                label: Text('Donate'),
+                label: const Text('Donate'),
               ),
             ],
           ),
