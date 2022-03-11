@@ -36,12 +36,12 @@ dependencies:
       ref: 03d957e8b5c99fc83cd4a781031b154ab3de8753
 
 dev_dependencies:
+  flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
   mocktail: ^0.2.0
-  pedantic: ^1.11.0
   test: ^1.19.5
 
 flutter:
