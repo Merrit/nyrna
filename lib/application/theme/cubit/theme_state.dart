@@ -4,7 +4,7 @@ part of 'theme_cubit.dart';
 class ThemeState extends Equatable {
   final AppTheme appTheme;
 
-  ThemeState({
+  const ThemeState({
     required this.appTheme,
   });
 
@@ -27,9 +27,9 @@ class ThemeState extends Equatable {
         color: Colors.grey[700]!.withOpacity(0.9),
         borderRadius: const BorderRadius.all(Radius.circular(4)),
       ),
-      margin: EdgeInsets.symmetric(horizontal: 50),
-      padding: EdgeInsets.all(8),
-      textStyle: TextStyle(
+      margin: const EdgeInsets.symmetric(horizontal: 50),
+      padding: const EdgeInsets.all(8),
+      textStyle: const TextStyle(
         color: Colors.white,
         fontSize: 16,
       ),

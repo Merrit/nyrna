@@ -8,6 +8,8 @@ import 'package:nyrna/presentation/preferences/pages/preferences_page.dart';
 import 'app/app.dart';
 
 class AppWidget extends StatelessWidget {
+  const AppWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
@@ -17,12 +19,12 @@ class AppWidget extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: state.themeData,
           routes: {
-            LoadingPage.id: (context) => LoadingPage(),
-            LogPage.id: (context) => LogPage(),
-            AppsPage.id: (context) => AppsPage(),
-            PreferencesPage.id: (conext) => PreferencesPage(),
+            LoadingPage.id: (context) => const LoadingPage(),
+            LogPage.id: (context) => const LogPage(),
+            AppsPage.id: (context) => const AppsPage(),
+            PreferencesPage.id: (conext) => const PreferencesPage(),
           },
-          home: LoadingPage(),
+          home: const LoadingPage(),
         );
       },
     );

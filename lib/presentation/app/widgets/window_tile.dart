@@ -88,7 +88,7 @@ class _StatusWidget extends StatelessWidget {
         shape: BoxShape.circle,
         color: (loading) ? null : _color,
       ),
-      child: (loading) ? CircularProgressIndicator() : null,
+      child: (loading) ? const CircularProgressIndicator() : null,
     );
   }
 }

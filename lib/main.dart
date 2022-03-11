@@ -62,7 +62,7 @@ Future<void> main(List<String> args) async {
               appVersion: AppVersion(packageInfo),
             ),
             lazy: false,
-            child: AppWidget(),
+            child: const AppWidget(),
           );
         },
       ),

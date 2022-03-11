@@ -9,9 +9,9 @@ import '../app.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
-  final preferredSize = Size.fromHeight(kToolbarHeight);
+  final preferredSize = const Size.fromHeight(kToolbarHeight);
 
-  CustomAppBar({Key? key}) : super(key: key);
+  const CustomAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 await canLaunch(url)
                     ? launch(url)
                     : ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text('Error launching browser'),
                         ),
                       );

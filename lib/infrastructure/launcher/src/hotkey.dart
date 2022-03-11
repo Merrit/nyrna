@@ -1,8 +1,12 @@
 import 'dart:io';
 
+import 'package:logging/logging.dart';
+
 /// Hotkey service only exists for Windows, as Linux supports settings
 /// custom hotkeys very easily by the end-user with no overhead.
 class Hotkey {
+  final _log = Logger('Hotkey');
+
   String _hotkeyExePath() {
     return Directory.current.path + '\\toggle_active_hotkey.exe';
   }
@@ -22,7 +26,7 @@ class Hotkey {
       '\$shortcut.Save()',
     ]);
     if (result.stderr != '') {
-      print('Unable to create startup shortcut: ${result.stderr}');
+      _log.warning('Unable to create startup shortcut: ${result.stderr}');
       return false;
     }
     return true;
@@ -36,7 +40,7 @@ class Hotkey {
       '\$startupDir',
     ]);
     if (result.stderr != '') {
-      print('Unable to find startup dir: ${result.stderr}');
+      _log.warning('Unable to find startup dir: ${result.stderr}');
       return false;
     }
     final startupDir = result.stdout.toString().trim();
@@ -46,7 +50,7 @@ class Hotkey {
     try {
       await shortcut.delete();
     } catch (e) {
-      print('Unable to delete shortcut: $e');
+      _log.warning('Unable to delete shortcut: $e');
       return false;
     }
     return true;

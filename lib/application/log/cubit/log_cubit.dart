@@ -10,7 +10,7 @@ late LogCubit logCubit;
 class LogCubit extends Cubit<LogState> {
   LogCubit()
       : super(
-          LogState(
+          const LogState(
             logLevel: Level.INFO,
             logsText: '',
           ),
@@ -21,18 +21,17 @@ class LogCubit extends Cubit<LogState> {
 
   void getLogsText(Level level) {
     String logsText = '';
-    LogFile.logs.forEach(
-      (LogRecord record) {
-        // Add if the record's level matches the user's choice.
-        if (record.level == level || level == Level.ALL) {
-          logsText = '${record.time} \n'
-              '${record.level.name} \n'
-              'Logger: ${record.loggerName} \n'
-              '${record.message} \n'
-              '\n';
-        }
-      },
-    );
+
+    for (var record in LogFile.logs) {
+      // Add if the record's level matches the user's choice.
+      if (record.level == level || level == Level.ALL) {
+        logsText = '${record.time} \n'
+            '${record.level.name} \n'
+            'Logger: ${record.loggerName} \n'
+            '${record.message} \n'
+            '\n';
+      }
+    }
     emit(state.copyWith(
       logLevel: level,
       logsText: logsText,

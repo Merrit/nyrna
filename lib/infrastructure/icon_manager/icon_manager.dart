@@ -5,8 +5,11 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as image;
+import 'package:logging/logging.dart';
 
 class IconManager {
+  final _log = Logger('IconManager');
+
   Uint8List? _loadedIconBytes;
 
   Future<Uint8List> iconBytes() async {
@@ -22,7 +25,7 @@ class IconManager {
     try {
       await Process.start('toggle_active_hotkey.exe', []);
     } on ProcessException {
-      print('Unable to launch hotkey executable');
+      _log.warning('Unable to launch hotkey executable');
     }
   }
 
@@ -43,7 +46,7 @@ class IconManager {
       blue: color.blue,
     );
     final icoBytes = image.encodeIco(updatedImage);
-    final assetPath = kDebugMode
+    const assetPath = kDebugMode
         ? '\\assets\\icons'
         : '\\data\\flutter_assets\\assets\\icons';
     final icoDirectory = Directory.current.path + assetPath;
@@ -51,7 +54,7 @@ class IconManager {
     try {
       await ico.writeAsBytes(icoBytes, flush: true);
     } catch (e) {
-      print('Unable to write icon file: $e');
+      _log.warning('Unable to write icon file: $e');
       return false;
     }
     await _refreshTray();

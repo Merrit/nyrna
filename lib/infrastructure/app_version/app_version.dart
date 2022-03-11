@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pub_semver/pub_semver.dart' as semver;
 
@@ -9,6 +10,8 @@ class AppVersion {
   final PackageInfo _packageInfo;
 
   AppVersion(this._packageInfo);
+
+  final _log = Logger('AppVersion');
 
   /// The application version that is currently running.
   ///
@@ -43,7 +46,7 @@ class AppVersion {
       // May need to be updated if we starting using postfixes like `beta`.
       _latest = tagName.substring(1, 6);
     } else {
-      print('Issue getting latest version info from GitHub, '
+      _log.info('Issue getting latest version info from GitHub, '
           'status code: ${response.statusCode}\n');
     }
     return _latest;

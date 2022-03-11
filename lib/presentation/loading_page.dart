@@ -10,6 +10,8 @@ import 'app/app.dart';
 class LoadingPage extends StatelessWidget {
   static const id = 'loading_screen';
 
+  const LoadingPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final _log = Logger('LoadingScreen');

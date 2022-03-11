@@ -35,7 +35,7 @@ void main() {
     when(() => _prefs.getString('ignoredUpdate')).thenReturn(null);
 
     when(() => _prefsCubit.state).thenReturn(
-      PreferencesState(
+      const PreferencesState(
         autoStartHotkey: false,
         autoRefresh: false,
         refreshInterval: 5,
