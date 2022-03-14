@@ -18,6 +18,6 @@
 /// - Delete the file containing the PID & window id so next call will suspend.
 library active_window;
 
-export 'src/active_window_handler.dart';
+export 'src/active_window.dart';
 export 'src/logger.dart';
 export 'src/toggle_active_window.dart';

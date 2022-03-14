@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'active_window.dart';
 import 'linux/linux.dart';
 import 'win32/win32.dart';
 import 'window.dart';
@@ -22,9 +21,6 @@ abstract class NativePlatform {
   /// The index of the currently active virtual desktop.
   Future<int> currentDesktop();
 
-  /// The PID associated with the given [windowId].
-  Future<int> windowPid(int windowId);
-
   /// List of [Window] objects for every visible window with title text.
   ///
   /// Setting [showHidden] to `true` will list windows from every
@@ -32,7 +28,7 @@ abstract class NativePlatform {
   Future<List<Window>> windows({bool showHidden});
 
   /// The active, foreground window.
-  Future<ActiveWindow> activeWindow();
+  Future<Window> activeWindow();
 
   /// Verify dependencies are present on the system.
   Future<bool> checkDependencies();

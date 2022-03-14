@@ -1,10 +1,9 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
-import 'package:win32/win32.dart';
 import 'package:logging/logging.dart';
+import 'package:win32/win32.dart';
 
-import '../active_window.dart';
 import '../native_platform.dart';
 import '../process.dart';
 import '../window.dart';
@@ -41,66 +40,55 @@ class Win32 implements NativePlatform {
 
   @override
   Future<List<Window>> windows({bool showHidden = false}) async {
-    // Clear the map to ensure we are starting fresh each time.
-    WindowBuilder.windows.clear();
     WindowBuilder.showHiddenWindows = showHidden;
-    // Process open windows.
-    /// [EnumWindows] returns 0 for failure.
-    final result = EnumWindows(WindowBuilder.callback, 0);
-    if (result == 0) {
-      print('Error from EnumWindows getting open windows');
-      return [];
-    }
-    final windowMap = WindowBuilder.windows;
-    final windows = await buildWindows(windowMap);
+    final windows = await WindowBuilder.buildWindows();
     return windows;
   }
 
-  late int _windowPid;
-
-  /// Takes the window handle as an argument and returns the
-  /// pid of the associated process.
   @override
-  Future<int> windowPid(int windowId) async {
-    // GetWindowThreadProcessId will assign the PID to this pointer.
-    final _pid = calloc<Uint32>();
-    // Populate the `_pid` pointer.
-    GetWindowThreadProcessId(windowId, _pid);
-    // Extract value from the pointer.
-    _windowPid = _pid.value;
-    // Free the pointer memory.
-    calloc.free(_pid);
-    return _windowPid;
-  }
-
-  @override
-  Future<ActiveWindow> activeWindow() async {
-    final windowId = await activeWindowId;
-    final pid = await windowPid(windowId);
+  Future<Window> activeWindow() async {
+    final windowId = await _activeWindowId();
+    final pid = await _pidFromWindowId(windowId);
     final executable = await getExecutableName(pid);
-    final win32Process = Win32Process(this, pid: pid, executable: executable);
-    final activeWindow = ActiveWindow(
-      NativePlatform(),
-      win32Process,
-      id: windowId,
-      pid: pid,
-    );
-    return activeWindow;
+    final process = Win32Process(this, pid: pid, executable: executable);
+    final title = getWindowTitle(windowId);
+
+    return Window(id: windowId, process: process, title: title);
   }
 
-  Future<int> get activeWindowPid async {
-    final windowId = await activeWindowId;
-    return windowPid(windowId);
+  Future<int> _activeWindowId() async => GetForegroundWindow();
+
+  Future<int> _pidFromWindowId(int windowId) async {
+    final buffer = calloc<Uint32>();
+    GetWindowThreadProcessId(windowId, buffer);
+
+    // Extract value from the pointer.
+    final pid = buffer.value;
+
+    // Free the pointer memory.
+    calloc.free(buffer);
+
+    return pid;
   }
 
-  Future<int> get activeWindowId async => GetForegroundWindow();
+  String getWindowTitle(int windowId) {
+    final length = GetWindowTextLength(windowId);
+    if (length == 0) return '';
+
+    final buffer = wsalloc(length + 1);
+    GetWindowText(windowId, buffer, length + 1);
+    final title = buffer.toDartString();
+    free(buffer);
+
+    return title;
+  }
 
   // No external dependencies for Win32, so always return true.
   @override
   Future<bool> checkDependencies() async => true;
 
-  Future<Process> windowProcess(int windowId) async {
-    final pid = await windowPid(windowId);
+  Future<Process> processFromWindowId(int windowId) async {
+    final pid = await _pidFromWindowId(windowId);
     final executable = await getExecutableName(pid);
     final process = Win32Process(this, pid: pid, executable: executable);
     return process;
@@ -119,52 +107,38 @@ class Win32 implements NativePlatform {
   }
 
   Future<String> getExecutableName(int pid) async {
-    final processHandle =
-        OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+    final processHandle = OpenProcess(
+      PROCESS_QUERY_LIMITED_INFORMATION,
+      FALSE,
+      pid,
+    );
+
     // Pointer that will be populated with the full executable path.
     final path = calloc<Uint16>(MAX_PATH).cast<Utf16>();
+
     // If the GetModuleFileNameEx function succeeds, the return value specifies
     // the length of the string copied to the buffer.
     // If the function fails, the return value is zero.
     final result = GetModuleFileNameEx(processHandle, NULL, path, MAX_PATH);
+
     if (result == 0) {
       _log.warning('Error getting executable name: ${GetLastError()}');
       return '';
     }
+
     // Pull the value from the pointer.
     // Discard all of path except the executable name.
     final _executable = path.toDartString().split('\\').last;
+
     // Free the pointer's memory.
     calloc.free(path);
+
     final handleClosed = CloseHandle(processHandle);
     if (handleClosed == 0) {
       _log.severe('get executable failed to close the process handle.');
     }
-    return _executable;
-  }
 
-  Future<List<Window>> buildWindows(List<Map<int, String>> windowMaps) async {
-    final windows = <Window>[];
-    await Future.forEach(
-      windowMaps,
-      (Map<int, String> window) async {
-        final windowId = window.keys.first;
-        final title = window.values.first;
-        final win32Process = await windowProcess(windowId);
-        final executable = win32Process.executable;
-        if (_filteredWindows.contains(executable)) return;
-        final pid = win32Process.pid;
-        final process = Process(pid: pid, executable: executable);
-        windows.add(
-          Window(
-            id: windowId,
-            process: process,
-            title: title,
-          ),
-        );
-      },
-    );
-    return windows;
+    return _executable;
   }
 }
 
@@ -173,35 +147,72 @@ class Win32 implements NativePlatform {
 /// Generates the list of visible windows on the user's desktop.
 class WindowBuilder {
   static bool showHiddenWindows = false;
+  static final List<Window> _windows = [];
+
+  static Future<List<Window>> buildWindows() async {
+    /// [EnumWindows] calls [enumWindowsCallback] for every window.
+    ///
+    /// [EnumWindows] returns 0 for failure.
+    final result = EnumWindows(_callback, 0);
+
+    if (result == 0) {
+      print('Error from EnumWindows getting open windows');
+      return const [];
+    }
+
+    /// At this point [enumWindowsCallback] has finished & populated [_windows].
+    final correctedWindows = <Window>[];
+
+    for (var window in _windows) {
+      final process = await Win32().processFromWindowId(window.id);
+
+      if (_filteredWindows.contains(process.executable)) continue;
+
+      correctedWindows.add(window.copyWith(process: process));
+    }
+
+    _windows.clear();
+
+    return correctedWindows;
+  }
 
   /// Persistant callback because:
   /// "The pointer returned will remain alive for the
   /// duration of the current isolate's lifetime."
   /// https://api.flutter.dev/flutter/dart-ffi/Pointer/fromFunction.html
-  static final callback = Pointer.fromFunction<EnumWindowsProc>(
+  static final _callback = Pointer.fromFunction<EnumWindowsProc>(
       WindowBuilder.enumWindowsCallback, 0);
 
-  /// Callback for each window found by EnumWindows().
+  /// Callback for each window found by `EnumWindows()`.
+  ///
+  /// The type signature must match what `EnumWindows()` requires,
+  /// so this can't be async or anything.
   static int enumWindowsCallback(int hWnd, int lParam) {
     // Only enumerate windows that are marked WS_VISIBLE.
     if (IsWindowVisible(hWnd) == FALSE) return TRUE;
+
     if (!showHiddenWindows) {
       // Only enumerate windows that aren't `cloaked`.
       if (_isDwmCloaked(hWnd)) return TRUE;
     }
-    final length = GetWindowTextLength(hWnd);
-    // Only enumerate windows with title text.
-    if (length == 0) return TRUE;
-    // Initialize pointer for title text.
-    final buffer = calloc<Uint16>(length + 1).cast<Utf16>();
-    // Populate pointer.
-    GetWindowText(hWnd, buffer, length + 1);
-    // Callback to build Window object with pointer value.
-    _buildWindowMap(hWnd, buffer.toDartString());
-    // Free pointer memory.
-    calloc.free(buffer);
+
+    final title = Win32().getWindowTitle(hWnd);
+    // Ignore windows without title text, they are not likely to be
+    // actual user windows that we care about.
+    if (title == '') return TRUE;
+
+    _windows.add(
+      Window(
+        id: hWnd,
+        process: Win32Process(Win32(), executable: '', pid: 0),
+        title: title,
+      ),
+    );
+
     return TRUE;
   }
+
+  static const DWMWA_CLOAKED = 14;
 
   /// Check if the window has the `DWMWA_CLOAKED` attribute.
   ///
@@ -219,26 +230,20 @@ class WindowBuilder {
   static bool _isDwmCloaked(int hWnd) {
     // Initialize memory for the result pointer.
     final result = calloc<Uint32>();
+
     // Populate into the `result` pointer.
-    const DWMWA_CLOAKED = 14;
     DwmGetWindowAttribute(hWnd, DWMWA_CLOAKED, result, sizeOf<Uint32>());
+
     // Pull the value from the pointer.
     var cloakedReason = result.value;
+
     // Free the memory now that we have the value.
     calloc.free(result);
+
     // If the value is 0, the window is not cloaked.
     // Values of 1, 2 or 4 indicate the reasons it _is_ cloaked.
     // Reference:
     // https://docs.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
     return (cloakedReason == 0) ? false : true;
-  }
-
-  static List<Map<int, String>> windows = [];
-
-  /// Called during the callback for every window to map the data.
-  static void _buildWindowMap(int windowId, String title) {
-    windows.add({
-      windowId: title,
-    });
   }
 }
