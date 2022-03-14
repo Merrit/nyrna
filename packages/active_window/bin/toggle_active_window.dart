@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:active_window/active_window.dart';
 import 'package:args/args.dart';
+import 'package:native_platform/native_platform.dart';
 
 /// This is a self-contained executable, and should be used as a hotkey
 /// on Windows systems by using the included `toggle_active_hotkey.exe`
@@ -19,6 +20,21 @@ suspend / resume state of the active, foreground window.
 This executable should be called by the included hotkey program 
 "toggle_active_hotkey.exe" and not manually.
 ''';
+
+Future<void> main(List<String> args) async {
+  final argParser = ArgumentParser();
+  argParser.parseArgs(args);
+
+  if (!argParser.shouldToggleActiveWindow) {
+    await Logger.log('Not asked to toggle window, exiting.');
+    exit(0);
+  }
+
+  await toggleActiveWindow(
+    shouldLog: argParser.logToFile,
+    nativePlatform: NativePlatform(),
+  );
+}
 
 /// Parse command-line arguments.
 class ArgumentParser {
@@ -55,14 +71,5 @@ class ArgumentParser {
       stdout.writeln(_helpText);
       exit(0);
     }
-  }
-}
-
-Future<void> main(List<String> args) async {
-  final argParser = ArgumentParser();
-  argParser.parseArgs(args);
-
-  if (argParser.shouldToggleActiveWindow) {
-    await toggleActiveWindow(logToFile: argParser.logToFile);
   }
 }

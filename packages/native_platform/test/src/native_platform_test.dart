@@ -17,7 +17,7 @@ void main() {
     test('activeWindow returns a window', () async {
       final activeWindow = await platform.activeWindow();
       expect(activeWindow.id, isPositive);
-      expect(activeWindow.pid, isPositive);
+      expect(activeWindow.process.pid, isPositive);
     });
   });
 }

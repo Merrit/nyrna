@@ -24,10 +24,15 @@ Future<void> main(List<String> args) async {
   final argParser = ArgumentParser();
   argParser.parseArgs(args);
 
+  final nativePlatform = NativePlatform();
+
   // If we receive the toggle argument, suspend or resume the active
   // window and then exit without showing the GUI.
   if (argParser.toggleActiveWindow) {
-    await toggleActiveWindow(logToFile: argParser.logToFile);
+    await toggleActiveWindow(
+      shouldLog: argParser.logToFile,
+      nativePlatform: nativePlatform,
+    );
     exit(0);
   }
 
@@ -35,8 +40,6 @@ Future<void> main(List<String> args) async {
   final prefs = Preferences(sharedPreferences);
 
   AppLogger().initialize();
-
-  final nativePlatform = NativePlatform();
 
   // Created outside runApp so it can be accessed for window settings below.
   final prefsCubit = PreferencesCubit(prefs);

@@ -1,21 +1,27 @@
 import 'dart:io';
 
+import 'package:active_window/src/storage.dart';
 import 'package:hive/hive.dart';
 import 'package:native_platform/native_platform.dart';
 
 import '../active_window.dart';
 
 /// Toggle suspend / resume for the active, foreground window.
-Future<void> toggleActiveWindow({bool logToFile = false}) async {
-  Logger.shouldLog = logToFile;
-
+Future<void> toggleActiveWindow({
+  bool shouldLog = false,
+  required NativePlatform nativePlatform,
+}) async {
+  Logger.shouldLog = shouldLog;
   Hive.init(Directory.systemTemp.path);
+  final storage = Storage();
 
-  final nativePlatform = NativePlatform();
+  final activeWindow = ActiveWindow(
+    await nativePlatform.activeWindow(),
+    nativePlatform,
+    storage,
+  );
 
-  final activeWindow = ActiveWindowHandler(nativePlatform);
-
-  final savedPid = await activeWindow.savedPid();
+  final savedPid = await storage.getInt('pid');
 
   if (savedPid != null) {
     final successful = await activeWindow.resume(savedPid);
