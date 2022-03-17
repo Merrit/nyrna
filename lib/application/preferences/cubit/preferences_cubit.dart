@@ -91,6 +91,8 @@ class PreferencesCubit extends Cubit<PreferencesState> {
   }
 
   /// Save the current window size & position to storage.
+  ///
+  /// Allows the app to remember its window size for next launch.
   Future<void> saveWindowSize() async {
     final windowInfo = await window.getWindowInfo();
     final rectJson = windowInfo.frame.toJson();
