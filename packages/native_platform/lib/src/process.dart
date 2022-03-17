@@ -1,7 +1,7 @@
 import 'dart:io' as io;
 
-import 'package:native_platform/src/linux/linux_process.dart';
-import 'package:native_platform/src/win32/win32.dart';
+import 'linux/linux_process.dart';
+import 'win32/win32.dart';
 
 enum ProcessStatus {
   normal,
