@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
-import 'package:nyrna/application/theme/theme.dart';
+
+import '../../../application/preferences/cubit/preferences_cubit.dart';
+import '../../../application/theme/theme.dart';
 
 class ThemeSection extends StatelessWidget {
   const ThemeSection({Key? key}) : super(key: key);

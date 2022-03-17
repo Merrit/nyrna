@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nyrna/presentation/logs/logs.dart';
-import 'package:nyrna/presentation/styles.dart';
 
+import '../../logs/logs.dart';
+import '../../styles.dart';
 import '../preferences.dart';
 
 class PreferencesPage extends StatelessWidget {

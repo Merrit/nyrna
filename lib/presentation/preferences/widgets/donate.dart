@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:nyrna/application/app/app.dart';
-import 'package:nyrna/presentation/styles.dart';
+
+import '../../../application/app/app.dart';
+import '../../styles.dart';
 
 class Donate extends StatelessWidget {
   const Donate({Key? key}) : super(key: key);

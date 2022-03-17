@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
-import 'package:nyrna/presentation/core/core.dart';
 
+import '../../../application/preferences/cubit/preferences_cubit.dart';
+import '../../core/core.dart';
 import '../../styles.dart';
 
 class BehaviourSection extends StatelessWidget {
