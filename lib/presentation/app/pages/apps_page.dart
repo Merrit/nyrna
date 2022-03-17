@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nyrna/application/app/app.dart';
-import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
-import 'package:nyrna/application/theme/theme.dart';
 
+import '../../../application/app/app.dart';
+import '../../../application/preferences/cubit/preferences_cubit.dart';
+import '../../../application/theme/theme.dart';
 import '../app.dart';
 
 /// The main screen for Nyrna.
@@ -20,6 +20,9 @@ class AppsPage extends StatefulWidget {
 
 class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
   /// Tracks the current window size.
+  ///
+  /// Updated in [initState], [dispose], and [didChangeMetrics] so that
+  /// we can save the window size when the user resizes the window.
   late Size _appWindowSize;
 
   @override
@@ -59,16 +62,18 @@ class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
                 child: ListView(
                   padding: const EdgeInsets.all(10),
                   children: [
-                    if (!state.loading && state.windows.isEmpty)
+                    if (!state.loading && state.windows.isEmpty) ...[
                       const _NoWindowsCard(),
-                    ...state.windows
-                        .map(
-                          (window) => WindowTile(
-                            key: ValueKey(window),
-                            window: window,
-                          ),
-                        )
-                        .toList(),
+                    ] else ...[
+                      ...state.windows
+                          .map(
+                            (window) => WindowTile(
+                              key: ValueKey(window),
+                              window: window,
+                            ),
+                          )
+                          .toList(),
+                    ],
                   ],
                 ),
               ),
