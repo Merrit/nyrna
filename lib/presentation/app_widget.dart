@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nyrna/application/theme/theme.dart';
-import 'package:nyrna/presentation/logs/pages/log_page.dart';
-import 'package:nyrna/presentation/loading_page.dart';
-import 'package:nyrna/presentation/preferences/pages/preferences_page.dart';
 
+import '../application/theme/theme.dart';
 import 'app/app.dart';
+import 'loading_page.dart';
+import 'logs/pages/log_page.dart';
+import 'preferences/pages/preferences_page.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({Key? key}) : super(key: key);
