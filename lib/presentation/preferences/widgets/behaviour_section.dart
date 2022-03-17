@@ -37,7 +37,7 @@ class BehaviourSection extends StatelessWidget {
               title: const Text('Auto Refresh Interval'),
               trailing: Text('${state.refreshInterval} seconds'),
               enabled: state.autoRefresh,
-              onTap: () => _refreshIntervalDialog(context),
+              onTap: () => _showRefreshIntervalDialog(context),
             );
           },
         ),
@@ -47,7 +47,7 @@ class BehaviourSection extends StatelessWidget {
   }
 
   /// Allow user to choose reset interval.
-  void _refreshIntervalDialog(BuildContext context) async {
+  void _showRefreshIntervalDialog(BuildContext context) async {
     final result = await showInputDialog(
       context: context,
       type: InputDialogs.onlyInt,

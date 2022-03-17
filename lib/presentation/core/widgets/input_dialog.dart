@@ -42,7 +42,7 @@ Future<String?> showInputDialog({
       keyboardType = TextInputType.visiblePassword;
   }
 
-  var result = await showDialog(
+  var result = await showDialog<String?>(
     context: context,
     builder: (context) {
       return InputDialog(
@@ -62,14 +62,21 @@ Future<String?> showInputDialog({
   // Format as a full double, for example text entered as '.49' becomes '0.49'
   // and '5' becomes '5.00'.
   if (type == InputDialogs.onlyDouble) {
-    var _asDouble = double.tryParse(result)!;
-    result = _asDouble.toStringAsFixed(2).toString();
+    result = double.tryParse(result)?.toStringAsFixed(2).toString();
   }
 
-  return result;
+  return result ?? '';
 }
 
 class InputDialog extends StatelessWidget {
+  final BuildContext? context;
+  final InputDialogs? type;
+  final String? title;
+  final String? hintText;
+  final int maxLines;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? formatter;
+
   InputDialog({
     Key? key,
     this.context,
@@ -88,13 +95,6 @@ class InputDialog extends StatelessWidget {
     );
   }
 
-  final BuildContext? context;
-  final InputDialogs? type;
-  final String? title;
-  final String? hintText;
-  final int maxLines;
-  final TextInputType? keyboardType;
-  final List<TextInputFormatter>? formatter;
   final FocusNode hotkeyFocusNode = FocusNode();
   final FocusNode textFieldFocusNode = FocusNode();
   final TextEditingController controller = TextEditingController();
