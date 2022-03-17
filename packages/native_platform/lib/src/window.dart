@@ -1,10 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 import 'process.dart';
 
 /// Friendly representation of a visible window.
-@immutable
 class Window extends Equatable {
   /// The unique window ID number associated with this window.
   final int id;
