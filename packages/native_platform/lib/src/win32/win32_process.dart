@@ -1,10 +1,10 @@
 import 'dart:io' as io;
 
 import 'package:logging/logging.dart';
-import 'package:native_platform/src/win32/win32.dart';
 import 'package:win32_suspend_process/win32_suspend_process.dart' as w32proc;
 
 import '../process.dart';
+import 'win32.dart';
 
 class Win32Process implements Process {
   @override
