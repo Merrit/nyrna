@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nyrna/application/app/app.dart';
-import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
-import 'package:nyrna/presentation/preferences/preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../application/app/app.dart';
+import '../../../application/preferences/cubit/preferences_cubit.dart';
+import '../../preferences/preferences.dart';
 import '../app.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -32,9 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           icon: const Icon(Icons.settings),
-          onPressed: () {
-            Navigator.pushNamed(context, PreferencesPage.id);
-          },
+          onPressed: () => Navigator.pushNamed(context, PreferencesPage.id),
         ),
       ],
     );
@@ -46,9 +44,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final currentVersion = state.runningVersion;
     final latestVersion = state.updateVersion;
     const url = 'https://nyrna.merritt.codes/download';
-    var _message = 'An update for Nyrna is available!\n\n'
+    final _message = 'An update for Nyrna is available!\n\n'
         'Current version: $currentVersion\n'
         'Latest version: $latestVersion';
+
     await showDialog(
       context: context,
       builder: (context) {
