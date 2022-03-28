@@ -11,12 +11,16 @@ class AppState extends Equatable {
 
   final List<Window> windows;
 
+  /// Non-null if interacting with a process failed.
+  final InteractionError? interactionError;
+
   const AppState({
     required this.loading,
     required this.runningVersion,
     required this.updateVersion,
     required this.updateAvailable,
     required this.windows,
+    this.interactionError,
   });
 
   factory AppState.initial() {
@@ -30,13 +34,14 @@ class AppState extends Equatable {
   }
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       loading,
       runningVersion,
       updateVersion,
       updateAvailable,
       windows,
+      interactionError,
     ];
   }
 
@@ -46,6 +51,7 @@ class AppState extends Equatable {
     String? updateVersion,
     bool? updateAvailable,
     List<Window>? windows,
+    InteractionError? interactionError,
   }) {
     return AppState(
       loading: loading ?? this.loading,
@@ -53,6 +59,16 @@ class AppState extends Equatable {
       updateVersion: updateVersion ?? this.updateVersion,
       updateAvailable: updateAvailable ?? this.updateAvailable,
       windows: windows ?? this.windows,
+      interactionError: interactionError,
     );
   }
+}
+
+/// Present in AppState when an interaction has failed.
+class InteractionError {
+  final Window window;
+
+  const InteractionError({
+    required this.window,
+  });
 }

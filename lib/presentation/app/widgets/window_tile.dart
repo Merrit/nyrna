@@ -63,20 +63,12 @@ class _WindowTileState extends State<WindowTile> {
             ),
             onTap: () async {
               setState(() => loading = true);
-              final success = await context.read<AppCubit>().toggle(window);
-              if (!success) await _showSnackError(context);
+              await context.read<AppCubit>().toggle(window);
               setState(() => loading = false);
             },
           ),
         ],
       ),
-    );
-  }
-
-  Future<void> _showSnackError(BuildContext context) async {
-    final name = widget.window.process.executable;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('There was a problem interacting with $name')),
     );
   }
 }

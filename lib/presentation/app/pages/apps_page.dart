@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../../application/app/app.dart';
 import '../../../application/preferences/cubit/preferences_cubit.dart';
@@ -53,7 +54,18 @@ class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: BlocBuilder<AppCubit, AppState>(
+      body: BlocConsumer<AppCubit, AppState>(
+        listener: (context, state) {
+          if (state.interactionError == null) return;
+
+          showDialog(
+              context: context,
+              builder: (context) {
+                return InteractionErrorDialog(
+                  interactionError: state.interactionError!,
+                );
+              });
+        },
         builder: (context, state) {
           return Stack(
             children: [
@@ -84,6 +96,55 @@ class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
       ),
       // We don't show a manual refresh button with a short auto-refresh.
       floatingActionButton: const _FloatingActionButton(),
+    );
+  }
+}
+
+/// A dialog to inform the user that interacting with a process has failed.
+class InteractionErrorDialog extends StatelessWidget {
+  final InteractionError interactionError;
+
+  const InteractionErrorDialog({
+    Key? key,
+    required this.interactionError,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final executable = interactionError.window.process.executable;
+
+    return AlertDialog(
+      title: const Text('Interaction Error'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MarkdownBody(
+            data: 'There was an issue interacting with *$executable*.'
+                '\n\n'
+                'This often happens with games that use Easy Anti-Cheat.'
+                '\n\n'
+                'You can check if your game uses this by searching for it at '
+                '[pcgamingwiki.com](https://www.pcgamingwiki.com) and checking '
+                'if the "Middleware" section lists Easy Anti-Cheat.'
+                '\n\n'
+                'Due to the restricted and obfuscated nature of Easy '
+                'Anti-Cheat Nyrna cannot manage titles that use this.'
+                '\n\n'
+                'If this is not the case for your application feel free to '
+                '[file a bug](https://github.com/Merrit/nyrna/issues).',
+            onTapLink: (String text, String? href, String title) {
+              if (href == null) return;
+              appCubit.launchURL(href);
+            },
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {},
+          child: const Text('Close'),
+        ),
+      ],
     );
   }
 }
