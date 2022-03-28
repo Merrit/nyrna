@@ -120,7 +120,12 @@ class AppCubit extends Cubit<AppState> {
         ?.process
         .refreshStatus();
 
-    emit(state.copyWith(windows: windows));
+    emit(state.copyWith(
+      windows: windows,
+      interactionError: (successful) ? null : InteractionError(window: window),
+    ));
+
+    emit(state.copyWith(interactionError: null));
 
     return successful;
   }
