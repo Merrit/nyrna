@@ -29,20 +29,20 @@ class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    _appWindowSize = WidgetsBinding.instance!.window.physicalSize;
+    _appWindowSize = WidgetsBinding.instance.window.physicalSize;
     // Listen for changes to the application's window size.
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeMetrics() {
-    final updatedWindowSize = WidgetsBinding.instance!.window.physicalSize;
+    final updatedWindowSize = WidgetsBinding.instance.window.physicalSize;
     if (_appWindowSize != updatedWindowSize) {
       _appWindowSize = updatedWindowSize;
       preferencesCubit.saveWindowSize();
