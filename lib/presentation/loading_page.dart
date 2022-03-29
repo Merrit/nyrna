@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nyrna/application/loading/loading.dart';
 
-import 'app/app.dart';
+import '../apps_list/apps_list.dart';
 
 /// Intermediate loading screen while verifying that Nyrna's dependencies are
 /// available. If they are not an error message is shown, preventing a crash.
@@ -25,7 +25,7 @@ class LoadingPage extends StatelessWidget {
           child: BlocConsumer<LoadingCubit, LoadingState>(
             listener: (context, state) {
               if (state is LoadingSuccess) {
-                Navigator.pushReplacementNamed(context, AppsPage.id);
+                Navigator.pushReplacementNamed(context, AppsListPage.id);
               }
             },
             builder: (context, state) {

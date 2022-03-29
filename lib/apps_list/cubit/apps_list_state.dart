@@ -1,6 +1,6 @@
-part of 'app_cubit.dart';
+part of 'apps_list_cubit.dart';
 
-class AppState extends Equatable {
+class AppsListState extends Equatable {
   /// True when the app should communicate when work is being done,
   /// such as when the user requests a manual refresh.
   final bool loading;
@@ -14,7 +14,7 @@ class AppState extends Equatable {
   /// Non-null if interacting with a process failed.
   final InteractionError? interactionError;
 
-  const AppState({
+  const AppsListState({
     required this.loading,
     required this.runningVersion,
     required this.updateVersion,
@@ -23,8 +23,8 @@ class AppState extends Equatable {
     this.interactionError,
   });
 
-  factory AppState.initial() {
-    return const AppState(
+  factory AppsListState.initial() {
+    return const AppsListState(
       loading: true,
       runningVersion: '',
       updateVersion: '',
@@ -45,7 +45,7 @@ class AppState extends Equatable {
     ];
   }
 
-  AppState copyWith({
+  AppsListState copyWith({
     bool? loading,
     String? runningVersion,
     String? updateVersion,
@@ -53,7 +53,7 @@ class AppState extends Equatable {
     List<Window>? windows,
     InteractionError? interactionError,
   }) {
-    return AppState(
+    return AppsListState(
       loading: loading ?? this.loading,
       runningVersion: runningVersion ?? this.runningVersion,
       updateVersion: updateVersion ?? this.updateVersion,

@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-import '../../../application/app/app.dart';
-import '../../../application/theme/theme.dart';
-import '../../../settings/cubit/settings_cubit.dart';
-import '../app.dart';
+import '../application/theme/theme.dart';
+import '../settings/cubit/settings_cubit.dart';
+import 'apps_list.dart';
 
 /// The main screen for Nyrna.
 ///
 /// Shows a ListView with tiles for each open window on the current desktop.
-class AppsPage extends StatefulWidget {
+class AppsListPage extends StatefulWidget {
   static const id = 'running_apps_screen';
 
-  const AppsPage({Key? key}) : super(key: key);
+  const AppsListPage({Key? key}) : super(key: key);
 
   @override
-  State<AppsPage> createState() => _AppsPageState();
+  State<AppsListPage> createState() => _AppsListPageState();
 }
 
-class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
+class _AppsListPageState extends State<AppsListPage>
+    with WidgetsBindingObserver {
   /// Tracks the current window size.
   ///
   /// Updated in [initState], [dispose], and [didChangeMetrics] so that
@@ -54,7 +54,7 @@ class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: BlocConsumer<AppCubit, AppState>(
+      body: BlocConsumer<AppsListCubit, AppsListState>(
         listener: (context, state) {
           if (state.interactionError == null) return;
 
@@ -134,7 +134,7 @@ class InteractionErrorDialog extends StatelessWidget {
                 '[file a bug](https://github.com/Merrit/nyrna/issues).',
             onTapLink: (String text, String? href, String title) {
               if (href == null) return;
-              appCubit.launchURL(href);
+              appsListCubit.launchURL(href);
             },
           ),
         ],
@@ -172,7 +172,7 @@ class _ProgressOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppCubit, AppState>(
+    return BlocBuilder<AppsListCubit, AppsListState>(
       builder: (context, state) {
         return (state.loading)
             ? Stack(
@@ -209,7 +209,7 @@ class _FloatingActionButton extends StatelessWidget {
                     backgroundColor: (state.appTheme == AppTheme.pitchBlack)
                         ? Colors.black
                         : null,
-                    onPressed: () => appCubit.manualRefresh(),
+                    onPressed: () => appsListCubit.manualRefresh(),
                     child: const Icon(Icons.refresh),
                   );
                 },

@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:nyrna/application/app/app.dart';
 import 'package:nyrna/application/helpers/json_converters.dart';
 import 'package:nyrna/infrastructure/icon_manager/icon_manager.dart';
 import 'package:nyrna/settings/settings_service.dart';
@@ -12,6 +11,7 @@ import 'package:nyrna/presentation/styles.dart';
 import 'package:window_size/window_size.dart' as window;
 
 import '../../../infrastructure/launcher/src/hotkey.dart';
+import '../../apps_list/apps_list.dart';
 
 part 'settings_state.dart';
 
@@ -63,7 +63,7 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateAutoRefresh([bool? autoEnabled]) async {
     if (autoEnabled != null) {
       await _prefs.setBool(key: 'autoRefresh', value: autoEnabled);
-      appCubit.setAutoRefresh(
+      appsListCubit.setAutoRefresh(
         autoRefresh: autoEnabled,
         refreshInterval: state.refreshInterval,
       );

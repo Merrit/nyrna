@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../application/theme/theme.dart';
-import 'app/app.dart';
+import '../apps_list/apps_list.dart';
 import 'loading_page.dart';
 import 'logs/pages/log_page.dart';
 import '../settings/settings_page.dart';
@@ -21,7 +21,7 @@ class AppWidget extends StatelessWidget {
           routes: {
             LoadingPage.id: (context) => const LoadingPage(),
             LogPage.id: (context) => const LogPage(),
-            AppsPage.id: (context) => const AppsPage(),
+            AppsListPage.id: (context) => const AppsListPage(),
             SettingsPage.id: (conext) => const SettingsPage(),
           },
           home: const LoadingPage(),

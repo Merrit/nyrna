@@ -12,18 +12,18 @@ import '../../../infrastructure/app_version/app_version.dart';
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../../settings/settings_service.dart';
 
-part 'app_state.dart';
+part 'apps_list_state.dart';
 
 /// Convenience access to the main app cubit.
-late AppCubit appCubit;
+late AppsListCubit appsListCubit;
 
-class AppCubit extends Cubit<AppState> {
+class AppsListCubit extends Cubit<AppsListState> {
   final NativePlatform _nativePlatform;
   final SettingsService _prefs;
   final SettingsCubit _prefsCubit;
   final AppVersion _appVersion;
 
-  AppCubit({
+  AppsListCubit({
     required NativePlatform nativePlatform,
     required SettingsService prefs,
     required SettingsCubit prefsCubit,
@@ -33,8 +33,8 @@ class AppCubit extends Cubit<AppState> {
         _prefs = prefs,
         _prefsCubit = prefsCubit,
         _appVersion = appVersion,
-        super(AppState.initial()) {
-    appCubit = this;
+        super(AppsListState.initial()) {
+    appsListCubit = this;
     _initialize();
   }
 

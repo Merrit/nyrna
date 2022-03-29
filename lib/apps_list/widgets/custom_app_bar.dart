@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../application/app/app.dart';
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../../settings/settings_page.dart';
-import '../app.dart';
+import '../apps_list.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -17,7 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       actions: [
-        BlocBuilder<AppCubit, AppState>(
+        BlocBuilder<AppsListCubit, AppsListState>(
           builder: (context, state) {
             return state.updateAvailable
                 ? IconButton(
@@ -40,7 +39,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// Inform user about new version of Nyrna, download link, etc.
   Future<void> _showUpdateDialog(BuildContext context) async {
-    final state = appCubit.state;
+    final state = appsListCubit.state;
     final currentVersion = state.runningVersion;
     final latestVersion = state.updateVersion;
     const url = 'https://nyrna.merritt.codes/download';
@@ -70,7 +69,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             TextButton(
               onPressed: () {
                 settingsCubit.ignoreUpdate(latestVersion);
-                Navigator.pushReplacementNamed(context, AppsPage.id);
+                Navigator.pushReplacementNamed(context, AppsListPage.id);
               },
               child: const Text('Dismiss'),
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../application/app/app.dart';
+import '../../apps_list/apps_list.dart';
 
 class AboutSection extends StatelessWidget {
   const AboutSection({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class AboutSection extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.info_outline),
           title: const Text('Nyrna version'),
-          subtitle: BlocBuilder<AppCubit, AppState>(
+          subtitle: BlocBuilder<AppsListCubit, AppsListState>(
             builder: (context, state) {
               return Text(state.runningVersion);
             },
@@ -24,12 +24,13 @@ class AboutSection extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.launch),
           title: const Text('Nyrna homepage'),
-          onTap: () => appCubit.launchURL('https://nyrna.merritt.codes'),
+          onTap: () => appsListCubit.launchURL('https://nyrna.merritt.codes'),
         ),
         ListTile(
           leading: const Icon(Icons.launch),
           title: const Text('GitHub repository'),
-          onTap: () => appCubit.launchURL('https://github.com/Merrit/nyrna'),
+          onTap: () =>
+              appsListCubit.launchURL('https://github.com/Merrit/nyrna'),
         ),
       ],
     );

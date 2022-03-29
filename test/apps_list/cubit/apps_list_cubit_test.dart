@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:native_platform/native_platform.dart';
+import 'package:nyrna/apps_list/apps_list.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:test/test.dart';
 
-import 'package:nyrna/application/app/app.dart';
-
-import '../../../mock_app_version.dart';
-import '../../../mock_native_platform.dart';
-import '../../../mock_settings_service.dart';
-import '../../../mock_settings_cubit.dart';
-import '../../../mock_process.dart';
+import '../../mock_app_version.dart';
+import '../../mock_native_platform.dart';
+import '../../mock_process.dart';
+import '../../mock_settings_cubit.dart';
+import '../../mock_settings_service.dart';
 
 final msPaintProcess = MockProcess(
   executable: 'mspaint.exe',
@@ -30,7 +29,7 @@ void main() {
     final _prefsCubit = MockSettingsCubit();
     final _appVersion = MockAppVersion();
 
-    late AppCubit _appCubit;
+    late AppsListCubit _appCubit;
 
     when(() => _prefs.getString('ignoredUpdate')).thenReturn(null);
 
@@ -51,7 +50,7 @@ void main() {
       when(() => _appVersion.latest()).thenAnswer((_) async => '1.0.0');
       when(() => _appVersion.updateAvailable()).thenAnswer((_) async => false);
 
-      _appCubit = AppCubit(
+      _appCubit = AppsListCubit(
         nativePlatform: _nativePlatform,
         prefs: _prefs,
         prefsCubit: _prefsCubit,

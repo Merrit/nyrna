@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_platform/native_platform.dart';
 
-import '../../../application/app/app.dart';
+import '../apps_list.dart';
 
 /// Represents a visible window on the desktop, running state and actions.
 class WindowTile extends StatefulWidget {
@@ -63,7 +63,7 @@ class _WindowTileState extends State<WindowTile> {
             ),
             onTap: () async {
               setState(() => loading = true);
-              await context.read<AppCubit>().toggle(window);
+              await context.read<AppsListCubit>().toggle(window);
               setState(() => loading = false);
             },
           ),

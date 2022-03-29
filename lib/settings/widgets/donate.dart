@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../../application/app/app.dart';
+import '../../apps_list/apps_list.dart';
 import '../../presentation/styles.dart';
 
 class Donate extends StatelessWidget {
@@ -25,7 +25,7 @@ class Donate extends StatelessWidget {
                       style: const TextStyle(color: Colors.lightBlueAccent),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          appCubit.launchURL('https://merritt.codes/');
+                          appsListCubit.launchURL('https://merritt.codes/');
                         },
                     ),
                     const TextSpan(text: '.'),
@@ -35,7 +35,7 @@ class Donate extends StatelessWidget {
               Spacers.verticalXtraSmall,
               ElevatedButton.icon(
                 onPressed: () {
-                  appCubit.launchURL('https://merritt.codes/support');
+                  appsListCubit.launchURL('https://merritt.codes/support');
                 },
                 icon: const Icon(
                   Icons.favorite,

@@ -8,8 +8,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart' as window;
 
-import 'application/app/app.dart';
 import 'application/theme/cubit/theme_cubit.dart';
+import 'apps_list/apps_list.dart';
 import 'domain/arguments/argument_parser.dart';
 import 'infrastructure/app_version/app_version.dart';
 import 'infrastructure/logger/app_logger.dart';
@@ -58,7 +58,7 @@ Future<void> main(List<String> args) async {
       child: Builder(
         builder: (context) {
           return BlocProvider(
-            create: (context) => AppCubit(
+            create: (context) => AppsListCubit(
               nativePlatform: nativePlatform,
               prefs: settingsService,
               prefsCubit: context.read<SettingsCubit>(),
