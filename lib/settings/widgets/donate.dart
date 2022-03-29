@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../apps_list/apps_list.dart';
-import '../../presentation/styles.dart';
+import '../../theme/styles.dart';
 
 class Donate extends StatelessWidget {
   const Donate({Key? key}) : super(key: key);

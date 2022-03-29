@@ -8,7 +8,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart' as window;
 
-import 'application/theme/cubit/theme_cubit.dart';
 import 'apps_list/apps_list.dart';
 import 'domain/arguments/argument_parser.dart';
 import 'infrastructure/app_version/app_version.dart';
@@ -16,6 +15,7 @@ import 'logs/app_logger.dart';
 import 'settings/cubit/settings_cubit.dart';
 import 'settings/settings_service.dart';
 import 'presentation/app_widget.dart';
+import 'theme/theme.dart';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();

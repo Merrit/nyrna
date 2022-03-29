@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../presentation/styles.dart';
+import '../../theme/styles.dart';
 import '../settings.dart';
 
 /// Add shortcuts and icons for portable builds or autostart.

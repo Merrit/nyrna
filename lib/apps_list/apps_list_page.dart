@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-import '../application/theme/theme.dart';
 import '../settings/cubit/settings_cubit.dart';
+import '../theme/theme.dart';
 import 'apps_list.dart';
 
 /// The main screen for Nyrna.

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../logs/logs.dart';
-import '../presentation/styles.dart';
+import '../theme/styles.dart';
 import 'widgets/widgets.dart';
 
 class SettingsPage extends StatelessWidget {
