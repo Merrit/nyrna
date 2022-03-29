@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../../application/app/app.dart';
-import '../../../application/preferences/cubit/preferences_cubit.dart';
 import '../../../application/theme/theme.dart';
+import '../../../settings/cubit/settings_cubit.dart';
 import '../app.dart';
 
 /// The main screen for Nyrna.
@@ -45,7 +45,7 @@ class _AppsPageState extends State<AppsPage> with WidgetsBindingObserver {
     final updatedWindowSize = WidgetsBinding.instance.window.physicalSize;
     if (_appWindowSize != updatedWindowSize) {
       _appWindowSize = updatedWindowSize;
-      preferencesCubit.saveWindowSize();
+      settingsCubit.saveWindowSize();
     }
     super.didChangeMetrics();
   }
@@ -195,7 +195,7 @@ class _FloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PreferencesCubit, PreferencesState>(
+    return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (context, state) {
         final autoRefresh = state.autoRefresh;
         final refreshIntervalSufficient = (state.refreshInterval > 5);

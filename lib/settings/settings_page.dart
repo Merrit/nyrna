@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../logs/logs.dart';
-import '../../styles.dart';
-import '../preferences.dart';
+import '../presentation/logs/logs.dart';
+import '../presentation/styles.dart';
+import 'widgets/widgets.dart';
 
-class PreferencesPage extends StatelessWidget {
-  static const id = 'preferences_page';
+class SettingsPage extends StatelessWidget {
+  static const id = 'settings_page';
 
-  const PreferencesPage({Key? key}) : super(key: key);
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Preferences')),
+      appBar: AppBar(title: const Text('Settings')),
       body: Scrollbar(
         thumbVisibility: true,
         child: ListView(

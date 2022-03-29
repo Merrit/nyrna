@@ -5,7 +5,7 @@ import '../application/theme/theme.dart';
 import 'app/app.dart';
 import 'loading_page.dart';
 import 'logs/pages/log_page.dart';
-import 'preferences/pages/preferences_page.dart';
+import '../settings/settings_page.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class AppWidget extends StatelessWidget {
             LoadingPage.id: (context) => const LoadingPage(),
             LogPage.id: (context) => const LogPage(),
             AppsPage.id: (context) => const AppsPage(),
-            PreferencesPage.id: (conext) => const PreferencesPage(),
+            SettingsPage.id: (conext) => const SettingsPage(),
           },
           home: const LoadingPage(),
         );

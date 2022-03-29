@@ -9,12 +9,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart' as window;
 
 import 'application/app/app.dart';
-import 'application/preferences/cubit/preferences_cubit.dart';
 import 'application/theme/cubit/theme_cubit.dart';
 import 'domain/arguments/argument_parser.dart';
 import 'infrastructure/app_version/app_version.dart';
 import 'infrastructure/logger/app_logger.dart';
-import 'infrastructure/preferences/preferences.dart';
+import 'settings/cubit/settings_cubit.dart';
+import 'settings/settings_service.dart';
 import 'presentation/app_widget.dart';
 
 Future<void> main(List<String> args) async {
@@ -37,12 +37,12 @@ Future<void> main(List<String> args) async {
   }
 
   final sharedPreferences = await SharedPreferences.getInstance();
-  final prefs = Preferences(sharedPreferences);
+  final settingsService = SettingsService(sharedPreferences);
 
   AppLogger().initialize();
 
   // Created outside runApp so it can be accessed for window settings below.
-  final prefsCubit = PreferencesCubit(prefs);
+  final prefsCubit = SettingsCubit(settingsService);
 
   // Provides information on this app from the pubspec.yaml.
   final packageInfo = await PackageInfo.fromPlatform();
@@ -52,7 +52,7 @@ Future<void> main(List<String> args) async {
       providers: [
         BlocProvider.value(value: prefsCubit),
         BlocProvider(
-          create: (context) => ThemeCubit(prefs),
+          create: (context) => ThemeCubit(settingsService),
         ),
       ],
       child: Builder(
@@ -60,8 +60,8 @@ Future<void> main(List<String> args) async {
           return BlocProvider(
             create: (context) => AppCubit(
               nativePlatform: nativePlatform,
-              prefs: prefs,
-              prefsCubit: context.read<PreferencesCubit>(),
+              prefs: settingsService,
+              prefsCubit: context.read<SettingsCubit>(),
               appVersion: AppVersion(packageInfo),
             ),
             lazy: false,
@@ -72,7 +72,7 @@ Future<void> main(List<String> args) async {
     ),
   );
 
-  final savedWindowSize = await preferencesCubit.savedWindowSize();
+  final savedWindowSize = await settingsCubit.savedWindowSize();
   if (savedWindowSize != null) {
     window.setWindowFrame(savedWindowSize);
   }

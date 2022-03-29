@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:native_platform/native_platform.dart';
+import 'package:nyrna/settings/settings.dart';
 import 'package:test/test.dart';
 
 import 'package:nyrna/application/app/app.dart';
-import 'package:nyrna/application/preferences/cubit/preferences_cubit.dart';
 
 import '../../../mock_app_version.dart';
 import '../../../mock_native_platform.dart';
-import '../../../mock_preferences.dart';
-import '../../../mock_preferences_cubit.dart';
+import '../../../mock_settings_service.dart';
+import '../../../mock_settings_cubit.dart';
 import '../../../mock_process.dart';
 
 final msPaintProcess = MockProcess(
@@ -26,8 +26,8 @@ final msPaintWindow = Window(
 void main() {
   group('AppCubit:', () {
     final _nativePlatform = MockNativePlatform();
-    final _prefs = MockPreferences();
-    final _prefsCubit = MockPreferencesCubit();
+    final _prefs = MockSettingsService();
+    final _prefsCubit = MockSettingsCubit();
     final _appVersion = MockAppVersion();
 
     late AppCubit _appCubit;
@@ -35,7 +35,7 @@ void main() {
     when(() => _prefs.getString('ignoredUpdate')).thenReturn(null);
 
     when(() => _prefsCubit.state).thenReturn(
-      const PreferencesState(
+      const SettingsState(
         autoStartHotkey: false,
         autoRefresh: false,
         refreshInterval: 5,

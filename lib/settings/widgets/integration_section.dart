@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../application/preferences/cubit/preferences_cubit.dart';
-import '../../styles.dart';
+import '../../presentation/styles.dart';
+import '../settings.dart';
 
 /// Add shortcuts and icons for portable builds or autostart.
 class IntegrationSection extends StatelessWidget {
@@ -34,12 +34,12 @@ class _WindowsIntegration extends StatelessWidget {
         ListTile(
           title: const Text('Start hotkey automatically at system startup'),
           leading: const Icon(Icons.add_circle_outline),
-          trailing: BlocBuilder<PreferencesCubit, PreferencesState>(
+          trailing: BlocBuilder<SettingsCubit, SettingsState>(
             builder: (context, state) {
               return Switch(
                 value: state.autoStartHotkey,
                 onChanged: (value) async {
-                  await preferencesCubit.updateAutoStartHotkey(value);
+                  await settingsCubit.updateAutoStartHotkey(value);
                 },
               );
             },

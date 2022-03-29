@@ -1,6 +1,6 @@
-part of 'preferences_cubit.dart';
+part of 'settings_cubit.dart';
 
-class PreferencesState extends Equatable {
+class SettingsState extends Equatable {
   final bool autoStartHotkey;
 
   /// Whether or not to automatically refresh the list of open windows.
@@ -13,7 +13,7 @@ class PreferencesState extends Equatable {
 
   final Color trayIconColor;
 
-  const PreferencesState({
+  const SettingsState({
     required this.autoStartHotkey,
     required this.autoRefresh,
     required this.refreshInterval,
@@ -32,14 +32,14 @@ class PreferencesState extends Equatable {
     ];
   }
 
-  PreferencesState copyWith({
+  SettingsState copyWith({
     bool? autoStartHotkey,
     bool? autoRefresh,
     int? refreshInterval,
     bool? showHiddenWindows,
     Color? trayIconColor,
   }) {
-    return PreferencesState(
+    return SettingsState(
       autoStartHotkey: autoStartHotkey ?? this.autoStartHotkey,
       autoRefresh: autoRefresh ?? this.autoRefresh,
       refreshInterval: refreshInterval ?? this.refreshInterval,

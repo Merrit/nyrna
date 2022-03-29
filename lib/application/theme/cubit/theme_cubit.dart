@@ -2,16 +2,16 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:nyrna/application/theme/enums/app_theme.dart';
-import 'package:nyrna/infrastructure/preferences/preferences.dart';
+import 'package:nyrna/settings/settings_service.dart';
 
 part 'theme_state.dart';
 
 late ThemeCubit themeCubit;
 
 class ThemeCubit extends Cubit<ThemeState> {
-  final Preferences _prefs;
+  final SettingsService _prefs;
 
-  ThemeCubit(Preferences prefs)
+  ThemeCubit(SettingsService prefs)
       : _prefs = prefs,
         super(
           ThemeState(appTheme: _getAppTheme(prefs)),
@@ -19,7 +19,7 @@ class ThemeCubit extends Cubit<ThemeState> {
     themeCubit = this;
   }
 
-  static AppTheme _getAppTheme(Preferences prefs) {
+  static AppTheme _getAppTheme(SettingsService prefs) {
     final savedTheme = prefs.getString('appTheme');
     switch (savedTheme) {
       case null:

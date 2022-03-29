@@ -9,8 +9,8 @@ import 'package:native_platform/native_platform.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../infrastructure/app_version/app_version.dart';
-import '../../../infrastructure/preferences/preferences.dart';
-import '../../preferences/cubit/preferences_cubit.dart';
+import '../../../settings/cubit/settings_cubit.dart';
+import '../../../settings/settings_service.dart';
 
 part 'app_state.dart';
 
@@ -19,14 +19,14 @@ late AppCubit appCubit;
 
 class AppCubit extends Cubit<AppState> {
   final NativePlatform _nativePlatform;
-  final Preferences _prefs;
-  final PreferencesCubit _prefsCubit;
+  final SettingsService _prefs;
+  final SettingsCubit _prefsCubit;
   final AppVersion _appVersion;
 
   AppCubit({
     required NativePlatform nativePlatform,
-    required Preferences prefs,
-    required PreferencesCubit prefsCubit,
+    required SettingsService prefs,
+    required SettingsCubit prefsCubit,
     required AppVersion appVersion,
     bool testing = false,
   })  : _nativePlatform = nativePlatform,

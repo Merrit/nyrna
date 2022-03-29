@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../application/app/app.dart';
-import '../../../application/preferences/cubit/preferences_cubit.dart';
-import '../../preferences/preferences.dart';
+import '../../../settings/cubit/settings_cubit.dart';
+import '../../../settings/settings_page.dart';
 import '../app.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -32,7 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           icon: const Icon(Icons.settings),
-          onPressed: () => Navigator.pushNamed(context, PreferencesPage.id),
+          onPressed: () => Navigator.pushNamed(context, SettingsPage.id),
         ),
       ],
     );
@@ -69,7 +69,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             TextButton(
               onPressed: () {
-                preferencesCubit.ignoreUpdate(latestVersion);
+                settingsCubit.ignoreUpdate(latestVersion);
                 Navigator.pushReplacementNamed(context, AppsPage.id);
               },
               child: const Text('Dismiss'),

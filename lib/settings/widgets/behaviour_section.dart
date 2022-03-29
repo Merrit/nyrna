@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../application/preferences/cubit/preferences_cubit.dart';
-import '../../core/core.dart';
-import '../../styles.dart';
+import '../../presentation/core/core.dart';
+import '../../presentation/styles.dart';
+import '../cubit/settings_cubit.dart';
 
 class BehaviourSection extends StatelessWidget {
   const BehaviourSection({Key? key}) : super(key: key);
@@ -19,18 +19,18 @@ class BehaviourSection extends StatelessWidget {
           title: const Text('Auto Refresh'),
           leading: const Icon(Icons.refresh),
           subtitle: const Text('Update window & process info automatically'),
-          trailing: BlocBuilder<PreferencesCubit, PreferencesState>(
+          trailing: BlocBuilder<SettingsCubit, SettingsState>(
             builder: (context, state) {
               return Switch(
                 value: state.autoRefresh,
                 onChanged: (value) async {
-                  await preferencesCubit.updateAutoRefresh(value);
+                  await settingsCubit.updateAutoRefresh(value);
                 },
               );
             },
           ),
         ),
-        BlocBuilder<PreferencesCubit, PreferencesState>(
+        BlocBuilder<SettingsCubit, SettingsState>(
           builder: (context, state) {
             return ListTile(
               leading: const Icon(Icons.timelapse),
@@ -52,13 +52,13 @@ class BehaviourSection extends StatelessWidget {
       context: context,
       type: InputDialogs.onlyInt,
       title: 'Auto Refresh Interval',
-      initialValue: preferencesCubit.state.refreshInterval.toString(),
+      initialValue: settingsCubit.state.refreshInterval.toString(),
     );
     if (result == null) return;
     final newInterval = int.tryParse(result);
     if (newInterval == null) return;
-    await preferencesCubit.setRefreshInterval(newInterval);
-    await preferencesCubit.updateAutoRefresh();
+    await settingsCubit.setRefreshInterval(newInterval);
+    await settingsCubit.updateAutoRefresh();
   }
 }
 
@@ -90,12 +90,12 @@ class ShowHiddenTile extends StatelessWidget {
       leading: const Icon(Icons.refresh),
       // subtitle: const Text('Includes windows from other virtual desktops '
       //     'and special windows that are not normally detected'),
-      trailing: BlocBuilder<PreferencesCubit, PreferencesState>(
+      trailing: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
           return Switch(
             value: state.showHiddenWindows,
             onChanged: (value) async {
-              await preferencesCubit.updateShowHiddenWindows(value);
+              await settingsCubit.updateShowHiddenWindows(value);
             },
           );
         },

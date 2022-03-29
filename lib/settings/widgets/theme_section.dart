@@ -4,8 +4,8 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../application/preferences/cubit/preferences_cubit.dart';
 import '../../../application/theme/theme.dart';
+import '../settings.dart';
 
 class ThemeSection extends StatelessWidget {
   const ThemeSection({Key? key}) : super(key: key);
@@ -66,7 +66,7 @@ class _IconCustomizer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PreferencesCubit, PreferencesState>(
+    return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (context, state) {
         return ListTile(
           leading: ColorIndicator(
@@ -87,7 +87,7 @@ class _IconCustomizer extends StatelessWidget {
     required Color currentColor,
   }) async {
     Color iconColor = currentColor;
-    final iconBytes = await preferencesCubit.iconBytes();
+    final iconBytes = await settingsCubit.iconBytes();
     await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -127,7 +127,7 @@ class _IconCustomizer extends StatelessWidget {
             ),
             TextButton(
               onPressed: () async {
-                await preferencesCubit.updateIconColor(iconColor);
+                await settingsCubit.updateIconColor(iconColor);
                 Navigator.pop(context);
               },
               child: const Text('Save'),

@@ -1,19 +1,19 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Persist key value pairs to disk.
-class Preferences {
+class SettingsService {
   /// Instance of SharedPreferences for getting and setting preferences.
   final SharedPreferences _prefs;
 
   // Settings is a singleton.
-  Preferences._internal(SharedPreferences prefs) : _prefs = prefs;
+  SettingsService._internal(SharedPreferences prefs) : _prefs = prefs;
 
-  static Preferences? _instance;
+  static SettingsService? _instance;
 
-  factory Preferences([SharedPreferences? prefs]) {
+  factory SettingsService([SharedPreferences? prefs]) {
     if (_instance == null) {
       assert(prefs != null);
-      _instance = Preferences._internal(prefs!);
+      _instance = SettingsService._internal(prefs!);
     }
     return _instance!;
   }
@@ -38,6 +38,6 @@ class Preferences {
 
   String? getString(String key) => _prefs.getString(key);
 
-  /// Remove a value from stored preferences.
+  /// Remove a value from stored settings.
   Future<bool> remove(String key) async => await _prefs.remove(key);
 }

@@ -5,7 +5,7 @@ import 'dart:ui';
 
 /// Converts Rect objects to / from json easily.
 ///
-/// Needed so they can be saved as a String to preferences.
+/// Needed so they can be saved as a String to settings.
 extension RectConverter on Rect {
   static Rect fromJson(String json) {
     final rectMap = jsonDecode(json) as Map<String, dynamic>;
