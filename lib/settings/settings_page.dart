@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../presentation/logs/logs.dart';
+import '../logs/logs.dart';
 import '../presentation/styles.dart';
 import 'widgets/widgets.dart';
 

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../application/theme/theme.dart';
 import '../apps_list/apps_list.dart';
 import 'loading_page.dart';
-import 'logs/pages/log_page.dart';
+import '../logs/log_page.dart';
 import '../settings/settings_page.dart';
 
 class AppWidget extends StatelessWidget {

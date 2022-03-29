@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
-import 'package:nyrna/infrastructure/logger/log_file.dart';
+
+import '../log_file.dart';
 
 part 'log_state.dart';
 

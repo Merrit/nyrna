@@ -12,7 +12,7 @@ import 'application/theme/cubit/theme_cubit.dart';
 import 'apps_list/apps_list.dart';
 import 'domain/arguments/argument_parser.dart';
 import 'infrastructure/app_version/app_version.dart';
-import 'infrastructure/logger/app_logger.dart';
+import 'logs/app_logger.dart';
 import 'settings/cubit/settings_cubit.dart';
 import 'settings/settings_service.dart';
 import 'presentation/app_widget.dart';

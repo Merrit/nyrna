@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 
-import '../../../application/log/cubit/log_cubit.dart';
+import 'logs.dart';
 
 /// Display Nyrna's logs.
 class LogPage extends StatelessWidget {
