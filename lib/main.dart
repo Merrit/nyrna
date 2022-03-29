@@ -10,8 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart' as window;
 
 import 'app.dart';
-import 'apps_list/apps_list.dart';
 import 'app_version/app_version.dart';
+import 'apps_list/apps_list.dart';
 import 'logs/app_logger.dart';
 import 'settings/cubit/settings_cubit.dart';
 import 'settings/settings_service.dart';
