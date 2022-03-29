@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:active_window/active_window.dart';
+import 'package:args/args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_platform/native_platform.dart';
@@ -9,12 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart' as window;
 
 import 'apps_list/apps_list.dart';
-import 'domain/arguments/argument_parser.dart';
 import 'infrastructure/app_version/app_version.dart';
 import 'logs/app_logger.dart';
+import 'presentation/app_widget.dart';
 import 'settings/cubit/settings_cubit.dart';
 import 'settings/settings_service.dart';
-import 'presentation/app_widget.dart';
 import 'theme/theme.dart';
 
 Future<void> main(List<String> args) async {
@@ -77,4 +77,58 @@ Future<void> main(List<String> args) async {
     window.setWindowFrame(savedWindowSize);
   }
   window.setWindowVisibility(visible: true);
+}
+
+/// Message to be displayed if Nyrna is called with an unknown argument.
+const _helpTextGreeting = '''
+Nyrna - Suspend games and applications.
+
+
+Run Nyrna without any arguments to launch the GUI.
+
+Supported arguments:
+
+''';
+
+/// Parse command-line arguments.
+class ArgumentParser {
+  bool logToFile = false;
+  bool toggleActiveWindow = false;
+
+  final _parser = ArgParser(usageLineLength: 80);
+
+  /// Parse received arguments.
+  void parseArgs(List<String> args) {
+    _parser
+      ..addFlag(
+        'toggle',
+        abbr: 't',
+        negatable: false,
+        callback: (bool value) => toggleActiveWindow = value,
+        help: 'Toggle the suspend / resume state for the active window. \n'
+            '❗Please note this will immediately suspend the active window, and '
+            'is intended to be used with a hotkey - be sure not to run this '
+            'from a terminal and accidentally suspend your terminal! ❗',
+      )
+      ..addFlag(
+        'log',
+        abbr: 'l',
+        negatable: false,
+        callback: (bool value) => logToFile = value,
+        help: 'Log events to a temporary file for debug purposes.',
+      );
+
+    final _helpText = _helpTextGreeting + _parser.usage + '\n\n';
+
+    try {
+      final result = _parser.parse(args);
+      if (result.rest.isNotEmpty) {
+        stdout.writeln(_helpText);
+        exit(0);
+      }
+    } on ArgParserException {
+      stdout.writeln(_helpText);
+      exit(0);
+    }
+  }
 }
