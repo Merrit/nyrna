@@ -9,7 +9,7 @@ import 'package:nyrna/settings/settings_service.dart';
 import 'package:nyrna/theme/styles.dart';
 import 'package:window_size/window_size.dart' as window;
 
-import '../../../infrastructure/launcher/src/hotkey.dart';
+import '../hotkey.dart';
 import '../../apps_list/apps_list.dart';
 import '../../core/core.dart';
 
