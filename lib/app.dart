@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../apps_list/apps_list.dart';
 import '../theme/theme.dart';
-import 'loading_page.dart';
+import 'loading/loading_page.dart';
 import '../logs/log_page.dart';
 import '../settings/settings_page.dart';
 
-class AppWidget extends StatelessWidget {
-  const AppWidget({Key? key}) : super(key: key);
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
