@@ -4,6 +4,16 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {
+            "name": "Debug win32 version updater",
+            "type": "dart",
+            "request": "launch",
+            "program": "packaging/win32/update_windows_version_info/bin/update_windows_version_info.dart",
+            "args": [
+                "/home/merritt/Development/nyrna/pubspec.yaml",
+                "/home/merritt/Development/nyrna/windows/runner/Runner.rc"
+            ]
+        },
         // Test current file
         {
             "name": "Test current file",
