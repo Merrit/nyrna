@@ -58,7 +58,8 @@ your gamepad, allowing you to suspend/resume your game with just your controller
 
 **Linux Example**
 
-{% capture linux-example-text %}
+KDE System Settings:
+
 - Shortcuts ->
 - Custom Shortcuts ->
   - Edit ->
@@ -67,10 +68,3 @@ your gamepad, allowing you to suspend/resume your game with just your controller
         - Action: `/path/to/nyrna/nyrna_toggle_active_window`
 
 ![KDE custom shortcut](../assets/images/custom-shortcut-linux-kde.png)
-
-{% endcapture %}
-
-<div class="notice--info">
-  <h4 class="no_toc">KDE System Settings:</h4>
-  {{ linux-example-text | markdownify }}
-</div>
