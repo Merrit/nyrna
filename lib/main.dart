@@ -5,6 +5,8 @@ import 'package:args/args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_platform/native_platform.dart';
+import 'package:nyrna/system_tray/system_tray_manager.dart';
+import 'package:nyrna/window/nyrna_window.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_size/window_size.dart' as window;
@@ -71,6 +73,9 @@ Future<void> main(List<String> args) async {
       ),
     ),
   );
+
+  final systemTray = SystemTrayManager(const NyrnaWindow());
+  await systemTray.initialize();
 
   final savedWindowSize = await settingsCubit.savedWindowSize();
   if (savedWindowSize != null) {
