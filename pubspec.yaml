@@ -27,6 +27,7 @@ dependencies:
   path_provider: ^2.0.1
   pub_semver: ^2.0.0
   shared_preferences: ^2.0.5
+  system_tray: ^0.1.1
   url_launcher: ^6.0.4
   win32: ^2.1.1
   win32_suspend_process: ^1.0.0
