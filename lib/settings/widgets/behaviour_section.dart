@@ -41,6 +41,20 @@ class BehaviourSection extends StatelessWidget {
             );
           },
         ),
+        ListTile(
+          title: const Text('Close to tray'),
+          leading: const Icon(Icons.bedtime),
+          trailing: BlocBuilder<SettingsCubit, SettingsState>(
+            builder: (context, state) {
+              return Switch(
+                value: state.closeToTray,
+                onChanged: (value) async {
+                  await settingsCubit.updateCloseToTray(value);
+                },
+              );
+            },
+          ),
+        ),
         const ShowHiddenTile(),
       ],
     );

@@ -37,6 +37,7 @@ void main() {
       const SettingsState(
         autoStartHotkey: false,
         autoRefresh: false,
+        closeToTray: false,
         refreshInterval: 5,
         showHiddenWindows: false,
         trayIconColor: Colors.blue,
