@@ -26,6 +26,7 @@ class SettingsCubit extends Cubit<SettingsState> {
           SettingsState(
             autoStartHotkey: prefs.getBool('autoStartHotkey') ?? false,
             autoRefresh: _checkAutoRefresh(prefs),
+            closeToTray: prefs.getBool('closeToTray') ?? false,
             refreshInterval: prefs.getInt('refreshInterval') ?? 5,
             showHiddenWindows: prefs.getBool('showHiddenWindows') ?? false,
             trayIconColor: Color(
@@ -69,6 +70,13 @@ class SettingsCubit extends Cubit<SettingsState> {
       );
       emit(state.copyWith(autoRefresh: autoEnabled));
     }
+  }
+
+  Future<void> updateCloseToTray([bool? closeToTray]) async {
+    if (closeToTray == null) return;
+
+    await _prefs.setBool(key: 'closeToTray', value: closeToTray);
+    emit(state.copyWith(closeToTray: closeToTray));
   }
 
   Future<Uint8List> iconBytes() async {

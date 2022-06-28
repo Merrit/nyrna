@@ -74,7 +74,7 @@ Future<void> main(List<String> args) async {
     ),
   );
 
-  final systemTray = SystemTrayManager(const NyrnaWindow());
+  final systemTray = SystemTrayManager(NyrnaWindow());
   await systemTray.initialize();
 
   final savedWindowSize = await settingsCubit.savedWindowSize();
