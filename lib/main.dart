@@ -14,6 +14,7 @@ import 'package:window_size/window_size.dart' as window;
 import 'app.dart';
 import 'app_version/app_version.dart';
 import 'apps_list/apps_list.dart';
+import 'hotkey/hotkey_service.dart';
 import 'logs/app_logger.dart';
 import 'settings/cubit/settings_cubit.dart';
 import 'settings/settings_service.dart';
@@ -44,7 +45,10 @@ Future<void> main(List<String> args) async {
   AppLogger().initialize();
 
   // Created outside runApp so it can be accessed for window settings below.
-  final prefsCubit = SettingsCubit(settingsService);
+  final _settingsCubit = SettingsCubit(
+    prefs: settingsService,
+    hotkeyService: HotkeyService(),
+  );
 
   // Provides information on this app from the pubspec.yaml.
   final packageInfo = await PackageInfo.fromPlatform();
@@ -52,7 +56,7 @@ Future<void> main(List<String> args) async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider.value(value: prefsCubit),
+        BlocProvider.value(value: _settingsCubit),
         BlocProvider(
           create: (context) => ThemeCubit(settingsService),
         ),

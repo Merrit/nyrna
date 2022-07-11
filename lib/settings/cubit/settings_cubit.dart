@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:nyrna/hotkey/hotkey_service.dart';
 import 'package:window_size/window_size.dart' as window;
 
 import '../../apps_list/apps_list.dart';
@@ -19,22 +22,44 @@ late SettingsCubit settingsCubit;
 
 class SettingsCubit extends Cubit<SettingsState> {
   final SettingsService _prefs;
+  final HotkeyService _hotkeyService;
 
-  SettingsCubit(SettingsService prefs)
-      : _prefs = prefs,
-        super(
-          SettingsState(
-            autoStartHotkey: prefs.getBool('autoStartHotkey') ?? false,
-            autoRefresh: _checkAutoRefresh(prefs),
-            closeToTray: prefs.getBool('closeToTray') ?? false,
-            refreshInterval: prefs.getInt('refreshInterval') ?? 5,
-            showHiddenWindows: prefs.getBool('showHiddenWindows') ?? false,
-            trayIconColor: Color(
-              prefs.getInt('trayIconColor') ?? AppColors.defaultIconColor,
-            ),
-          ),
-        ) {
+  SettingsCubit._(
+    this._prefs,
+    this._hotkeyService, {
+    required SettingsState initialState,
+  }) : super(initialState) {
     settingsCubit = this;
+    _hotkeyService.updateHotkey(state.hotKey);
+  }
+
+  factory SettingsCubit({
+    required SettingsService prefs,
+    required HotkeyService hotkeyService,
+  }) {
+    HotKey? hotkey;
+    final String? savedHotkey = prefs.getString('hotkey');
+    if (savedHotkey != null) {
+      hotkey = HotKey.fromJson(jsonDecode(savedHotkey));
+    } else {
+      hotkey = defaultHotkey;
+    }
+
+    return SettingsCubit._(
+      prefs,
+      hotkeyService,
+      initialState: SettingsState(
+        autoStartHotkey: prefs.getBool('autoStartHotkey') ?? false,
+        autoRefresh: _checkAutoRefresh(prefs),
+        closeToTray: prefs.getBool('closeToTray') ?? false,
+        hotKey: hotkey,
+        refreshInterval: prefs.getInt('refreshInterval') ?? 5,
+        showHiddenWindows: prefs.getBool('showHiddenWindows') ?? false,
+        trayIconColor: Color(
+          prefs.getInt('trayIconColor') ?? AppColors.defaultIconColor,
+        ),
+      ),
+    );
   }
 
   static bool _checkAutoRefresh(SettingsService prefs) {
@@ -96,6 +121,21 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateShowHiddenWindows(bool value) async {
     await _prefs.setBool(key: 'showHiddenWindows', value: value);
     emit(state.copyWith(showHiddenWindows: value));
+  }
+
+  Future<void> resetHotkey() async {
+    await _hotkeyService.updateHotkey(defaultHotkey);
+    emit(state.copyWith(hotKey: defaultHotkey));
+    await _prefs.remove('hotkey');
+  }
+
+  Future<void> updateHotkey(HotKey newHotKey) async {
+    await _hotkeyService.updateHotkey(newHotKey);
+    emit(state.copyWith(hotKey: newHotKey));
+    await _prefs.setString(
+      key: 'hotkey',
+      value: jsonEncode(newHotKey.toJson()),
+    );
   }
 
   /// Save the current window size & position to storage.

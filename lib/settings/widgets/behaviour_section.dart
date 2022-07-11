@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../../core/core.dart';
+import '../../hotkey/hotkey_service.dart';
 import '../../theme/styles.dart';
 import '../cubit/settings_cubit.dart';
 
@@ -41,6 +45,7 @@ class BehaviourSection extends StatelessWidget {
             );
           },
         ),
+        const HotkeyConfigWidget(),
         ListTile(
           title: const Text('Close to tray'),
           leading: const Icon(Icons.bedtime),
@@ -73,6 +78,118 @@ class BehaviourSection extends StatelessWidget {
     if (newInterval == null) return;
     await settingsCubit.setRefreshInterval(newInterval);
     await settingsCubit.updateAutoRefresh();
+  }
+}
+
+class HotkeyConfigWidget extends StatelessWidget {
+  const HotkeyConfigWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Hotkey service not working properly on Linux..
+    if (Platform.isLinux) return const SizedBox();
+
+    return ListTile(
+      title: const Text('Hotkey'),
+      leading: const Icon(Icons.keyboard),
+      trailing: ElevatedButton(
+        style: ElevatedButton.styleFrom(primary: Colors.grey.shade700),
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) => RecordHotKeyDialog(
+            initialHotkey: settingsCubit.state.hotKey,
+          ),
+        ),
+        child: BlocBuilder<SettingsCubit, SettingsState>(
+          builder: (context, state) {
+            return Text(state.hotKey.toStringHelper());
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class RecordHotKeyDialog extends StatefulWidget {
+  final HotKey? initialHotkey;
+
+  const RecordHotKeyDialog({
+    Key? key,
+    required this.initialHotkey,
+  }) : super(key: key);
+
+  @override
+  _RecordHotKeyDialogState createState() => _RecordHotKeyDialogState();
+}
+
+class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
+  HotKey? _hotKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            Row(
+              children: [
+                const Text('Record a new hotkey'),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.restore),
+                  onPressed: () {
+                    settingsCubit.resetHotkey();
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            ),
+            Container(
+              width: 100,
+              height: 60,
+              margin: const EdgeInsets.only(top: 20),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  HotKeyRecorder(
+                    initalHotKey: widget.initialHotkey,
+                    onHotKeyRecorded: (hotKey) {
+                      _hotKey = hotKey;
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Cancel'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
+          child: const Text('OK'),
+          onPressed: _hotKey == null
+              ? null
+              : () {
+                  // widget.onHotKeyRecorded(_hotKey!);
+                  settingsCubit.updateHotkey(_hotKey!);
+                  Navigator.of(context).pop();
+                },
+        ),
+      ],
+    );
   }
 }
 

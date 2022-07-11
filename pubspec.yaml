@@ -17,6 +17,7 @@ dependencies:
   flutter_bloc: ^8.0.0
   flutter_markdown: ^0.6.9+1
   flutter_window_close: ^0.2.2
+  hotkey_manager: ^0.1.7
   http: ^0.13.3
   image: ^3.0.2
   logging: ^1.0.1
