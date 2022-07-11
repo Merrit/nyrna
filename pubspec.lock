@@ -84,7 +84,7 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.15.0"
+    version: "1.16.0"
   convert:
     dependency: transitive
     description:
@@ -119,7 +119,7 @@ packages:
       name: fake_async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.3.0"
   ffi:
     dependency: transitive
     description:
@@ -182,6 +182,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_window_close:
+    dependency: "direct main"
+    description:
+      name: flutter_window_close
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.2"
   frontend_server_client:
     dependency: transitive
     description:
@@ -208,6 +215,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.6"
+  hotkey_manager:
+    dependency: "direct main"
+    description:
+      name: hotkey_manager
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.7"
   http:
     dependency: "direct main"
     description:
@@ -624,6 +638,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
+  system_tray:
+    dependency: "direct main"
+    description:
+      name: system_tray
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   term_glyph:
     dependency: transitive
     description:
@@ -715,6 +736,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.6"
   vector_math:
     dependency: transitive
     description:
@@ -728,7 +756,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "8.2.0"
+    version: "8.2.2"
   watcher:
     dependency: transitive
     description:
@@ -763,7 +791,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.1"
+    version: "2.6.1"
   win32_suspend_process:
     dependency: "direct main"
     description:
@@ -802,5 +830,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.16.1 <3.0.0"
+  dart: ">=2.17.0 <3.0.0"
   flutter: ">=2.10.0"

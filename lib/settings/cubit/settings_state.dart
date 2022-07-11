@@ -9,6 +9,9 @@ class SettingsState extends Equatable {
   /// Whether the app should continue running in the tray when closed.
   final bool closeToTray;
 
+  /// The hotkey to toggle active application suspend.
+  final HotKey hotKey;
+
   /// How often to automatically refresh the list of open windows, in seconds.
   final int refreshInterval;
 
@@ -20,6 +23,7 @@ class SettingsState extends Equatable {
     required this.autoStartHotkey,
     required this.autoRefresh,
     required this.closeToTray,
+    required this.hotKey,
     required this.refreshInterval,
     required this.showHiddenWindows,
     required this.trayIconColor,
@@ -31,6 +35,7 @@ class SettingsState extends Equatable {
       autoStartHotkey,
       autoRefresh,
       closeToTray,
+      hotKey,
       refreshInterval,
       showHiddenWindows,
       trayIconColor,
@@ -41,6 +46,7 @@ class SettingsState extends Equatable {
     bool? autoStartHotkey,
     bool? autoRefresh,
     bool? closeToTray,
+    HotKey? hotKey,
     int? refreshInterval,
     bool? showHiddenWindows,
     Color? trayIconColor,
@@ -49,6 +55,7 @@ class SettingsState extends Equatable {
       autoStartHotkey: autoStartHotkey ?? this.autoStartHotkey,
       autoRefresh: autoRefresh ?? this.autoRefresh,
       closeToTray: closeToTray ?? this.closeToTray,
+      hotKey: hotKey ?? this.hotKey,
       refreshInterval: refreshInterval ?? this.refreshInterval,
       showHiddenWindows: showHiddenWindows ?? this.showHiddenWindows,
       trayIconColor: trayIconColor ?? this.trayIconColor,

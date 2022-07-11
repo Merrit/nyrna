@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:native_platform/native_platform.dart';
 import 'package:nyrna/apps_list/apps_list.dart';
@@ -34,10 +35,11 @@ void main() {
     when(() => _prefs.getString('ignoredUpdate')).thenReturn(null);
 
     when(() => _prefsCubit.state).thenReturn(
-      const SettingsState(
+      SettingsState(
         autoStartHotkey: false,
         autoRefresh: false,
         closeToTray: false,
+        hotKey: HotKey(KeyCode.again),
         refreshInterval: 5,
         showHiddenWindows: false,
         trayIconColor: Colors.blue,
