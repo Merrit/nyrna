@@ -130,6 +130,10 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(state.copyWith(showHiddenWindows: value));
   }
 
+  Future<void> removeHotkey() async {
+    await _hotkeyService.removeHotkey();
+  }
+
   Future<void> resetHotkey() async {
     await _hotkeyService.updateHotkey(defaultHotkey);
     emit(state.copyWith(hotKey: defaultHotkey));

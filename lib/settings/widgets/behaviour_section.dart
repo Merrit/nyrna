@@ -113,7 +113,7 @@ class HotkeyConfigWidget extends StatelessWidget {
 }
 
 class RecordHotKeyDialog extends StatefulWidget {
-  final HotKey? initialHotkey;
+  final HotKey initialHotkey;
 
   const RecordHotKeyDialog({
     Key? key,
@@ -129,6 +129,8 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
 
   @override
   Widget build(BuildContext context) {
+    settingsCubit.removeHotkey();
+
     return AlertDialog(
       content: SingleChildScrollView(
         child: ListBody(
@@ -175,6 +177,7 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
         TextButton(
           child: const Text('Cancel'),
           onPressed: () {
+            settingsCubit.updateHotkey(widget.initialHotkey);
             Navigator.of(context).pop();
           },
         ),
@@ -183,7 +186,6 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
           onPressed: _hotKey == null
               ? null
               : () {
-                  // widget.onHotKeyRecorded(_hotKey!);
                   settingsCubit.updateHotkey(_hotKey!);
                   Navigator.of(context).pop();
                 },
