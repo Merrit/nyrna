@@ -6,12 +6,13 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:nyrna/hotkey/hotkey_service.dart';
 import 'package:window_size/window_size.dart' as window;
 
 import '../../apps_list/apps_list.dart';
 import '../../core/core.dart';
+import '../../hotkey/hotkey_service.dart';
 import '../../theme/styles.dart';
+import '../../window/nyrna_window.dart';
 import '../hotkey.dart';
 import '../icon_manager.dart';
 import '../settings_service.dart';
@@ -23,19 +24,23 @@ late SettingsCubit settingsCubit;
 class SettingsCubit extends Cubit<SettingsState> {
   final SettingsService _prefs;
   final HotkeyService _hotkeyService;
+  final NyrnaWindow _nyrnaWindow;
 
   SettingsCubit._(
     this._prefs,
-    this._hotkeyService, {
+    this._hotkeyService,
+    this._nyrnaWindow, {
     required SettingsState initialState,
   }) : super(initialState) {
     settingsCubit = this;
     _hotkeyService.updateHotkey(state.hotKey);
+    _nyrnaWindow.preventClose(state.closeToTray);
   }
 
   factory SettingsCubit({
     required SettingsService prefs,
     required HotkeyService hotkeyService,
+    required NyrnaWindow nyrnaWindow,
   }) {
     HotKey? hotkey;
     final String? savedHotkey = prefs.getString('hotkey');
@@ -48,6 +53,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     return SettingsCubit._(
       prefs,
       hotkeyService,
+      nyrnaWindow,
       initialState: SettingsState(
         autoStartHotkey: prefs.getBool('autoStartHotkey') ?? false,
         autoRefresh: _checkAutoRefresh(prefs),
@@ -100,6 +106,7 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateCloseToTray([bool? closeToTray]) async {
     if (closeToTray == null) return;
 
+    await _nyrnaWindow.preventClose(closeToTray);
     await _prefs.setBool(key: 'closeToTray', value: closeToTray);
     emit(state.copyWith(closeToTray: closeToTray));
   }

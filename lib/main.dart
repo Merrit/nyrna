@@ -5,10 +5,9 @@ import 'package:args/args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_platform/native_platform.dart';
-import 'package:nyrna/system_tray/system_tray_manager.dart';
-import 'package:nyrna/window/nyrna_window.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart' as window;
 
 import 'app.dart';
@@ -18,10 +17,13 @@ import 'hotkey/hotkey_service.dart';
 import 'logs/app_logger.dart';
 import 'settings/cubit/settings_cubit.dart';
 import 'settings/settings_service.dart';
+import 'system_tray/system_tray_manager.dart';
 import 'theme/theme.dart';
+import 'window/nyrna_window.dart';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
 
   // Parse command-line arguments.
   final argParser = ArgumentParser();
@@ -44,10 +46,13 @@ Future<void> main(List<String> args) async {
 
   AppLogger().initialize();
 
+  final nyrnaWindow = NyrnaWindow();
+
   // Created outside runApp so it can be accessed for window settings below.
   final _settingsCubit = SettingsCubit(
     prefs: settingsService,
     hotkeyService: HotkeyService(),
+    nyrnaWindow: nyrnaWindow,
   );
 
   // Provides information on this app from the pubspec.yaml.
@@ -78,7 +83,7 @@ Future<void> main(List<String> args) async {
     ),
   );
 
-  final systemTray = SystemTrayManager(NyrnaWindow());
+  final systemTray = SystemTrayManager(nyrnaWindow);
   await systemTray.initialize();
 
   final savedWindowSize = await settingsCubit.savedWindowSize();

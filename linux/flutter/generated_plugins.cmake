@@ -5,8 +5,10 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   flutter_window_close
   hotkey_manager
+  screen_retriever
   system_tray
   url_launcher_linux
+  window_manager
   window_size
 )
 
