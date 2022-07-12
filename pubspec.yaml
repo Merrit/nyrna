@@ -33,6 +33,7 @@ dependencies:
   url_launcher: ^6.0.4
   win32: ^2.1.1
   win32_suspend_process: ^1.0.0
+  window_manager: ^0.2.5
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
