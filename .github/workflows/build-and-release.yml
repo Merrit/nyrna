@@ -64,7 +64,7 @@ jobs:
         if: matrix.target == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev
+          sudo apt-get install -y keybinder-3.0 libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev
           # Install AppImage dependencies
           sudo apt-get install -y jq python3 zsync
           # yq gets the version from pubspec.yaml
