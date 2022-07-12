@@ -8,6 +8,10 @@ import 'package:native_platform/native_platform.dart';
 class HotkeyService {
   final _log = Logger('HotkeyService');
 
+  Future<void> removeHotkey() async {
+    await hotKeyManager.unregisterAll();
+  }
+
   Future<void> updateHotkey(HotKey _hotKey) async {
     // Hotkey service not working properly on Linux..
     // - The method channel doesn't seem able to register `Pause` at all.
