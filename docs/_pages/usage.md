@@ -42,8 +42,9 @@ Nyrna can be used to toggle the suspend / resume state of one active window:
     > ~/Applications/Nyrna/nyrna --toggle
 
 - Windows
-  - Run the `toggle_active_hotkey.exe` file from the Nyrna directory to add an
-    icon to the system tray that will listen for the `Pause` key to be pressed.
+  - In settings enable `Close to tray`, and configure a hotkey. While Nyrna is
+    opened or in the system tray this hotkey will trigger suspend/resume for the
+    actively focused window.
     - Optionally, from Nyrna's settings you can set this hotkey monitor to run
       automatically at boot.
 
