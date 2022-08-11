@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
+import 'package:desktop_integration/desktop_integration.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:helpers/helpers.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:window_size/window_size.dart' as window;
 
@@ -13,7 +17,6 @@ import '../../core/core.dart';
 import '../../hotkey/hotkey_service.dart';
 import '../../theme/styles.dart';
 import '../../window/nyrna_window.dart';
-import '../hotkey.dart';
 import '../icon_manager.dart';
 import '../settings_service.dart';
 
@@ -55,7 +58,7 @@ class SettingsCubit extends Cubit<SettingsState> {
       hotkeyService,
       nyrnaWindow,
       initialState: SettingsState(
-        autoStartHotkey: prefs.getBool('autoStartHotkey') ?? false,
+        autoStart: prefs.getBool('autoStart') ?? false,
         autoRefresh: _checkAutoRefresh(prefs),
         closeToTray: prefs.getBool('closeToTray') ?? false,
         hotKey: hotkey,
@@ -84,12 +87,32 @@ class SettingsCubit extends Cubit<SettingsState> {
     }
   }
 
-  Future<bool> updateAutoStartHotkey(bool value) async {
-    final successful = await Hotkey().autoStart(value);
-    if (!successful) return false;
-    await _prefs.setBool(key: 'autoStartHotkey', value: value);
-    emit(state.copyWith(autoStartHotkey: value));
-    return true;
+  Future<void> updateAutoStart(bool shouldAutostart) async {
+    if (kDebugMode) return;
+
+    File? desktopFile;
+    if (Platform.isLinux) {
+      desktopFile = await assetToTempDir('packaging/linux/nyrna.desktop');
+    }
+
+    final iconFileSuffix = Platform.isWindows ? 'ico' : 'svg';
+    final iconFile = await assetToTempDir('assets/icons/nyrna.$iconFileSuffix');
+
+    final desktopIntegration = DesktopIntegration(
+      desktopFilePath: desktopFile?.path ?? '',
+      iconPath: iconFile.path,
+      packageName: 'codes.merritt.nyrna',
+      linkFileName: 'Nyrna',
+    );
+
+    if (shouldAutostart) {
+      await desktopIntegration.enableAutostart();
+    } else {
+      await desktopIntegration.disableAutostart();
+    }
+
+    await _prefs.setBool(key: 'autoStart', value: shouldAutostart);
+    emit(state.copyWith(autoStart: shouldAutostart));
   }
 
   Future<void> updateAutoRefresh([bool? autoEnabled]) async {
