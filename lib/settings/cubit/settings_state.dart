@@ -1,7 +1,7 @@
 part of 'settings_cubit.dart';
 
 class SettingsState extends Equatable {
-  final bool autoStartHotkey;
+  final bool autoStart;
 
   /// Whether or not to automatically refresh the list of open windows.
   final bool autoRefresh;
@@ -20,7 +20,7 @@ class SettingsState extends Equatable {
   final Color trayIconColor;
 
   const SettingsState({
-    required this.autoStartHotkey,
+    required this.autoStart,
     required this.autoRefresh,
     required this.closeToTray,
     required this.hotKey,
@@ -32,7 +32,7 @@ class SettingsState extends Equatable {
   @override
   List<Object> get props {
     return [
-      autoStartHotkey,
+      autoStart,
       autoRefresh,
       closeToTray,
       hotKey,
@@ -43,7 +43,7 @@ class SettingsState extends Equatable {
   }
 
   SettingsState copyWith({
-    bool? autoStartHotkey,
+    bool? autoStart,
     bool? autoRefresh,
     bool? closeToTray,
     HotKey? hotKey,
@@ -52,7 +52,7 @@ class SettingsState extends Equatable {
     Color? trayIconColor,
   }) {
     return SettingsState(
-      autoStartHotkey: autoStartHotkey ?? this.autoStartHotkey,
+      autoStart: autoStart ?? this.autoStart,
       autoRefresh: autoRefresh ?? this.autoRefresh,
       closeToTray: closeToTray ?? this.closeToTray,
       hotKey: hotKey ?? this.hotKey,

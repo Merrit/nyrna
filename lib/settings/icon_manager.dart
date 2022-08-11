@@ -20,15 +20,6 @@ class IconManager {
     return iconBytes;
   }
 
-  /// Re-launch the tray application so it shows the new icon.
-  Future<void> _refreshTray() async {
-    try {
-      await Process.start('toggle_active_hotkey.exe', []);
-    } on ProcessException {
-      _log.warning('Unable to launch hotkey executable');
-    }
-  }
-
   Future<bool> updateIconColor(Color color) async {
     final _iconBytes = await iconBytes();
     final loadedImage = image.decodePng(_iconBytes);
@@ -57,7 +48,6 @@ class IconManager {
       _log.warning('Unable to write icon file: $e');
       return false;
     }
-    await _refreshTray();
     return true;
   }
 }

@@ -36,7 +36,7 @@ void main() {
 
     when(() => _prefsCubit.state).thenReturn(
       SettingsState(
-        autoStartHotkey: false,
+        autoStart: false,
         autoRefresh: false,
         closeToTray: false,
         hotKey: HotKey(KeyCode.again),
