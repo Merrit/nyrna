@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
@@ -14,9 +13,7 @@ import 'package:window_size/window_size.dart' as window;
 import '../../apps_list/apps_list.dart';
 import '../../core/core.dart';
 import '../../hotkey/hotkey_service.dart';
-import '../../theme/styles.dart';
 import '../../window/nyrna_window.dart';
-import '../icon_manager.dart';
 import '../settings_service.dart';
 
 part 'settings_state.dart';
@@ -64,9 +61,6 @@ class SettingsCubit extends Cubit<SettingsState> {
         refreshInterval: prefs.getInt('refreshInterval') ?? 5,
         showHiddenWindows: prefs.getBool('showHiddenWindows') ?? false,
         startHiddenInTray: prefs.getBool('startHiddenInTray') ?? false,
-        trayIconColor: Color(
-          prefs.getInt('trayIconColor') ?? AppColors.defaultIconColor,
-        ),
       ),
     );
   }
@@ -130,20 +124,6 @@ class SettingsCubit extends Cubit<SettingsState> {
     await _nyrnaWindow.preventClose(closeToTray);
     await _prefs.setBool(key: 'closeToTray', value: closeToTray);
     emit(state.copyWith(closeToTray: closeToTray));
-  }
-
-  Future<Uint8List> iconBytes() async {
-    final iconManager = IconManager();
-    final iconBytes = await iconManager.iconBytes();
-    return iconBytes;
-  }
-
-  Future<void> updateIconColor(Color newColor) async {
-    final successful = await IconManager().updateIconColor(newColor);
-    if (successful) {
-      await _prefs.setInt(key: 'trayIconColor', value: newColor.value);
-      emit(state.copyWith(trayIconColor: newColor));
-    }
   }
 
   Future<void> updateShowHiddenWindows(bool value) async {

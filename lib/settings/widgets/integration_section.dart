@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,8 +35,6 @@ class _AutostartTile extends StatelessWidget {
           title: const Text('Start automatically at system boot'),
           value: state.autoStart,
           onChanged: (value) async {
-            if (kDebugMode) return;
-
             await settingsCubit.updateAutoStart(value);
           },
         );

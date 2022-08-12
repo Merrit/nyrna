@@ -143,13 +143,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.2"
-  flex_color_picker:
-    dependency: "direct main"
-    description:
-      name: flex_color_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -669,7 +662,7 @@ packages:
       name: system_tray
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1"
+    version: "2.0.1"
   term_glyph:
     dependency: transitive
     description:
