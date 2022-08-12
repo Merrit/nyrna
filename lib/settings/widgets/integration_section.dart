@@ -12,23 +12,35 @@ class IntegrationSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: const [
         Spacers.verticalMedium,
-        const Text('System Integration'),
+        Text('System Integration'),
         Spacers.verticalXtraSmall,
-        BlocBuilder<SettingsCubit, SettingsState>(
-          builder: (context, state) {
-            return SwitchListTile(
-              secondary: const Icon(Icons.start),
-              title: const Text('Start automatically at system boot'),
-              value: state.autoStart,
-              onChanged: (value) async {
-                await settingsCubit.updateAutoStart(value);
-              },
-            );
-          },
-        ),
+        _AutostartTile(),
       ],
+    );
+  }
+}
+
+class _AutostartTile extends StatelessWidget {
+  const _AutostartTile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        return SwitchListTile(
+          secondary: const Icon(Icons.start),
+          title: const Text('Start automatically at system boot'),
+          value: state.autoStart,
+          onChanged: (value) async {
+            await settingsCubit.updateAutoStart(value);
+          },
+        );
+      },
+    );
+  }
+}
     );
   }
 }
