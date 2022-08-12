@@ -42,6 +42,7 @@ void main() {
         hotKey: HotKey(KeyCode.again),
         refreshInterval: 5,
         showHiddenWindows: false,
+        startHiddenInTray: false,
         trayIconColor: Colors.blue,
       ),
     );

@@ -90,7 +90,13 @@ Future<void> main(List<String> args) async {
   if (savedWindowSize != null) {
     window.setWindowFrame(savedWindowSize);
   }
-  window.setWindowVisibility(visible: true);
+
+  bool visible = true;
+  if (settingsService.getBool('startHiddenInTray') == true) {
+    visible = false;
+  }
+
+  window.setWindowVisibility(visible: visible);
 }
 
 /// Message to be displayed if Nyrna is called with an unknown argument.
