@@ -18,8 +18,6 @@ class SettingsState extends Equatable {
   final bool showHiddenWindows;
   final bool startHiddenInTray;
 
-  final Color trayIconColor;
-
   const SettingsState({
     required this.autoStart,
     required this.autoRefresh,
@@ -28,7 +26,6 @@ class SettingsState extends Equatable {
     required this.refreshInterval,
     required this.showHiddenWindows,
     required this.startHiddenInTray,
-    required this.trayIconColor,
   });
 
   @override
@@ -41,7 +38,6 @@ class SettingsState extends Equatable {
       refreshInterval,
       showHiddenWindows,
       startHiddenInTray,
-      trayIconColor,
     ];
   }
 
@@ -53,7 +49,6 @@ class SettingsState extends Equatable {
     int? refreshInterval,
     bool? showHiddenWindows,
     bool? startHiddenInTray,
-    Color? trayIconColor,
   }) {
     return SettingsState(
       autoStart: autoStart ?? this.autoStart,
@@ -63,7 +58,6 @@ class SettingsState extends Equatable {
       refreshInterval: refreshInterval ?? this.refreshInterval,
       showHiddenWindows: showHiddenWindows ?? this.showHiddenWindows,
       startHiddenInTray: startHiddenInTray ?? this.startHiddenInTray,
-      trayIconColor: trayIconColor ?? this.trayIconColor,
     );
   }
 }

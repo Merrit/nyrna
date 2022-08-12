@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:native_platform/native_platform.dart';
@@ -43,7 +42,6 @@ void main() {
         refreshInterval: 5,
         showHiddenWindows: false,
         startHiddenInTray: false,
-        trayIconColor: Colors.blue,
       ),
     );
 

@@ -16,15 +16,16 @@ class SystemTrayManager {
         ? 'assets/icons/nyrna.ico'
         : 'assets/icons/nyrna.png';
 
-    final menu = [
-      MenuItem(label: 'Show', onClicked: _window.show),
-      MenuItem(label: 'Hide', onClicked: _window.hide),
-      MenuItem(label: 'Exit', onClicked: _window.close),
-    ];
+    final menu = Menu();
+    await menu.buildFrom([
+      MenuItemLable(label: 'Show', onClicked: (menuItem) => _window.show()),
+      MenuItemLable(label: 'Hide', onClicked: (menuItem) => _window.hide()),
+      MenuItemLable(label: 'Exit', onClicked: (menuItem) => _window.close()),
+    ]);
 
     // We first init the systray menu and then add the menu entries
     await _systemTray.initSystemTray(
-      title: "Nyrna",
+      toolTip: "Nyrna",
       iconPath: path,
     );
 
