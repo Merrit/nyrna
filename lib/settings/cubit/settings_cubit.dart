@@ -6,7 +6,6 @@ import 'dart:ui';
 import 'package:bloc/bloc.dart';
 import 'package:desktop_integration/desktop_integration.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
@@ -64,6 +63,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         hotKey: hotkey,
         refreshInterval: prefs.getInt('refreshInterval') ?? 5,
         showHiddenWindows: prefs.getBool('showHiddenWindows') ?? false,
+        startHiddenInTray: prefs.getBool('startHiddenInTray') ?? false,
         trayIconColor: Color(
           prefs.getInt('trayIconColor') ?? AppColors.defaultIconColor,
         ),
@@ -88,8 +88,6 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   Future<void> updateAutoStart(bool shouldAutostart) async {
-    if (kDebugMode) return;
-
     File? desktopFile;
     if (Platform.isLinux) {
       desktopFile = await assetToTempDir('packaging/linux/nyrna.desktop');
@@ -151,6 +149,11 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateShowHiddenWindows(bool value) async {
     await _prefs.setBool(key: 'showHiddenWindows', value: value);
     emit(state.copyWith(showHiddenWindows: value));
+  }
+
+  Future<void> updateStartHiddenInTray(bool value) async {
+    await _prefs.setBool(key: 'startHiddenInTray', value: value);
+    emit(state.copyWith(startHiddenInTray: value));
   }
 
   Future<void> removeHotkey() async {
