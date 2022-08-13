@@ -111,7 +111,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "3493e8de5a86f36f68cfc98f0169862df3462abb"
+      resolved-ref: "138b5b0bf6616dbb3ad5a25f2d9d502de1c1a454"
       url: "https://github.com/Merrit/desktop_integration.git"
     source: git
     version: "0.0.1"

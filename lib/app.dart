@@ -45,6 +45,18 @@ class _AppState extends State<App> with TrayListener, WindowListener {
   }
 
   @override
+  void onTrayIconMouseDown() {
+    trayManager.popUpContextMenu();
+    super.onTrayIconMouseDown();
+  }
+
+  @override
+  void onTrayIconRightMouseDown() {
+    trayManager.popUpContextMenu();
+    super.onTrayIconRightMouseDown();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
