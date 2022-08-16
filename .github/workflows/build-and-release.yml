@@ -54,11 +54,8 @@ jobs:
 
     # ----------------------------------- Setup ---------------------------------- #
     steps:
-      # Set up Flutter.
-      - name: Clone Flutter repository
-        uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8
-        with:
-          channel: beta
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2.3.0
 
       - name: Install Linux dependencies
         if: matrix.target == 'Linux'
