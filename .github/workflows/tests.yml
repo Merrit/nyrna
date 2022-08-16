@@ -21,9 +21,8 @@ jobs:
         with:
           java-version: "12.x"
 
-      - uses: subosito/flutter-action@v1
-        with:
-          channel: "beta"
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2.3.0
 
       - name: Get Linux dependencies
         if: runner.os == 'Linux'
