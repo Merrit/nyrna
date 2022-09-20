@@ -50,6 +50,8 @@ class _AppsListPageState extends State<AppsListPage>
     super.didChangeMetrics();
   }
 
+  final ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,8 +72,10 @@ class _AppsListPageState extends State<AppsListPage>
           return Stack(
             children: [
               Scrollbar(
+                controller: scrollController,
                 thumbVisibility: true,
                 child: ListView(
+                  controller: scrollController,
                   padding: const EdgeInsets.all(10),
                   children: [
                     if (!state.loading && state.windows.isEmpty) ...[
