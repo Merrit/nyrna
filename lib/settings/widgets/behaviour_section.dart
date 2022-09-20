@@ -95,7 +95,7 @@ class HotkeyConfigWidget extends StatelessWidget {
       title: const Text('Hotkey'),
       leading: const Icon(Icons.keyboard),
       trailing: ElevatedButton(
-        style: ElevatedButton.styleFrom(primary: Colors.grey.shade700),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade700),
         onPressed: () => showDialog(
           context: context,
           builder: (context) => RecordHotKeyDialog(
