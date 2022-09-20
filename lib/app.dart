@@ -66,9 +66,9 @@ class _AppState extends State<App> with TrayListener, WindowListener {
           theme: state.themeData,
           routes: {
             LoadingPage.id: (context) => const LoadingPage(),
-            LogPage.id: (context) => const LogPage(),
+            LogPage.id: (context) => LogPage(),
             AppsListPage.id: (context) => const AppsListPage(),
-            SettingsPage.id: (conext) => const SettingsPage(),
+            SettingsPage.id: (conext) => SettingsPage(),
           },
           home: const LoadingPage(),
         );

@@ -9,7 +9,9 @@ import 'logs.dart';
 class LogPage extends StatelessWidget {
   static const id = 'log_page';
 
-  const LogPage({Key? key}) : super(key: key);
+  LogPage({Key? key}) : super(key: key);
+
+  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -82,8 +84,10 @@ class LogPage extends StatelessWidget {
                     vertical: 15,
                   ),
                   child: Scrollbar(
+                    controller: scrollController,
                     thumbVisibility: true,
                     child: SingleChildScrollView(
+                      controller: scrollController,
                       child: BlocBuilder<LogCubit, LogState>(
                         builder: (context, state) {
                           return SelectableText(state.logsText);
