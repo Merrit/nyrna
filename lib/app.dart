@@ -45,6 +45,12 @@ class _AppState extends State<App> with TrayListener, WindowListener {
   }
 
   @override
+  void onWindowRestore() {
+    appsListCubit.manualRefresh();
+    super.onWindowRestore();
+  }
+
+  @override
   void onTrayIconMouseDown() {
     trayManager.popUpContextMenu();
     super.onTrayIconMouseDown();
