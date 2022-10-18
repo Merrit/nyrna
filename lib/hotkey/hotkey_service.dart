@@ -5,6 +5,8 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:logging/logging.dart';
 import 'package:native_platform/native_platform.dart';
 
+import '../apps_list/apps_list.dart';
+
 class HotkeyService {
   final _log = Logger('HotkeyService');
 
@@ -32,6 +34,7 @@ class HotkeyService {
     _log.info('Triggering toggle from hotkey press.');
 
     await toggleActiveWindow(nativePlatform: NativePlatform());
+    await appsListCubit.manualRefresh();
   }
 }
 
