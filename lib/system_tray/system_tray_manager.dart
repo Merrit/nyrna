@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:tray_manager/tray_manager.dart';
 
+import '../apps_list/apps_list.dart';
 import '../window/nyrna_window.dart';
 
 class SystemTrayManager {
@@ -16,9 +17,14 @@ class SystemTrayManager {
 
     await trayManager.setIcon(iconPath);
 
+    Future<void> _showWindow() async {
+      await _window.show();
+      await appsListCubit.manualRefresh();
+    }
+
     final Menu menu = Menu(
       items: [
-        MenuItem(label: 'Show', onClick: (menuItem) => _window.show()),
+        MenuItem(label: 'Show', onClick: (menuItem) => _showWindow()),
         MenuItem(label: 'Hide', onClick: (menuItem) => _window.hide()),
         MenuItem(label: 'Exit', onClick: (menuItem) => _window.close()),
       ],
