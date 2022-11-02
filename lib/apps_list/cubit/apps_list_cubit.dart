@@ -54,6 +54,10 @@ class AppsListCubit extends Cubit<AppsListState> {
       showHidden: _prefsCubit.state.showHiddenWindows,
     );
 
+    // Filter out windows that are likely not desired or workable,
+    // for example the root window, unknown (0) pid, etc.
+    windows.removeWhere((element) => element.process.pid < 10);
+
     for (var window in windows) {
       await window.process.refreshStatus();
     }
