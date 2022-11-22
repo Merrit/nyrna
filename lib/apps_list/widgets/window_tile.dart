@@ -64,6 +64,8 @@ class _WindowTileState extends State<WindowTile> {
             onTap: () async {
               setState(() => loading = true);
               await context.read<AppsListCubit>().toggle(window);
+
+              if (!mounted) return;
               setState(() => loading = false);
             },
           ),
