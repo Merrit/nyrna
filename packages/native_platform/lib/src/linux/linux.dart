@@ -1,8 +1,8 @@
 import 'dart:io' as io;
 
 import '../native_platform.dart';
+import '../process/models/process.dart';
 import '../window.dart';
-import 'linux_process.dart';
 
 /// System-level or non-app executables. Nyrna shouldn't show these.
 const List<String> _filteredWindows = [
@@ -65,10 +65,14 @@ class Linux implements NativePlatform {
     final executable = await _getExecutableName(pid);
     if (_filteredWindows.contains(executable)) return null;
 
-    final linuxProcess = LinuxProcess(executable: executable, pid: pid);
+    final process = Process(
+      executable: executable,
+      pid: pid,
+      status: ProcessStatus.unknown,
+    );
     final title = parts.sublist(4).join(' ');
 
-    return Window(id: id, process: linuxProcess, title: title);
+    return Window(id: id, process: process, title: title);
   }
 
   Future<String> _getExecutableName(int pid) async {
@@ -86,7 +90,11 @@ class Linux implements NativePlatform {
     if (pid == 0) throw (Exception('No pid'));
 
     final executable = await _getExecutableName(pid);
-    final process = LinuxProcess(pid: pid, executable: executable);
+    final process = Process(
+      pid: pid,
+      executable: executable,
+      status: ProcessStatus.unknown,
+    );
     final windowTitle = await _activeWindowTitle();
 
     return Window(

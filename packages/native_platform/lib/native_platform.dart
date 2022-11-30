@@ -2,5 +2,5 @@
 library native_platform;
 
 export 'src/native_platform.dart';
-export 'src/process.dart';
+export 'src/process/process.dart';
 export 'src/window.dart';

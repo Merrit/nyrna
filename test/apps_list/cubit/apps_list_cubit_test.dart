@@ -7,13 +7,15 @@ import 'package:test/test.dart';
 
 import '../../mock_app_version.dart';
 import '../../mock_native_platform.dart';
-import '../../mock_process.dart';
 import '../../mock_settings_cubit.dart';
 import '../../mock_settings_service.dart';
 
-final msPaintProcess = MockProcess(
+class MockProcessRepository extends Mock implements ProcessRepository {}
+
+const msPaintProcess = Process(
   executable: 'mspaint.exe',
   pid: 3716,
+  status: ProcessStatus.normal,
 );
 
 final msPaintWindow = Window(
@@ -27,6 +29,7 @@ void main() {
     final _nativePlatform = MockNativePlatform();
     final _prefs = MockSettingsService();
     final _prefsCubit = MockSettingsCubit();
+    final _processRepository = MockProcessRepository();
     final _appVersion = MockAppVersion();
 
     late AppsListCubit _appCubit;
@@ -52,10 +55,14 @@ void main() {
       when(() => _appVersion.latest()).thenAnswer((_) async => '1.0.0');
       when(() => _appVersion.updateAvailable()).thenAnswer((_) async => false);
 
+      when(() => _processRepository.getProcessStatus(any()))
+          .thenAnswer((_) async => ProcessStatus.normal);
+
       _appCubit = AppsListCubit(
         nativePlatform: _nativePlatform,
         prefs: _prefs,
         prefsCubit: _prefsCubit,
+        processRepository: _processRepository,
         appVersion: _appVersion,
         testing: true,
       );
@@ -78,7 +85,6 @@ void main() {
     test('process changed externally updates state', () async {
       when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
           .thenAnswer((_) async => [msPaintWindow]);
-      when(() => msPaintProcess.status).thenReturn(ProcessStatus.normal);
 
       await _appCubit.manualRefresh();
 
@@ -88,7 +94,9 @@ void main() {
       expect(windows[0].process.status, ProcessStatus.normal);
 
       // Simulate the process being suspended outside Nyrna.
-      when(() => msPaintProcess.status).thenReturn(ProcessStatus.suspended);
+      reset(_processRepository);
+      when(() => _processRepository.getProcessStatus(any()))
+          .thenAnswer((_) async => ProcessStatus.suspended);
 
       // Verify we pick up this status change.
       await _appCubit.manualRefresh();
@@ -123,17 +131,29 @@ void main() {
           .thenAnswer((_) async => [
                 Window(
                   id: 7363,
-                  process: MockProcess(executable: 'kate', pid: 836482),
+                  process: const Process(
+                    executable: 'kate',
+                    pid: 836482,
+                    status: ProcessStatus.normal,
+                  ),
                   title: 'Kate',
                 ),
                 Window(
                   id: 29347,
-                  process: MockProcess(executable: 'evince', pid: 94847),
+                  process: const Process(
+                    executable: 'evince',
+                    pid: 94847,
+                    status: ProcessStatus.normal,
+                  ),
                   title: 'Evince',
                 ),
                 Window(
                   id: 89374,
-                  process: MockProcess(executable: 'ark', pid: 9374623),
+                  process: const Process(
+                    executable: 'ark',
+                    pid: 9374623,
+                    status: ProcessStatus.normal,
+                  ),
                   title: 'Ark',
                 ),
               ]);

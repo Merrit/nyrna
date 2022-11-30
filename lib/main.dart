@@ -73,6 +73,7 @@ Future<void> main(List<String> args) async {
               nativePlatform: nativePlatform,
               prefs: settingsService,
               prefsCubit: context.read<SettingsCubit>(),
+              processRepository: ProcessRepository.init(),
               appVersion: AppVersion(packageInfo),
             ),
             lazy: false,

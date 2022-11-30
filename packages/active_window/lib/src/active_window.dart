@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' hide pid;
 
 import 'package:native_platform/native_platform.dart';
 
@@ -10,18 +10,22 @@ import 'storage.dart';
 /// We use extra logging here in order to debug issues since this has
 /// no user interface.
 class ActiveWindow {
-  final NativePlatform nativePlatform;
+  final NativePlatform _nativePlatform;
+  final ProcessRepository _processRepository;
   final Storage _storage;
   final Window _window;
 
-  const ActiveWindow(this._window, this.nativePlatform, this._storage);
+  const ActiveWindow(
+    this._nativePlatform,
+    this._processRepository,
+    this._storage,
+    this._window,
+  );
 
   Future<bool> resume(int savedPid) async {
     await Logger.log('resuming, pid: $savedPid');
 
-    final process = Process(pid: savedPid, executable: '');
-
-    final resumed = await process.resume();
+    final resumed = await _processRepository.resume(savedPid);
     if (!resumed) {
       await Logger.log('Failed to resume! Try resuming process manually?');
       // Must delete here, or enter infinite loop of failing to resume.
@@ -34,7 +38,7 @@ class ActiveWindow {
     if (windowId == null) {
       await Logger.log('Failed to find saved windowId, cannot restore.');
     } else {
-      final restoreSuccessful = await nativePlatform.restoreWindow(windowId);
+      final restoreSuccessful = await _nativePlatform.restoreWindow(windowId);
       if (!restoreSuccessful) await Logger.log('Failed to restore window.');
     }
 
@@ -56,7 +60,7 @@ class ActiveWindow {
       }
     }
 
-    final minimized = await nativePlatform.minimizeWindow(_window.id);
+    final minimized = await _nativePlatform.minimizeWindow(_window.id);
     if (!minimized) {
       await Logger.log('Failed to minimize window.');
       return false;
@@ -68,7 +72,7 @@ class ActiveWindow {
       await Future.delayed(Duration(milliseconds: 500));
     }
 
-    final suspended = await _window.process.suspend();
+    final suspended = await _processRepository.suspend(_window.process.pid);
     if (!suspended) {
       await Logger.log('Failed to suspend active window.');
       return false;
