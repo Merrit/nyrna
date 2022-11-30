@@ -21,17 +21,20 @@ class AppsListCubit extends Cubit<AppsListState> {
   final NativePlatform _nativePlatform;
   final SettingsService _prefs;
   final SettingsCubit _prefsCubit;
+  final ProcessRepository _processRepository;
   final AppVersion _appVersion;
 
   AppsListCubit({
     required NativePlatform nativePlatform,
     required SettingsService prefs,
     required SettingsCubit prefsCubit,
+    required ProcessRepository processRepository,
     required AppVersion appVersion,
     bool testing = false,
   })  : _nativePlatform = nativePlatform,
         _prefs = prefs,
         _prefsCubit = prefsCubit,
+        _processRepository = processRepository,
         _appVersion = appVersion,
         super(AppsListState.initial()) {
     appsListCubit = this;
@@ -58,8 +61,8 @@ class AppsListCubit extends Cubit<AppsListState> {
     // for example the root window, unknown (0) pid, etc.
     windows.removeWhere((element) => element.process.pid < 10);
 
-    for (var window in windows) {
-      await window.process.refreshStatus();
+    for (var i = 0; i < windows.length; i++) {
+      windows[i] = await _refreshWindowProcess(windows[i]);
     }
 
     windows.sortWindows();
@@ -109,7 +112,7 @@ class AppsListCubit extends Cubit<AppsListState> {
 
   /// Toggle suspend / resume for the process associated with the given window.
   Future<bool> toggle(Window window) async {
-    await window.process.refreshStatus();
+    window = await _refreshWindowProcess(window);
     bool successful;
 
     if (window.process.status == ProcessStatus.suspended) {
@@ -118,11 +121,10 @@ class AppsListCubit extends Cubit<AppsListState> {
       successful = await _suspend(window);
     }
 
-    final windows = state.windows;
-    await windows
-        .singleWhereOrNull((element) => element.id == window.id)
-        ?.process
-        .refreshStatus();
+    // Create a copy of the state of windows, with this window's info refreshed.
+    final windows = [...state.windows];
+    final index = windows.indexWhere((element) => element.id == window.id);
+    windows.replaceRange(index, index, [await _refreshWindowProcess(window)]);
 
     emit(state.copyWith(
       windows: windows,
@@ -135,7 +137,7 @@ class AppsListCubit extends Cubit<AppsListState> {
   }
 
   Future<bool> _resume(Window window) async {
-    final successful = await window.process.resume();
+    final successful = await _processRepository.resume(window.process.pid);
 
     // Restore the window _after_ resuming or it might not restore.
     if (successful) await _nativePlatform.restoreWindow(window.id);
@@ -153,13 +155,23 @@ class AppsListCubit extends Cubit<AppsListState> {
       await Future.delayed(const Duration(milliseconds: 500));
     }
 
-    final successful = await window.process.suspend();
+    final successful = await _processRepository.suspend(window.process.pid);
 
     // If suspend failed, restore the window so the user won't mistakenly
     // think that the suspend was successful.
     if (!successful) await _nativePlatform.restoreWindow(window.id);
 
     return successful;
+  }
+
+  /// Refresh the process status associated with [window].
+  Future<Window> _refreshWindowProcess(Window window) async {
+    final process = window.process;
+    return window.copyWith(
+      process: process.copyWith(
+        status: await _processRepository.getProcessStatus(process.pid),
+      ),
+    );
   }
 
   /// Launch the requested [url] in the default browser.

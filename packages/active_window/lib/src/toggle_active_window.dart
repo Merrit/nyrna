@@ -16,9 +16,10 @@ Future<void> toggleActiveWindow({
   final storage = Storage();
 
   final activeWindow = ActiveWindow(
-    await nativePlatform.activeWindow(),
     nativePlatform,
+    ProcessRepository.init(),
     storage,
+    await nativePlatform.activeWindow(),
   );
 
   final savedPid = await storage.getInt('pid');

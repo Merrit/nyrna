@@ -1,12 +1,15 @@
-import 'package:native_platform/src/process.dart';
-import 'package:native_platform/src/window.dart';
+import 'package:native_platform/native_platform.dart';
 import 'package:test/test.dart';
 
 void main() {
   const fakeId = 8172363;
   const fakeExecutable = 'firefox';
   const fakePid = 1723128;
-  final fakeProcess = Process(executable: fakeExecutable, pid: fakePid);
+  final fakeProcess = Process(
+    executable: fakeExecutable,
+    pid: fakePid,
+    status: ProcessStatus.normal,
+  );
   final fakeTitle = 'Google -- Mozilla Firefox';
 
   final window = Window(id: fakeId, process: fakeProcess, title: fakeTitle);

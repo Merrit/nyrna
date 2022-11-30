@@ -5,11 +5,8 @@ import 'package:logging/logging.dart';
 import 'package:win32/win32.dart';
 
 import '../native_platform.dart';
-import '../process.dart';
+import '../process/models/process.dart';
 import '../window.dart';
-import 'win32_process.dart';
-
-export 'win32_process.dart';
 
 /// System-level or non-app executables. Nyrna shouldn't show these.
 const List<String> _filteredWindows = [
@@ -50,7 +47,11 @@ class Win32 implements NativePlatform {
     final windowId = await _activeWindowId();
     final pid = await _pidFromWindowId(windowId);
     final executable = await getExecutableName(pid);
-    final process = Win32Process(this, pid: pid, executable: executable);
+    final process = Process(
+      pid: pid,
+      executable: executable,
+      status: ProcessStatus.unknown,
+    );
     final title = getWindowTitle(windowId);
 
     return Window(id: windowId, process: process, title: title);
@@ -90,7 +91,11 @@ class Win32 implements NativePlatform {
   Future<Process> processFromWindowId(int windowId) async {
     final pid = await _pidFromWindowId(windowId);
     final executable = await getExecutableName(pid);
-    final process = Win32Process(this, pid: pid, executable: executable);
+    final process = Process(
+      pid: pid,
+      executable: executable,
+      status: ProcessStatus.unknown,
+    );
     return process;
   }
 
@@ -204,7 +209,7 @@ class WindowBuilder {
     _windows.add(
       Window(
         id: hWnd,
-        process: Win32Process(Win32(), executable: '', pid: 0),
+        process: Process(executable: '', pid: 0, status: ProcessStatus.unknown),
         title: title,
       ),
     );

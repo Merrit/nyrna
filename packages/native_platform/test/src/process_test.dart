@@ -8,14 +8,26 @@ void main() {
   late Process process;
 
   group('Process:', () {
-    setUp(() => process = Process(executable: 'nyrna', pid: pid));
+    setUp(() {
+      return process = Process(
+        executable: 'nyrna',
+        pid: pid,
+        status: ProcessStatus.normal,
+      );
+    });
 
     test('Can instantiate', () {
       expect(process, isA<Process>());
     });
 
     group('pid', () {
-      setUp(() => process = Process(executable: 'nyrna', pid: pid));
+      setUp(() {
+        return process = Process(
+          executable: 'nyrna',
+          pid: pid,
+          status: ProcessStatus.normal,
+        );
+      });
 
       test('is not null', () {
         expect(process.pid, isA<int>());
@@ -30,9 +42,13 @@ void main() {
       late ProcessStatus status;
 
       setUp(() async {
-        process = Process(executable: 'nyrna', pid: pid);
-        await process.refreshStatus();
-        status = process.status;
+        process = Process(
+          executable: 'nyrna',
+          pid: pid,
+          status: ProcessStatus.normal,
+        );
+        final processRepository = ProcessRepository.init();
+        status = await processRepository.getProcessStatus(pid);
       });
 
       test('is a ProcessStatus', () {
