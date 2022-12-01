@@ -46,6 +46,11 @@ class Linux implements NativePlatform {
     return windows;
   }
 
+  /// wmctrl reports a window's desktop number as -1 if it is "sticky".
+  /// For example, if using GNOME's "Workspaces on primary display only"
+  /// preference every window on secondary displays will have "desktop: -1";
+  static const _kStickyWindowIdentifier = -1;
+
   /// Takes a line of output from wmctrl and if valid returns a [Window].
   Future<Window?> _buildWindow(String wmctrlLine, bool showHidden) async {
     final parts = wmctrlLine.split(' ');
@@ -55,7 +60,8 @@ class Linux implements NativePlatform {
 
     // Which virtual desktop this window is on.
     final windowDesktop = int.tryParse(parts[1]);
-    final windowOnCurrentDesktop = (windowDesktop == _desktop);
+    final windowOnCurrentDesktop = (windowDesktop == _desktop ||
+        windowDesktop == _kStickyWindowIdentifier);
     if (!windowOnCurrentDesktop && !showHidden) return null;
 
     final pid = int.tryParse(parts[2]);
