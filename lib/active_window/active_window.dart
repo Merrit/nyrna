@@ -2,9 +2,6 @@
 /// suspend / resume the active, foreground window.
 ///
 /// Calling this should be bound to a hotkey
-/// using the operating system's default methods on Linux, or by using
-/// the included `toggle_active_hotkey.exe` on Windows which sits in the
-/// system tray and listens for the `Pause` keyboard key to activate.
 ///
 /// When the hotkey launches Nyrna with the `--toggle` argument it will:
 /// - Find the active, foreground window
@@ -16,8 +13,5 @@
 /// - Resume the suspended process
 /// - Restore / unminimize the associated window
 /// - Delete the file containing the PID & window id so next call will suspend.
-library active_window;
 
-export 'src/active_window.dart';
-export 'src/logger.dart';
 export 'src/toggle_active_window.dart';

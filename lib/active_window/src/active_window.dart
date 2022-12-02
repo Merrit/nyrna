@@ -69,7 +69,7 @@ class ActiveWindow {
     // Small delay on Windows to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
     if (Platform.isWindows) {
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
     }
 
     final suspended = await _processRepository.suspend(_window.process.pid);

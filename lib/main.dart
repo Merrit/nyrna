@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:active_window/active_window.dart';
 import 'package:args/args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart' as window;
 
+import 'active_window/active_window.dart';
 import 'app.dart';
 import 'app_version/app_version.dart';
 import 'apps_list/apps_list.dart';
