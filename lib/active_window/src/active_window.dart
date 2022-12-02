@@ -1,7 +1,6 @@
 import 'dart:io' hide pid;
 
-import 'package:native_platform/native_platform.dart';
-
+import '../../native_platform/native_platform.dart';
 import 'logger.dart';
 import 'storage.dart';
 

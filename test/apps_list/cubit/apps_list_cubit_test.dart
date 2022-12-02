@@ -1,7 +1,7 @@
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:native_platform/native_platform.dart';
 import 'package:nyrna/apps_list/apps_list.dart';
+import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:test/test.dart';
 

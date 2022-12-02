@@ -336,13 +336,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
-  native_platform:
-    dependency: "direct main"
-    description:
-      path: "packages/native_platform"
-      relative: true
-    source: path
-    version: "1.0.0"
   nested:
     dependency: transitive
     description:

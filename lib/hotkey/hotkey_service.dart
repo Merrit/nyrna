@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:logging/logging.dart';
-import 'package:native_platform/native_platform.dart';
 
 import '../active_window/active_window.dart';
 import '../apps_list/apps_list.dart';
+import '../native_platform/native_platform.dart';
 
 class HotkeyService {
   final _log = Logger('HotkeyService');

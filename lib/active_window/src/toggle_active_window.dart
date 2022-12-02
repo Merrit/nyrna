@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:hive/hive.dart';
-import 'package:native_platform/native_platform.dart';
 
+import '../../native_platform/native_platform.dart';
 import 'active_window.dart';
 import 'logger.dart';
 import 'storage.dart';
