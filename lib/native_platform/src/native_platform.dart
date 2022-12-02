@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'linux/linux.dart';
 import 'win32/win32.dart';
@@ -11,8 +11,8 @@ import 'window.dart';
 abstract class NativePlatform {
   // Return correct subtype depending on the current operating system.
   factory NativePlatform() {
-    if (Platform.isLinux) {
-      return Linux();
+    if (io.Platform.isLinux) {
+      return Linux(io.Process.run);
     } else {
       return Win32();
     }
