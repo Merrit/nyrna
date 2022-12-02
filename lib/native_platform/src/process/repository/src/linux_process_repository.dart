@@ -1,8 +1,7 @@
 import 'dart:io' show ProcessResult, ProcessSignal;
 
-import 'package:native_platform/src/process/models/process.dart';
-import 'package:native_platform/src/typedefs.dart';
-
+import '../../../typedefs.dart';
+import '../../process.dart';
 import '../process_repository.dart';
 
 /// Provides interaction access with host system processes on Linux.

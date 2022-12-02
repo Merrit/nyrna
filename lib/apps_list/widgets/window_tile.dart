@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:native_platform/native_platform.dart';
 
+import '../../native_platform/native_platform.dart';
 import '../apps_list.dart';
 
 /// Represents a visible window on the desktop, running state and actions.

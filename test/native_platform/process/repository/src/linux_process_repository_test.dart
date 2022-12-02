@@ -1,8 +1,7 @@
 import 'dart:io' show ProcessResult, ProcessSignal;
 
-import 'package:native_platform/src/process/models/process.dart';
-import 'package:native_platform/src/process/repository/src/linux_process_repository.dart';
-import 'package:native_platform/src/typedefs.dart';
+import 'package:nyrna/native_platform/native_platform.dart';
+import 'package:nyrna/native_platform/src/typedefs.dart';
 import 'package:test/test.dart';
 
 late KillFunction mockKill;

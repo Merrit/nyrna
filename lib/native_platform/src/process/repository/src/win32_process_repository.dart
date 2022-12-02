@@ -2,11 +2,11 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:logging/logging.dart';
-import 'package:native_platform/src/process/models/process.dart';
-import 'package:native_platform/src/typedefs.dart';
 import 'package:win32/win32.dart';
 import 'package:win32_suspend_process/win32_suspend_process.dart';
 
+import '../../../typedefs.dart';
+import '../../process.dart';
 import '../process_repository.dart';
 
 /// Provides interaction access with host system processes on Windows.

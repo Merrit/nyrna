@@ -1,4 +1,4 @@
-import 'package:native_platform/src/native_platform.dart';
+import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:test/test.dart';
 
 import 'skip_github.dart';

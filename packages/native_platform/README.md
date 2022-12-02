@@ -1,1 +1,0 @@
-Nyrna's package to interactive with the native platform.

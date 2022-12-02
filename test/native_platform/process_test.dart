@@ -1,6 +1,6 @@
 import 'dart:io' as io;
 
-import 'package:native_platform/native_platform.dart';
+import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:test/test.dart';
 
 void main() {

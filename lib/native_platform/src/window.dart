@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:native_platform/src/process/process.dart';
+
+import 'process/models/process.dart';
 
 /// Friendly representation of a visible window.
 class Window extends Equatable {
