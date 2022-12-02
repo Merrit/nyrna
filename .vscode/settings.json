@@ -6,5 +6,8 @@
         "**/.hg/store/**": true,
         "**/packaging/linux/appimage/AppDir**": true,
         "**/packaging/linux/appimage/appimage-builder-cache**": true,
-    }
+    },
+    "dart.flutterTestAdditionalArgs": [
+        "--coverage"
+    ]
 }
