@@ -12,6 +12,9 @@ packaging/output/
 packaging/PKGBUILD/.SRCINFO
 packaging/PKGBUILD/.gitignore
 
+# Test coverage
+lcov.info
+
 # Local-only files
 nyrna-release.txt
 
