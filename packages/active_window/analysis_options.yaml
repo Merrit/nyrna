@@ -1,5 +1,0 @@
-include: package:pedantic/analysis_options.yaml
-
-analyzer:
-  errors:
-    omit_local_variable_types: ignore

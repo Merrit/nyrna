@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:active_window/src/storage.dart';
 import 'package:hive/hive.dart';
 import 'package:native_platform/native_platform.dart';
 
-import '../active_window.dart';
+import 'active_window.dart';
+import 'logger.dart';
+import 'storage.dart';
 
 /// Toggle suspend / resume for the active, foreground window.
 Future<void> toggleActiveWindow({

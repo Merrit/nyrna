@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:active_window/active_window.dart' hide Logger;
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:logging/logging.dart';
 import 'package:native_platform/native_platform.dart';
 
+import '../active_window/active_window.dart';
 import '../apps_list/apps_list.dart';
 
 class HotkeyService {
