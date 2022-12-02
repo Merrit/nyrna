@@ -1,7 +1,6 @@
-import 'dart:io' as io;
-
 import '../native_platform.dart';
 import '../process/models/process.dart';
+import '../typedefs.dart';
 import '../window.dart';
 
 /// System-level or non-app executables. Nyrna shouldn't show these.
@@ -11,12 +10,16 @@ const List<String> _filteredWindows = [
 
 /// Interact with the native Linux operating system.
 class Linux implements NativePlatform {
+  final RunFunction _run;
+
+  Linux(this._run);
+
   int? _desktop;
 
   // Active virtual desktop as reported by wmctrl.
   @override
   Future<int> currentDesktop() async {
-    final result = await io.Process.run('wmctrl', ['-d']);
+    final result = await _run('wmctrl', ['-d']);
     final lines = result.stdout.toString().split('\n');
     lines.forEach((line) {
       if (line.contains('*')) _desktop = int.tryParse(line[0]);
@@ -29,7 +32,7 @@ class Linux implements NativePlatform {
   Future<List<Window>> windows({bool showHidden = false}) async {
     await currentDesktop();
 
-    final wmctrlOutput = await io.Process.run('bash', ['-c', 'wmctrl -lp']);
+    final wmctrlOutput = await _run('bash', ['-c', 'wmctrl -lp']);
 
     // Each line from wmctrl will be something like:
     // 0x03600041  1 1459   SHODAN Inbox - Unified Folders - Mozilla Thunderbird
@@ -82,7 +85,7 @@ class Linux implements NativePlatform {
   }
 
   Future<String> _getExecutableName(int pid) async {
-    final result = await io.Process.run('readlink', ['/proc/$pid/exe']);
+    final result = await _run('readlink', ['/proc/$pid/exe']);
     final executable = result.stdout.toString().split('/').last.trim();
     return executable;
   }
@@ -112,13 +115,13 @@ class Linux implements NativePlatform {
 
   // Returns the unique hex ID of the active window as reported by xdotool.
   Future<int> _activeWindowId() async {
-    final result = await io.Process.run('xdotool', ['getactivewindow']);
+    final result = await _run('xdotool', ['getactivewindow']);
     final _windowId = int.tryParse(result.stdout.toString().trim());
     return _windowId ?? 0;
   }
 
   Future<int> _activeWindowPid(int windowId) async {
-    final result = await io.Process.run(
+    final result = await _run(
       'xdotool',
       ['getwindowpid', '$windowId'],
     );
@@ -127,7 +130,7 @@ class Linux implements NativePlatform {
   }
 
   Future<String> _activeWindowTitle() async {
-    final result = await io.Process.run(
+    final result = await _run(
       'xdotool',
       ['getactivewindow getwindowname'],
     );
@@ -138,12 +141,12 @@ class Linux implements NativePlatform {
   @override
   Future<bool> checkDependencies() async {
     try {
-      await io.Process.run('wmctrl', ['-d']);
+      await _run('wmctrl', ['-d']);
     } catch (err) {
       return false;
     }
     try {
-      await io.Process.run('xdotool', ['getactivewindow']);
+      await _run('xdotool', ['getactivewindow']);
     } catch (err) {
       return false;
     }
@@ -152,7 +155,7 @@ class Linux implements NativePlatform {
 
   @override
   Future<bool> minimizeWindow(int windowId) async {
-    final result = await io.Process.run(
+    final result = await _run(
       'xdotool',
       ['windowminimize', '$windowId'],
     );
@@ -161,7 +164,7 @@ class Linux implements NativePlatform {
 
   @override
   Future<bool> restoreWindow(int windowId) async {
-    final result = await io.Process.run(
+    final result = await _run(
       'xdotool',
       ['windowactivate', '$windowId'],
     );
