@@ -150,17 +150,6 @@ jobs:
       # ----------------------------------- Build ---------------------------------- #
       - run: flutter build -v ${{ matrix.build_target }} --release
 
-      - name: Build hotkey executable for Windows
-        if: matrix.target == 'Windows'
-        run: |
-          cd ${{ github.workspace }}\packages\active_window
-          dart pub get
-          dart compile exe .\bin\toggle_active_window.dart
-          editbin.exe /subsystem:windows .\bin\toggle_active_window.exe
-          xcopy .\bin\toggle_active_window.exe ${{ github.workspace }}\${{ matrix.build_path }}\
-
-          cd ${{ github.workspace }}
-
       # ---------------------------------- Package --------------------------------- #
       - name: Create output directory
         run: |
