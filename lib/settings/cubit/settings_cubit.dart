@@ -6,9 +6,8 @@ import 'package:bloc/bloc.dart';
 import 'package:desktop_integration/desktop_integration.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:helpers/helpers.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:window_size/window_size.dart' as window;
+import 'package:window_size/window_size.dart' show PlatformWindow;
 
 import '../../apps_list/apps_list.dart';
 import '../../core/core.dart';
@@ -21,11 +20,15 @@ part 'settings_state.dart';
 late SettingsCubit settingsCubit;
 
 class SettingsCubit extends Cubit<SettingsState> {
+  final Future<File> Function(String path) _assetToTempDir;
+  final Future<PlatformWindow> Function() _getWindowInfo;
   final SettingsService _prefs;
   final HotkeyService _hotkeyService;
   final NyrnaWindow _nyrnaWindow;
 
   SettingsCubit._(
+    this._assetToTempDir,
+    this._getWindowInfo,
     this._prefs,
     this._hotkeyService,
     this._nyrnaWindow, {
@@ -37,6 +40,8 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   factory SettingsCubit({
+    required Future<File> Function(String path) assetToTempDir,
+    required Future<PlatformWindow> Function() getWindowInfo,
     required SettingsService prefs,
     required HotkeyService hotkeyService,
     required NyrnaWindow nyrnaWindow,
@@ -50,6 +55,8 @@ class SettingsCubit extends Cubit<SettingsState> {
     }
 
     return SettingsCubit._(
+      assetToTempDir,
+      getWindowInfo,
       prefs,
       hotkeyService,
       nyrnaWindow,
@@ -84,11 +91,12 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateAutoStart(bool shouldAutostart) async {
     File? desktopFile;
     if (Platform.isLinux) {
-      desktopFile = await assetToTempDir('packaging/linux/nyrna.desktop');
+      desktopFile = await _assetToTempDir('packaging/linux/nyrna.desktop');
     }
 
     final iconFileSuffix = Platform.isWindows ? 'ico' : 'svg';
-    final iconFile = await assetToTempDir('assets/icons/nyrna.$iconFileSuffix');
+    final iconFile =
+        await _assetToTempDir('assets/icons/nyrna.$iconFileSuffix');
 
     final desktopIntegration = DesktopIntegration(
       desktopFilePath: desktopFile?.path ?? '',
@@ -110,6 +118,8 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateAutoRefresh([bool? autoEnabled]) async {
     if (autoEnabled != null) {
       await _prefs.setBool(key: 'autoRefresh', value: autoEnabled);
+      // TODO: appsListCubit should be listening to a stream for this setting
+      // from a repository, cubits shouldn't know about each other.
       appsListCubit.setAutoRefresh(
         autoRefresh: autoEnabled,
         refreshInterval: state.refreshInterval,
@@ -159,7 +169,7 @@ class SettingsCubit extends Cubit<SettingsState> {
   ///
   /// Allows the app to remember its window size for next launch.
   Future<void> saveWindowSize() async {
-    final windowInfo = await window.getWindowInfo();
+    final windowInfo = await _getWindowInfo();
     final rectJson = windowInfo.frame.toJson();
     await _prefs.setString(key: 'windowSize', value: rectJson);
   }
