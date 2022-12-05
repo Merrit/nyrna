@@ -5,13 +5,21 @@ import 'package:nyrna/native_platform/src/linux/linux.dart';
 import 'package:nyrna/native_platform/src/typedefs.dart';
 import 'package:test/test.dart';
 
+late RunFunction mockRun;
+
 final stubSuccessfulProcessResult = ProcessResult(0, 0, '', '');
 
 void main() {
+  setUp(() {
+    mockRun = (String executable, List<String> args) async {
+      return ProcessResult(1, 1, '', '');
+    };
+  });
+
   group('Linux:', () {
     group('currentDesktop:', () {
       test('returns correct virtual desktop', () async {
-        RunFunction mockRun = ((executable, args) async {
+        mockRun = ((executable, args) async {
           const wmctrlReturnValue = '''
 0  - DG: 8948x2873  VP: N/A  WA: 0,0 8948x2420  Workspace 1
 1  * DG: 8948x2873  VP: 0,0  WA: 0,0 8948x2420  Workspace 2''';
@@ -34,7 +42,7 @@ void main() {
     });
 
     test('windows() returns appropriate list of Window objects', () async {
-      final RunFunction mockRun = ((executable, args) async {
+      mockRun = ((executable, args) async {
         const wmctrlReturnValue = '''
 0x0640003e  0 8062   shodan Muesli - Wikipedia — Mozilla Firefox
 0x05800003  1 69029  shodan linux.dart - nyrna - Visual Studio Code
@@ -99,7 +107,7 @@ void main() {
 
     group('checkDependencies:', () {
       test('finds dependencies when present', () async {
-        final RunFunction mockRun = ((executable, args) async {
+        mockRun = ((executable, args) async {
           if (executable == 'wmctrl' || executable == 'xdotool') {
             return stubSuccessfulProcessResult;
           } else {
@@ -113,7 +121,7 @@ void main() {
       });
 
       test('returns false if missing wmctrl', () async {
-        final RunFunction mockRun = ((executable, args) async {
+        mockRun = ((executable, args) async {
           if (executable == 'xdotool') {
             return stubSuccessfulProcessResult;
           } else {
@@ -127,7 +135,7 @@ void main() {
       });
 
       test('returns false if missing xdotool', () async {
-        final RunFunction mockRun = ((executable, args) async {
+        mockRun = ((executable, args) async {
           if (executable == 'wmctrl') {
             return stubSuccessfulProcessResult;
           } else {
