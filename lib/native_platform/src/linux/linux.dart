@@ -24,6 +24,7 @@ class Linux implements NativePlatform {
     lines.forEach((line) {
       if (line.contains('*')) _desktop = int.tryParse(line[0]);
     });
+    _desktop ??= 0;
     return _desktop ?? 0;
   }
 
