@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:helpers/helpers.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
@@ -50,6 +51,8 @@ Future<void> main(List<String> args) async {
 
   // Created outside runApp so it can be accessed for window settings below.
   final _settingsCubit = SettingsCubit(
+    assetToTempDir: assetToTempDir,
+    getWindowInfo: window.getWindowInfo,
     prefs: settingsService,
     hotkeyService: HotkeyService(),
     nyrnaWindow: nyrnaWindow,
