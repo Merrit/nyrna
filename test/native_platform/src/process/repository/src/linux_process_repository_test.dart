@@ -25,9 +25,9 @@ void main() {
 
     group('getProcess:', () {
       test('valid pid returns populated Process object', () async {
-        final testPid = 123367;
+        const testPid = 123367;
 
-        RunFunction mockRun = (String executable, List<String> args) async {
+        mockRun = (String executable, List<String> args) async {
           if (executable == 'readlink') {
             return ProcessResult(
               testPid,
@@ -60,9 +60,9 @@ void main() {
       });
 
       test('invalid pid returns generic Process object', () async {
-        final testPid = 155867;
+        const testPid = 155867;
 
-        RunFunction mockRun = (String executable, List<String> args) async {
+        mockRun = (String executable, List<String> args) async {
           return ProcessResult(
             000000,
             1,
@@ -81,9 +81,9 @@ void main() {
 
     group('getProcessStatus:', () {
       test('invalid pid returns ProcessStatus.unknown', () async {
-        final testPid = 155867;
+        const testPid = 155867;
 
-        RunFunction mockRun = (String executable, List<String> args) async {
+        mockRun = (String executable, List<String> args) async {
           return ProcessResult(
             000000,
             1,
@@ -98,9 +98,9 @@ void main() {
       });
 
       test('running process returns ProcessStatus.normal', () async {
-        final testPid = 123367;
+        const testPid = 123367;
 
-        RunFunction mockRun = (String executable, List<String> args) async {
+        mockRun = (String executable, List<String> args) async {
           if (executable == 'ps') {
             return ProcessResult(
               testPid,
