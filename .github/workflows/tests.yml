@@ -43,8 +43,3 @@ jobs:
       - name: Run unit tests
         run: |
           flutter test
-
-      - name: Test native_platform
-        run: |
-          cd packages/native_platform
-          dart run test
