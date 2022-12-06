@@ -17,7 +17,7 @@ dependencies:
   flutter_bloc: ^8.0.0
   flutter_markdown: ^0.6.9+1
   flutter_window_close: ^0.2.2
-  hive: ^2.0.4
+  hive_flutter: ^1.1.0
   helpers:
     git:
       url: https://github.com/Merrit/helpers.git

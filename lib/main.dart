@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpers/helpers.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
@@ -18,6 +19,7 @@ import 'logs/app_logger.dart';
 import 'native_platform/native_platform.dart';
 import 'settings/cubit/settings_cubit.dart';
 import 'settings/settings_service.dart';
+import 'storage/storage_repository.dart';
 import 'system_tray/system_tray_manager.dart';
 import 'theme/theme.dart';
 import 'window/nyrna_window.dart';
@@ -30,6 +32,7 @@ Future<void> main(List<String> args) async {
   final argParser = ArgumentParser();
   argParser.parseArgs(args);
 
+  final storageRepository = await StorageRepository.initialize(Hive);
   final nativePlatform = NativePlatform();
 
   // If we receive the toggle argument, suspend or resume the active
