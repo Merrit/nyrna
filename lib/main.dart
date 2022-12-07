@@ -40,7 +40,7 @@ Future<void> main(List<String> args) async {
   // If we receive the toggle argument, suspend or resume the active
   // window and then exit without showing the GUI.
   if (argParser.toggleActiveWindow) {
-    await toggleActiveWindow(nativePlatform: nativePlatform);
+    await toggleActiveWindow(nativePlatform, storageRepository);
     exit(0);
   } else {}
 
@@ -60,7 +60,7 @@ Future<void> main(List<String> args) async {
     assetToTempDir: assetToTempDir,
     getWindowInfo: window.getWindowInfo,
     prefs: settingsService,
-    hotkeyService: HotkeyService(),
+    hotkeyService: HotkeyService(nativePlatform, storageRepository),
     nyrnaWindow: nyrnaWindow,
   );
 
