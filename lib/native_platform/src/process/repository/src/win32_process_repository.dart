@@ -1,18 +1,16 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
-import 'package:logging/logging.dart';
 import 'package:win32/win32.dart';
 import 'package:win32_suspend_process/win32_suspend_process.dart';
 
+import '../../../../../logs/logs.dart';
 import '../../../typedefs.dart';
 import '../../process.dart';
 import '../process_repository.dart';
 
 /// Provides interaction access with host system processes on Windows.
 class Win32ProcessRepository extends ProcessRepository {
-  static final _log = Logger('Win32ProcessRepository');
-
   final RunFunction _run;
 
   const Win32ProcessRepository(this._run);
@@ -47,7 +45,7 @@ class Win32ProcessRepository extends ProcessRepository {
     final result = GetModuleFileNameEx(processHandle, NULL, path, MAX_PATH);
 
     if (result == 0) {
-      _log.warning('Error getting executable name: ${GetLastError()}');
+      log.w('Error getting executable name: ${GetLastError()}');
       return '';
     }
 
@@ -60,7 +58,7 @@ class Win32ProcessRepository extends ProcessRepository {
 
     final handleClosed = CloseHandle(processHandle);
     if (handleClosed == 0) {
-      _log.severe('get executable failed to close the process handle.');
+      log.e('get executable failed to close the process handle.');
     }
 
     return _executable;
@@ -83,7 +81,7 @@ class Win32ProcessRepository extends ProcessRepository {
     ProcessStatus _status;
 
     if (result.stderr != '') {
-      _log.warning('Unable to get process status', result.stderr);
+      log.w('Unable to get process status', result.stderr);
       return ProcessStatus.unknown;
     }
 

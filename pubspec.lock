@@ -208,7 +208,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "30329fe9a626390a39199046dd66606a12f0098b"
+      resolved-ref: "28951b10772193571677a44d4f6d76e659a569ad"
       url: "https://github.com/Merrit/helpers.git"
     source: git
     version: "0.0.1"
@@ -287,8 +287,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  logging:
+  logger:
     dependency: "direct main"
+    description:
+      name: logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
+  logging:
+    dependency: transitive
     description:
       name: logging
       url: "https://pub.dartlang.org"

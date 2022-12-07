@@ -1,9 +1,9 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
-import 'package:logging/logging.dart';
 import 'package:win32/win32.dart';
 
+import '../../../logs/logs.dart';
 import '../native_platform.dart';
 import '../process/models/process.dart';
 import '../window.dart';
@@ -29,8 +29,6 @@ const List<String> _filteredWindows = [
 ///
 /// Requires many syscalls to the win32 API.
 class Win32 implements NativePlatform {
-  static final _log = Logger('Win32');
-
   // Not available on Windows, so just return 0 always.
   @override
   Future<int> currentDesktop() async => 0;
@@ -127,7 +125,7 @@ class Win32 implements NativePlatform {
     final result = GetModuleFileNameEx(processHandle, NULL, path, MAX_PATH);
 
     if (result == 0) {
-      _log.warning('Error getting executable name: ${GetLastError()}');
+      log.w('Error getting executable name: ${GetLastError()}');
       return '';
     }
 
@@ -140,7 +138,7 @@ class Win32 implements NativePlatform {
 
     final handleClosed = CloseHandle(processHandle);
     if (handleClosed == 0) {
-      _log.severe('get executable failed to close the process handle.');
+      log.e('Failed to close the process handle.');
     }
 
     return _executable;

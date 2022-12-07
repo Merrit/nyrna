@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logging/logging.dart';
 
 import '../../apps_list/apps_list.dart';
 import 'loading.dart';
@@ -14,9 +13,6 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _log = Logger('LoadingScreen');
-    _log.info('Loading screen initializing');
-
     return BlocProvider(
       create: (context) => LoadingCubit(),
       lazy: false,

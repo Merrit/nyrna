@@ -1,7 +1,7 @@
 import 'dart:io' hide pid;
 
+import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
-import 'logger.dart';
 import 'storage.dart';
 
 /// Manage the active window.
@@ -22,11 +22,11 @@ class ActiveWindow {
   );
 
   Future<bool> resume(int savedPid) async {
-    await Logger.log('resuming, pid: $savedPid');
+    log.v('resuming, pid: $savedPid');
 
     final resumed = await _processRepository.resume(savedPid);
     if (!resumed) {
-      await Logger.log('Failed to resume! Try resuming process manually?');
+      log.e('Failed to resume! Try resuming process manually?');
       // Must delete here, or enter infinite loop of failing to resume.
       await _storage.deleteSaved();
       return false;
@@ -35,33 +35,33 @@ class ActiveWindow {
     final windowId = await _storage.getInt('windowId');
     await _storage.deleteSaved();
     if (windowId == null) {
-      await Logger.log('Failed to find saved windowId, cannot restore.');
+      log.e('Failed to find saved windowId, cannot restore.');
     } else {
       final restoreSuccessful = await _nativePlatform.restoreWindow(windowId);
-      if (!restoreSuccessful) await Logger.log('Failed to restore window.');
+      if (!restoreSuccessful) log.e('Failed to restore window.');
     }
 
-    await Logger.log('Resumed $savedPid successfully.');
+    log.v('Resumed $savedPid successfully.');
 
     return true;
   }
 
   Future<bool> suspend() async {
-    await Logger.log('Suspending');
+    log.v('Suspending');
 
     if (Platform.isWindows) {
       // Once in a blue moon on Windows we get "explorer.exe" as the active
       // window, even when no file explorer windows are open / the desktop
       // is not the active element, etc. So we filter it just in case.
       if (_window.process.executable == 'explorer.exe') {
-        await Logger.log('Only got explorer as active window!');
+        log.e('Only got explorer as active window!');
         return false;
       }
     }
 
     final minimized = await _nativePlatform.minimizeWindow(_window.id);
     if (!minimized) {
-      await Logger.log('Failed to minimize window.');
+      log.e('Failed to minimize window.');
       return false;
     }
 
@@ -73,13 +73,13 @@ class ActiveWindow {
 
     final suspended = await _processRepository.suspend(_window.process.pid);
     if (!suspended) {
-      await Logger.log('Failed to suspend active window.');
+      log.e('Failed to suspend active window.');
       return false;
     }
 
     await _storage.saveValue(key: 'pid', value: _window.process.pid);
     await _storage.saveValue(key: 'windowId', value: _window.id);
-    await Logger.log('Suspended ${_window.process.pid} successfully');
+    log.v('Suspended ${_window.process.pid} successfully');
 
     return true;
   }
