@@ -28,12 +28,22 @@ late AppsListCubit cubit;
 AppsListState get state => cubit.state;
 
 void main() {
-  group('AppCubit:', () {
-    final _nativePlatform = MockNativePlatform();
-    final _prefs = MockSettingsService();
-    final _prefsCubit = MockSettingsCubit();
-    final _processRepository = MockProcessRepository();
-    final _appVersion = MockAppVersion();
+  final _nativePlatform = MockNativePlatform();
+  final _prefs = MockSettingsService();
+  final _prefsCubit = MockSettingsCubit();
+  final _processRepository = MockProcessRepository();
+  final _appVersion = MockAppVersion();
+
+  setUp(() {
+    when(() => _appVersion.latest()).thenAnswer((_) async => '1.0.0');
+    when(() => _appVersion.updateAvailable()).thenAnswer((_) async => false);
+
+    when(() => _nativePlatform.minimizeWindow(any()))
+        .thenAnswer((_) async => true);
+    when(() => _nativePlatform.restoreWindow(any()))
+        .thenAnswer((_) async => true);
+    when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
+        .thenAnswer((_) async => []);
 
     when(() => _prefs.getString('ignoredUpdate')).thenReturn(null);
 
@@ -49,26 +59,22 @@ void main() {
       ),
     );
 
-    when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
-        .thenAnswer((_) async => []);
+    when(() => _processRepository.getProcessStatus(any()))
+        .thenAnswer((_) async => ProcessStatus.normal);
+    when(() => _processRepository.resume(any())).thenAnswer((_) async => true);
+    when(() => _processRepository.suspend(any())).thenAnswer((_) async => true);
 
-    setUp(() {
-      when(() => _appVersion.latest()).thenAnswer((_) async => '1.0.0');
-      when(() => _appVersion.updateAvailable()).thenAnswer((_) async => false);
+    cubit = AppsListCubit(
+      nativePlatform: _nativePlatform,
+      prefs: _prefs,
+      prefsCubit: _prefsCubit,
+      processRepository: _processRepository,
+      appVersion: _appVersion,
+      testing: true,
+    );
+  });
 
-      when(() => _processRepository.getProcessStatus(any()))
-          .thenAnswer((_) async => ProcessStatus.normal);
-
-      cubit = AppsListCubit(
-        nativePlatform: _nativePlatform,
-        prefs: _prefs,
-        prefsCubit: _prefsCubit,
-        processRepository: _processRepository,
-        appVersion: _appVersion,
-        testing: true,
-      );
-    });
-
+  group('AppCubit:', () {
     test('initial state has no windows', () {
       expect(state.windows.length, 0);
     });
