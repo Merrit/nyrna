@@ -25,22 +25,22 @@ void main() {
       expect(argParser.toggleActiveWindow, true);
     });
 
-    test('log defaults to false', () {
+    test('verbose defaults to false', () {
       final args = <String>[];
       argParser.parseArgs(args);
-      expect(argParser.logToFile, false);
+      expect(argParser.verbose, false);
     });
 
-    test('--log works', () {
-      final args = ['--log'];
+    test('--verbose works', () {
+      final args = ['--verbose'];
       argParser.parseArgs(args);
-      expect(argParser.logToFile, true);
+      expect(argParser.verbose, true);
     });
 
-    test('-l works', () {
-      final args = ['-l'];
+    test('-v works', () {
+      final args = ['-v'];
       argParser.parseArgs(args);
-      expect(argParser.logToFile, true);
+      expect(argParser.verbose, true);
     });
   });
 }
