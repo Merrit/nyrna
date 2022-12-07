@@ -38,7 +38,7 @@
             "program": "lib/main.dart",
             // "args": [
             //     "--dart-entrypoint-args",
-            //     "--toggle,--log",
+            //     "--toggle,--verbose",
             // ],
         },
         // Profile

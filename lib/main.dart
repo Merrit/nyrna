@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpers/helpers.dart';
@@ -15,7 +16,7 @@ import 'app.dart';
 import 'app_version/app_version.dart';
 import 'apps_list/apps_list.dart';
 import 'hotkey/hotkey_service.dart';
-import 'logs/app_logger.dart';
+import 'logs/logs.dart';
 import 'native_platform/native_platform.dart';
 import 'settings/cubit/settings_cubit.dart';
 import 'settings/settings_service.dart';
@@ -34,21 +35,23 @@ Future<void> main(List<String> args) async {
 
   final storageRepository = await StorageRepository.initialize(Hive);
   final nativePlatform = NativePlatform();
+  await LoggingManager.initialize(verbose: argParser.verbose);
 
   // If we receive the toggle argument, suspend or resume the active
   // window and then exit without showing the GUI.
   if (argParser.toggleActiveWindow) {
-    await toggleActiveWindow(
-      shouldLog: argParser.logToFile,
-      nativePlatform: nativePlatform,
-    );
+    await toggleActiveWindow(nativePlatform: nativePlatform);
     exit(0);
-  }
+  } else {}
+
+  // Handle platform errors not caught by Flutter.
+  PlatformDispatcher.instance.onError = (error, stack) {
+    log.e('Uncaught platform error', error, stack);
+    return true;
+  };
 
   final sharedPreferences = await SharedPreferences.getInstance();
   final settingsService = SettingsService(sharedPreferences);
-
-  AppLogger().initialize();
 
   final nyrnaWindow = NyrnaWindow();
 
@@ -119,8 +122,8 @@ Supported arguments:
 
 /// Parse command-line arguments.
 class ArgumentParser {
-  bool logToFile = false;
   bool toggleActiveWindow = false;
+  bool verbose = false;
 
   final _parser = ArgParser(usageLineLength: 80);
 
@@ -138,11 +141,11 @@ class ArgumentParser {
             'from a terminal and accidentally suspend your terminal! ❗',
       )
       ..addFlag(
-        'log',
-        abbr: 'l',
+        'verbose',
+        abbr: 'v',
         negatable: false,
-        callback: (bool value) => logToFile = value,
-        help: 'Log events to a temporary file for debug purposes.',
+        callback: (bool value) => verbose = value,
+        help: 'Output verbose logs for troubleshooting and debugging.',
       );
 
     final _helpText = _helpTextGreeting + _parser.usage + '\n\n';

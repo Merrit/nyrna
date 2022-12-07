@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logging/logging.dart';
 
 import 'logs.dart';
 
@@ -23,57 +22,25 @@ class LogPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 30),
           child: Column(
             children: [
-              Row(
-                children: [
-                  const Text('Log level'),
-                  const SizedBox(width: 10),
-                  BlocBuilder<LogCubit, LogState>(
-                    builder: (context, state) {
-                      return DropdownButton<Level>(
-                        value: state.logLevel,
-                        onChanged: (level) => logCubit.getLogsText(level!),
-                        items: const [
-                          DropdownMenuItem(
-                            value: Level.INFO,
-                            child: Text('INFO'),
-                          ),
-                          DropdownMenuItem(
-                            value: Level.WARNING,
-                            child: Text('WARNING'),
-                          ),
-                          DropdownMenuItem(
-                            value: Level.SEVERE,
-                            child: Text('SEVERE'),
-                          ),
-                          DropdownMenuItem(
-                            value: Level.ALL,
-                            child: Text('ALL'),
-                          ),
-                        ],
+              BlocBuilder<LogCubit, LogState>(
+                builder: (context, state) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      // Copy the visible logs to user's clipboard.
+                      await Clipboard.setData(
+                        ClipboardData(text: state.logsText),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Logs copied to clipboard'),
+                        ),
                       );
                     },
-                  ),
-                  const Spacer(),
-                  BlocBuilder<LogCubit, LogState>(
-                    builder: (context, state) {
-                      return ElevatedButton(
-                        onPressed: () async {
-                          // Copy the visible logs to user's clipboard.
-                          await Clipboard.setData(
-                            ClipboardData(text: state.logsText),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Logs copied to clipboard'),
-                            ),
-                          );
-                        },
-                        child: const Text('Copy'),
-                      );
-                    },
-                  ),
-                ],
+                    child: const Text('Copy logs'),
+                  );
+                },
               ),
+              const SizedBox(height: 10),
               Flexible(
                 child: Container(
                   color: Colors.grey[800],
