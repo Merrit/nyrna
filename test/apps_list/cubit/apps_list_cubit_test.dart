@@ -24,6 +24,9 @@ final msPaintWindow = Window(
   title: 'Untitled - Paint',
 );
 
+late AppsListCubit cubit;
+AppsListState get state => cubit.state;
+
 void main() {
   group('AppCubit:', () {
     final _nativePlatform = MockNativePlatform();
@@ -31,8 +34,6 @@ void main() {
     final _prefsCubit = MockSettingsCubit();
     final _processRepository = MockProcessRepository();
     final _appVersion = MockAppVersion();
-
-    late AppsListCubit _appCubit;
 
     when(() => _prefs.getString('ignoredUpdate')).thenReturn(null);
 
@@ -58,7 +59,7 @@ void main() {
       when(() => _processRepository.getProcessStatus(any()))
           .thenAnswer((_) async => ProcessStatus.normal);
 
-      _appCubit = AppsListCubit(
+      cubit = AppsListCubit(
         nativePlatform: _nativePlatform,
         prefs: _prefs,
         prefsCubit: _prefsCubit,
@@ -69,27 +70,27 @@ void main() {
     });
 
     test('initial state has no windows', () {
-      expect(_appCubit.state.windows.length, 0);
+      expect(state.windows.length, 0);
     });
 
     test('new window is added to state', () async {
-      expect(_appCubit.state.windows.length, 0);
+      expect(state.windows.length, 0);
 
       when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
           .thenAnswer((_) async => [msPaintWindow]);
 
-      await _appCubit.manualRefresh();
-      expect(_appCubit.state.windows.length, 1);
+      await cubit.manualRefresh();
+      expect(state.windows.length, 1);
     });
 
     test('process changed externally updates state', () async {
       when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
           .thenAnswer((_) async => [msPaintWindow]);
 
-      await _appCubit.manualRefresh();
+      await cubit.manualRefresh();
 
       // Verify we have one window, and it has a normal status.
-      var windows = _appCubit.state.windows;
+      var windows = state.windows;
       expect(windows.length, 1);
       expect(windows[0].process.status, ProcessStatus.normal);
 
@@ -99,31 +100,31 @@ void main() {
           .thenAnswer((_) async => ProcessStatus.suspended);
 
       // Verify we pick up this status change.
-      await _appCubit.manualRefresh();
-      windows = _appCubit.state.windows;
+      await cubit.manualRefresh();
+      windows = state.windows;
       expect(windows.length, 1);
       expect(windows[0].process.status, ProcessStatus.suspended);
     });
 
     test('app version information populates to cubit', () async {
       // Verify initial state is unpopulated.
-      expect(_appCubit.state.runningVersion, '');
-      expect(_appCubit.state.updateVersion, '');
-      expect(_appCubit.state.updateAvailable, false);
+      expect(state.runningVersion, '');
+      expect(state.updateVersion, '');
+      expect(state.updateAvailable, false);
 
       // Stubbed data propogates.
-      await _appCubit.fetchVersionData();
-      expect(_appCubit.state.runningVersion, '1.0.0');
-      expect(_appCubit.state.updateVersion, '1.0.0');
-      expect(_appCubit.state.updateAvailable, false);
+      await cubit.fetchVersionData();
+      expect(state.runningVersion, '1.0.0');
+      expect(state.updateVersion, '1.0.0');
+      expect(state.updateAvailable, false);
 
       // Simulate an update being available.
       when(() => _appVersion.latest()).thenAnswer((_) async => '1.0.1');
       when(() => _appVersion.updateAvailable()).thenAnswer((_) async => true);
-      await _appCubit.fetchVersionData();
-      expect(_appCubit.state.runningVersion, '1.0.0');
-      expect(_appCubit.state.updateVersion, '1.0.1');
-      expect(_appCubit.state.updateAvailable, true);
+      await cubit.fetchVersionData();
+      expect(state.runningVersion, '1.0.0');
+      expect(state.updateVersion, '1.0.1');
+      expect(state.updateAvailable, true);
     });
 
     test('windows are sorted', () async {
@@ -158,8 +159,8 @@ void main() {
                 ),
               ]);
 
-      await _appCubit.manualRefresh();
-      final windows = _appCubit.state.windows;
+      await cubit.manualRefresh();
+      final windows = state.windows;
       expect(windows[0].process.executable, 'ark');
       expect(windows[1].process.executable, 'evince');
       expect(windows[2].process.executable, 'kate');
