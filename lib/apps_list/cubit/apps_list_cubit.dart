@@ -124,7 +124,11 @@ class AppsListCubit extends Cubit<AppsListState> {
     // Create a copy of the state of windows, with this window's info refreshed.
     final windows = [...state.windows];
     final index = windows.indexWhere((element) => element.id == window.id);
-    windows.replaceRange(index, index, [await _refreshWindowProcess(window)]);
+    windows.replaceRange(
+      index,
+      index + 1,
+      [await _refreshWindowProcess(window)],
+    );
 
     emit(state.copyWith(
       windows: windows,
