@@ -29,6 +29,9 @@ class StorageRepository {
     return instance;
   }
 
+  /// Save and close all storage to ensure clean exit.
+  Future<void> close() async => await _hive.close();
+
   /// Delete [key] from storage.
   Future<void> deleteValue(String key, {String? storageArea}) async {
     final Box box = await _getBox(storageArea);
