@@ -1,24 +1,24 @@
-import 'package:hive/hive.dart';
-
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
+import '../../storage/storage_repository.dart';
 import 'active_window.dart';
-import 'storage.dart';
 
 /// Toggle suspend / resume for the active, foreground window.
-Future<void> toggleActiveWindow({
-  required NativePlatform nativePlatform,
-}) async {
-  final storage = Storage();
-
+Future<void> toggleActiveWindow(
+  NativePlatform nativePlatform,
+  StorageRepository storageRepository,
+) async {
   final activeWindow = ActiveWindow(
     nativePlatform,
     ProcessRepository.init(),
-    storage,
+    storageRepository,
     await nativePlatform.activeWindow(),
   );
 
-  final savedPid = await storage.getInt('pid');
+  final savedPid = await storageRepository.getValue(
+    'pid',
+    storageArea: 'activeWindow',
+  );
 
   if (savedPid != null) {
     final successful = await activeWindow.resume(savedPid);
@@ -28,7 +28,7 @@ Future<void> toggleActiveWindow({
     if (!successful) log.e('Failed to suspend successfully.');
   }
 
-  await Hive.close();
+  await storageRepository.close();
   LoggingManager.instance.close();
   // Add a slight delay, because Logger doesn't await closing its file output.
   // This will hopefully ensure the log file gets fully written.

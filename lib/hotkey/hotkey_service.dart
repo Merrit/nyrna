@@ -6,8 +6,17 @@ import '../active_window/active_window.dart';
 import '../apps_list/apps_list.dart';
 import '../logs/logs.dart';
 import '../native_platform/native_platform.dart';
+import '../storage/storage_repository.dart';
 
 class HotkeyService {
+  final NativePlatform _nativePlatform;
+  final StorageRepository _storageRepository;
+
+  const HotkeyService(
+    this._nativePlatform,
+    this._storageRepository,
+  );
+
   Future<void> removeHotkey() async {
     await hotKeyManager.unregisterAll();
   }
@@ -31,7 +40,7 @@ class HotkeyService {
   Future<void> _toggleActiveWindow() async {
     log.v('Triggering toggle from hotkey press.');
 
-    await toggleActiveWindow(nativePlatform: NativePlatform());
+    await toggleActiveWindow(_nativePlatform, _storageRepository);
     await appsListCubit.manualRefresh();
   }
 }

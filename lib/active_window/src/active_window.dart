@@ -2,7 +2,7 @@ import 'dart:io' hide pid;
 
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
-import 'storage.dart';
+import '../../storage/storage_repository.dart';
 
 /// Manage the active window.
 ///
@@ -11,13 +11,13 @@ import 'storage.dart';
 class ActiveWindow {
   final NativePlatform _nativePlatform;
   final ProcessRepository _processRepository;
-  final Storage _storage;
+  final StorageRepository _storageRepository;
   final Window _window;
 
   const ActiveWindow(
     this._nativePlatform,
     this._processRepository,
-    this._storage,
+    this._storageRepository,
     this._window,
   );
 
@@ -28,12 +28,15 @@ class ActiveWindow {
     if (!resumed) {
       log.e('Failed to resume! Try resuming process manually?');
       // Must delete here, or enter infinite loop of failing to resume.
-      await _storage.deleteSaved();
+      await _deleteSavedIds();
       return false;
     }
 
-    final windowId = await _storage.getInt('windowId');
-    await _storage.deleteSaved();
+    final windowId = await _storageRepository.getValue(
+      'windowId',
+      storageArea: 'activeWindow',
+    );
+    await _deleteSavedIds();
     if (windowId == null) {
       log.e('Failed to find saved windowId, cannot restore.');
     } else {
@@ -44,6 +47,14 @@ class ActiveWindow {
     log.v('Resumed $savedPid successfully.');
 
     return true;
+  }
+
+  Future<void> _deleteSavedIds() async {
+    await _storageRepository.deleteValue('pid', storageArea: 'activeWindow');
+    await _storageRepository.deleteValue(
+      'windowId',
+      storageArea: 'activeWindow',
+    );
   }
 
   Future<bool> suspend() async {
@@ -77,8 +88,16 @@ class ActiveWindow {
       return false;
     }
 
-    await _storage.saveValue(key: 'pid', value: _window.process.pid);
-    await _storage.saveValue(key: 'windowId', value: _window.id);
+    await _storageRepository.saveValue(
+      key: 'pid',
+      value: _window.process.pid,
+      storageArea: 'activeWindow',
+    );
+    await _storageRepository.saveValue(
+      key: 'windowId',
+      value: _window.id,
+      storageArea: 'activeWindow',
+    );
     log.v('Suspended ${_window.process.pid} successfully');
 
     return true;
