@@ -9,18 +9,20 @@ class AppsListState extends Equatable {
   final String updateVersion;
   final bool updateAvailable;
 
+  /// Contains [InteractionError]s for any window that had an error.
+  final List<InteractionError> interactionErrors;
+
   final List<Window> windows;
 
   /// Non-null if interacting with a process failed.
-  final InteractionError? interactionError;
 
   const AppsListState({
     required this.loading,
     required this.runningVersion,
     required this.updateVersion,
     required this.updateAvailable,
+    required this.interactionErrors,
     required this.windows,
-    this.interactionError,
   });
 
   factory AppsListState.initial() {
@@ -29,6 +31,7 @@ class AppsListState extends Equatable {
       runningVersion: '',
       updateVersion: '',
       updateAvailable: false,
+      interactionErrors: [],
       windows: <Window>[],
     );
   }
@@ -40,8 +43,8 @@ class AppsListState extends Equatable {
       runningVersion,
       updateVersion,
       updateAvailable,
+      interactionErrors,
       windows,
-      interactionError,
     ];
   }
 
@@ -50,25 +53,16 @@ class AppsListState extends Equatable {
     String? runningVersion,
     String? updateVersion,
     bool? updateAvailable,
+    List<InteractionError>? interactionErrors,
     List<Window>? windows,
-    InteractionError? interactionError,
   }) {
     return AppsListState(
       loading: loading ?? this.loading,
       runningVersion: runningVersion ?? this.runningVersion,
       updateVersion: updateVersion ?? this.updateVersion,
       updateAvailable: updateAvailable ?? this.updateAvailable,
+      interactionErrors: interactionErrors ?? this.interactionErrors,
       windows: windows ?? this.windows,
-      interactionError: interactionError,
     );
   }
-}
-
-/// Present in AppState when an interaction has failed.
-class InteractionError {
-  final Window window;
-
-  const InteractionError({
-    required this.window,
-  });
 }

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nyrna/apps_list/apps_list.dart';
@@ -170,6 +171,68 @@ void main() {
       expect(windows[0].process.executable, 'ark');
       expect(windows[1].process.executable, 'evince');
       expect(windows[2].process.executable, 'kate');
+    });
+
+    group('toggle:', () {
+      test('suspends correctly', () async {
+        expect(state.windows.isEmpty, true);
+        when(() => _nativePlatform.windows(
+              showHidden: any(named: 'showHidden'),
+            )).thenAnswer((_) async => [msPaintWindow]);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 1);
+        expect(state.windows.first.process.status, ProcessStatus.normal);
+
+        when(() => _processRepository.getProcessStatus(msPaintProcess.pid))
+            .thenAnswer((_) async => ProcessStatus.suspended);
+        await cubit.toggle(msPaintWindow);
+        expect(state.windows.length, 1);
+        expect(state.windows.first.process.status, ProcessStatus.suspended);
+      });
+
+      test('resumes correctly', () async {
+        expect(state.windows.isEmpty, true);
+        when(() => _nativePlatform.windows(
+              showHidden: any(named: 'showHidden'),
+            )).thenAnswer((_) async => [msPaintWindow]);
+        when(() => _processRepository.getProcessStatus(msPaintProcess.pid))
+            .thenAnswer((_) async => ProcessStatus.suspended);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 1);
+        expect(state.windows.first.process.status, ProcessStatus.suspended);
+
+        when(() => _processRepository.getProcessStatus(msPaintProcess.pid))
+            .thenAnswer((_) async => ProcessStatus.normal);
+        await cubit.toggle(msPaintWindow);
+        expect(state.windows.length, 1);
+        expect(state.windows.first.process.status, ProcessStatus.normal);
+      });
+
+      test('adds InteractionError to window on failure', () async {
+        expect(state.windows.isEmpty, true);
+        when(() => _nativePlatform.windows(
+              showHidden: any(named: 'showHidden'),
+            )).thenAnswer((_) async => [msPaintWindow]);
+        when(() => _processRepository.getProcessStatus(msPaintProcess.pid))
+            .thenAnswer((_) async => ProcessStatus.normal);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 1);
+        expect(state.windows.first.process.status, ProcessStatus.normal);
+
+        when(() => _processRepository.suspend(any()))
+            .thenAnswer((_) async => false);
+        when(() => _processRepository.getProcessStatus(msPaintProcess.pid))
+            .thenAnswer((_) async => ProcessStatus.normal);
+        await cubit.toggle(msPaintWindow);
+        expect(state.windows.length, 1);
+        expect(state.windows.first.process.status, ProcessStatus.normal);
+        final interactionError = state //
+            .interactionErrors
+            .singleWhereOrNull((e) => e.windowId == msPaintWindow.id);
+        expect(interactionError, isNotNull);
+        expect(interactionError!.interactionType, InteractionType.suspend);
+        expect(interactionError.statusAfterInteraction, ProcessStatus.normal);
+      });
     });
   });
 }
