@@ -11,6 +11,7 @@ import '../../../settings/cubit/settings_cubit.dart';
 import '../../../settings/settings_service.dart';
 import '../../app_version/app_version.dart';
 import '../../native_platform/native_platform.dart';
+import '../apps_list.dart';
 
 part 'apps_list_state.dart';
 
@@ -115,11 +116,19 @@ class AppsListCubit extends Cubit<AppsListState> {
     window = await _refreshWindowProcess(window);
     bool successful;
 
-    if (window.process.status == ProcessStatus.suspended) {
+    final interaction = (window.process.status == ProcessStatus.suspended)
+        ? InteractionType.resume
+        : InteractionType.suspend;
+
+    if (interaction == InteractionType.resume) {
       successful = await _resume(window);
     } else {
       successful = await _suspend(window);
     }
+
+    window = await _refreshWindowProcess(window);
+
+    if (!successful) await _addInteractionError(window, interaction);
 
     // Create a copy of the state of windows, with this window's info refreshed.
     final windows = [...state.windows];
@@ -127,15 +136,12 @@ class AppsListCubit extends Cubit<AppsListState> {
     windows.replaceRange(
       index,
       index + 1,
-      [await _refreshWindowProcess(window)],
+      [window],
     );
 
     emit(state.copyWith(
       windows: windows,
-      interactionError: (successful) ? null : InteractionError(window: window),
     ));
-
-    emit(state.copyWith(interactionError: null));
 
     return successful;
   }
@@ -178,11 +184,37 @@ class AppsListCubit extends Cubit<AppsListState> {
     );
   }
 
+  /// Refresh the process status and add an [InteractionError].
+  Future<void> _addInteractionError(
+    Window window,
+    InteractionType interaction,
+  ) async {
+    final interactionError = InteractionError(
+      interactionType: interaction,
+      statusAfterInteraction: window.process.status,
+      windowId: window.id,
+    );
+
+    final errors = [...state.interactionErrors] //
+      ..addError(interactionError);
+
+    emit(state.copyWith(
+      interactionErrors: errors,
+    ));
+  }
+
   /// Launch the requested [url] in the default browser.
   Future<void> launchURL(String url) async {
     await canLaunch(url)
         ? await launch(url)
         : throw 'Could not launch url: $url';
+  }
+}
+
+extension on List<InteractionError> {
+  void addError(InteractionError interactionError) {
+    removeWhere((e) => e.windowId == interactionError.windowId);
+    add(interactionError);
   }
 }
 

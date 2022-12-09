@@ -99,6 +99,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
+  dbus:
+    dependency: transitive
+    description:
+      name: dbus
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.8"
   desktop_integration:
     dependency: "direct main"
     description:
@@ -167,6 +174,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.9+1"
+  flutter_svg:
+    dependency: transitive
+    description:
+      name: flutter_svg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -203,6 +217,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  gsettings:
+    dependency: transitive
+    description:
+      name: gsettings
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.7"
   helpers:
     dependency: "direct main"
     description:
@@ -260,7 +281,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.3"
+    version: "3.2.2"
   integration_test:
     dependency: "direct dev"
     description: flutter
@@ -280,6 +301,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  libadwaita:
+    dependency: "direct main"
+    description:
+      name: libadwaita
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.5"
+  libadwaita_core:
+    dependency: transitive
+    description:
+      name: libadwaita_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.4"
   lints:
     dependency: transitive
     description:
@@ -420,6 +455,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  path_drawing:
+    dependency: transitive
+    description:
+      name: path_drawing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   path_provider:
     dependency: "direct main"
     description:
@@ -475,7 +524,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.0"
+    version: "5.1.0"
   platform:
     dependency: transitive
     description:
@@ -497,6 +546,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
+  popover_gtk:
+    dependency: transitive
+    description:
+      name: popover_gtk
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.6+3"
   process:
     dependency: transitive
     description:
@@ -718,7 +774,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.20"
+    version: "6.1.7"
   url_launcher_android:
     dependency: transitive
     description:
@@ -753,7 +809,7 @@ packages:
       name: url_launcher_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.1.1"
   url_launcher_web:
     dependency: transitive
     description:
@@ -860,7 +916,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.3.1"
+    version: "6.1.0"
   yaml:
     dependency: transitive
     description:
@@ -869,5 +925,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.17.6 <3.0.0"
+  dart: ">=2.18.0 <3.0.0"
   flutter: ">=3.0.0"
