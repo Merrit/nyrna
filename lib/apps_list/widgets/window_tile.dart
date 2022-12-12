@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:libadwaita/libadwaita.dart';
 
+import '../../app/app.dart';
 import '../../native_platform/native_platform.dart';
 import '../apps_list.dart';
 
@@ -216,7 +217,7 @@ class _ErrorMessage extends StatelessWidget {
                       '[file a bug](https://github.com/Merrit/nyrna/issues).',
                   onTapLink: (String text, String? href, String title) {
                     if (href == null) return;
-                    appsListCubit.launchURL(href);
+                    AppCubit.instance.launchURL(href);
                   },
                 ),
               ],

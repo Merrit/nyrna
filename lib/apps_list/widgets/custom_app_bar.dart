@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../../settings/settings_page.dart';
+import '../../app/app.dart';
 import '../apps_list.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -56,13 +56,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           actions: [
             TextButton(
               onPressed: () async {
-                await canLaunch(url)
-                    ? launch(url)
-                    : ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Error launching browser'),
-                        ),
-                      );
+                final launched = await AppCubit.instance.launchURL(url);
+
+                if (!launched) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Error launching browser'),
+                    ),
+                  );
+                }
               },
               child: const Text('Open download page'),
             ),

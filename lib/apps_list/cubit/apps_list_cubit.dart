@@ -5,12 +5,10 @@ import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../../settings/settings_service.dart';
 import '../../app_version/app_version.dart';
-import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../apps_list.dart';
 
@@ -202,20 +200,6 @@ class AppsListCubit extends Cubit<AppsListState> {
     emit(state.copyWith(
       interactionErrors: errors,
     ));
-  }
-
-  /// Launch the requested [url] in the default browser.
-  Future<void> launchURL(String url) async {
-    final uri = Uri.tryParse(url);
-
-    if (uri == null) {
-      log.e('Unable to parse url: $url');
-      return;
-    }
-
-    await canLaunchUrl(uri)
-        ? await launchUrl(uri)
-        : throw 'Could not launch url: $url';
   }
 }
 
