@@ -15,7 +15,7 @@ class Window extends Equatable {
   /// Can & does change, for example a browser shows the title of the page.
   final String title;
 
-  Window({
+  const Window({
     required this.id,
     required this.process,
     required this.title,

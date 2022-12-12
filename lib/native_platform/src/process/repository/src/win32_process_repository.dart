@@ -7,7 +7,6 @@ import 'package:win32_suspend_process/win32_suspend_process.dart';
 import '../../../../../logs/logs.dart';
 import '../../../typedefs.dart';
 import '../../process.dart';
-import '../process_repository.dart';
 
 /// Provides interaction access with host system processes on Windows.
 class Win32ProcessRepository extends ProcessRepository {
@@ -91,14 +90,14 @@ class Win32ProcessRepository extends ProcessRepository {
 
     final suspended = <bool>[];
     // Check each thread's status, track in [suspended] variable.
-    threads.forEach((thread) {
+    for (var thread in threads) {
       final threadWaitReason = thread.split(' ').last.trim();
       if (threadWaitReason == 'Suspended') {
         suspended.add(true);
       } else {
         suspended.add(false);
       }
-    });
+    }
 
     // If every thread has the `Suspended` status, process is suspended.
     _status = suspended.contains(false)

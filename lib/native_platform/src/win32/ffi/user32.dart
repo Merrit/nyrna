@@ -2,6 +2,8 @@
 ///
 /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/
 
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:ffi';
 
 final _user32 = DynamicLibrary.open('user32.dll');

@@ -1,8 +1,8 @@
 import 'dart:io' show ProcessResult, ProcessSignal;
 
+import '../../../../../logs/logs.dart';
 import '../../../typedefs.dart';
 import '../../process.dart';
-import '../process_repository.dart';
 
 /// Provides interaction access with host system processes on Linux.
 class LinuxProcessRepository extends ProcessRepository {
@@ -152,7 +152,7 @@ class LinuxProcessRepository extends ProcessRepository {
   Future<List<int>?> _getChildPids(int parentPid) async {
     final result = await _run('bash', ['-c', 'pgrep -P $parentPid']);
     if (result.stderr != '') {
-      print('Unable to get child pids: ${result.stderr}');
+      log.e('Unable to get child pids: ${result.stderr}');
       return null;
     }
     final childPids = result.stdout

@@ -21,9 +21,9 @@ class Linux implements NativePlatform {
   Future<int> currentDesktop() async {
     final result = await _run('wmctrl', ['-d']);
     final lines = result.stdout.toString().split('\n');
-    lines.forEach((line) {
+    for (var line in lines) {
       if (line.contains('*')) _desktop = int.tryParse(line[0]);
-    });
+    }
     _desktop ??= 0;
     return _desktop ?? 0;
   }

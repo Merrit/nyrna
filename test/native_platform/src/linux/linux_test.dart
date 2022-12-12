@@ -74,27 +74,27 @@ void main() {
       final linux = Linux(mockRun);
       final windows = await linux.windows();
       final expected = [
-        Window(
+        const Window(
           id: 104857662,
-          process: const Process(
+          process: Process(
             executable: 'firefox-bin',
             pid: 8062,
             status: ProcessStatus.unknown,
           ),
           title: 'Muesli - Wikipedia — Mozilla Firefox',
         ),
-        Window(
+        const Window(
           id: 41943046,
-          process: const Process(
+          process: Process(
             executable: 'Telegram',
             pid: 140564,
             status: ProcessStatus.unknown,
           ),
           title: 'Telegram (4)',
         ),
-        Window(
+        const Window(
           id: 48234538,
-          process: const Process(
+          process: Process(
             executable: 'nautilus',
             pid: 157040,
             status: ProcessStatus.unknown,

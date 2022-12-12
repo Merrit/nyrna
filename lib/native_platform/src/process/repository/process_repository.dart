@@ -13,9 +13,9 @@ abstract class ProcessRepository {
 
   static ProcessRepository init() {
     if (io.Platform.isLinux) {
-      return LinuxProcessRepository(io.Process.killPid, io.Process.run);
+      return const LinuxProcessRepository(io.Process.killPid, io.Process.run);
     } else {
-      return Win32ProcessRepository(io.Process.run);
+      return const Win32ProcessRepository(io.Process.run);
     }
   }
 
