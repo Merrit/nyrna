@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
@@ -159,7 +161,7 @@ class WindowBuilder {
     final result = EnumWindows(_callback, 0);
 
     if (result == 0) {
-      print('Error from EnumWindows getting open windows');
+      log.e('Error from EnumWindows getting open windows');
       return const [];
     }
 
@@ -207,7 +209,11 @@ class WindowBuilder {
     _windows.add(
       Window(
         id: hWnd,
-        process: Process(executable: '', pid: 0, status: ProcessStatus.unknown),
+        process: const Process(
+          executable: '',
+          pid: 0,
+          status: ProcessStatus.unknown,
+        ),
         title: title,
       ),
     );

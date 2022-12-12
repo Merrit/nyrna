@@ -19,7 +19,7 @@ const msPaintProcess = Process(
   status: ProcessStatus.normal,
 );
 
-final msPaintWindow = Window(
+const msPaintWindow = Window(
   id: 132334,
   process: msPaintProcess,
   title: 'Untitled - Paint',
@@ -137,27 +137,27 @@ void main() {
     test('windows are sorted', () async {
       when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
           .thenAnswer((_) async => [
-                Window(
+                const Window(
                   id: 7363,
-                  process: const Process(
+                  process: Process(
                     executable: 'kate',
                     pid: 836482,
                     status: ProcessStatus.normal,
                   ),
                   title: 'Kate',
                 ),
-                Window(
+                const Window(
                   id: 29347,
-                  process: const Process(
+                  process: Process(
                     executable: 'evince',
                     pid: 94847,
                     status: ProcessStatus.normal,
                   ),
                   title: 'Evince',
                 ),
-                Window(
+                const Window(
                   id: 89374,
-                  process: const Process(
+                  process: Process(
                     executable: 'ark',
                     pid: 9374623,
                     status: ProcessStatus.normal,
