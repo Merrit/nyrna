@@ -8,11 +8,13 @@ import 'package:helpers/helpers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart' as window;
 
 import 'active_window/active_window.dart';
 import 'app.dart';
+import 'app/app.dart';
 import 'app_version/app_version.dart';
 import 'apps_list/apps_list.dart';
 import 'hotkey/hotkey_service.dart';
@@ -55,6 +57,11 @@ Future<void> main(List<String> args) async {
 
   final nyrnaWindow = NyrnaWindow();
 
+  final appCubit = AppCubit(
+    canLaunchUrl,
+    launchUrl,
+  );
+
   // Created outside runApp so it can be accessed for window settings below.
   final _settingsCubit = SettingsCubit(
     assetToTempDir: assetToTempDir,
@@ -70,6 +77,7 @@ Future<void> main(List<String> args) async {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider.value(value: appCubit),
         BlocProvider.value(value: _settingsCubit),
         BlocProvider(
           create: (context) => ThemeCubit(settingsService),
