@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../../settings/settings_service.dart';
 import '../../app_version/app_version.dart';
+import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../apps_list.dart';
 
@@ -205,8 +206,15 @@ class AppsListCubit extends Cubit<AppsListState> {
 
   /// Launch the requested [url] in the default browser.
   Future<void> launchURL(String url) async {
-    await canLaunch(url)
-        ? await launch(url)
+    final uri = Uri.tryParse(url);
+
+    if (uri == null) {
+      log.e('Unable to parse url: $url');
+      return;
+    }
+
+    await canLaunchUrl(uri)
+        ? await launchUrl(uri)
         : throw 'Could not launch url: $url';
   }
 }
