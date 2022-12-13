@@ -3,21 +3,19 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 
 import '../../logs/logs.dart';
-import '../app.dart';
+import '../../url_launcher/url_launcher.dart';
 
 part 'app_state.dart';
 
 /// Handles general app-related functionality, like launching urls and checking
 /// for app updates.
 class AppCubit extends Cubit<AppState> {
-  final CanLaunchUrlFunction _canLaunchUrl;
-  final LaunchUrlFunction _launchUrl;
+  final UrlLauncher _urlLauncher;
 
   static late AppCubit instance;
 
   AppCubit(
-    this._canLaunchUrl,
-    this._launchUrl,
+    this._urlLauncher,
   ) : super(const AppState()) {
     instance = this;
   }
@@ -31,10 +29,10 @@ class AppCubit extends Cubit<AppState> {
       return false;
     }
 
-    if (!await _canLaunchUrl(uri)) return false;
+    if (!await _urlLauncher.canLaunch(uri)) return false;
 
     try {
-      return await _launchUrl(uri);
+      return await _urlLauncher.launch(uri);
     } on PlatformException catch (e) {
       log.e('Could not launch url: $url', e);
       return false;

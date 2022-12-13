@@ -8,7 +8,6 @@ import 'package:helpers/helpers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart' as window;
 
@@ -25,6 +24,7 @@ import 'settings/settings_service.dart';
 import 'storage/storage_repository.dart';
 import 'system_tray/system_tray_manager.dart';
 import 'theme/theme.dart';
+import 'url_launcher/url_launcher.dart';
 import 'window/nyrna_window.dart';
 
 Future<void> main(List<String> args) async {
@@ -58,8 +58,7 @@ Future<void> main(List<String> args) async {
   final nyrnaWindow = NyrnaWindow();
 
   final appCubit = AppCubit(
-    canLaunchUrl,
-    launchUrl,
+    UrlLauncher(),
   );
 
   // Created outside runApp so it can be accessed for window settings below.
