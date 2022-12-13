@@ -210,16 +210,28 @@ This is why Nyrna comes with the disclaimer that things can go wrong, and you sh
               title: const Text('If this is a game...'),
               children: [
                 MarkdownBody(
-                  data:
-                      'If this is a game, check if it uses `Easy Anti-Cheat` by searching for it at '
-                      '[pcgamingwiki.com](https://www.pcgamingwiki.com) and checking '
-                      'if the "Middleware" section lists Easy Anti-Cheat.'
-                      '\n\n'
-                      'Due to the restricted and obfuscated nature of Easy '
-                      'Anti-Cheat Nyrna cannot manage titles that use this.'
-                      '\n\n'
-                      'If this is not the case for your application feel free to '
-                      '[file a bug](https://github.com/Merrit/nyrna/issues).',
+                  data: '''
+If this is a game, check if it uses `Easy Anti-Cheat` by searching for it at [pcgamingwiki.com](https://www.pcgamingwiki.com) and checking if the "Middleware" section lists Easy Anti-Cheat.
+
+Due to the restricted and obfuscated nature of Easy Anti-Cheat Nyrna cannot manage titles that use this.''',
+                  onTapLink: (String text, String? href, String title) {
+                    if (href == null) return;
+                    AppCubit.instance.launchURL(href);
+                  },
+                ),
+              ],
+            ),
+            ExpansionTile(
+              title: const Text('Report bug'),
+              children: [
+                MarkdownBody(
+                  data: '''
+If you believe this is an issue with Nyrna rather than a limitation of manipulating processes you can [create an issue](https://github.com/Merrit/nyrna/issues).
+
+For troubleshooting or to include in filing an issue you can obtain more detailed logs by:
+- Starting Nyrna with verbose logging, eg: `nyrna --verbose`
+- Reproducing the error
+- Copying the logs from the settings page''',
                   onTapLink: (String text, String? href, String title) {
                     if (href == null) return;
                     AppCubit.instance.launchURL(href);
