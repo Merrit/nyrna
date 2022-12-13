@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nyrna/apps_list/apps_list.dart';
+import 'package:nyrna/logs/logs.dart';
 import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:test/test.dart';
@@ -34,6 +36,10 @@ void main() {
   final _prefsCubit = MockSettingsCubit();
   final _processRepository = MockProcessRepository();
   final _appVersion = MockAppVersion();
+
+  setUpAll(() {
+    log = Logger();
+  });
 
   setUp(() {
     when(() => _appVersion.latest()).thenAnswer((_) async => '1.0.0');
