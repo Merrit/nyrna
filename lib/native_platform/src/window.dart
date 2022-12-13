@@ -35,4 +35,7 @@ class Window extends Equatable {
       title: title ?? this.title,
     );
   }
+
+  @override
+  String toString() => 'Window(id: $id, process: $process, title: $title)';
 }
