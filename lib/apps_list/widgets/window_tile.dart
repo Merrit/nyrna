@@ -5,6 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:libadwaita/libadwaita.dart';
 
 import '../../app/app.dart';
+import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../apps_list.dart';
 
@@ -73,6 +74,8 @@ class _WindowTileState extends State<WindowTile> {
                 horizontal: 20,
               ),
               onTap: () async {
+                log.v('WindowTile clicked: $window');
+
                 setState(() => loading = true);
                 await context.read<AppsListCubit>().toggle(window);
 

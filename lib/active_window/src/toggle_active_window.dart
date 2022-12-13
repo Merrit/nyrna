@@ -8,6 +8,8 @@ Future<void> toggleActiveWindow(
   NativePlatform nativePlatform,
   StorageRepository storageRepository,
 ) async {
+  log.v('Toggling active window.');
+
   final activeWindow = ActiveWindow(
     nativePlatform,
     ProcessRepository.init(),

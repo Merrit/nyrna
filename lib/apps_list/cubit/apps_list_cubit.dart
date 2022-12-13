@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../../settings/settings_service.dart';
 import '../../app_version/app_version.dart';
+import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../apps_list.dart';
 
@@ -119,13 +120,17 @@ class AppsListCubit extends Cubit<AppsListState> {
         ? InteractionType.resume
         : InteractionType.suspend;
 
+    log.v('Beginning ${interaction.name} for window: $window');
+
     if (interaction == InteractionType.resume) {
       successful = await _resume(window);
     } else {
       successful = await _suspend(window);
     }
 
+    log.v('${interaction.name} was successful: $successful');
     window = await _refreshWindowProcess(window);
+    log.v('Window after interaction: $window');
 
     if (!successful) await _addInteractionError(window, interaction);
 

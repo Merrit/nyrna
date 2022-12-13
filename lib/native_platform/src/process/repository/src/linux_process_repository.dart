@@ -79,6 +79,7 @@ class LinuxProcessRepository extends ProcessRepository {
   /// Resume the provided [pid].
   bool _resumePid(int pid) {
     final bool successful = _kill(pid, ProcessSignal.sigcont);
+    log.v('Resuming $pid was successful: $successful');
     return successful;
   }
 
@@ -86,6 +87,8 @@ class LinuxProcessRepository extends ProcessRepository {
   Future<bool> _resumeChildren(int parentPid) async {
     final childPids = await _getChildPids(parentPid);
     if (childPids == null) return true;
+
+    log.v('Resuming child pids of $parentPid. Child pids: $childPids');
 
     for (var childPid in childPids) {
       bool successful;
@@ -127,6 +130,7 @@ class LinuxProcessRepository extends ProcessRepository {
   /// Suspend the provided [pid].
   bool _suspendPid(int pid) {
     final bool successful = _kill(pid, ProcessSignal.sigstop);
+    log.v('Suspending $pid was successful: $successful');
     return successful;
   }
 
@@ -134,6 +138,8 @@ class LinuxProcessRepository extends ProcessRepository {
   Future<bool> _suspendChildren(int parentPid) async {
     final childPids = await _getChildPids(parentPid);
     if (childPids == null) return true;
+
+    log.v('Suspending child pids of $parentPid. Child pids: $childPids');
 
     for (var childPid in childPids) {
       bool successful;

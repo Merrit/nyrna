@@ -111,15 +111,19 @@ class Win32ProcessRepository extends ProcessRepository {
   Future<bool> resume(int pid) async {
     final processHandle = OpenProcess(PROCESS_SUSPEND_RESUME, FALSE, pid);
     final result = NtResumeProcess(processHandle);
+    final successful = (result == 0);
+    log.v('Resuming $pid was successful: $successful');
     CloseHandle(processHandle);
-    return (result == 0) ? true : false;
+    return successful;
   }
 
   @override
   Future<bool> suspend(int pid) async {
     final processHandle = OpenProcess(PROCESS_SUSPEND_RESUME, FALSE, pid);
     final result = NtSuspendProcess(processHandle);
+    final successful = (result == 0);
+    log.v('Suspending $pid was successful: $successful');
     CloseHandle(processHandle);
-    return (result == 0) ? true : false;
+    return successful;
   }
 }

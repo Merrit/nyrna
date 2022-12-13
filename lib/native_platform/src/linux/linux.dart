@@ -1,3 +1,4 @@
+import '../../../logs/logs.dart';
 import '../native_platform.dart';
 import '../process/models/process.dart';
 import '../typedefs.dart';
@@ -156,6 +157,7 @@ class Linux implements NativePlatform {
 
   @override
   Future<bool> minimizeWindow(int windowId) async {
+    log.v('Minimizing window with id $windowId');
     final result = await _run(
       'xdotool',
       ['windowminimize', '$windowId'],
@@ -165,6 +167,7 @@ class Linux implements NativePlatform {
 
   @override
   Future<bool> restoreWindow(int windowId) async {
+    log.v('Restoring window with id $windowId');
     final result = await _run(
       'xdotool',
       ['windowactivate', '$windowId'],
