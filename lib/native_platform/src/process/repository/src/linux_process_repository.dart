@@ -162,6 +162,7 @@ class LinuxProcessRepository extends ProcessRepository {
         .where((e) => e.trim() != '')
         .map((e) => int.parse(e))
         .toList();
+    if (childPids.isEmpty) return null;
     return childPids;
   }
 }
