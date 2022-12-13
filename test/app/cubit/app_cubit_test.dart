@@ -1,7 +1,10 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:nyrna/app/app.dart';
+import 'package:nyrna/storage/storage_repository.dart';
 import 'package:nyrna/url_launcher/url_launcher.dart';
 import 'package:test/test.dart';
+
+class MockStorageRepository extends Mock implements StorageRepository {}
 
 class MockUrlLauncher extends Mock implements UrlLauncher {}
 
@@ -9,6 +12,7 @@ late AppCubit cubit;
 AppState get state => cubit.state;
 
 void main() {
+  late StorageRepository storageRepository;
   late UrlLauncher urlLauncher;
 
   setUpAll(() {
@@ -16,16 +20,25 @@ void main() {
   });
 
   setUp(() {
+    storageRepository = MockStorageRepository();
+    when(() => storageRepository.getValue(any())).thenAnswer((_) async => null);
+
     urlLauncher = MockUrlLauncher();
     when(() => urlLauncher.canLaunch(any())).thenAnswer((_) async => true);
     when(() => urlLauncher.launch(any())).thenAnswer((_) async => true);
 
     cubit = AppCubit(
+      storageRepository,
       urlLauncher,
     );
   });
 
   group('AppCubit:', () {
+    test('firstRun default is true', () {
+      // This test may require a delay if the cubit's init takes longer.
+      expect(state.firstRun, true);
+    });
+
     group('launchURL:', () {
       const correctTestUrl = 'https://www.google.com/';
 

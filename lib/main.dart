@@ -57,10 +57,6 @@ Future<void> main(List<String> args) async {
 
   final nyrnaWindow = NyrnaWindow();
 
-  final appCubit = AppCubit(
-    UrlLauncher(),
-  );
-
   // Created outside runApp so it can be accessed for window settings below.
   final _settingsCubit = SettingsCubit(
     assetToTempDir: assetToTempDir,
@@ -76,7 +72,13 @@ Future<void> main(List<String> args) async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider.value(value: appCubit),
+        BlocProvider(
+          create: (context) => AppCubit(
+            storageRepository,
+            UrlLauncher(),
+          ),
+          lazy: false,
+        ),
         BlocProvider.value(value: _settingsCubit),
         BlocProvider(
           create: (context) => ThemeCubit(settingsService),
