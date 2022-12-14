@@ -4,7 +4,7 @@ import '../../storage/storage_repository.dart';
 import 'active_window.dart';
 
 /// Toggle suspend / resume for the active, foreground window.
-Future<void> toggleActiveWindow(
+Future<bool> toggleActiveWindow(
   NativePlatform nativePlatform,
   ProcessRepository processRepository,
   StorageRepository storageRepository,
@@ -23,11 +23,12 @@ Future<void> toggleActiveWindow(
     storageArea: 'activeWindow',
   );
 
+  bool successful;
   if (savedPid != null) {
-    final successful = await activeWindow.resume(savedPid);
+    successful = await activeWindow.resume(savedPid);
     if (!successful) log.e('Failed to resume successfully.');
   } else {
-    final successful = await activeWindow.suspend();
+    successful = await activeWindow.suspend();
     if (!successful) log.e('Failed to suspend successfully.');
   }
 
@@ -36,4 +37,6 @@ Future<void> toggleActiveWindow(
   // Add a slight delay, because Logger doesn't await closing its file output.
   // This will hopefully ensure the log file gets fully written.
   await Future.delayed(const Duration(milliseconds: 500));
+
+  return successful;
 }
