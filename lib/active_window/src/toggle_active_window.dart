@@ -6,13 +6,14 @@ import 'active_window.dart';
 /// Toggle suspend / resume for the active, foreground window.
 Future<void> toggleActiveWindow(
   NativePlatform nativePlatform,
+  ProcessRepository processRepository,
   StorageRepository storageRepository,
 ) async {
   log.v('Toggling active window.');
 
   final activeWindow = ActiveWindow(
     nativePlatform,
-    ProcessRepository.init(),
+    processRepository,
     storageRepository,
     await nativePlatform.activeWindow(),
   );
