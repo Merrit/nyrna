@@ -1,5 +1,7 @@
 import 'dart:io' hide pid;
 
+import 'package:flutter/foundation.dart';
+
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../../storage/storage_repository.dart';
@@ -60,7 +62,7 @@ class ActiveWindow {
   Future<bool> suspend() async {
     log.v('Suspending');
 
-    if (Platform.isWindows) {
+    if (defaultTargetPlatform == TargetPlatform.windows) {
       // Once in a blue moon on Windows we get "explorer.exe" as the active
       // window, even when no file explorer windows are open / the desktop
       // is not the active element, etc. So we filter it just in case.
