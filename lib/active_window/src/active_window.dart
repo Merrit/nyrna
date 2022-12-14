@@ -80,7 +80,7 @@ class ActiveWindow {
 
     // Small delay on Windows to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
-    if (Platform.isWindows) {
+    if (defaultTargetPlatform == TargetPlatform.windows) {
       await Future.delayed(const Duration(milliseconds: 500));
     }
 
