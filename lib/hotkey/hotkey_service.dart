@@ -10,10 +10,12 @@ import '../storage/storage_repository.dart';
 
 class HotkeyService {
   final NativePlatform _nativePlatform;
+  final ProcessRepository _processRepository;
   final StorageRepository _storageRepository;
 
   const HotkeyService(
     this._nativePlatform,
+    this._processRepository,
     this._storageRepository,
   );
 
@@ -40,7 +42,11 @@ class HotkeyService {
   Future<void> _toggleActiveWindow() async {
     log.v('Triggering toggle from hotkey press.');
 
-    await toggleActiveWindow(_nativePlatform, _storageRepository);
+    await toggleActiveWindow(
+      _nativePlatform,
+      _processRepository,
+      _storageRepository,
+    );
     await appsListCubit.manualRefresh();
   }
 }
