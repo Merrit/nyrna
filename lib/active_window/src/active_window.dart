@@ -73,10 +73,7 @@ class ActiveWindow {
     }
 
     final minimized = await _nativePlatform.minimizeWindow(_window.id);
-    if (!minimized) {
-      log.e('Failed to minimize window.');
-      return false;
-    }
+    if (!minimized) log.e('Failed to minimize window.');
 
     // Small delay on Windows to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
