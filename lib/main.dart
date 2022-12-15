@@ -40,14 +40,16 @@ Future<void> main(List<String> args) async {
   await LoggingManager.initialize(verbose: argParser.verbose);
   final processRepository = ProcessRepository.init();
 
+  final activeWindow = ActiveWindow(
+    nativePlatform,
+    processRepository,
+    storageRepository,
+  );
+
   // If we receive the toggle argument, suspend or resume the active
   // window and then exit without showing the GUI.
   if (argParser.toggleActiveWindow) {
-    await toggleActiveWindow(
-      nativePlatform,
-      processRepository,
-      storageRepository,
-    );
+    await activeWindow.toggle();
     exit(0);
   } else {}
 
@@ -67,11 +69,7 @@ Future<void> main(List<String> args) async {
     assetToTempDir: assetToTempDir,
     getWindowInfo: window.getWindowInfo,
     prefs: settingsService,
-    hotkeyService: HotkeyService(
-      nativePlatform,
-      processRepository,
-      storageRepository,
-    ),
+    hotkeyService: HotkeyService(activeWindow),
     nyrnaWindow: nyrnaWindow,
   );
 

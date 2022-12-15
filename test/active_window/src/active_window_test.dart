@@ -35,6 +35,8 @@ void main() {
   ProcessRepository processRepository = MockProcessRepository();
   StorageRepository storageRepository = MockStorageRepository();
 
+  late ActiveWindow activeWindow;
+
   group('ActiveWindow:', () {
     setUpAll(() {
       // Set the logger to a dummy logger.
@@ -73,14 +75,16 @@ void main() {
             storageArea: any(named: 'storageArea'),
           )).thenAnswer((_) async {});
       when(() => storageRepository.close()).thenAnswer((_) async {});
-    });
 
-    test('suspends normal window', () async {
-      final successful = await toggleActiveWindow(
+      activeWindow = ActiveWindow(
         nativePlatform,
         processRepository,
         storageRepository,
       );
+    });
+
+    test('suspends normal window', () async {
+      final successful = await activeWindow.toggle();
       expect(successful, true);
       verify(() => processRepository.suspend(testWindow.process.pid)).called(1);
       verify(() => storageRepository.saveValue(
@@ -101,11 +105,7 @@ void main() {
           .thenAnswer((_) async => testWindow.copyWith(
                 process: testProcess.copyWith(executable: 'explorer.exe'),
               ));
-      final successful = await toggleActiveWindow(
-        nativePlatform,
-        processRepository,
-        storageRepository,
-      );
+      final successful = await activeWindow.toggle();
       expect(successful, false);
       verifyNever(() => processRepository.suspend(any()));
       // Restore global platform variable.
@@ -115,11 +115,7 @@ void main() {
     test('suspend failure returns false', () async {
       when(() => processRepository.suspend(any()))
           .thenAnswer((_) async => false);
-      final successful = await toggleActiveWindow(
-        nativePlatform,
-        processRepository,
-        storageRepository,
-      );
+      final successful = await activeWindow.toggle();
       expect(successful, false);
     });
 
@@ -145,11 +141,7 @@ void main() {
       test('resumes suspended window', () async {
         when(() => processRepository.resume(suspendedProcess.pid))
             .thenAnswer((_) async => true);
-        final successful = await toggleActiveWindow(
-          nativePlatform,
-          processRepository,
-          storageRepository,
-        );
+        final successful = await activeWindow.toggle();
         expect(successful, true);
         verify(() => processRepository.resume(suspendedProcess.pid)).called(1);
         verify(() => storageRepository.getValue('windowId',
@@ -163,11 +155,7 @@ void main() {
       test('failed resume returns false', () async {
         when(() => processRepository.resume(suspendedProcess.pid))
             .thenAnswer((_) async => false);
-        final successful = await toggleActiveWindow(
-          nativePlatform,
-          processRepository,
-          storageRepository,
-        );
+        final successful = await activeWindow.toggle();
         expect(successful, false);
         verify(() => processRepository.resume(suspendedProcess.pid)).called(1);
         verifyNever(() => storageRepository.getValue('windowId',

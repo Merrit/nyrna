@@ -12,16 +12,41 @@ class ActiveWindow {
   final NativePlatform _nativePlatform;
   final ProcessRepository _processRepository;
   final StorageRepository _storageRepository;
-  final Window _window;
 
   const ActiveWindow(
     this._nativePlatform,
     this._processRepository,
     this._storageRepository,
-    this._window,
   );
 
-  Future<bool> resume(int savedPid) async {
+  /// Toggle suspend / resume for the active, foreground window.
+  Future<bool> toggle() async {
+    log.v('Toggling active window.');
+
+    final savedPid = await _storageRepository.getValue(
+      'pid',
+      storageArea: 'activeWindow',
+    );
+
+    bool successful;
+    if (savedPid != null) {
+      successful = await _resume(savedPid);
+      if (!successful) log.e('Failed to resume successfully.');
+    } else {
+      successful = await _suspend();
+      if (!successful) log.e('Failed to suspend successfully.');
+    }
+
+    await _storageRepository.close();
+    LoggingManager.instance.close();
+    // Add a slight delay, because Logger doesn't await closing its file output.
+    // This will hopefully ensure the log file gets fully written.
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    return successful;
+  }
+
+  Future<bool> _resume(int savedPid) async {
     log.v('resuming, pid: $savedPid');
 
     final resumed = await _processRepository.resume(savedPid);
@@ -57,8 +82,10 @@ class ActiveWindow {
     );
   }
 
-  Future<bool> suspend() async {
+  Future<bool> _suspend() async {
     log.v('Suspending');
+
+    final _window = await _nativePlatform.activeWindow();
 
     if (defaultTargetPlatform == TargetPlatform.windows) {
       // Once in a blue moon on Windows we get "explorer.exe" as the active
