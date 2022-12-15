@@ -12,6 +12,7 @@ import 'package:window_size/window_size.dart' show PlatformWindow;
 import '../../apps_list/apps_list.dart';
 import '../../core/core.dart';
 import '../../hotkey/hotkey_service.dart';
+import '../../storage/storage_repository.dart';
 import '../../window/nyrna_window.dart';
 import '../settings_service.dart';
 
@@ -25,13 +26,15 @@ class SettingsCubit extends Cubit<SettingsState> {
   final SettingsService _prefs;
   final HotkeyService _hotkeyService;
   final NyrnaWindow _nyrnaWindow;
+  final StorageRepository _storageRepository;
 
   SettingsCubit._(
     this._assetToTempDir,
     this._getWindowInfo,
     this._prefs,
     this._hotkeyService,
-    this._nyrnaWindow, {
+    this._nyrnaWindow,
+    this._storageRepository, {
     required SettingsState initialState,
   }) : super(initialState) {
     settingsCubit = this;
@@ -39,13 +42,14 @@ class SettingsCubit extends Cubit<SettingsState> {
     _nyrnaWindow.preventClose(state.closeToTray);
   }
 
-  factory SettingsCubit({
+  static Future<SettingsCubit> init({
     required Future<File> Function(String path) assetToTempDir,
     required Future<PlatformWindow> Function() getWindowInfo,
     required SettingsService prefs,
     required HotkeyService hotkeyService,
     required NyrnaWindow nyrnaWindow,
-  }) {
+    required StorageRepository storageRepository,
+  }) async {
     HotKey? hotkey;
     final String? savedHotkey = prefs.getString('hotkey');
     if (savedHotkey != null) {
@@ -54,17 +58,22 @@ class SettingsCubit extends Cubit<SettingsState> {
       hotkey = defaultHotkey;
     }
 
+    bool? minimizeWindows = await storageRepository.getValue('minimizeWindows');
+    minimizeWindows ??= true;
+
     return SettingsCubit._(
       assetToTempDir,
       getWindowInfo,
       prefs,
       hotkeyService,
       nyrnaWindow,
+      storageRepository,
       initialState: SettingsState(
         autoStart: prefs.getBool('autoStart') ?? false,
         autoRefresh: _checkAutoRefresh(prefs),
         closeToTray: prefs.getBool('closeToTray') ?? false,
         hotKey: hotkey,
+        minimizeWindows: minimizeWindows,
         refreshInterval: prefs.getInt('refreshInterval') ?? 5,
         showHiddenWindows: prefs.getBool('showHiddenWindows') ?? false,
         startHiddenInTray: prefs.getBool('startHiddenInTray') ?? false,
@@ -134,6 +143,12 @@ class SettingsCubit extends Cubit<SettingsState> {
     await _nyrnaWindow.preventClose(closeToTray);
     await _prefs.setBool(key: 'closeToTray', value: closeToTray);
     emit(state.copyWith(closeToTray: closeToTray));
+  }
+
+  /// Update the preference for auto minimizing windows.
+  Future<void> updateMinimizeWindows(bool value) async {
+    emit(state.copyWith(minimizeWindows: value));
+    await _storageRepository.saveValue(key: 'minimizeWindows', value: value);
   }
 
   Future<void> updateShowHiddenWindows(bool value) async {

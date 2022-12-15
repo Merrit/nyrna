@@ -6,6 +6,7 @@ import 'package:nyrna/apps_list/apps_list.dart';
 import 'package:nyrna/logs/logs.dart';
 import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/storage/storage_repository.dart';
 import 'package:test/test.dart';
 
 import '../../mock_app_version.dart';
@@ -14,6 +15,8 @@ import '../../mock_settings_cubit.dart';
 import '../../mock_settings_service.dart';
 
 class MockProcessRepository extends Mock implements ProcessRepository {}
+
+class MockStorageRepository extends Mock implements StorageRepository {}
 
 const msPaintProcess = Process(
   executable: 'mspaint.exe',
@@ -35,6 +38,7 @@ void main() {
   final _prefs = MockSettingsService();
   final _prefsCubit = MockSettingsCubit();
   final _processRepository = MockProcessRepository();
+  final _storageRepository = MockStorageRepository();
   final _appVersion = MockAppVersion();
 
   setUpAll(() {
@@ -60,6 +64,7 @@ void main() {
         autoRefresh: false,
         closeToTray: false,
         hotKey: HotKey(KeyCode.again),
+        minimizeWindows: true,
         refreshInterval: 5,
         showHiddenWindows: false,
         startHiddenInTray: false,
@@ -70,6 +75,10 @@ void main() {
         .thenAnswer((_) async => ProcessStatus.normal);
     when(() => _processRepository.resume(any())).thenAnswer((_) async => true);
     when(() => _processRepository.suspend(any())).thenAnswer((_) async => true);
+
+    // StorageRepository
+    when(() => _storageRepository.getValue('minimizeWindows'))
+        .thenAnswer((_) async => true);
 
     cubit = AppsListCubit(
       nativePlatform: _nativePlatform,

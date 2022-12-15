@@ -38,6 +38,13 @@ Future<void> main(List<String> args) async {
   final storageRepository = await StorageRepository.initialize(Hive);
   final nativePlatform = NativePlatform();
   await LoggingManager.initialize(verbose: argParser.verbose);
+
+  // Handle platform errors not caught by Flutter.
+  PlatformDispatcher.instance.onError = (error, stack) {
+    log.e('Uncaught platform error', error, stack);
+    return true;
+  };
+
   final processRepository = ProcessRepository.init();
 
   final activeWindow = ActiveWindow(
@@ -53,24 +60,19 @@ Future<void> main(List<String> args) async {
     exit(0);
   } else {}
 
-  // Handle platform errors not caught by Flutter.
-  PlatformDispatcher.instance.onError = (error, stack) {
-    log.e('Uncaught platform error', error, stack);
-    return true;
-  };
-
   final sharedPreferences = await SharedPreferences.getInstance();
   final settingsService = SettingsService(sharedPreferences);
 
   final nyrnaWindow = NyrnaWindow();
 
   // Created outside runApp so it can be accessed for window settings below.
-  final _settingsCubit = SettingsCubit(
+  final _settingsCubit = await SettingsCubit.init(
     assetToTempDir: assetToTempDir,
     getWindowInfo: window.getWindowInfo,
     prefs: settingsService,
     hotkeyService: HotkeyService(activeWindow),
     nyrnaWindow: nyrnaWindow,
+    storageRepository: storageRepository,
   );
 
   // Provides information on this app from the pubspec.yaml.
