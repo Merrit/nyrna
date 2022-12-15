@@ -14,4 +14,4 @@
 /// - Restore / unminimize the associated window
 /// - Delete the file containing the PID & window id so next call will suspend.
 
-export 'src/toggle_active_window.dart';
+export 'src/active_window.dart';

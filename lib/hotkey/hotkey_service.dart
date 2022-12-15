@@ -5,18 +5,12 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 import '../active_window/active_window.dart';
 import '../apps_list/apps_list.dart';
 import '../logs/logs.dart';
-import '../native_platform/native_platform.dart';
-import '../storage/storage_repository.dart';
 
 class HotkeyService {
-  final NativePlatform _nativePlatform;
-  final ProcessRepository _processRepository;
-  final StorageRepository _storageRepository;
+  final ActiveWindow _activeWindow;
 
   const HotkeyService(
-    this._nativePlatform,
-    this._processRepository,
-    this._storageRepository,
+    this._activeWindow,
   );
 
   Future<void> removeHotkey() async {
@@ -39,15 +33,11 @@ class HotkeyService {
     log.v('Registered hotkey: ${_hotKey.toStringHelper()}');
   }
 
-  Future<void> _toggleActiveWindow() async {
+  Future<bool> _toggleActiveWindow() async {
     log.v('Triggering toggle from hotkey press.');
-
-    await toggleActiveWindow(
-      _nativePlatform,
-      _processRepository,
-      _storageRepository,
-    );
+    final successful = await _activeWindow.toggle();
     await appsListCubit.manualRefresh();
+    return successful;
   }
 }
 
