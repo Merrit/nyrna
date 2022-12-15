@@ -1,5 +1,3 @@
-import 'dart:io' hide pid;
-
 import 'package:flutter/foundation.dart';
 
 import '../../logs/logs.dart';
