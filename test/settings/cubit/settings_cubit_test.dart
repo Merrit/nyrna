@@ -8,6 +8,7 @@ import 'package:nyrna/apps_list/cubit/apps_list_cubit.dart';
 import 'package:nyrna/core/helpers/helpers.dart';
 import 'package:nyrna/hotkey/hotkey_service.dart';
 import 'package:nyrna/settings/settings.dart';
+import 'package:nyrna/storage/storage_repository.dart';
 import 'package:nyrna/window/nyrna_window.dart';
 import 'package:window_size/window_size.dart';
 
@@ -21,11 +22,14 @@ class MockNyrnaWindow extends Mock implements NyrnaWindow {}
 
 class MockSettingsService extends Mock implements SettingsService {}
 
+class MockStorageRepository extends Mock implements StorageRepository {}
+
 late Future<File> Function(String path) assetToTempDir;
 late Future<PlatformWindow> Function() getWindowInfo;
 HotkeyService hotkeyService = MockHotkeyService();
 NyrnaWindow nyrnaWindow = MockNyrnaWindow();
 SettingsService settingsService = MockSettingsService();
+StorageRepository storageRepository = MockStorageRepository();
 
 /// Cubit being tested
 
@@ -52,7 +56,7 @@ void main() {
     registerFallbackValue(HotKey(KeyCode.abort));
   }));
 
-  setUp((() {
+  setUp((() async {
     when(() => hotkeyService.updateHotkey(any())).thenAnswer((_) async {});
     when(() => hotkeyService.removeHotkey()).thenAnswer((_) async {});
 
@@ -72,12 +76,19 @@ void main() {
           value: any(named: 'value'),
         )).thenAnswer((_) async {});
 
-    cubit = SettingsCubit(
+    // StorageRepository
+    when(() => storageRepository.getValue(
+          any(),
+          storageArea: any(named: 'storageArea'),
+        )).thenAnswer((_) async => null);
+
+    cubit = await SettingsCubit.init(
       assetToTempDir: assetToTempDir,
       getWindowInfo: getWindowInfo,
       prefs: settingsService,
       hotkeyService: hotkeyService,
       nyrnaWindow: nyrnaWindow,
+      storageRepository: storageRepository,
     );
   }));
 

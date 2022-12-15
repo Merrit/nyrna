@@ -60,6 +60,20 @@ class BehaviourSection extends StatelessWidget {
             },
           ),
         ),
+        ListTile(
+          title: const Text('Minimize / restore windows'),
+          leading: const Icon(Icons.minimize),
+          trailing: BlocBuilder<SettingsCubit, SettingsState>(
+            builder: (context, state) {
+              return Switch(
+                value: state.minimizeWindows,
+                onChanged: (value) async {
+                  await settingsCubit.updateMinimizeWindows(value);
+                },
+              );
+            },
+          ),
+        ),
         const ShowHiddenTile(),
       ],
     );

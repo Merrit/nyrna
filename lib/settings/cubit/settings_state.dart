@@ -12,6 +12,10 @@ class SettingsState extends Equatable {
   /// The hotkey to toggle active application suspend.
   final HotKey hotKey;
 
+  /// If true the window will be automatically minimized when suspending and
+  /// restored when resuming.
+  final bool minimizeWindows;
+
   /// How often to automatically refresh the list of open windows, in seconds.
   final int refreshInterval;
 
@@ -23,6 +27,7 @@ class SettingsState extends Equatable {
     required this.autoRefresh,
     required this.closeToTray,
     required this.hotKey,
+    required this.minimizeWindows,
     required this.refreshInterval,
     required this.showHiddenWindows,
     required this.startHiddenInTray,
@@ -35,6 +40,7 @@ class SettingsState extends Equatable {
       autoRefresh,
       closeToTray,
       hotKey,
+      minimizeWindows,
       refreshInterval,
       showHiddenWindows,
       startHiddenInTray,
@@ -46,6 +52,7 @@ class SettingsState extends Equatable {
     bool? autoRefresh,
     bool? closeToTray,
     HotKey? hotKey,
+    bool? minimizeWindows,
     int? refreshInterval,
     bool? showHiddenWindows,
     bool? startHiddenInTray,
@@ -55,6 +62,7 @@ class SettingsState extends Equatable {
       autoRefresh: autoRefresh ?? this.autoRefresh,
       closeToTray: closeToTray ?? this.closeToTray,
       hotKey: hotKey ?? this.hotKey,
+      minimizeWindows: minimizeWindows ?? this.minimizeWindows,
       refreshInterval: refreshInterval ?? this.refreshInterval,
       showHiddenWindows: showHiddenWindows ?? this.showHiddenWindows,
       startHiddenInTray: startHiddenInTray ?? this.startHiddenInTray,

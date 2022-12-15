@@ -154,12 +154,24 @@ class AppsListCubit extends Cubit<AppsListState> {
     final successful = await _processRepository.resume(window.process.pid);
 
     // Restore the window _after_ resuming or it might not restore.
-    if (successful) await _nativePlatform.restoreWindow(window.id);
+    if (successful) await _restore(window);
 
     return successful;
   }
 
   Future<bool> _suspend(Window window) async {
+    await _minimize(window);
+    final successful = await _processRepository.suspend(window.process.pid);
+
+    // If suspend failed, restore the window so the user won't mistakenly
+    // think that the suspend was successful.
+    if (!successful) await _restore(window);
+    return successful;
+  }
+
+  Future<void> _minimize(Window window) async {
+    if (!_prefsCubit.state.minimizeWindows) return;
+
     // Minimize the window before suspending or it might not minimize.
     await _nativePlatform.minimizeWindow(window.id);
 
@@ -168,14 +180,12 @@ class AppsListCubit extends Cubit<AppsListState> {
     if (io.Platform.isWindows) {
       await Future.delayed(const Duration(milliseconds: 500));
     }
+  }
 
-    final successful = await _processRepository.suspend(window.process.pid);
+  Future<void> _restore(Window window) async {
+    if (!_prefsCubit.state.minimizeWindows) return;
 
-    // If suspend failed, restore the window so the user won't mistakenly
-    // think that the suspend was successful.
-    if (!successful) await _nativePlatform.restoreWindow(window.id);
-
-    return successful;
+    await _nativePlatform.restoreWindow(window.id);
   }
 
   /// Refresh the process status associated with [window].

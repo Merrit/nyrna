@@ -65,8 +65,7 @@ class ActiveWindow {
     if (windowId == null) {
       log.e('Failed to find saved windowId, cannot restore.');
     } else {
-      final restoreSuccessful = await _nativePlatform.restoreWindow(windowId);
-      if (!restoreSuccessful) log.e('Failed to restore window.');
+      await _restore(windowId);
     }
 
     log.v('Resumed $savedPid successfully.');
@@ -87,6 +86,8 @@ class ActiveWindow {
 
     final _window = await _nativePlatform.activeWindow();
 
+    log.v('Active window: $_window');
+
     if (defaultTargetPlatform == TargetPlatform.windows) {
       // Once in a blue moon on Windows we get "explorer.exe" as the active
       // window, even when no file explorer windows are open / the desktop
@@ -97,8 +98,7 @@ class ActiveWindow {
       }
     }
 
-    final minimized = await _nativePlatform.minimizeWindow(_window.id);
-    if (!minimized) log.e('Failed to minimize window.');
+    await _minimize(_window.id);
 
     // Small delay on Windows to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
@@ -125,5 +125,27 @@ class ActiveWindow {
     log.v('Suspended ${_window.process.pid} successfully');
 
     return true;
+  }
+
+  Future<void> _minimize(int windowId) async {
+    log.v('Starting minimize');
+    final shouldMinimize = await _getShouldMinimize();
+    if (!shouldMinimize) return;
+
+    final minimized = await _nativePlatform.minimizeWindow(windowId);
+    if (!minimized) log.e('Failed to minimize window.');
+  }
+
+  Future<void> _restore(int windowId) async {
+    final shouldRestore = await _getShouldMinimize();
+    if (!shouldRestore) return;
+
+    final minimized = await _nativePlatform.restoreWindow(windowId);
+    if (!minimized) log.e('Failed to restore window.');
+  }
+
+  /// Checks for a user preference on whether to minimize/restore windows.
+  Future<bool> _getShouldMinimize() async {
+    return await _storageRepository.getValue('minimizeWindows') ?? true;
   }
 }
