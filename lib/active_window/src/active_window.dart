@@ -129,10 +129,10 @@ class ActiveWindow {
   }
 
   Future<void> _minimize(int windowId) async {
-    log.v('Starting minimize');
     final shouldMinimize = await _getShouldMinimize();
     if (!shouldMinimize) return;
 
+    log.v('Starting minimize');
     final minimized = await _nativePlatform.minimizeWindow(windowId);
     if (!minimized) log.e('Failed to minimize window.');
   }
@@ -141,6 +141,7 @@ class ActiveWindow {
     final shouldRestore = await _getShouldMinimize();
     if (!shouldRestore) return;
 
+    log.v('Starting restore');
     final minimized = await _nativePlatform.restoreWindow(windowId);
     if (!minimized) log.e('Failed to restore window.');
   }
@@ -149,8 +150,14 @@ class ActiveWindow {
   Future<bool> _getShouldMinimize() async {
     // If minimize preference was set by flag it overrides UI-based preference.
     final minimizeArg = argParser.minimize;
-    if (minimizeArg != null) return minimizeArg;
+    if (minimizeArg != null) {
+      log.v('Received no-minimize flag, affecting window state: $minimizeArg');
+      return minimizeArg;
+    }
 
-    return await _storageRepository.getValue('minimizeWindows') ?? true;
+    bool? minimize = await _storageRepository.getValue('minimizeWindows');
+    minimize ??= true;
+    log.v('Minimizing / restoring window: $minimize');
+    return minimize;
   }
 }
