@@ -152,9 +152,18 @@ class ArgumentParser {
   void parseArgs(List<String> args) {
     _parser
       ..addFlag(
-        'no-minimize',
-        negatable: false,
-        callback: (_) => minimize = false,
+        'minimize',
+        defaultsTo: true,
+        callback: (bool value) {
+          /// We only want to register when the user calls the negated version of
+          /// this flag: `--no-minimize`. Otherwise the [minimize] value will be
+          /// null and the UI-set preference can be checked.
+          if (value == true) {
+            return;
+          } else {
+            minimize = false;
+          }
+        },
         help: '''
 Used with the `toggle` flag, `no-minimize` instructs Nyrna not to automatically minimize / restore the active window - it will be suspended / resumed only.''',
       )
