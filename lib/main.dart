@@ -32,8 +32,8 @@ Future<void> main(List<String> args) async {
   await windowManager.ensureInitialized();
 
   // Parse command-line arguments.
-  final argParser = ArgumentParser();
-  argParser.parseArgs(args);
+  argParser = ArgumentParser() //
+    ..parseArgs(args);
 
   final storageRepository = await StorageRepository.initialize(Hive);
   final nativePlatform = NativePlatform();
@@ -138,8 +138,11 @@ Supported arguments:
 
 ''';
 
+late ArgumentParser argParser;
+
 /// Parse command-line arguments.
 class ArgumentParser {
+  bool? minimize;
   bool toggleActiveWindow = false;
   bool verbose = false;
 
@@ -148,6 +151,13 @@ class ArgumentParser {
   /// Parse received arguments.
   void parseArgs(List<String> args) {
     _parser
+      ..addFlag(
+        'no-minimize',
+        negatable: false,
+        callback: (_) => minimize = false,
+        help: '''
+Used with the `toggle` flag, `no-minimize` instructs Nyrna not to automatically minimize / restore the active window - it will be suspended / resumed only.''',
+      )
       ..addFlag(
         'toggle',
         abbr: 't',

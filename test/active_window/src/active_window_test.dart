@@ -3,11 +3,14 @@ import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nyrna/active_window/active_window.dart';
 import 'package:nyrna/logs/logs.dart';
+import 'package:nyrna/main.dart';
 import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/storage/storage_repository.dart';
 import 'package:test/test.dart';
 
 const kActiveWindowStorageArea = 'activeWindow';
+
+class MockArgParser extends Mock implements ArgumentParser {}
 
 class MockLoggingManager extends Mock implements LoggingManager {}
 
@@ -31,58 +34,65 @@ const testWindow = Window(
 
 void main() {
   LoggingManager loggingManager = MockLoggingManager();
-  NativePlatform nativePlatform = MockNativePlatform();
-  ProcessRepository processRepository = MockProcessRepository();
-  StorageRepository storageRepository = MockStorageRepository();
+
+  late NativePlatform nativePlatform;
+  late ProcessRepository processRepository;
+  late StorageRepository storageRepository;
 
   late ActiveWindow activeWindow;
 
+  setUpAll(() {
+    argParser = MockArgParser();
+    when(() => argParser.minimize).thenReturn(null);
+
+    // Set the logger to a dummy logger.
+    log = Logger(level: Level.nothing);
+    LoggingManager.instance = loggingManager;
+    when(() => loggingManager.close()).thenReturn(null);
+  });
+
+  setUp(() {
+    nativePlatform = MockNativePlatform();
+    processRepository = MockProcessRepository();
+    storageRepository = MockStorageRepository();
+
+    // Setup initial dummy responses for mocks.
+
+    // NativePlatform
+    when(() => nativePlatform.activeWindow())
+        .thenAnswer((_) async => testWindow);
+    when(() => nativePlatform.minimizeWindow(any()))
+        .thenAnswer((_) async => true);
+    when(() => nativePlatform.restoreWindow(any()))
+        .thenAnswer((_) async => true);
+
+    // ProcessRepository
+    when(() => processRepository.suspend(any())).thenAnswer((_) async => true);
+
+    // StorageRepository
+    when(() => storageRepository.deleteValue(
+          any(),
+          storageArea: any(named: 'storageArea'),
+        )).thenAnswer((_) async {});
+    when(() => storageRepository.getValue(
+          any(),
+          storageArea: any(named: 'storageArea'),
+        )).thenAnswer((_) async => null);
+    when(() => storageRepository.saveValue(
+          key: any(named: 'key'),
+          value: any(named: 'value'),
+          storageArea: any(named: 'storageArea'),
+        )).thenAnswer((_) async {});
+    when(() => storageRepository.close()).thenAnswer((_) async {});
+
+    activeWindow = ActiveWindow(
+      nativePlatform,
+      processRepository,
+      storageRepository,
+    );
+  });
+
   group('ActiveWindow:', () {
-    setUpAll(() {
-      // Set the logger to a dummy logger.
-      log = Logger(level: Level.nothing);
-      LoggingManager.instance = loggingManager;
-      when(() => loggingManager.close()).thenReturn(null);
-    });
-
-    setUp(() {
-      // Setup initial dummy responses for mocks.
-
-      // NativePlatform
-      when(() => nativePlatform.activeWindow())
-          .thenAnswer((_) async => testWindow);
-      when(() => nativePlatform.minimizeWindow(any()))
-          .thenAnswer((_) async => true);
-      when(() => nativePlatform.restoreWindow(any()))
-          .thenAnswer((_) async => true);
-
-      // ProcessRepository
-      when(() => processRepository.suspend(any()))
-          .thenAnswer((_) async => true);
-
-      // StorageRepository
-      when(() => storageRepository.deleteValue(
-            any(),
-            storageArea: any(named: 'storageArea'),
-          )).thenAnswer((_) async {});
-      when(() => storageRepository.getValue(
-            any(),
-            storageArea: any(named: 'storageArea'),
-          )).thenAnswer((_) async => null);
-      when(() => storageRepository.saveValue(
-            key: any(named: 'key'),
-            value: any(named: 'value'),
-            storageArea: any(named: 'storageArea'),
-          )).thenAnswer((_) async {});
-      when(() => storageRepository.close()).thenAnswer((_) async {});
-
-      activeWindow = ActiveWindow(
-        nativePlatform,
-        processRepository,
-        storageRepository,
-      );
-    });
-
     test('suspends normal window', () async {
       final successful = await activeWindow.toggle();
       expect(successful, true);
@@ -117,6 +127,42 @@ void main() {
           .thenAnswer((_) async => false);
       final successful = await activeWindow.toggle();
       expect(successful, false);
+    });
+
+    group('minimizing & restoring:', () {
+      test('no flag or preference defaults to minimizing', () async {
+        expect(argParser.minimize, null);
+        final successful = await activeWindow.toggle();
+        expect(successful, true);
+        verify(() => nativePlatform.minimizeWindow(any())).called(1);
+      });
+
+      test('no flag & preference=false does not minimize', () async {
+        when(() => storageRepository.getValue('minimizeWindows'))
+            .thenAnswer((_) async => false);
+        expect(argParser.minimize, null);
+        final successful = await activeWindow.toggle();
+        expect(successful, true);
+        verifyNever(() => nativePlatform.minimizeWindow(any()));
+      });
+
+      test('no-minimize flag received & no preference does not minimize',
+          () async {
+        when(() => argParser.minimize).thenReturn(false);
+        final successful = await activeWindow.toggle();
+        expect(successful, true);
+        verifyNever(() => nativePlatform.minimizeWindow(any()));
+      });
+
+      test('no-minimize flag received & preference=true does not minimize',
+          () async {
+        when(() => storageRepository.getValue('minimizeWindows'))
+            .thenAnswer((_) async => true);
+        when(() => argParser.minimize).thenReturn(false);
+        final successful = await activeWindow.toggle();
+        expect(successful, true);
+        verifyNever(() => nativePlatform.minimizeWindow(any()));
+      });
     });
 
     group('resuming:', () {
