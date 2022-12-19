@@ -1,6 +1,6 @@
 name: nyrna
 title: Nyrna
-version: 2.4.1
+version: 2.8.0
 summary: Suspend games and applications
 description: |
   Similar to the incredibly useful sleep/suspend function found in
@@ -8,7 +8,7 @@ description: |
   game (and its resource usage) at any time, and 
   resume whenever you wish - at the push of a button.
 issues: https://github.com/Merrit/nyrna/issues
-donation: https://www.buymeacoffee.com/Merritt
+donation: https://merritt.codes/support/
 source-code: https://github.com/Merrit/nyrna.git
 website: https://nyrna.merritt.codes/
 license: GPL-3.0
@@ -29,7 +29,7 @@ slots:
 apps:
   nyrna:
     command: nyrna
-    extensions: [flutter-beta] # Flutter channel to use for the build.
+    extensions: [flutter-stable] # Flutter channel to use for the build.
     plugs:
       - network
       - process-control # Necessary for core functionality.
