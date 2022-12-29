@@ -178,7 +178,7 @@ jobs:
       - name: Compress build for Linux
         if: matrix.target == 'Linux'
         run: |
-          tar czf ${{ env.project-name }}-${{ matrix.target }}-Portable.tar.gz *
+          tar aczf ${{ env.project-name }}-${{ matrix.target }}-Portable.tar.gz *
           mv *.tar.gz ${{ github.workspace }}/output/
         working-directory: ${{ matrix.build_path }}
 
