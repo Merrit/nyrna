@@ -1,0 +1,75 @@
+# name: Publish Flatpak
+
+# on:
+#   # Enable manual run
+#   workflow_dispatch:
+#   # Build & deploy for published releases
+#   release:
+#     types:
+#       - published
+
+# # ${{ secrets.FLATHUB_TOKEN }} is a Personal Access Token to grant push access.
+
+# env:
+#   project-id: codes.merritt.bargain
+
+# jobs:
+#   update-recipe:
+#     name: Update Flatpak recipe files
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+#         with:
+#           path: code
+
+#       - name: Install dependencies
+#         run: |
+#           sudo apt-get update
+#           sudo apt-get install -y flatpak flatpak-builder
+#           sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+#           sudo flatpak install -y org.freedesktop.Sdk/x86_64/21.08
+#           sudo flatpak install -y org.freedesktop.Platform/x86_64/21.08
+#           sudo flatpak install -y flathub org.freedesktop.appstream-glib
+
+#       - name: Setup Dart SDK
+#         uses: dart-lang/setup-dart@v1.3
+
+#       - name: Prepare for Flatpak build & update recipe files
+#         working-directory: ${{ github.workspace }}/code/packaging/linux/flatpak
+#         run: |
+#           bash prepare-flatpak-build.sh
+
+#       - name: Verify Flatpak builds successfully
+#         working-directory: ${{ github.workspace }}/code/packaging/linux/flatpak
+#         run: |
+#           cp ../${{ env.project-id }}.metainfo.xml .
+#           flatpak-builder --force-clean build-dir ${{ env.project-id }}.yml
+
+#       - name: Checkout flathub repository
+#         uses: actions/checkout@v2
+#         with:
+#           repository: flathub/${{ env.project-id }}
+#           path: flathub
+#           token: ${{ secrets.FLATHUB_TOKEN }}
+
+#       - name: Push updated recipe to Flathub
+#         working-directory: ${{ github.workspace }}
+#         env:
+#           GH_TOKEN: ${{ secrets.FLATHUB_TOKEN }}
+#           REPO_KEY: ${{ secrets.FLATHUB_TOKEN }}
+#           USERNAME: merrit
+#         run: |
+#           cd ${{ github.workspace }}/flathub
+#           cp -r ${{ github.workspace }}/code/packaging/linux/flatpak/${{ env.project-id }}.json .
+#           cp -r ${{ github.workspace }}/code/packaging/linux/flatpak/${{ env.project-id }}.metainfo.xml .
+#           git config --local user.name "Kristen McWilliam"
+#           git config --local user.email "9575627+Merrit@users.noreply.github.com"
+#           git checkout -b flathub_update
+#           git add -A
+#           git commit -m "Update flatpak for new release"
+#           git push -u origin flathub_update -f
+#           gh pr create --fill --head flathub_update
+#         # Disable auto-merge because they are disallowing it (╯°□°）╯︵ ┻━┻
+#         # gh pr merge --rebase --delete-branch
+#         # git push https://$USERNAME:$REPO_KEY@github.com/flathub/${{ env.project-id }}.git
