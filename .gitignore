@@ -7,6 +7,9 @@ appimage-builder-cache
 packaging/linux/appimage/AppDir
 packaging/linux/appimage/appimage-builder-cache
 packaging/output/
+.flatpak-builder
+build-dir
+shared-modules
 
 # PKGBUILD extras
 packaging/PKGBUILD/.SRCINFO

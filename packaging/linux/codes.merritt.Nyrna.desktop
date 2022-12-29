@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Nyrna
+Comment=Suspend games and applications
+Exec=nyrna
+Icon=codes.merritt.Nyrna
+Terminal=false
+StartupNotify=false
+Categories=Utility;
+StartupWMClass=Nyrna
