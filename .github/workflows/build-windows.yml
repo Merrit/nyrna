@@ -1,0 +1,59 @@
+name: Build Windows
+on:
+  # Enable manual run
+  workflow_dispatch:
+  # Verify builds succeed on pull requests
+  pull_request:
+  # Allow being called by other workflows
+  workflow_call:
+    inputs:
+      pre-release:
+        description: "Whether the build is for a pre-release"
+        required: false
+        default: false
+        type: boolean
+
+env:
+  app-display-name: "Nyrna"
+  author: "Merritt Codes"
+  identifier: "codes.merritt.Nyrna"
+  msix-icon-path: "assets\\icons\\nyrna.png"
+
+jobs:
+  build-windows:
+    name: Build Windows
+    runs-on: windows-2019
+
+    # ----------------------------------- Setup ------------------------------ #
+
+    steps:
+      - name: Set pre-release environment variable
+        if: inputs.pre-release == true
+        run: echo "prerelease=true" >> $GITHUB_ENV
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2.3.0
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Prepare for build
+        run: |
+          flutter config --enable-windows-desktop
+          flutter upgrade
+          flutter pub get
+
+      # ----------------------------------- Build ---------------------------- #
+
+      - name: Run build script
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: flutter pub run flutter_app_builder --platforms=windows
+
+      # ---------------------------------- Upload ---------------------------- #
+
+      - name: Upload artifacts to workflow
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-artifacts
+          path: output/*
