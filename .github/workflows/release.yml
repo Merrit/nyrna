@@ -1,0 +1,53 @@
+# Create a new release
+
+name: Release
+
+on:
+  # Build & deploy for tag events matching v*, i.e. v1.0.0, v20.15.10
+  push:
+    tags:
+      - "v*"
+
+concurrency:
+  group: ci-release-${{ github.ref }}-1
+  cancel-in-progress: true
+
+jobs:
+  call-tests:
+    uses: ./.github/workflows/tests.yml
+
+  call-build-linux:
+    needs: call-tests
+    uses: ./.github/workflows/build-linux.yml
+    with:
+      pre-release: false
+    secrets: inherit
+  call-build-windows:
+    needs: call-tests
+    uses: ./.github/workflows/build-windows.yml
+    with:
+      pre-release: false
+    secrets: inherit
+
+  release:
+    name: "Release"
+    needs: [call-build-linux, call-build-windows]
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Create Draft Release & Upload artifacts
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          draft: true
+          prerelease: false
+          files: |
+            ${{ github.workspace }}/artifacts/linux-artifacts/*
+            ${{ github.workspace }}/artifacts/windows-artifacts/*

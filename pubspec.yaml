@@ -42,12 +42,17 @@ dependencies:
       ref: 03d957e8b5c99fc83cd4a781031b154ab3de8753
 
 dev_dependencies:
+  flutter_app_builder:
+    git:
+      url: https://github.com/Merrit/flutter_app_builder.git
+      ref: 2a91a517fdf0e25dd76466bc51975f96dae285d3
   flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
   mocktail: ^0.2.0
+  msix: ^3.6.2
   test: ^1.19.5
 
 flutter:
@@ -55,3 +60,12 @@ flutter:
   assets:
     - assets/icons/
     - packaging/linux/nyrna.desktop
+
+flutter_app_builder:
+  app_display_name: "Nyrna"
+  author: "Merritt Codes"
+  identifier: codes.merritt.Nyrna
+  msix_identity_name: codes.merritt.Nyrna
+  msix_publisher: CN=0AA9BC0E-36DF-4B4F-BFF4-E300B746CB9D # placeholder
+  msix_icon_path: assets\icons\nyrna.png
+  msix_capabilities: internetClient

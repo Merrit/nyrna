@@ -1,0 +1,55 @@
+# Create a new prerelease with every push on main
+
+name: Pre-Release
+
+on:
+  push:
+    branches:
+      - "main"
+    tags-ignore:
+      - "*"
+
+concurrency:
+  group: ci-pre-release-${{ github.ref }}-1
+  cancel-in-progress: true
+
+jobs:
+  call-tests:
+    uses: ./.github/workflows/tests.yml
+
+  call-build-linux:
+    needs: call-tests
+    uses: ./.github/workflows/build-linux.yml
+    with:
+      pre-release: true
+    secrets: inherit
+  call-build-windows:
+    needs: call-tests
+    uses: ./.github/workflows/build-windows.yml
+    with:
+      pre-release: true
+    secrets: inherit
+
+  pre-release:
+    name: "Pre Release"
+    needs: [call-build-linux, call-build-windows]
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Create Development Release & Upload artifacts
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            ${{ github.workspace }}/artifacts/linux-artifacts/*
+            ${{ github.workspace }}/artifacts/windows-artifacts/*

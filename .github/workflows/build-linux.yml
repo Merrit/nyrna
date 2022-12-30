@@ -1,0 +1,66 @@
+name: Build Linux
+on:
+  # Enable manual run
+  workflow_dispatch:
+  # Verify builds succeed on pull requests
+  pull_request:
+  # Allow being called by other workflows
+  workflow_call:
+    inputs:
+      pre-release:
+        description: "Whether the build is for a pre-release"
+        required: false
+        default: false
+        type: boolean
+
+env:
+  app-display-name: "Nyrna"
+  author: "Merritt Codes"
+  identifier: "codes.merritt.Nyrna"
+
+jobs:
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-20.04
+
+    # ----------------------------------- Setup ------------------------------ #
+
+    steps:
+      - name: Setup Linux build requirements
+        run: |
+          sudo apt-get update
+          # libappindicator required for tray_manager
+          sudo apt-get install appindicator3-0.1 libappindicator3-dev
+          # keybinder required for global hotkeys
+          sudo apt-get install keybinder-3.0
+
+      - name: Set pre-release environment variable
+        if: inputs.pre-release == true
+        run: echo "prerelease=true" >> $GITHUB_ENV
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2.3.0
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Prepare for build
+        run: |
+          flutter config --enable-linux-desktop
+          flutter upgrade
+          flutter pub get
+
+      # ----------------------------------- Build ---------------------------- #
+
+      - name: Run build script
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: flutter pub run flutter_app_builder --platforms=linux
+
+      # ---------------------------------- Upload ---------------------------- #
+
+      - name: Upload artifacts to workflow
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-artifacts
+          path: output/*
