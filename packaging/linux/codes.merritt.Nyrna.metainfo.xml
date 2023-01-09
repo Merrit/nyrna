@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-    Generator for metainfo & .desktop files: 
-    https://www.freedesktop.org/software/appstream/metainfocreator/#/
+    Generator for metainfo & .desktop files:
+https://www.freedesktop.org/software/appstream/metainfocreator/#/
 -->
 <component type="desktop-application">
   <id>codes.merritt.Nyrna</id>
   <name>Nyrna</name>
-  <summary>Easily compare items when shopping</summary>
+  <summary>Suspend games and applications</summary>
   <developer_name>Merritt Codes</developer_name>
-  <url type="homepage">https://merritt.codes/bargain/</url>
+  <url type="homepage">https://nyrna.merritt.codes/</url>
   <url type="donation">https://merritt.codes/support/</url>
   <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
@@ -18,54 +18,39 @@
     <control>touch</control>
   </supports>
   <description>
-    <p>Save money: Unit Bargain Hunter helps you figure out and keep track of the best value for products.</p>
-    <p>Is that family-sized pack really a better value?</p>
-    <p>If a brand-name item is $14.99 for 500g and the no-name item beside it is $13.99 for 20 oz, which is the better deal?</p>
-    <p>Unit Bargain Hunter makes it easy to compare any number of items to find exactly how they stack up against each other.</p>
+    <p>
+      Similar to the incredibly useful sleep/suspend function found in consoles like the Nintendo
+      Switch and Sony PlayStation; suspend your game (and its resource usage) at any time, and
+      resume whenever you wish - at the push of a button.
+    </p>
+    <p>
+      Nyrna can be used to suspend normal, non-game applications as well. For example:
+    </p>
     <ul>
-      <li>Compare unlimited items</li>
-      <li>Compare by weight, volume, or number of items</li>
-      <li>Saves your information between sessions</li>
-      <li>Available cross-platform: Linux, Windows, Web, Android</li>
-      <li>Open source</li>
+      <li>3D renders</li>
+      <li>video encoding</li>
+      <li>software compilation</li>
     </ul>
+    <p>
+      The CPU and GPU resources are being used by said task - maybe for hours - when you would like
+      to use the system for something else. With Nyrna you can suspend that program, freeing up the
+      resources (excluding RAM) until the process is resumed, without losing where you were - like
+      the middle of a long job, or a gaming session between save points.
+    </p>
   </description>
-  <launchable type="desktop-id">nyrna.desktop</launchable>
-  <!-- <launchable type="desktop-id">codes.merritt.Nyrna.desktop</launchable> -->
+  <launchable type="desktop-id">codes.merritt.Nyrna.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/Merrit/unit_bargain_hunter/main/assets/images/promo/promo.png</image>
+      <image>https://github.com/Merrit/nyrna/raw/main/assets/images/promo/promo.jpg</image>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/Merrit/unit_bargain_hunter/main/assets/images/screenshots/linux-dark1.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/Merrit/unit_bargain_hunter/main/assets/images/screenshots/linux-dark2.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/Merrit/unit_bargain_hunter/main/assets/images/screenshots/linux-light1.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/Merrit/unit_bargain_hunter/main/assets/images/screenshots/linux-light2.png</image>
+      <image>https://nyrna.merritt.codes/assets/images/nyrna-window.png</image>
     </screenshot>
   </screenshots>
-  <content_rating type="oars-1.1"/>
+  <content_rating type="oars-1.1" />
   <releases>
-    <release version="2.8.0" date="2022-12-19">
+    <release version="2.9.0" date="2023-01-09">
       <description>
-        <p>## What's Changed</p>
-        <p>### New Features 🎉</p>
-        <p>* Minimizing/restoring the window automatically is now an option</p>
-        <p>* Setting in the GUI</p>
-        <p>* CLI flag to override settings: `--no-minimize`</p>
-        <p>### Fixes ✨</p>
-        <p>* Several misc changes that should improve performance</p>
-        <p>* Fix "sticky" windows on Linux not showing up</p>
-        <p>### Code Cleanup 🪥</p>
-        <p>* Large amounts of code cleanup</p>
-        <p>* Will improve reliability and confidence when making changes and doing maintenance</p>
-        <p>* Large ongoing refactoring</p>
-        <p>* Many added unit tests</p>
       </description>
     </release>
   </releases>

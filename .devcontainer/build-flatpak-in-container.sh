@@ -28,5 +28,11 @@ cd "$workspace" || exit
 
 cd packaging/linux/flatpak || exit
 
+# Copy the AppStream file to the flatpak dir for build.
+cp -r ../"$projectId".metainfo.xml .
+
 flatpak-builder --force-clean build-dir $projectId.yml --repo=repo
 flatpak build-bundle repo $projectId.flatpak $projectId
+
+# Remove the AppStream file from the flatpak dir after build.
+rm "$projectId".metainfo.xml
