@@ -3,21 +3,17 @@
 #include <windows.h>
 
 #include "flutter_window.h"
-#include "run_loop.h"
 #include "utils.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command) {
-
-
-  // // Attach to console when present (e.g., 'flutter run') or create a
-  // // new console when running with a debugger.
+  // Attach to console when present (e.g., 'flutter run') or create a
+  // new console when running with a debugger.
   // if (!::AttachConsole(ATTACH_PARENT_PROCESS) && ::IsDebuggerPresent()) {
   //   CreateAndAttachConsole();
   // }
 
-
-/* ------------------------ Hidden Console Workaround ----------------------- */
+  /* ------------------------ Hidden Console Workaround ----------------------- */
 
 
   // https://github.com/flutter/flutter/issues/47891#issuecomment-708850435
@@ -48,12 +44,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
 /* ----------------------------- Workaround end ----------------------------- */
 
-
   // Initialize COM, so that it is available for use in the library and/or
   // plugins.
   ::CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-
-  RunLoop run_loop;
 
   flutter::DartProject project(L"data");
 
@@ -62,7 +55,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
 
-  FlutterWindow window(&run_loop, project);
+  FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(530, 600);
   if (!window.CreateAndShow(L"Nyrna", origin, size)) {
@@ -70,7 +63,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   }
   window.SetQuitOnClose(true);
 
-  run_loop.Run();
+  ::MSG msg;
+  while (::GetMessage(&msg, nullptr, 0, 0)) {
+    ::TranslateMessage(&msg);
+    ::DispatchMessage(&msg);
+  }
 
   ::CoUninitialize();
   return EXIT_SUCCESS;
