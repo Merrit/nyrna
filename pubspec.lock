@@ -159,8 +159,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: c4ba9e37503e5330849a717fd3e0ef4a777072b0
-      resolved-ref: c4ba9e37503e5330849a717fd3e0ef4a777072b0
+      ref: "5253d9d368f8bc6ea43a81492e711d9dabaa23b6"
+      resolved-ref: "5253d9d368f8bc6ea43a81492e711d9dabaa23b6"
       url: "https://github.com/Merrit/flutter_app_builder.git"
     source: git
     version: "1.0.0"
@@ -316,7 +316,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.17.0"
+    version: "0.18.0"
   io:
     dependency: transitive
     description:
