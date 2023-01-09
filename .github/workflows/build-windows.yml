@@ -52,6 +52,16 @@ jobs:
 
       # ---------------------------------- Upload ---------------------------- #
 
+      - name: Upload Windows Store MSIX artifact to workflow
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-store-artifact
+          path: output/*.msix
+
+      # MSIX is only for publishing to the Windows Store.
+      - name: Remove Windows Store artifact from release files
+        run: rm output/*.msix
+
       - name: Upload artifacts to workflow
         uses: actions/upload-artifact@v2
         with:
