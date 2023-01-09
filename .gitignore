@@ -10,7 +10,6 @@ packaging/output/
 .flatpak-builder
 build-dir
 output
-shared-modules
 
 # PKGBUILD extras
 packaging/PKGBUILD/.SRCINFO
