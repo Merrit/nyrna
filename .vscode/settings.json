@@ -9,5 +9,8 @@
     },
     "dart.flutterTestAdditionalArgs": [
         "--coverage"
+    ],
+    "git.ignoredRepositories": [
+        "packaging/linux/flatpak/shared-modules"
     ]
 }
