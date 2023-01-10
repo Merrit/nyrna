@@ -30,11 +30,11 @@ dependencies:
   path_provider: ^2.0.1
   pub_semver: ^2.0.0
   shared_preferences: ^2.0.5
-  tray_manager: ^0.1.8
+  tray_manager: ^0.2.0
   url_launcher: ^6.0.4
   win32: ^2.2.5
   win32_suspend_process: ^1.0.0
-  window_manager: ^0.2.5
+  window_manager: ^0.3.0
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
@@ -46,12 +46,12 @@ dev_dependencies:
     git:
       url: https://github.com/Merrit/flutter_app_builder.git
       ref: 5253d9d368f8bc6ea43a81492e711d9dabaa23b6
-  flutter_lints: ^1.0.4
+  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
-  mocktail: ^0.2.0
+  mocktail: ^0.3.0
   msix: ^3.6.2
   test: ^1.19.5
 
