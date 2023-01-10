@@ -12,5 +12,6 @@
     ],
     "git.ignoredRepositories": [
         "packaging/linux/flatpak/shared-modules"
-    ]
+    ],
+    "git.detectSubmodules": false
 }
