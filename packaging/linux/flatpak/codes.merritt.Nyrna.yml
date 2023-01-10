@@ -24,11 +24,14 @@ modules:
   - "./build-flatpak.sh"
   sources:
   - type: file
-    url: https://github.com/Merrit/nyrna/releases/download/v2.8.0/Nyrna-Linux-Portable.tar.gz
-    sha256: 301fe2227d93f45e2e9ca623cfe6d871d90f80c0487a8a3f198e438d9e102907
+    url: https://github.com/Merrit/nyrna/releases/download/v2.9.0/Nyrna-Linux-Portable.tar.gz
+    sha256: 1c48d1cb5921d0c81fe99840ec8e7c7574edc087acdaa897e53f0b0846fc0810
   - type: git
     url: https://github.com/Merrit/nyrna.git
-    tag: v2.8.0
+    tag: v2.9.0
+    # If flatpak-builder throws error `fatal: transport 'file' not allowed`
+    # during build resolve by running `git config --global --add protocol.file.allow always`
+    disable-shallow-clone: true
   - type: file
     path: codes.merritt.Nyrna.metainfo.xml
 - name: keybinder3
