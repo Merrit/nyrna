@@ -19,7 +19,7 @@
 #     runs-on: ubuntu-latest
 #     steps:
 #       - name: Checkout code
-#         uses: actions/checkout@v2
+#         uses: actions/checkout@v3
 #         with:
 #           path: code
 
@@ -47,7 +47,7 @@
 #           flatpak-builder --force-clean build-dir ${{ env.project-id }}.yml
 
 #       - name: Checkout flathub repository
-#         uses: actions/checkout@v2
+#         uses: actions/checkout@v3
 #         with:
 #           repository: flathub/${{ env.project-id }}
 #           path: flathub
