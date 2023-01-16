@@ -53,7 +53,7 @@ jobs:
       # ---------------------------------- Upload ---------------------------- #
 
       - name: Upload Windows Store MSIX artifact to workflow
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: windows-store-artifact
           path: output/*.msix
@@ -63,7 +63,7 @@ jobs:
         run: rm output/*.msix
 
       - name: Upload artifacts to workflow
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: windows-artifacts
           path: output/*
