@@ -91,7 +91,6 @@ class BehaviourSection extends StatelessWidget {
     final newInterval = int.tryParse(result);
     if (newInterval == null) return;
     await settingsCubit.setRefreshInterval(newInterval);
-    await settingsCubit.updateAutoRefresh();
   }
 }
 

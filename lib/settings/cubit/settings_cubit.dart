@@ -124,17 +124,16 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(state.copyWith(autoStart: shouldAutostart));
   }
 
-  Future<void> updateAutoRefresh([bool? autoEnabled]) async {
-    if (autoEnabled != null) {
-      await _prefs.setBool(key: 'autoRefresh', value: autoEnabled);
-      // TODO: appsListCubit should be listening to a stream for this setting
-      // from a repository, cubits shouldn't know about each other.
-      appsListCubit.setAutoRefresh(
-        autoRefresh: autoEnabled,
-        refreshInterval: state.refreshInterval,
-      );
-      emit(state.copyWith(autoRefresh: autoEnabled));
-    }
+  Future<void> updateAutoRefresh(bool? enabled) async {
+    if (enabled == null) return;
+
+    await _prefs.setBool(key: 'autoRefresh', value: enabled);
+    appsListCubit.setAutoRefresh(
+      autoRefresh: enabled,
+      refreshInterval: state.refreshInterval,
+    );
+
+    emit(state.copyWith(autoRefresh: enabled));
   }
 
   Future<void> updateCloseToTray([bool? closeToTray]) async {
