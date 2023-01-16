@@ -4,7 +4,7 @@ layout: single
 permalink: /
 ---
 
-![Nyrna Interface](assets/images/nyrna-window.png)
+![Promo Image](https://raw.githubusercontent.com/Merrit/nyrna/main/assets/images/promo/promo.jpg)
 
 Similar to the incredibly useful sleep/suspend function found in consoles like the Nintendo Switch and Sony PlayStation; suspend your game (and its resource usage) at any time, and resume whenever you wish - at the push of a button.
 
