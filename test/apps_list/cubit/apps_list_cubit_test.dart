@@ -34,31 +34,31 @@ late AppsListCubit cubit;
 AppsListState get state => cubit.state;
 
 void main() {
-  final _nativePlatform = MockNativePlatform();
-  final _prefs = MockSettingsService();
-  final _prefsCubit = MockSettingsCubit();
-  final _processRepository = MockProcessRepository();
-  final _storageRepository = MockStorageRepository();
-  final _appVersion = MockAppVersion();
+  final nativePlatform = MockNativePlatform();
+  final prefs = MockSettingsService();
+  final prefsCubit = MockSettingsCubit();
+  final processRepository = MockProcessRepository();
+  final storageRepository = MockStorageRepository();
+  final appVersion = MockAppVersion();
 
   setUpAll(() {
     log = Logger();
   });
 
   setUp(() {
-    when(() => _appVersion.latest()).thenAnswer((_) async => '1.0.0');
-    when(() => _appVersion.updateAvailable()).thenAnswer((_) async => false);
+    when(() => appVersion.latest()).thenAnswer((_) async => '1.0.0');
+    when(() => appVersion.updateAvailable()).thenAnswer((_) async => false);
 
-    when(() => _nativePlatform.minimizeWindow(any()))
+    when(() => nativePlatform.minimizeWindow(any()))
         .thenAnswer((_) async => true);
-    when(() => _nativePlatform.restoreWindow(any()))
+    when(() => nativePlatform.restoreWindow(any()))
         .thenAnswer((_) async => true);
-    when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
+    when(() => nativePlatform.windows(showHidden: any(named: 'showHidden')))
         .thenAnswer((_) async => []);
 
-    when(() => _prefs.getString('ignoredUpdate')).thenReturn(null);
+    when(() => prefs.getString('ignoredUpdate')).thenReturn(null);
 
-    when(() => _prefsCubit.state).thenReturn(
+    when(() => prefsCubit.state).thenReturn(
       SettingsState(
         autoStart: false,
         autoRefresh: false,
@@ -71,21 +71,21 @@ void main() {
       ),
     );
 
-    when(() => _processRepository.getProcessStatus(any()))
+    when(() => processRepository.getProcessStatus(any()))
         .thenAnswer((_) async => ProcessStatus.normal);
-    when(() => _processRepository.resume(any())).thenAnswer((_) async => true);
-    when(() => _processRepository.suspend(any())).thenAnswer((_) async => true);
+    when(() => processRepository.resume(any())).thenAnswer((_) async => true);
+    when(() => processRepository.suspend(any())).thenAnswer((_) async => true);
 
     // StorageRepository
-    when(() => _storageRepository.getValue('minimizeWindows'))
+    when(() => storageRepository.getValue('minimizeWindows'))
         .thenAnswer((_) async => true);
 
     cubit = AppsListCubit(
-      nativePlatform: _nativePlatform,
-      prefs: _prefs,
-      prefsCubit: _prefsCubit,
-      processRepository: _processRepository,
-      appVersion: _appVersion,
+      nativePlatform: nativePlatform,
+      prefs: prefs,
+      prefsCubit: prefsCubit,
+      processRepository: processRepository,
+      appVersion: appVersion,
       testing: true,
     );
   });
@@ -98,7 +98,7 @@ void main() {
     test('new window is added to state', () async {
       expect(state.windows.length, 0);
 
-      when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
+      when(() => nativePlatform.windows(showHidden: any(named: 'showHidden')))
           .thenAnswer((_) async => [msPaintWindow]);
 
       await cubit.manualRefresh();
@@ -106,7 +106,7 @@ void main() {
     });
 
     test('process changed externally updates state', () async {
-      when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
+      when(() => nativePlatform.windows(showHidden: any(named: 'showHidden')))
           .thenAnswer((_) async => [msPaintWindow]);
 
       await cubit.manualRefresh();
@@ -117,8 +117,8 @@ void main() {
       expect(windows[0].process.status, ProcessStatus.normal);
 
       // Simulate the process being suspended outside Nyrna.
-      reset(_processRepository);
-      when(() => _processRepository.getProcessStatus(any()))
+      reset(processRepository);
+      when(() => processRepository.getProcessStatus(any()))
           .thenAnswer((_) async => ProcessStatus.suspended);
 
       // Verify we pick up this status change.
@@ -141,8 +141,8 @@ void main() {
       expect(state.updateAvailable, false);
 
       // Simulate an update being available.
-      when(() => _appVersion.latest()).thenAnswer((_) async => '1.0.1');
-      when(() => _appVersion.updateAvailable()).thenAnswer((_) async => true);
+      when(() => appVersion.latest()).thenAnswer((_) async => '1.0.1');
+      when(() => appVersion.updateAvailable()).thenAnswer((_) async => true);
       await cubit.fetchVersionData();
       expect(state.runningVersion, '1.0.0');
       expect(state.updateVersion, '1.0.1');
@@ -150,7 +150,7 @@ void main() {
     });
 
     test('windows are sorted', () async {
-      when(() => _nativePlatform.windows(showHidden: any(named: 'showHidden')))
+      when(() => nativePlatform.windows(showHidden: any(named: 'showHidden')))
           .thenAnswer((_) async => [
                 const Window(
                   id: 7363,
@@ -191,14 +191,14 @@ void main() {
     group('toggle:', () {
       test('suspends correctly', () async {
         expect(state.windows.isEmpty, true);
-        when(() => _nativePlatform.windows(
+        when(() => nativePlatform.windows(
               showHidden: any(named: 'showHidden'),
             )).thenAnswer((_) async => [msPaintWindow]);
         await cubit.manualRefresh();
         expect(state.windows.length, 1);
         expect(state.windows.first.process.status, ProcessStatus.normal);
 
-        when(() => _processRepository.getProcessStatus(msPaintProcess.pid))
+        when(() => processRepository.getProcessStatus(msPaintProcess.pid))
             .thenAnswer((_) async => ProcessStatus.suspended);
         await cubit.toggle(msPaintWindow);
         expect(state.windows.length, 1);
@@ -207,16 +207,16 @@ void main() {
 
       test('resumes correctly', () async {
         expect(state.windows.isEmpty, true);
-        when(() => _nativePlatform.windows(
+        when(() => nativePlatform.windows(
               showHidden: any(named: 'showHidden'),
             )).thenAnswer((_) async => [msPaintWindow]);
-        when(() => _processRepository.getProcessStatus(msPaintProcess.pid))
+        when(() => processRepository.getProcessStatus(msPaintProcess.pid))
             .thenAnswer((_) async => ProcessStatus.suspended);
         await cubit.manualRefresh();
         expect(state.windows.length, 1);
         expect(state.windows.first.process.status, ProcessStatus.suspended);
 
-        when(() => _processRepository.getProcessStatus(msPaintProcess.pid))
+        when(() => processRepository.getProcessStatus(msPaintProcess.pid))
             .thenAnswer((_) async => ProcessStatus.normal);
         await cubit.toggle(msPaintWindow);
         expect(state.windows.length, 1);
@@ -225,18 +225,18 @@ void main() {
 
       test('adds InteractionError to window on failure', () async {
         expect(state.windows.isEmpty, true);
-        when(() => _nativePlatform.windows(
+        when(() => nativePlatform.windows(
               showHidden: any(named: 'showHidden'),
             )).thenAnswer((_) async => [msPaintWindow]);
-        when(() => _processRepository.getProcessStatus(msPaintProcess.pid))
+        when(() => processRepository.getProcessStatus(msPaintProcess.pid))
             .thenAnswer((_) async => ProcessStatus.normal);
         await cubit.manualRefresh();
         expect(state.windows.length, 1);
         expect(state.windows.first.process.status, ProcessStatus.normal);
 
-        when(() => _processRepository.suspend(any()))
+        when(() => processRepository.suspend(any()))
             .thenAnswer((_) async => false);
-        when(() => _processRepository.getProcessStatus(msPaintProcess.pid))
+        when(() => processRepository.getProcessStatus(msPaintProcess.pid))
             .thenAnswer((_) async => ProcessStatus.normal);
         await cubit.toggle(msPaintWindow);
         expect(state.windows.length, 1);

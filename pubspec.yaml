@@ -8,10 +8,12 @@ environment:
 
 dependencies:
   args: ^2.2.0
+  collection: ^1.16.0
   desktop_integration:
     git:
       url: https://github.com/Merrit/desktop_integration.git
   equatable: ^2.0.3
+  ffi: ^2.0.1
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.0

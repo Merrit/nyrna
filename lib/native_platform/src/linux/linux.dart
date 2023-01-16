@@ -118,8 +118,8 @@ class Linux implements NativePlatform {
   // Returns the unique hex ID of the active window as reported by xdotool.
   Future<int> _activeWindowId() async {
     final result = await _run('xdotool', ['getactivewindow']);
-    final _windowId = int.tryParse(result.stdout.toString().trim());
-    return _windowId ?? 0;
+    final windowId = int.tryParse(result.stdout.toString().trim());
+    return windowId ?? 0;
   }
 
   Future<int> _activeWindowPid(int windowId) async {
@@ -127,8 +127,8 @@ class Linux implements NativePlatform {
       'xdotool',
       ['getwindowpid', '$windowId'],
     );
-    final _pid = int.tryParse(result.stdout.toString().trim());
-    return _pid ?? 0;
+    final pid = int.tryParse(result.stdout.toString().trim());
+    return pid ?? 0;
   }
 
   Future<String> _activeWindowTitle() async {

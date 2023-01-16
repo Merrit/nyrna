@@ -50,7 +50,7 @@ class Win32ProcessRepository extends ProcessRepository {
 
     // Pull the value from the pointer.
     // Discard all of path except the executable name.
-    final _executable = path.toDartString().split('\\').last;
+    final executable = path.toDartString().split('\\').last;
 
     // Free the pointer's memory.
     calloc.free(path);
@@ -60,7 +60,7 @@ class Win32ProcessRepository extends ProcessRepository {
       log.e('get executable failed to close the process handle.');
     }
 
-    return _executable;
+    return executable;
   }
 
   @override
@@ -77,7 +77,7 @@ class Win32ProcessRepository extends ProcessRepository {
       ],
     );
 
-    ProcessStatus _status;
+    ProcessStatus status;
 
     if (result.stderr != '') {
       log.w('Unable to get process status', result.stderr);
@@ -100,11 +100,11 @@ class Win32ProcessRepository extends ProcessRepository {
     }
 
     // If every thread has the `Suspended` status, process is suspended.
-    _status = suspended.contains(false)
+    status = suspended.contains(false)
         ? ProcessStatus.normal
         : ProcessStatus.suspended;
 
-    return _status;
+    return status;
   }
 
   @override

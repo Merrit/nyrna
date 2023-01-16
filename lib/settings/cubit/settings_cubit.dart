@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:bloc/bloc.dart';
 import 'package:desktop_integration/desktop_integration.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:window_size/window_size.dart' show PlatformWindow;
 

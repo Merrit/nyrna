@@ -90,21 +90,21 @@ class ActiveWindow {
   Future<bool> _suspend() async {
     log.v('Suspending');
 
-    final _window = await _nativePlatform.activeWindow();
+    final window = await _nativePlatform.activeWindow();
 
-    log.v('Active window: $_window');
+    log.v('Active window: $window');
 
     if (defaultTargetPlatform == TargetPlatform.windows) {
       // Once in a blue moon on Windows we get "explorer.exe" as the active
       // window, even when no file explorer windows are open / the desktop
       // is not the active element, etc. So we filter it just in case.
-      if (_window.process.executable == 'explorer.exe') {
+      if (window.process.executable == 'explorer.exe') {
         log.e('Only got explorer as active window!');
         return false;
       }
     }
 
-    await _minimize(_window.id);
+    await _minimize(window.id);
 
     // Small delay on Windows to ensure the window actually minimizes.
     // Doesn't seem to be necessary on Linux.
@@ -112,7 +112,7 @@ class ActiveWindow {
       await Future.delayed(const Duration(milliseconds: 500));
     }
 
-    final suspended = await _processRepository.suspend(_window.process.pid);
+    final suspended = await _processRepository.suspend(window.process.pid);
     if (!suspended) {
       log.e('Failed to suspend active window.');
       return false;
@@ -120,15 +120,15 @@ class ActiveWindow {
 
     await _storageRepository.saveValue(
       key: 'pid',
-      value: _window.process.pid,
+      value: window.process.pid,
       storageArea: 'activeWindow',
     );
     await _storageRepository.saveValue(
       key: 'windowId',
-      value: _window.id,
+      value: window.id,
       storageArea: 'activeWindow',
     );
-    log.v('Suspended ${_window.process.pid} successfully');
+    log.v('Suspended ${window.process.pid} successfully');
 
     return true;
   }

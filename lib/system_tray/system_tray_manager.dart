@@ -17,11 +17,6 @@ class SystemTrayManager {
 
     await trayManager.setIcon(iconPath);
 
-    Future<void> _showWindow() async {
-      await _window.show();
-      await appsListCubit.manualRefresh();
-    }
-
     final Menu menu = Menu(
       items: [
         MenuItem(label: 'Show', onClick: (menuItem) => _showWindow()),
@@ -31,5 +26,10 @@ class SystemTrayManager {
     );
 
     await trayManager.setContextMenu(menu);
+  }
+
+  Future<void> _showWindow() async {
+    await _window.show();
+    await appsListCubit.manualRefresh();
   }
 }

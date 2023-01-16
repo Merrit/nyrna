@@ -17,7 +17,7 @@ class HotkeyService {
     await hotKeyManager.unregisterAll();
   }
 
-  Future<void> updateHotkey(HotKey _hotKey) async {
+  Future<void> updateHotkey(HotKey hotKey) async {
     // Hotkey service not working properly on Linux..
     // - The method channel doesn't seem able to register `Pause` at all.
     // - Hotkeys don't seem to work on Wayland.
@@ -26,11 +26,11 @@ class HotkeyService {
     await hotKeyManager.unregisterAll();
 
     await hotKeyManager.register(
-      _hotKey,
+      hotKey,
       keyDownHandler: (hotKey) => _toggleActiveWindow(),
     );
 
-    log.v('Registered hotkey: ${_hotKey.toStringHelper()}');
+    log.v('Registered hotkey: ${hotKey.toStringHelper()}');
   }
 
   Future<bool> _toggleActiveWindow() async {
