@@ -44,7 +44,6 @@ void main() {
   );
 
   setUpAll((() {
-    // TODO: Decouple appsListCubit from SettingsCubit.
     appsListCubit = MockAppsListCubit();
     when(() => appsListCubit.setAutoRefresh(
           autoRefresh: any(named: 'autoRefresh'),
