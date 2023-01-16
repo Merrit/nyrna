@@ -47,9 +47,11 @@ Nyrna works on Linux with X11 and Microsoft Windows.
 
 # Disclaimer
 
-I have not had any issues using Nyrna, however keep in mind it is possible
-something could go wrong with an application while suspended. So please remember to always save
-your work and games.
+Modifying running applications comes with the possibility that the application will crash.
+
+While this is rare, it is a known possibility that Nyrna can do nothing about.
+
+Please make sure to **save** your data or game before attempting to use Nyrna.
 
 
 # FAQ
