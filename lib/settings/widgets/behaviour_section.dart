@@ -135,6 +135,7 @@ class RecordHotKeyDialog extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _RecordHotKeyDialogState createState() => _RecordHotKeyDialogState();
 }
 
@@ -196,13 +197,13 @@ class _RecordHotKeyDialogState extends State<RecordHotKeyDialog> {
           },
         ),
         TextButton(
-          child: const Text('OK'),
           onPressed: _hotKey == null
               ? null
               : () {
                   settingsCubit.updateHotkey(_hotKey!);
                   Navigator.of(context).pop();
                 },
+          child: const Text('OK'),
         ),
       ],
     );

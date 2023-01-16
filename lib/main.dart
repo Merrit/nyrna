@@ -66,7 +66,7 @@ Future<void> main(List<String> args) async {
   final nyrnaWindow = NyrnaWindow();
 
   // Created outside runApp so it can be accessed for window settings below.
-  final _settingsCubit = await SettingsCubit.init(
+  final settingsCubit = await SettingsCubit.init(
     assetToTempDir: assetToTempDir,
     getWindowInfo: window.getWindowInfo,
     prefs: settingsService,
@@ -88,7 +88,7 @@ Future<void> main(List<String> args) async {
           ),
           lazy: false,
         ),
-        BlocProvider.value(value: _settingsCubit),
+        BlocProvider.value(value: settingsCubit),
         BlocProvider(
           create: (context) => ThemeCubit(settingsService),
         ),
@@ -185,16 +185,16 @@ Used with the `toggle` flag, `no-minimize` instructs Nyrna not to automatically 
         help: 'Output verbose logs for troubleshooting and debugging.',
       );
 
-    final _helpText = _helpTextGreeting + _parser.usage + '\n\n';
+    final helpText = '$_helpTextGreeting${_parser.usage}\n\n';
 
     try {
       final result = _parser.parse(args);
       if (result.rest.isNotEmpty) {
-        stdout.writeln(_helpText);
+        stdout.writeln(helpText);
         exit(0);
       }
     } on ArgParserException {
-      stdout.writeln(_helpText);
+      stdout.writeln(helpText);
       exit(0);
     }
   }

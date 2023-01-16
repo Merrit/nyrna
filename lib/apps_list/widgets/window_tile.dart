@@ -33,17 +33,17 @@ class _WindowTileState extends State<WindowTile> {
   @override
   Widget build(BuildContext context) {
     final window = widget.window;
-    Color _statusColor;
+    Color statusColor;
 
     switch (window.process.status) {
       case ProcessStatus.normal:
-        _statusColor = Colors.green;
+        statusColor = Colors.green;
         break;
       case ProcessStatus.suspended:
-        _statusColor = Colors.orange[700]!;
+        statusColor = Colors.orange[700]!;
         break;
       case ProcessStatus.unknown:
-        _statusColor = Colors.grey;
+        statusColor = Colors.grey;
     }
 
     return BlocProvider(
@@ -57,7 +57,7 @@ class _WindowTileState extends State<WindowTile> {
                 width: 25,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: (loading) ? null : _statusColor,
+                  color: (loading) ? null : statusColor,
                 ),
                 child: (loading) ? const CircularProgressIndicator() : null,
               ),

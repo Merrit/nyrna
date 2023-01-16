@@ -43,7 +43,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final currentVersion = state.runningVersion;
     final latestVersion = state.updateVersion;
     const url = 'https://nyrna.merritt.codes/download';
-    final _message = 'An update for Nyrna is available!\n\n'
+    final message = 'An update for Nyrna is available!\n\n'
         'Current version: $currentVersion\n'
         'Latest version: $latestVersion';
 
@@ -52,14 +52,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       builder: (context) {
         return AlertDialog(
           title: const Text('Update available'),
-          content: Text(_message),
+          content: Text(message),
           actions: [
             TextButton(
               onPressed: () async {
+                final scaffoldMessenger = ScaffoldMessenger.of(context);
                 final launched = await AppCubit.instance.launchURL(url);
 
                 if (!launched) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  scaffoldMessenger.showSnackBar(
                     const SnackBar(
                       content: Text('Error launching browser'),
                     ),

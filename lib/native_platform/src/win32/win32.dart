@@ -135,7 +135,7 @@ class Win32 implements NativePlatform {
 
     // Pull the value from the pointer.
     // Discard all of path except the executable name.
-    final _executable = path.toDartString().split('\\').last;
+    final executable = path.toDartString().split('\\').last;
 
     // Free the pointer's memory.
     calloc.free(path);
@@ -145,7 +145,7 @@ class Win32 implements NativePlatform {
       log.e('Failed to close the process handle.');
     }
 
-    return _executable;
+    return executable;
   }
 }
 

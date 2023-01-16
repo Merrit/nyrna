@@ -26,11 +26,13 @@ class LogPage extends StatelessWidget {
                 builder: (context, state) {
                   return ElevatedButton(
                     onPressed: () async {
+                      final scaffoldMessenger = ScaffoldMessenger.of(context);
                       // Copy the visible logs to user's clipboard.
                       await Clipboard.setData(
                         ClipboardData(text: state.logsText),
                       );
-                      ScaffoldMessenger.of(context).showSnackBar(
+
+                      scaffoldMessenger.showSnackBar(
                         const SnackBar(
                           content: Text('Logs copied to clipboard'),
                         ),
