@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../app/app.dart';
@@ -41,6 +42,16 @@ class _AppsListPageState extends State<AppsListPage>
   }
 
   @override
+  void didChangeDependencies() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final firstRun = context.read<AppCubit>().state.firstRun;
+      if (firstRun) _showFirstRunDialog();
+    });
+
+    super.didChangeDependencies();
+  }
+
+  @override
   void didChangeMetrics() {
     final updatedWindowSize = WidgetsBinding.instance.window.physicalSize;
     if (_appWindowSize != updatedWindowSize) {
@@ -52,51 +63,48 @@ class _AppsListPageState extends State<AppsListPage>
 
   final ScrollController scrollController = ScrollController();
 
+  void _showFirstRunDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => const FirstRunDialog(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: BlocListener<AppCubit, AppState>(
-        listener: (context, state) {
-          if (state.firstRun) {
-            showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) => const FirstRunDialog(),
-            );
-          }
-        },
-        child: BlocBuilder<AppsListCubit, AppsListState>(
-          builder: (context, state) {
-            return Stack(
-              children: [
-                Scrollbar(
+      body: BlocBuilder<AppsListCubit, AppsListState>(
+        builder: (context, state) {
+          return Stack(
+            children: [
+              Scrollbar(
+                controller: scrollController,
+                thumbVisibility: true,
+                child: ListView(
                   controller: scrollController,
-                  thumbVisibility: true,
-                  child: ListView(
-                    controller: scrollController,
-                    padding: const EdgeInsets.all(10),
-                    children: [
-                      if (!state.loading && state.windows.isEmpty) ...[
-                        const _NoWindowsCard(),
-                      ] else ...[
-                        ...state.windows
-                            .map(
-                              (window) => WindowTile(
-                                key: ValueKey(window),
-                                window: window,
-                              ),
-                            )
-                            .toList(),
-                      ],
+                  padding: const EdgeInsets.all(10),
+                  children: [
+                    if (!state.loading && state.windows.isEmpty) ...[
+                      const _NoWindowsCard(),
+                    ] else ...[
+                      ...state.windows
+                          .map(
+                            (window) => WindowTile(
+                              key: ValueKey(window),
+                              window: window,
+                            ),
+                          )
+                          .toList(),
                     ],
-                  ),
+                  ],
                 ),
-                const _ProgressOverlay(),
-              ],
-            );
-          },
-        ),
+              ),
+              const _ProgressOverlay(),
+            ],
+          );
+        },
       ),
       // We don't show a manual refresh button with a short auto-refresh.
       floatingActionButton: const _FloatingActionButton(),
