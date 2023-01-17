@@ -23,7 +23,13 @@ dependencies:
   helpers:
     git:
       url: https://github.com/Merrit/helpers.git
-  hotkey_manager: ^0.1.7
+  # Using own branch while waiting on bugfix PR to be merged:
+  # https://github.com/leanflutter/hotkey_manager/pull/25
+  hotkey_manager:
+    git:
+      url: https://github.com/Merrit/hotkey_manager.git
+      ref: fix_tostring
+  # hotkey_manager: ^0.1.7
   http: ^0.13.3
   image: ^3.0.2
   libadwaita: ^1.2.5

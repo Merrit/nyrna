@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:desktop_integration/desktop_integration.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,7 +68,7 @@ Future<void> main(List<String> args) async {
 
   // Created outside runApp so it can be accessed for window settings below.
   final settingsCubit = await SettingsCubit.init(
-    assetToTempDir: assetToTempDir,
+    desktopIntegration: await _initDesktopIntegration(),
     getWindowInfo: window.getWindowInfo,
     prefs: settingsService,
     hotkeyService: HotkeyService(activeWindow),
@@ -198,4 +199,22 @@ Used with the `toggle` flag, `no-minimize` instructs Nyrna not to automatically 
       exit(0);
     }
   }
+}
+
+/// Instantiates DesktopIntegration for DI.
+Future<DesktopIntegration> _initDesktopIntegration() async {
+  File? desktopFile;
+  if (Platform.isLinux) {
+    desktopFile = await assetToTempDir('packaging/linux/nyrna.desktop');
+  }
+
+  final iconFileSuffix = Platform.isWindows ? 'ico' : 'svg';
+  final iconFile = await assetToTempDir('assets/icons/nyrna.$iconFileSuffix');
+
+  return DesktopIntegration(
+    desktopFilePath: desktopFile?.path ?? '',
+    iconPath: iconFile.path,
+    packageName: 'codes.merritt.nyrna',
+    linkFileName: 'Nyrna',
+  );
 }

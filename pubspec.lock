@@ -273,9 +273,11 @@ packages:
   hotkey_manager:
     dependency: "direct main"
     description:
-      name: hotkey_manager
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: fix_tostring
+      resolved-ref: bf2fe609ec27e28e8487d02f5649803a2e3153db
+      url: "https://github.com/Merrit/hotkey_manager.git"
+    source: git
     version: "0.1.7"
   http:
     dependency: "direct main"
