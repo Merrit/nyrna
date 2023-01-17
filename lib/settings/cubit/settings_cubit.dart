@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:desktop_integration/desktop_integration.dart';
@@ -21,7 +20,7 @@ part 'settings_state.dart';
 late SettingsCubit settingsCubit;
 
 class SettingsCubit extends Cubit<SettingsState> {
-  final Future<File> Function(String path) _assetToTempDir;
+  final DesktopIntegration _desktopIntegration;
   final Future<PlatformWindow> Function() _getWindowInfo;
   final SettingsService _prefs;
   final HotkeyService _hotkeyService;
@@ -29,7 +28,7 @@ class SettingsCubit extends Cubit<SettingsState> {
   final StorageRepository _storageRepository;
 
   SettingsCubit._(
-    this._assetToTempDir,
+    this._desktopIntegration,
     this._getWindowInfo,
     this._prefs,
     this._hotkeyService,
@@ -43,7 +42,7 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   static Future<SettingsCubit> init({
-    required Future<File> Function(String path) assetToTempDir,
+    required DesktopIntegration desktopIntegration,
     required Future<PlatformWindow> Function() getWindowInfo,
     required SettingsService prefs,
     required HotkeyService hotkeyService,
@@ -62,7 +61,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     minimizeWindows ??= true;
 
     return SettingsCubit._(
-      assetToTempDir,
+      desktopIntegration,
       getWindowInfo,
       prefs,
       hotkeyService,
@@ -98,26 +97,10 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   Future<void> updateAutoStart(bool shouldAutostart) async {
-    File? desktopFile;
-    if (Platform.isLinux) {
-      desktopFile = await _assetToTempDir('packaging/linux/nyrna.desktop');
-    }
-
-    final iconFileSuffix = Platform.isWindows ? 'ico' : 'svg';
-    final iconFile =
-        await _assetToTempDir('assets/icons/nyrna.$iconFileSuffix');
-
-    final desktopIntegration = DesktopIntegration(
-      desktopFilePath: desktopFile?.path ?? '',
-      iconPath: iconFile.path,
-      packageName: 'codes.merritt.nyrna',
-      linkFileName: 'Nyrna',
-    );
-
     if (shouldAutostart) {
-      await desktopIntegration.enableAutostart();
+      await _desktopIntegration.enableAutostart();
     } else {
-      await desktopIntegration.disableAutostart();
+      await _desktopIntegration.disableAutostart();
     }
 
     await _prefs.setBool(key: 'autoStart', value: shouldAutostart);

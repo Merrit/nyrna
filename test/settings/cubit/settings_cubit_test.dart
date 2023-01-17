@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'dart:ui';
 
+import 'package:desktop_integration/desktop_integration.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:mocktail/mocktail.dart';
@@ -11,6 +11,14 @@ import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/storage/storage_repository.dart';
 import 'package:nyrna/window/nyrna_window.dart';
 import 'package:window_size/window_size.dart';
+
+class FakeDesktopIntegration extends Fake implements DesktopIntegration {
+  @override
+  Future<void> disableAutostart() async {}
+
+  @override
+  Future<void> enableAutostart() async {}
+}
 
 /// Mocks
 
@@ -24,7 +32,6 @@ class MockSettingsService extends Mock implements SettingsService {}
 
 class MockStorageRepository extends Mock implements StorageRepository {}
 
-late Future<File> Function(String path) assetToTempDir;
 late Future<PlatformWindow> Function() getWindowInfo;
 HotkeyService hotkeyService = MockHotkeyService();
 NyrnaWindow nyrnaWindow = MockNyrnaWindow();
@@ -50,7 +57,6 @@ void main() {
           refreshInterval: any(named: 'refreshInterval'),
         )).thenReturn(null);
 
-    assetToTempDir = (path) async => File(path);
     getWindowInfo = () async => fallbackPlatformWindow;
     registerFallbackValue(HotKey(KeyCode.abort));
   }));
@@ -61,6 +67,7 @@ void main() {
 
     when(() => nyrnaWindow.preventClose(any())).thenAnswer((_) async {});
 
+    when(() => settingsService.getString('hotkey')).thenReturn(null);
     when(() => settingsService.remove(any())).thenAnswer((_) async => true);
     when(() => settingsService.setBool(
           key: any(named: 'key'),
@@ -80,9 +87,14 @@ void main() {
           any(),
           storageArea: any(named: 'storageArea'),
         )).thenAnswer((_) async => null);
+    when(() => storageRepository.saveValue(
+          key: any(named: 'key'),
+          value: any(named: 'value'),
+          storageArea: any(named: 'storageArea'),
+        )).thenAnswer((_) async {});
 
     cubit = await SettingsCubit.init(
-      assetToTempDir: assetToTempDir,
+      desktopIntegration: FakeDesktopIntegration(),
       getWindowInfo: getWindowInfo,
       prefs: settingsService,
       hotkeyService: hotkeyService,
@@ -150,6 +162,27 @@ void main() {
           ))).called(1);
     });
 
+    test('updateMinimizeWindows works', () async {
+      // Default should be true.
+      expect(state.minimizeWindows, true);
+      await cubit.updateMinimizeWindows(false);
+      expect(state.minimizeWindows, false);
+      verify(
+        () => storageRepository.saveValue(
+          key: 'minimizeWindows',
+          value: false,
+        ),
+      ).called(1);
+      await cubit.updateMinimizeWindows(true);
+      expect(state.minimizeWindows, true);
+      verify(
+        () => storageRepository.saveValue(
+          key: 'minimizeWindows',
+          value: true,
+        ),
+      ).called(1);
+    });
+
     test('updateShowHiddenWindows works', () async {
       expect(state.showHiddenWindows, false);
       await cubit.updateShowHiddenWindows(true);
@@ -170,22 +203,70 @@ void main() {
           ))).called(1);
     });
 
-    test('removeHotkey works', () async {
-      await cubit.removeHotkey();
-      verify(() => hotkeyService.removeHotkey()).called(1);
+    group('autostart:', () {
+      test('disabled by default', () {
+        expect(state.autoStart, false);
+      });
+
+      test('updating saves preference to storage', () async {
+        expect(state.autoStart, false);
+        await cubit.updateAutoStart(true);
+        expect(state.autoStart, true);
+        verify(() => settingsService.setBool(key: 'autoStart', value: true))
+            .called(1);
+        await cubit.updateAutoStart(false);
+        expect(state.autoStart, false);
+        verify(() => settingsService.setBool(key: 'autoStart', value: false))
+            .called(1);
+      });
     });
 
-    test('updateHotkey & resetHotkey work', () async {
-      final newHotkey = HotKey(KeyCode.f12);
-      expect(state.hotKey.keyCode, KeyCode.pause);
-      await cubit.updateHotkey(newHotkey);
-      expect(state.hotKey.keyCode, KeyCode.f12);
-      verify(() => hotkeyService.updateHotkey(newHotkey)).called(1);
-      await cubit.resetHotkey();
-      expect(state.hotKey.keyCode, KeyCode.pause);
-      verify(() => settingsService.remove('hotkey')).called(1);
-    });
+    group('hotkey:', () {
+      test('default hotkey is Pause', () {
+        expect(state.hotKey.keyCode, KeyCode.pause);
+        expect(state.hotKey.modifiers, null);
+      });
 
+      test('removeHotkey works', () async {
+        await cubit.removeHotkey();
+        verify(() => hotkeyService.removeHotkey()).called(1);
+      });
+
+      test('resetting hotkey restores Pause default', () async {
+        await cubit.updateHotkey(HotKey(KeyCode.insert));
+        expect(state.hotKey.keyCode, KeyCode.insert);
+        await cubit.resetHotkey();
+        expect(state.hotKey.keyCode, KeyCode.pause);
+        verify(() => settingsService.remove('hotkey')).called(1);
+      });
+
+      test('saved hotkey is loaded', () async {
+        when(() => settingsService.getString('hotkey')).thenReturn(
+          '{"keyCode":"insert","modifiers":[],"identifier":"7fe60a47-35b9-4d40-8f74-ec77b83687b3","scope":"system"}',
+        );
+        cubit = await SettingsCubit.init(
+          desktopIntegration: FakeDesktopIntegration(),
+          getWindowInfo: getWindowInfo,
+          prefs: settingsService,
+          hotkeyService: hotkeyService,
+          nyrnaWindow: nyrnaWindow,
+          storageRepository: storageRepository,
+        );
+        expect(state.hotKey.keyCode, KeyCode.insert);
+        expect(state.hotKey.modifiers?.isEmpty, true);
+      });
+
+      test('updateHotkey & resetHotkey work', () async {
+        final newHotkey = HotKey(KeyCode.f12);
+        expect(state.hotKey.keyCode, KeyCode.pause);
+        await cubit.updateHotkey(newHotkey);
+        expect(state.hotKey.keyCode, KeyCode.f12);
+        verify(() => hotkeyService.updateHotkey(newHotkey)).called(1);
+        await cubit.resetHotkey();
+        expect(state.hotKey.keyCode, KeyCode.pause);
+        verify(() => settingsService.remove('hotkey')).called(1);
+      });
+    });
     test('saveWindowSize works', () async {
       await cubit.saveWindowSize();
       verify(() => settingsService.setString(
