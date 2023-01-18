@@ -26,6 +26,13 @@ class LoggingManager {
   }
 
   static Future<LoggingManager> initialize({required bool verbose}) async {
+    final testing = Platform.environment.containsKey('FLUTTER_TEST');
+    if (testing) {
+      // Set the logger to a dummy logger during unit tests.
+      log = Logger(level: Level.nothing);
+      return LoggingManager._(File(''));
+    }
+
     final dataDir = await getApplicationSupportDirectory();
     final logFile = File('${dataDir.path}${Platform.pathSeparator}log.txt');
     if (await logFile.exists()) await logFile.delete();
