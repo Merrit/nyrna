@@ -12,6 +12,18 @@
             "program": "lib/main.dart",
             "flutterMode": "debug",
         },
+        // Debug with verbose logging
+        {
+            "name": "Debug with verbose logging",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "program": "lib/main.dart",
+            "args": [
+                "--dart-entrypoint-args",
+                "--verbose",
+            ],
+        },
         // Debug with arguments
         {
             "name": "Debug with arguments",
