@@ -14,7 +14,7 @@ RUN apt-get -y install curl file git unzip xz-utils zip clang cmake ninja-build 
 RUN apt-get -y install keybinder-3.0 appindicator3-0.1 libappindicator3-1 libappindicator3-dev
 
 # Install Flutter
-RUN git clone https://github.com/flutter/flutter.git /home/vscode/flutter
+RUN git clone https://github.com/flutter/flutter.git -b stable /home/vscode/flutter
 RUN git config --global --add safe.directory /home/vscode/flutter
 ENV PATH="$PATH:/home/vscode/flutter/bin"
 RUN flutter upgrade
