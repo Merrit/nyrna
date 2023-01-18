@@ -1,3 +1,5 @@
+import 'dart:io' as io;
+
 import '../../../logs/logs.dart';
 import '../native_platform.dart';
 import '../process/models/process.dart';
@@ -167,6 +169,13 @@ Make sure these are installed on your host system.''',
     }
 
     return dependenciesAvailable;
+  }
+
+  /// Return is `x11` or `wayland` depending on which session type is running.
+  Future<String> sessionType() async {
+    final sessionType = io.Platform.environment['XDG_SESSION_TYPE'];
+    log.v('Current session type: $sessionType');
+    return sessionType!;
   }
 
   @override
