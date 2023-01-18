@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:nyrna/logs/logs.dart';
 import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/native_platform/src/linux/linux.dart';
 import 'package:nyrna/native_platform/src/typedefs.dart';
@@ -8,8 +9,13 @@ import 'package:test/test.dart';
 late RunFunction mockRun;
 
 final stubSuccessfulProcessResult = ProcessResult(0, 0, '', '');
+final stubFailureProcessResult = ProcessResult(0, 1, '', 'error');
 
 void main() {
+  setUpAll(() async {
+    await LoggingManager.initialize(verbose: false);
+  });
+
   setUp(() {
     mockRun = (String executable, List<String> args) async {
       return ProcessResult(1, 1, '', '');
@@ -108,11 +114,9 @@ void main() {
     group('checkDependencies:', () {
       test('finds dependencies when present', () async {
         mockRun = ((executable, args) async {
-          if (executable == 'wmctrl' || executable == 'xdotool') {
-            return stubSuccessfulProcessResult;
-          } else {
-            throw Exception('Command not found!');
-          }
+          return (args[1].contains('wmctrl') || args[1].contains('xdotool'))
+              ? stubSuccessfulProcessResult
+              : stubFailureProcessResult;
         });
 
         final linux = Linux(mockRun);
@@ -122,11 +126,9 @@ void main() {
 
       test('returns false if missing wmctrl', () async {
         mockRun = ((executable, args) async {
-          if (executable == 'xdotool') {
-            return stubSuccessfulProcessResult;
-          } else {
-            throw Exception('Command not found!');
-          }
+          return (args[1].contains('wmctrl'))
+              ? stubSuccessfulProcessResult
+              : stubFailureProcessResult;
         });
 
         final linux = Linux(mockRun);
@@ -136,11 +138,9 @@ void main() {
 
       test('returns false if missing xdotool', () async {
         mockRun = ((executable, args) async {
-          if (executable == 'wmctrl') {
-            return stubSuccessfulProcessResult;
-          } else {
-            throw Exception('Command not found!');
-          }
+          return (args[1].contains('xdotool'))
+              ? stubSuccessfulProcessResult
+              : stubFailureProcessResult;
         });
 
         final linux = Linux(mockRun);
