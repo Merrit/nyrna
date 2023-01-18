@@ -142,17 +142,31 @@ class Linux implements NativePlatform {
   // Verify wmctrl and xdotool are present on the system.
   @override
   Future<bool> checkDependencies() async {
-    try {
-      await _run('wmctrl', ['-d']);
-    } catch (err) {
-      return false;
+    final xdotoolResult = await _run('bash', [
+      '-c',
+      'command -v xdotool >/dev/null 2>&1 || { echo >&2 "xdotool is required but it\'s not installed."; exit 1; }'
+    ]);
+
+    final wmctrlResult = await _run('bash', [
+      '-c',
+      'command -v wmctrl >/dev/null 2>&1 || { echo >&2 "wmctrl is required but it\'s not installed."; exit 1; }'
+    ]);
+
+    final xdotoolAvailable = xdotoolResult.stderr.toString().trim() == '';
+    final wmctrlAvailable = wmctrlResult.stderr.toString().trim() == '';
+    final dependenciesAvailable = xdotoolAvailable && wmctrlAvailable;
+
+    if (!dependenciesAvailable) {
+      log.e(
+        '''
+Dependency check failed!
+xdotool available: $xdotoolAvailable
+wmctrl available: $wmctrlAvailable
+Make sure these are installed on your host system.''',
+      );
     }
-    try {
-      await _run('xdotool', ['getactivewindow']);
-    } catch (err) {
-      return false;
-    }
-    return true;
+
+    return dependenciesAvailable;
   }
 
   @override

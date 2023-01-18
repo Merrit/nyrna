@@ -104,7 +104,7 @@ Future<void> main(List<String> args) async {
               processRepository: processRepository,
               appVersion: AppVersion(packageInfo),
             ),
-            lazy: false,
+            lazy: true,
             child: const App(),
           );
         },
