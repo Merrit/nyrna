@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nyrna/active_window/active_window.dart';
 import 'package:nyrna/logs/logs.dart';
@@ -11,8 +10,6 @@ import 'package:test/test.dart';
 const kActiveWindowStorageArea = 'activeWindow';
 
 class MockArgParser extends Mock implements ArgumentParser {}
-
-class MockLoggingManager extends Mock implements LoggingManager {}
 
 class MockNativePlatform extends Mock implements NativePlatform {}
 
@@ -33,22 +30,17 @@ const testWindow = Window(
 );
 
 void main() {
-  LoggingManager loggingManager = MockLoggingManager();
-
   late NativePlatform nativePlatform;
   late ProcessRepository processRepository;
   late StorageRepository storageRepository;
 
   late ActiveWindow activeWindow;
 
-  setUpAll(() {
+  setUpAll(() async {
     argParser = MockArgParser();
     when(() => argParser.minimize).thenReturn(null);
 
-    // Set the logger to a dummy logger.
-    log = Logger(level: Level.nothing);
-    LoggingManager.instance = loggingManager;
-    when(() => loggingManager.close()).thenReturn(null);
+    await LoggingManager.initialize(verbose: false);
   });
 
   setUp(() {
