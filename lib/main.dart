@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart' as window;
 
@@ -21,7 +20,6 @@ import 'hotkey/hotkey_service.dart';
 import 'logs/logs.dart';
 import 'native_platform/native_platform.dart';
 import 'settings/cubit/settings_cubit.dart';
-import 'settings/settings_service.dart';
 import 'storage/storage_repository.dart';
 import 'system_tray/system_tray_manager.dart';
 import 'theme/theme.dart';
@@ -36,7 +34,7 @@ Future<void> main(List<String> args) async {
   argParser = ArgumentParser() //
     ..parseArgs(args);
 
-  final storageRepository = await StorageRepository.initialize(Hive);
+  final storage = await StorageRepository.initialize(Hive);
   final nativePlatform = NativePlatform();
   await LoggingManager.initialize(verbose: argParser.verbose);
 
@@ -51,7 +49,7 @@ Future<void> main(List<String> args) async {
   final activeWindow = ActiveWindow(
     nativePlatform,
     processRepository,
-    storageRepository,
+    storage,
   );
 
   // If we receive the toggle argument, suspend or resume the active
@@ -61,20 +59,18 @@ Future<void> main(List<String> args) async {
     exit(0);
   } else {}
 
-  final sharedPreferences = await SharedPreferences.getInstance();
-  final settingsService = SettingsService(sharedPreferences);
-
   final nyrnaWindow = NyrnaWindow();
 
   // Created outside runApp so it can be accessed for window settings below.
   final settingsCubit = await SettingsCubit.init(
     desktopIntegration: await _initDesktopIntegration(),
     getWindowInfo: window.getWindowInfo,
-    prefs: settingsService,
     hotkeyService: HotkeyService(activeWindow),
     nyrnaWindow: nyrnaWindow,
-    storageRepository: storageRepository,
+    storage: storage,
   );
+
+  final themeCubit = await ThemeCubit.init(storage);
 
   // Provides information on this app from the pubspec.yaml.
   final packageInfo = await PackageInfo.fromPlatform();
@@ -84,24 +80,22 @@ Future<void> main(List<String> args) async {
       providers: [
         BlocProvider(
           create: (context) => AppCubit(
-            storageRepository,
+            storage,
             UrlLauncher(),
           ),
           lazy: false,
         ),
         BlocProvider.value(value: settingsCubit),
-        BlocProvider(
-          create: (context) => ThemeCubit(settingsService),
-        ),
+        BlocProvider.value(value: themeCubit),
       ],
       child: Builder(
         builder: (context) {
           return BlocProvider(
             create: (context) => AppsListCubit(
               nativePlatform: nativePlatform,
-              prefs: settingsService,
               prefsCubit: context.read<SettingsCubit>(),
               processRepository: processRepository,
+              storage: storage,
               appVersion: AppVersion(packageInfo),
             ),
             lazy: true,
@@ -121,7 +115,8 @@ Future<void> main(List<String> args) async {
   }
 
   bool visible = true;
-  if (settingsService.getBool('startHiddenInTray') == true) {
+  bool? startHiddenInTray = await storage.getValue('startHiddenInTray');
+  if (startHiddenInTray == true) {
     visible = false;
   }
 

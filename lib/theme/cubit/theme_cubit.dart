@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../settings/settings_service.dart';
+import '../../storage/storage_repository.dart';
 import '../theme.dart';
 
 part 'theme_state.dart';
@@ -10,18 +10,22 @@ part 'theme_state.dart';
 late ThemeCubit themeCubit;
 
 class ThemeCubit extends Cubit<ThemeState> {
-  final SettingsService _prefs;
+  final StorageRepository _storage;
 
-  ThemeCubit(SettingsService prefs)
-      : _prefs = prefs,
-        super(
-          ThemeState(appTheme: _getAppTheme(prefs)),
-        ) {
+  ThemeCubit._(
+    AppTheme theme,
+    this._storage,
+  ) : super(ThemeState(appTheme: theme)) {
     themeCubit = this;
   }
 
-  static AppTheme _getAppTheme(SettingsService prefs) {
-    final savedTheme = prefs.getString('appTheme');
+  static Future<ThemeCubit> init(StorageRepository storage) async {
+    final theme = await _getAppTheme(storage);
+    return ThemeCubit._(theme, storage);
+  }
+
+  static Future<AppTheme> _getAppTheme(StorageRepository storage) async {
+    String? savedTheme = await storage.getValue('appTheme');
     switch (savedTheme) {
       case null:
         return AppTheme.dark;
@@ -36,8 +40,8 @@ class ThemeCubit extends Cubit<ThemeState> {
     }
   }
 
-  void changeTheme(AppTheme appTheme) {
-    _prefs.setString(key: 'appTheme', value: appTheme.toString());
+  Future<void> changeTheme(AppTheme appTheme) async {
+    await _storage.saveValue(key: 'appTheme', value: appTheme.toString());
     emit(state.copyWith(appTheme: appTheme));
   }
 }

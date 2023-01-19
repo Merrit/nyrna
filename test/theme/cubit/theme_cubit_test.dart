@@ -1,24 +1,26 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:nyrna/storage/storage_repository.dart';
 import 'package:nyrna/theme/theme.dart';
 
-import '../../settings/cubit/settings_cubit_test.dart';
+class MockStorageRepository extends Mock implements StorageRepository {}
+
+StorageRepository storage = MockStorageRepository();
 
 late ThemeCubit cubit;
 ThemeState get state => cubit.state;
 
 void main() {
-  final settingsService = MockSettingsService();
-
   group('ThemeCubit:', () {
-    setUp(() {
-      when(() => settingsService.getString(any())).thenReturn(null);
-      when(() => settingsService.setString(
+    setUp(() async {
+      when(() => storage.getValue(any())).thenAnswer((_) async {});
+      when(() => storage.saveValue(
             key: any(named: 'key'),
             value: any(named: 'value'),
+            storageArea: any(named: 'storageArea'),
           )).thenAnswer((_) async {});
 
-      cubit = ThemeCubit(settingsService);
+      cubit = await ThemeCubit.init(storage);
     });
 
     test('global instance is available', () {
@@ -29,48 +31,49 @@ void main() {
       expect(state.appTheme, AppTheme.dark);
     });
 
-    test('saved light theme preference loads light theme', () {
-      when(() => settingsService.getString('appTheme'))
-          .thenReturn('AppTheme.light');
-      cubit = ThemeCubit(settingsService);
+    test('saved light theme preference loads light theme', () async {
+      when(() => storage.getValue('appTheme'))
+          .thenAnswer((_) async => 'AppTheme.light');
+      cubit = await ThemeCubit.init(storage);
       expect(state.appTheme, AppTheme.light);
     });
 
-    test('saved dark theme preference loads dark theme', () {
-      when(() => settingsService.getString('appTheme'))
-          .thenReturn('AppTheme.dark');
-      cubit = ThemeCubit(settingsService);
+    test('saved dark theme preference loads dark theme', () async {
+      when(() => storage.getValue('appTheme'))
+          .thenAnswer((_) async => 'AppTheme.dark');
+      cubit = await ThemeCubit.init(storage);
       expect(state.appTheme, AppTheme.dark);
     });
 
-    test('saved pitch black theme preference loads pitch black theme', () {
-      when(() => settingsService.getString('appTheme'))
-          .thenReturn('AppTheme.pitchBlack');
-      cubit = ThemeCubit(settingsService);
+    test('saved pitch black theme preference loads pitch black theme',
+        () async {
+      when(() => storage.getValue('appTheme'))
+          .thenAnswer((_) async => 'AppTheme.pitchBlack');
+      cubit = await ThemeCubit.init(storage);
       expect(state.appTheme, AppTheme.pitchBlack);
     });
 
-    test('changing theme works', () {
+    test('changing theme works', () async {
       // Default
       expect(state.appTheme, AppTheme.dark);
       // Light
-      cubit.changeTheme(AppTheme.light);
+      await cubit.changeTheme(AppTheme.light);
       expect(state.appTheme, AppTheme.light);
-      verify(() => settingsService.setString(
+      verify(() => storage.saveValue(
             key: 'appTheme',
             value: 'AppTheme.light',
           )).called(1);
       // Dark
-      cubit.changeTheme(AppTheme.dark);
+      await cubit.changeTheme(AppTheme.dark);
       expect(state.appTheme, AppTheme.dark);
-      verify(() => settingsService.setString(
+      verify(() => storage.saveValue(
             key: 'appTheme',
             value: 'AppTheme.dark',
           )).called(1);
       // Pitch Black
-      cubit.changeTheme(AppTheme.pitchBlack);
+      await cubit.changeTheme(AppTheme.pitchBlack);
       expect(state.appTheme, AppTheme.pitchBlack);
-      verify(() => settingsService.setString(
+      verify(() => storage.saveValue(
             key: 'appTheme',
             value: 'AppTheme.pitchBlack',
           )).called(1);

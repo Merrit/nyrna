@@ -274,9 +274,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: fix_tostring
-      resolved-ref: bf2fe609ec27e28e8487d02f5649803a2e3153db
-      url: "https://github.com/Merrit/hotkey_manager.git"
+      ref: "604523dd6edfb54e643f577512ea698c8debb96d"
+      resolved-ref: "604523dd6edfb54e643f577512ea698c8debb96d"
+      url: "https://github.com/leanflutter/hotkey_manager.git"
     source: git
     version: "0.1.7"
   http:
@@ -620,55 +620,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
-  shared_preferences:
-    dependency: "direct main"
-    description:
-      name: shared_preferences
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.16"
-  shared_preferences_android:
-    dependency: transitive
-    description:
-      name: shared_preferences_android
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.14"
-  shared_preferences_foundation:
-    dependency: transitive
-    description:
-      name: shared_preferences_foundation
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.1"
-  shared_preferences_linux:
-    dependency: transitive
-    description:
-      name: shared_preferences_linux
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.2"
-  shared_preferences_platform_interface:
-    dependency: transitive
-    description:
-      name: shared_preferences_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.0"
-  shared_preferences_web:
-    dependency: transitive
-    description:
-      name: shared_preferences_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.4"
-  shared_preferences_windows:
-    dependency: transitive
-    description:
-      name: shared_preferences_windows
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.2"
   shelf:
     dependency: transitive
     description:

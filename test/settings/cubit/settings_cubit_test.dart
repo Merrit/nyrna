@@ -28,15 +28,12 @@ class MockHotkeyService extends Mock implements HotkeyService {}
 
 class MockNyrnaWindow extends Mock implements NyrnaWindow {}
 
-class MockSettingsService extends Mock implements SettingsService {}
-
 class MockStorageRepository extends Mock implements StorageRepository {}
 
 late Future<PlatformWindow> Function() getWindowInfo;
 HotkeyService hotkeyService = MockHotkeyService();
 NyrnaWindow nyrnaWindow = MockNyrnaWindow();
-SettingsService settingsService = MockSettingsService();
-StorageRepository storageRepository = MockStorageRepository();
+StorageRepository storage = MockStorageRepository();
 
 /// Cubit being tested
 
@@ -67,27 +64,27 @@ void main() {
 
     when(() => nyrnaWindow.preventClose(any())).thenAnswer((_) async {});
 
-    when(() => settingsService.getString('hotkey')).thenReturn(null);
-    when(() => settingsService.remove(any())).thenAnswer((_) async => true);
-    when(() => settingsService.setBool(
+    when(() => storage.getValue('hotkey')).thenAnswer((_) async {});
+    when(() => storage.deleteValue(any())).thenAnswer((_) async {});
+    when(() => storage.saveValue(
           key: any(named: 'key'),
           value: any(named: 'value'),
         )).thenAnswer((_) async {});
-    when(() => settingsService.setInt(
+    when(() => storage.saveValue(
           key: any(named: 'key'),
           value: any(named: 'value'),
         )).thenAnswer((_) async {});
-    when(() => settingsService.setString(
+    when(() => storage.saveValue(
           key: any(named: 'key'),
           value: any(named: 'value'),
         )).thenAnswer((_) async {});
 
     // StorageRepository
-    when(() => storageRepository.getValue(
+    when(() => storage.getValue(
           any(),
           storageArea: any(named: 'storageArea'),
         )).thenAnswer((_) async => null);
-    when(() => storageRepository.saveValue(
+    when(() => storage.saveValue(
           key: any(named: 'key'),
           value: any(named: 'value'),
           storageArea: any(named: 'storageArea'),
@@ -96,10 +93,9 @@ void main() {
     cubit = await SettingsCubit.init(
       desktopIntegration: FakeDesktopIntegration(),
       getWindowInfo: getWindowInfo,
-      prefs: settingsService,
       hotkeyService: hotkeyService,
       nyrnaWindow: nyrnaWindow,
-      storageRepository: storageRepository,
+      storage: storage,
     );
   }));
 
@@ -124,7 +120,7 @@ void main() {
 
     test('ignoring update works', () async {
       await cubit.ignoreUpdate('1.0.0');
-      verify(() => settingsService.setString(
+      verify(() => storage.saveValue(
             key: 'ignoredUpdate',
             value: '1.0.0',
           )).called(1);
@@ -136,7 +132,7 @@ void main() {
       expect(state.refreshInterval, defaultInterval);
       await cubit.setRefreshInterval(newInterval);
       expect(state.refreshInterval, newInterval);
-      verify((() => settingsService.setInt(
+      verify((() => storage.saveValue(
             key: 'refreshInterval',
             value: newInterval,
           ))).called(1);
@@ -146,7 +142,7 @@ void main() {
       expect(state.autoRefresh, true);
       await cubit.updateAutoRefresh(false);
       expect(state.autoRefresh, false);
-      verify((() => settingsService.setBool(
+      verify((() => storage.saveValue(
             key: 'autoRefresh',
             value: false,
           ))).called(1);
@@ -156,7 +152,7 @@ void main() {
       expect(state.closeToTray, false);
       await cubit.updateCloseToTray(true);
       expect(state.closeToTray, true);
-      verify((() => settingsService.setBool(
+      verify((() => storage.saveValue(
             key: 'closeToTray',
             value: true,
           ))).called(1);
@@ -168,7 +164,7 @@ void main() {
       await cubit.updateMinimizeWindows(false);
       expect(state.minimizeWindows, false);
       verify(
-        () => storageRepository.saveValue(
+        () => storage.saveValue(
           key: 'minimizeWindows',
           value: false,
         ),
@@ -176,7 +172,7 @@ void main() {
       await cubit.updateMinimizeWindows(true);
       expect(state.minimizeWindows, true);
       verify(
-        () => storageRepository.saveValue(
+        () => storage.saveValue(
           key: 'minimizeWindows',
           value: true,
         ),
@@ -187,7 +183,7 @@ void main() {
       expect(state.showHiddenWindows, false);
       await cubit.updateShowHiddenWindows(true);
       expect(state.showHiddenWindows, true);
-      verify((() => settingsService.setBool(
+      verify((() => storage.saveValue(
             key: 'showHiddenWindows',
             value: true,
           ))).called(1);
@@ -197,7 +193,7 @@ void main() {
       expect(state.startHiddenInTray, false);
       await cubit.updateStartHiddenInTray(true);
       expect(state.startHiddenInTray, true);
-      verify((() => settingsService.setBool(
+      verify((() => storage.saveValue(
             key: 'startHiddenInTray',
             value: true,
           ))).called(1);
@@ -212,11 +208,11 @@ void main() {
         expect(state.autoStart, false);
         await cubit.updateAutoStart(true);
         expect(state.autoStart, true);
-        verify(() => settingsService.setBool(key: 'autoStart', value: true))
+        verify(() => storage.saveValue(key: 'autoStart', value: true))
             .called(1);
         await cubit.updateAutoStart(false);
         expect(state.autoStart, false);
-        verify(() => settingsService.setBool(key: 'autoStart', value: false))
+        verify(() => storage.saveValue(key: 'autoStart', value: false))
             .called(1);
       });
     });
@@ -237,20 +233,20 @@ void main() {
         expect(state.hotKey.keyCode, KeyCode.insert);
         await cubit.resetHotkey();
         expect(state.hotKey.keyCode, KeyCode.pause);
-        verify(() => settingsService.remove('hotkey')).called(1);
+        verify(() => storage.deleteValue('hotkey')).called(1);
       });
 
       test('saved hotkey is loaded', () async {
-        when(() => settingsService.getString('hotkey')).thenReturn(
-          '{"keyCode":"insert","modifiers":[],"identifier":"7fe60a47-35b9-4d40-8f74-ec77b83687b3","scope":"system"}',
+        when(() => storage.getValue('hotkey')).thenAnswer(
+          (_) async =>
+              '{"keyCode":"insert","modifiers":[],"identifier":"7fe60a47-35b9-4d40-8f74-ec77b83687b3","scope":"system"}',
         );
         cubit = await SettingsCubit.init(
           desktopIntegration: FakeDesktopIntegration(),
           getWindowInfo: getWindowInfo,
-          prefs: settingsService,
           hotkeyService: hotkeyService,
           nyrnaWindow: nyrnaWindow,
-          storageRepository: storageRepository,
+          storage: storage,
         );
         expect(state.hotKey.keyCode, KeyCode.insert);
         expect(state.hotKey.modifiers?.isEmpty, true);
@@ -264,20 +260,20 @@ void main() {
         verify(() => hotkeyService.updateHotkey(newHotkey)).called(1);
         await cubit.resetHotkey();
         expect(state.hotKey.keyCode, KeyCode.pause);
-        verify(() => settingsService.remove('hotkey')).called(1);
+        verify(() => storage.deleteValue('hotkey')).called(1);
       });
     });
     test('saveWindowSize works', () async {
       await cubit.saveWindowSize();
-      verify(() => settingsService.setString(
+      verify(() => storage.saveValue(
             key: 'windowSize',
             value: fallbackPlatformWindow.frame.toJson(),
           )).called(1);
     });
 
     test('savedWindowSize works', () async {
-      when(() => settingsService.getString('windowSize')).thenReturn(
-        fallbackPlatformWindow.frame.toJson(),
+      when(() => storage.getValue('windowSize')).thenAnswer(
+        (_) async => fallbackPlatformWindow.frame.toJson(),
       );
       final rect = await cubit.savedWindowSize();
       expect(rect, fallbackPlatformWindow.frame);

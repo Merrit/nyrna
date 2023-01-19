@@ -7,10 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../settings/cubit/settings_cubit.dart';
-import '../../../settings/settings_service.dart';
 import '../../app_version/app_version.dart';
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
+import '../../storage/storage_repository.dart';
 import '../apps_list.dart';
 
 part 'apps_list_state.dart';
@@ -20,22 +20,22 @@ late AppsListCubit appsListCubit;
 
 class AppsListCubit extends Cubit<AppsListState> {
   final NativePlatform _nativePlatform;
-  final SettingsService _prefs;
   final SettingsCubit _prefsCubit;
   final ProcessRepository _processRepository;
+  final StorageRepository _storage;
   final AppVersion _appVersion;
 
   AppsListCubit({
     required NativePlatform nativePlatform,
-    required SettingsService prefs,
     required SettingsCubit prefsCubit,
     required ProcessRepository processRepository,
+    required StorageRepository storage,
     required AppVersion appVersion,
     bool testing = false,
   })  : _nativePlatform = nativePlatform,
-        _prefs = prefs,
         _prefsCubit = prefsCubit,
         _processRepository = processRepository,
+        _storage = storage,
         _appVersion = appVersion,
         super(AppsListState.initial()) {
     appsListCubit = this;
@@ -94,7 +94,7 @@ class AppsListCubit extends Cubit<AppsListState> {
   Future<void> fetchVersionData() async {
     final runningVersion = _appVersion.running();
     final latestVersion = await _appVersion.latest();
-    final ignoredUpdate = _prefs.getString('ignoredUpdate');
+    final String? ignoredUpdate = await _storage.getValue('ignoredUpdate');
     final updateHasBeenIgnored = (latestVersion == ignoredUpdate);
     final updateAvailable =
         (updateHasBeenIgnored) ? false : await _appVersion.updateAvailable();
