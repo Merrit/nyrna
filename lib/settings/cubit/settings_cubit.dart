@@ -13,7 +13,6 @@ import '../../core/core.dart';
 import '../../hotkey/hotkey_service.dart';
 import '../../storage/storage_repository.dart';
 import '../../window/nyrna_window.dart';
-import '../settings_service.dart';
 
 part 'settings_state.dart';
 
@@ -22,18 +21,16 @@ late SettingsCubit settingsCubit;
 class SettingsCubit extends Cubit<SettingsState> {
   final DesktopIntegration _desktopIntegration;
   final Future<PlatformWindow> Function() _getWindowInfo;
-  final SettingsService _prefs;
   final HotkeyService _hotkeyService;
   final NyrnaWindow _nyrnaWindow;
-  final StorageRepository _storageRepository;
+  final StorageRepository _storage;
 
   SettingsCubit._(
     this._desktopIntegration,
     this._getWindowInfo,
-    this._prefs,
     this._hotkeyService,
     this._nyrnaWindow,
-    this._storageRepository, {
+    this._storage, {
     required SettingsState initialState,
   }) : super(initialState) {
     settingsCubit = this;
@@ -44,54 +41,56 @@ class SettingsCubit extends Cubit<SettingsState> {
   static Future<SettingsCubit> init({
     required DesktopIntegration desktopIntegration,
     required Future<PlatformWindow> Function() getWindowInfo,
-    required SettingsService prefs,
     required HotkeyService hotkeyService,
     required NyrnaWindow nyrnaWindow,
-    required StorageRepository storageRepository,
+    required StorageRepository storage,
   }) async {
-    HotKey? hotkey;
-    final String? savedHotkey = prefs.getString('hotkey');
+    bool autoStart = await storage.getValue('autoStart') ?? false;
+    bool autoRefresh = await storage.getValue('autoRefresh') ?? true;
+    bool closeToTray = await storage.getValue('closeToTray') ?? false;
+
+    HotKey hotkey;
+    String? savedHotkey = await storage.getValue('hotkey');
     if (savedHotkey != null) {
       hotkey = HotKey.fromJson(jsonDecode(savedHotkey));
     } else {
       hotkey = defaultHotkey;
     }
 
-    bool? minimizeWindows = await storageRepository.getValue('minimizeWindows');
-    minimizeWindows ??= true;
+    bool minimizeWindows = await storage.getValue('minimizeWindows') ?? true;
+    int refreshInterval = await storage.getValue('refreshInterval') ?? 5;
+    bool showHiddenWindows =
+        await storage.getValue('showHiddenWindows') ?? false;
+    bool startHiddenInTray =
+        await storage.getValue('startHiddenInTray') ?? false;
 
     return SettingsCubit._(
       desktopIntegration,
       getWindowInfo,
-      prefs,
       hotkeyService,
       nyrnaWindow,
-      storageRepository,
+      storage,
       initialState: SettingsState(
-        autoStart: prefs.getBool('autoStart') ?? false,
-        autoRefresh: _checkAutoRefresh(prefs),
-        closeToTray: prefs.getBool('closeToTray') ?? false,
+        autoStart: autoStart,
+        autoRefresh: autoRefresh,
+        closeToTray: closeToTray,
         hotKey: hotkey,
         minimizeWindows: minimizeWindows,
-        refreshInterval: prefs.getInt('refreshInterval') ?? 5,
-        showHiddenWindows: prefs.getBool('showHiddenWindows') ?? false,
-        startHiddenInTray: prefs.getBool('startHiddenInTray') ?? false,
+        refreshInterval: refreshInterval,
+        showHiddenWindows: showHiddenWindows,
+        startHiddenInTray: startHiddenInTray,
       ),
     );
   }
 
-  static bool _checkAutoRefresh(SettingsService prefs) {
-    return prefs.getBool('autoRefresh') ?? true;
-  }
-
-  /// If user wishes to ignore this update, save to SharedPreferences.
+  /// If user wishes to ignore this update, save choice to storage.
   Future<void> ignoreUpdate(String version) async {
-    await _prefs.setString(key: 'ignoredUpdate', value: version);
+    await _storage.saveValue(key: 'ignoredUpdate', value: version);
   }
 
   Future<void> setRefreshInterval(int interval) async {
     if (interval > 0) {
-      await _prefs.setInt(key: 'refreshInterval', value: interval);
+      await _storage.saveValue(key: 'refreshInterval', value: interval);
       emit(state.copyWith(refreshInterval: interval));
     }
   }
@@ -103,14 +102,14 @@ class SettingsCubit extends Cubit<SettingsState> {
       await _desktopIntegration.disableAutostart();
     }
 
-    await _prefs.setBool(key: 'autoStart', value: shouldAutostart);
+    await _storage.saveValue(key: 'autoStart', value: shouldAutostart);
     emit(state.copyWith(autoStart: shouldAutostart));
   }
 
   Future<void> updateAutoRefresh(bool? enabled) async {
     if (enabled == null) return;
 
-    await _prefs.setBool(key: 'autoRefresh', value: enabled);
+    await _storage.saveValue(key: 'autoRefresh', value: enabled);
     appsListCubit.setAutoRefresh(
       autoRefresh: enabled,
       refreshInterval: state.refreshInterval,
@@ -123,23 +122,23 @@ class SettingsCubit extends Cubit<SettingsState> {
     if (closeToTray == null) return;
 
     await _nyrnaWindow.preventClose(closeToTray);
-    await _prefs.setBool(key: 'closeToTray', value: closeToTray);
+    await _storage.saveValue(key: 'closeToTray', value: closeToTray);
     emit(state.copyWith(closeToTray: closeToTray));
   }
 
   /// Update the preference for auto minimizing windows.
   Future<void> updateMinimizeWindows(bool value) async {
     emit(state.copyWith(minimizeWindows: value));
-    await _storageRepository.saveValue(key: 'minimizeWindows', value: value);
+    await _storage.saveValue(key: 'minimizeWindows', value: value);
   }
 
   Future<void> updateShowHiddenWindows(bool value) async {
-    await _prefs.setBool(key: 'showHiddenWindows', value: value);
+    await _storage.saveValue(key: 'showHiddenWindows', value: value);
     emit(state.copyWith(showHiddenWindows: value));
   }
 
   Future<void> updateStartHiddenInTray(bool value) async {
-    await _prefs.setBool(key: 'startHiddenInTray', value: value);
+    await _storage.saveValue(key: 'startHiddenInTray', value: value);
     emit(state.copyWith(startHiddenInTray: value));
   }
 
@@ -150,13 +149,13 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> resetHotkey() async {
     await _hotkeyService.updateHotkey(defaultHotkey);
     emit(state.copyWith(hotKey: defaultHotkey));
-    await _prefs.remove('hotkey');
+    await _storage.deleteValue('hotkey');
   }
 
   Future<void> updateHotkey(HotKey newHotKey) async {
     await _hotkeyService.updateHotkey(newHotKey);
     emit(state.copyWith(hotKey: newHotKey));
-    await _prefs.setString(
+    await _storage.saveValue(
       key: 'hotkey',
       value: jsonEncode(newHotKey.toJson()),
     );
@@ -168,12 +167,12 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> saveWindowSize() async {
     final windowInfo = await _getWindowInfo();
     final rectJson = windowInfo.frame.toJson();
-    await _prefs.setString(key: 'windowSize', value: rectJson);
+    await _storage.saveValue(key: 'windowSize', value: rectJson);
   }
 
   /// Returns if available the last window size and position.
   Future<Rect?> savedWindowSize() async {
-    final rectJson = _prefs.getString('windowSize');
+    String? rectJson = await _storage.getValue('windowSize');
     if (rectJson == null) return null;
     final windowRect = RectConverter.fromJson(rectJson);
     return windowRect;

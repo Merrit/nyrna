@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:logger/logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nyrna/apps_list/apps_list.dart';
 import 'package:nyrna/logs/logs.dart';
@@ -12,7 +11,6 @@ import 'package:test/test.dart';
 import '../../mock_app_version.dart';
 import '../../mock_native_platform.dart';
 import '../../mock_settings_cubit.dart';
-import '../../mock_settings_service.dart';
 
 class MockProcessRepository extends Mock implements ProcessRepository {}
 
@@ -35,14 +33,13 @@ AppsListState get state => cubit.state;
 
 void main() {
   final nativePlatform = MockNativePlatform();
-  final prefs = MockSettingsService();
   final prefsCubit = MockSettingsCubit();
   final processRepository = MockProcessRepository();
-  final storageRepository = MockStorageRepository();
+  final storage = MockStorageRepository();
   final appVersion = MockAppVersion();
 
-  setUpAll(() {
-    log = Logger();
+  setUpAll(() async {
+    await LoggingManager.initialize(verbose: false);
   });
 
   setUp(() {
@@ -56,7 +53,7 @@ void main() {
     when(() => nativePlatform.windows(showHidden: any(named: 'showHidden')))
         .thenAnswer((_) async => []);
 
-    when(() => prefs.getString('ignoredUpdate')).thenReturn(null);
+    when(() => storage.getValue('ignoredUpdate')).thenAnswer((_) async {});
 
     when(() => prefsCubit.state).thenReturn(
       SettingsState(
@@ -77,14 +74,14 @@ void main() {
     when(() => processRepository.suspend(any())).thenAnswer((_) async => true);
 
     // StorageRepository
-    when(() => storageRepository.getValue('minimizeWindows'))
+    when(() => storage.getValue('minimizeWindows'))
         .thenAnswer((_) async => true);
 
     cubit = AppsListCubit(
       nativePlatform: nativePlatform,
-      prefs: prefs,
       prefsCubit: prefsCubit,
       processRepository: processRepository,
+      storage: storage,
       appVersion: appVersion,
       testing: true,
     );
