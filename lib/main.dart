@@ -200,7 +200,9 @@ Used with the `toggle` flag, `no-minimize` instructs Nyrna not to automatically 
 Future<DesktopIntegration> _initDesktopIntegration() async {
   File? desktopFile;
   if (Platform.isLinux) {
-    desktopFile = await assetToTempDir('packaging/linux/nyrna.desktop');
+    desktopFile = await assetToTempDir(
+      'packaging/linux/codes.merritt.Nyrna.desktop',
+    );
   }
 
   final iconFileSuffix = Platform.isWindows ? 'ico' : 'svg';
