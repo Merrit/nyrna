@@ -7,4 +7,5 @@ Icon=codes.merritt.Nyrna
 Terminal=false
 StartupNotify=false
 Categories=Utility;
+Keywords=sleep;suspend;pause;games;resources;
 StartupWMClass=Nyrna
