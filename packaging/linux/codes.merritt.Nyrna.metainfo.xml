@@ -59,6 +59,41 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   <releases>
     <release version="2.9.2" date="2023-01-18">
       <description>
+        <p>## Bug Fixes</p>
+        <p>- trigger first run dialog</p>
+        <p>- improve dependency check logic</p>
+        <p>- add verbose logs for flatpak run</p>
+        <p>- add check and warning for Wayland session</p>
+        <p></p>
+        <p>## Documentation</p>
+        <p>- add privacy policy</p>
+        <p>- update README description</p>
+        <p>- update website description</p>
+        <p>- update website promo image</p>
+        <p>- improve disclaimer wording</p>
+        <p></p>
+        <p>## Code Refactoring</p>
+        <p>- apply new lint suggestions</p>
+        <p>- **settings**: cleanup updateAutoRefresh</p>
+        <p></p>
+        <p>## Tests</p>
+        <p>- **SettingsCubit**: add tests</p>
+        <p>- **ThemeCubit**: add tests</p>
+        <p>- logger is dummy by default in tests</p>
+        <p>- **linux**: update dependency tests</p>
+        <p></p>
+        <p>## Continuous Integration</p>
+        <p>- upgrade actions/checkout to v3</p>
+        <p>- update upload-artifact to v3</p>
+        <p></p>
+        <p>## Chores</p>
+        <p>- update msix_identity_name</p>
+        <p>- **vscode**: don't detect git submodules</p>
+        <p>- update AppStream description</p>
+        <p>- remove obsolete comment</p>
+        <p>- dev container uses Flutter stable</p>
+        <p>- remove unused macos folder</p>
+        <p>- add vscode debug verbose config</p>
       </description>
     </release>
   </releases>
