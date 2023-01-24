@@ -26,13 +26,25 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   </keywords>
   <description>
     <p>Similar to the incredibly useful sleep/suspend function found in consoles like the Nintendo Switch and Sony PlayStation; suspend your game (and its resource usage) at any time, and resume whenever you wish - at the push of a button.</p>
+    <p>
+      <em>Suspend Games</em>
+    </p>
     <ul>
       <li>Pause cutscenes to read the subtitles, examine the scene, answer the door, etc.</li>
       <li>Pause games that can't normally be paused (single-player games like Dark Souls, Elden Ring, etc)</li>
       <li>Suspend games whose pause screens keep the system running hot or playing unwanted music</li>
       <li>Suspend inbetween checkpoints (example: Hollow Knight)</li>
     </ul>
-    <p>Nyrna can be used to suspend normal, non-game applications as well.</p>
+    <p>
+      <em>Suspend Applications</em>
+    </p>
+    <p>Nyrna can be used to suspend normal, non-game applications as well. For example:</p>
+    <ul>
+      <li>3D renders</li>
+      <li>video encoding</li>
+      <li>software compilation</li>
+    </ul>
+    <p>The CPU and GPU resources are being used by said task - maybe for hours - when you would like to use the system for something else. With Nyrna you can suspend that program, freeing up the resources (excluding RAM) until the process is resumed, without losing where you were - like the middle of a long job, or a gaming session between save points.</p>
   </description>
   <launchable type="desktop-id">codes.merritt.Nyrna.desktop</launchable>
   <screenshots>
@@ -46,43 +58,7 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   <content_rating type="oars-1.1"/>
   <releases>
     <release version="2.9.2" date="2023-01-18">
-      <description>
-        <p>## Bug Fixes</p>
-        <p>- trigger first run dialog</p>
-        <p>- improve dependency check logic</p>
-        <p>- add verbose logs for flatpak run</p>
-        <p>- add check and warning for Wayland session</p>
-        <p></p>
-        <p>## Documentation</p>
-        <p>- add privacy policy</p>
-        <p>- update README description</p>
-        <p>- update website description</p>
-        <p>- update website promo image</p>
-        <p>- improve disclaimer wording</p>
-        <p></p>
-        <p>## Code Refactoring</p>
-        <p>- apply new lint suggestions</p>
-        <p>- **settings**: cleanup updateAutoRefresh</p>
-        <p></p>
-        <p>## Tests</p>
-        <p>- **SettingsCubit**: add tests</p>
-        <p>- **ThemeCubit**: add tests</p>
-        <p>- logger is dummy by default in tests</p>
-        <p>- **linux**: update dependency tests</p>
-        <p></p>
-        <p>## Continuous Integration</p>
-        <p>- upgrade actions/checkout to v3</p>
-        <p>- update upload-artifact to v3</p>
-        <p></p>
-        <p>## Chores</p>
-        <p>- update msix_identity_name</p>
-        <p>- **vscode**: don't detect git submodules</p>
-        <p>- update AppStream description</p>
-        <p>- remove obsolete comment</p>
-        <p>- dev container uses Flutter stable</p>
-        <p>- remove unused macos folder</p>
-        <p>- add vscode debug verbose config</p>
-      </description>
+      <description/>
     </release>
   </releases>
 </component>
