@@ -37,6 +37,7 @@ jobs:
       # ---------------------- Update AppStream metadata file ---------------------- #
 
       - name: Update metadata file
+        working-directory: ${{ github.workspace }}/code
         run: |
           dart pub global activate --source git https://github.com/Merrit/linux_packaging_updater.git
           updater --projectId codes.merritt.Nyrna --repository nyrna --user merrit --metadata
@@ -46,6 +47,7 @@ jobs:
         with:
           commit_message: "chore: update linux metadata for new release"
           file_pattern: "packaging/linux/*.metainfo.xml"
+          repository: code/
           token: ${{ secrets.GIT_AUTO_COMMIT_TOKEN }}
 
       # --------------------------- Create FlatHub update -------------------------- #
