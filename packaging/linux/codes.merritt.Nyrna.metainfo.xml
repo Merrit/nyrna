@@ -17,6 +17,13 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
     <control>keyboard</control>
     <control>touch</control>
   </supports>
+  <keywords>
+    <keyword>sleep</keyword>
+    <keyword>suspend</keyword>
+    <keyword>pause</keyword>
+    <keyword>games</keyword>
+    <keyword>resources</keyword>
+  </keywords>
   <description>
     <p>
       Similar to the incredibly useful sleep/suspend function found in consoles like the Nintendo
