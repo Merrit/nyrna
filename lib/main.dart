@@ -9,7 +9,6 @@ import 'package:helpers/helpers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:window_size/window_size.dart' as window;
 
 import 'active_window/active_window.dart';
 import 'app.dart';
@@ -59,14 +58,12 @@ Future<void> main(List<String> args) async {
     exit(0);
   } else {}
 
-  final nyrnaWindow = NyrnaWindow();
+  final nyrnaWindow = NyrnaWindow(storage);
 
   // Created outside runApp so it can be accessed for window settings below.
   final settingsCubit = await SettingsCubit.init(
     desktopIntegration: await _initDesktopIntegration(),
-    getWindowInfo: window.getWindowInfo,
     hotkeyService: HotkeyService(activeWindow),
-    nyrnaWindow: nyrnaWindow,
     storage: storage,
   );
 
@@ -109,18 +106,9 @@ Future<void> main(List<String> args) async {
   final systemTray = SystemTrayManager(nyrnaWindow);
   await systemTray.initialize();
 
-  final savedWindowSize = await settingsCubit.savedWindowSize();
-  if (savedWindowSize != null) {
-    window.setWindowFrame(savedWindowSize);
-  }
-
-  bool visible = true;
   bool? startHiddenInTray = await storage.getValue('startHiddenInTray');
-  if (startHiddenInTray == true) {
-    visible = false;
-  }
 
-  window.setWindowVisibility(visible: visible);
+  if (startHiddenInTray != true) await nyrnaWindow.show();
 }
 
 /// Message to be displayed if Nyrna is called with an unknown argument.

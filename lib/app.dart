@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' hide MenuItem;
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
@@ -37,7 +37,7 @@ class _AppState extends State<App> with TrayListener, WindowListener {
     /// Only working on Windows for some reason.
     /// Linux will use `flutter_window_close` instead.
     if (settingsCubit.state.closeToTray) {
-      NyrnaWindow().hide();
+      NyrnaWindow.instance.hide();
       return;
     } else {
       super.onWindowClose();

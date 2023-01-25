@@ -1,12 +1,9 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:desktop_integration/desktop_integration.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:window_size/window_size.dart' show PlatformWindow;
 
 import '../../apps_list/apps_list.dart';
 import '../../core/core.dart';
@@ -20,29 +17,23 @@ late SettingsCubit settingsCubit;
 
 class SettingsCubit extends Cubit<SettingsState> {
   final DesktopIntegration _desktopIntegration;
-  final Future<PlatformWindow> Function() _getWindowInfo;
   final HotkeyService _hotkeyService;
-  final NyrnaWindow _nyrnaWindow;
   final StorageRepository _storage;
 
   SettingsCubit._(
     this._desktopIntegration,
-    this._getWindowInfo,
     this._hotkeyService,
-    this._nyrnaWindow,
     this._storage, {
     required SettingsState initialState,
   }) : super(initialState) {
     settingsCubit = this;
     _hotkeyService.updateHotkey(state.hotKey);
-    _nyrnaWindow.preventClose(state.closeToTray);
+    NyrnaWindow.instance.preventClose(state.closeToTray);
   }
 
   static Future<SettingsCubit> init({
     required DesktopIntegration desktopIntegration,
-    required Future<PlatformWindow> Function() getWindowInfo,
     required HotkeyService hotkeyService,
-    required NyrnaWindow nyrnaWindow,
     required StorageRepository storage,
   }) async {
     bool autoStart = await storage.getValue('autoStart') ?? false;
@@ -66,9 +57,7 @@ class SettingsCubit extends Cubit<SettingsState> {
 
     return SettingsCubit._(
       desktopIntegration,
-      getWindowInfo,
       hotkeyService,
-      nyrnaWindow,
       storage,
       initialState: SettingsState(
         autoStart: autoStart,
@@ -121,7 +110,7 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateCloseToTray([bool? closeToTray]) async {
     if (closeToTray == null) return;
 
-    await _nyrnaWindow.preventClose(closeToTray);
+    await NyrnaWindow.instance.preventClose(closeToTray);
     await _storage.saveValue(key: 'closeToTray', value: closeToTray);
     emit(state.copyWith(closeToTray: closeToTray));
   }
@@ -159,22 +148,5 @@ class SettingsCubit extends Cubit<SettingsState> {
       key: 'hotkey',
       value: jsonEncode(newHotKey.toJson()),
     );
-  }
-
-  /// Save the current window size & position to storage.
-  ///
-  /// Allows the app to remember its window size for next launch.
-  Future<void> saveWindowSize() async {
-    final windowInfo = await _getWindowInfo();
-    final rectJson = windowInfo.frame.toJson();
-    await _storage.saveValue(key: 'windowSize', value: rectJson);
-  }
-
-  /// Returns if available the last window size and position.
-  Future<Rect?> savedWindowSize() async {
-    String? rectJson = await _storage.getValue('windowSize');
-    if (rectJson == null) return null;
-    final windowRect = RectConverter.fromJson(rectJson);
-    return windowRect;
   }
 }
