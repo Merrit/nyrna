@@ -26,18 +26,14 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   </keywords>
   <description>
     <p>Similar to the incredibly useful sleep/suspend function found in consoles like the Nintendo Switch and Sony PlayStation; suspend your game (and its resource usage) at any time, and resume whenever you wish - at the push of a button.</p>
-    <p>
-      <em>Suspend Games</em>
-    </p>
+    <p>Suspend Games</p>
     <ul>
       <li>Pause cutscenes to read the subtitles, examine the scene, answer the door, etc.</li>
       <li>Pause games that can't normally be paused (single-player games like Dark Souls, Elden Ring, etc)</li>
       <li>Suspend games whose pause screens keep the system running hot or playing unwanted music</li>
       <li>Suspend inbetween checkpoints (example: Hollow Knight)</li>
     </ul>
-    <p>
-      <em>Suspend Applications</em>
-    </p>
+    <p>Suspend Applications</p>
     <p>Nyrna can be used to suspend normal, non-game applications as well. For example:</p>
     <ul>
       <li>3D renders</li>
