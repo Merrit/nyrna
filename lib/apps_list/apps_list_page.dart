@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../app/app.dart';
 import '../settings/cubit/settings_cubit.dart';
 import '../theme/theme.dart';
+import '../window/nyrna_window.dart';
 import 'apps_list.dart';
 
 /// The main screen for Nyrna.
@@ -56,7 +57,7 @@ class _AppsListPageState extends State<AppsListPage>
     final updatedWindowSize = WidgetsBinding.instance.window.physicalSize;
     if (_appWindowSize != updatedWindowSize) {
       _appWindowSize = updatedWindowSize;
-      settingsCubit.saveWindowSize();
+      NyrnaWindow.instance.saveWindowSize();
     }
     super.didChangeMetrics();
   }
