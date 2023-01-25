@@ -206,7 +206,9 @@ Future<DesktopIntegration> _initDesktopIntegration() async {
   }
 
   final iconFileSuffix = Platform.isWindows ? 'ico' : 'svg';
-  final iconFile = await assetToTempDir('assets/icons/nyrna.$iconFileSuffix');
+  final iconFile = await assetToTempDir(
+    'assets/icons/codes.merritt.Nyrna.$iconFileSuffix',
+  );
 
   return DesktopIntegration(
     desktopFilePath: desktopFile?.path ?? '',

@@ -74,5 +74,5 @@ flutter_app_builder:
   identifier: codes.merritt.Nyrna
   msix_identity_name: 33694MerrittCodes.Nyrna
   msix_publisher: CN=0AA9BC0E-36DF-4B4F-BFF4-E300B746CB9D
-  msix_icon_path: assets\icons\nyrna.png
+  msix_icon_path: assets\icons\codes.merritt.Nyrna.png
   msix_capabilities: internetClient
