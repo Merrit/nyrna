@@ -31,7 +31,6 @@ dependencies:
       ref: 604523dd6edfb54e643f577512ea698c8debb96d
   # hotkey_manager: ^0.1.7
   http: ^0.13.3
-  image: ^3.0.2
   libadwaita: ^1.2.5
   logger: ^1.1.0
   package_info_plus: ^1.3.0
