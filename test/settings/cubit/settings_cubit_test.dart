@@ -6,7 +6,7 @@ import 'package:nyrna/apps_list/cubit/apps_list_cubit.dart';
 import 'package:nyrna/hotkey/hotkey_service.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/storage/storage_repository.dart';
-import 'package:nyrna/window/nyrna_window.dart';
+import 'package:nyrna/window/app_window.dart';
 
 class FakeDesktopIntegration extends Fake implements DesktopIntegration {
   @override
@@ -22,7 +22,7 @@ class MockAppsListCubit extends Mock implements AppsListCubit {}
 
 class MockHotkeyService extends Mock implements HotkeyService {}
 
-class MockNyrnaWindow extends Mock implements NyrnaWindow {}
+class MockAppWindow extends Mock implements AppWindow {}
 
 class MockStorageRepository extends Mock implements StorageRepository {}
 
@@ -36,7 +36,7 @@ SettingsState get state => cubit.state;
 
 void main() {
   setUpAll((() {
-    NyrnaWindow.instance = MockNyrnaWindow();
+    AppWindow.instance = MockAppWindow();
     appsListCubit = MockAppsListCubit();
     when(() => appsListCubit.setAutoRefresh(
           autoRefresh: any(named: 'autoRefresh'),
@@ -50,8 +50,7 @@ void main() {
     when(() => hotkeyService.updateHotkey(any())).thenAnswer((_) async {});
     when(() => hotkeyService.removeHotkey()).thenAnswer((_) async {});
 
-    when(() => NyrnaWindow.instance.preventClose(any()))
-        .thenAnswer((_) async {});
+    when(() => AppWindow.instance.preventClose(any())).thenAnswer((_) async {});
 
     when(() => storage.getValue('hotkey')).thenAnswer((_) async {});
     when(() => storage.deleteValue(any())).thenAnswer((_) async {});

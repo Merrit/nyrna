@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:tray_manager/tray_manager.dart';
 
 import '../apps_list/apps_list.dart';
-import '../window/nyrna_window.dart';
+import '../window/app_window.dart';
 
 class SystemTrayManager {
-  final NyrnaWindow _window;
+  final AppWindow _window;
 
   SystemTrayManager(this._window);
 
