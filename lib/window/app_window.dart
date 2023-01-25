@@ -9,12 +9,12 @@ import '../logs/logs.dart';
 import '../settings/settings.dart';
 import '../storage/storage_repository.dart';
 
-class NyrnaWindow {
+class AppWindow {
   final StorageRepository _storage;
 
-  static late final NyrnaWindow instance;
+  static late final AppWindow instance;
 
-  NyrnaWindow(this._storage) {
+  AppWindow(this._storage) {
     instance = this;
     _listenForWindowClose();
   }

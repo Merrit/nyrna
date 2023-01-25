@@ -9,7 +9,7 @@ import '../../apps_list/apps_list.dart';
 import '../../core/core.dart';
 import '../../hotkey/hotkey_service.dart';
 import '../../storage/storage_repository.dart';
-import '../../window/nyrna_window.dart';
+import '../../window/app_window.dart';
 
 part 'settings_state.dart';
 
@@ -28,7 +28,7 @@ class SettingsCubit extends Cubit<SettingsState> {
   }) : super(initialState) {
     settingsCubit = this;
     _hotkeyService.updateHotkey(state.hotKey);
-    NyrnaWindow.instance.preventClose(state.closeToTray);
+    AppWindow.instance.preventClose(state.closeToTray);
   }
 
   static Future<SettingsCubit> init({
@@ -110,7 +110,7 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateCloseToTray([bool? closeToTray]) async {
     if (closeToTray == null) return;
 
-    await NyrnaWindow.instance.preventClose(closeToTray);
+    await AppWindow.instance.preventClose(closeToTray);
     await _storage.saveValue(key: 'closeToTray', value: closeToTray);
     emit(state.copyWith(closeToTray: closeToTray));
   }

@@ -23,7 +23,7 @@ import 'storage/storage_repository.dart';
 import 'system_tray/system_tray_manager.dart';
 import 'theme/theme.dart';
 import 'url_launcher/url_launcher.dart';
-import 'window/nyrna_window.dart';
+import 'window/app_window.dart';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +58,7 @@ Future<void> main(List<String> args) async {
     exit(0);
   } else {}
 
-  final nyrnaWindow = NyrnaWindow(storage);
+  final appWindow = AppWindow(storage);
 
   // Created outside runApp so it can be accessed for window settings below.
   final settingsCubit = await SettingsCubit.init(
@@ -103,12 +103,12 @@ Future<void> main(List<String> args) async {
     ),
   );
 
-  final systemTray = SystemTrayManager(nyrnaWindow);
+  final systemTray = SystemTrayManager(appWindow);
   await systemTray.initialize();
 
   bool? startHiddenInTray = await storage.getValue('startHiddenInTray');
 
-  if (startHiddenInTray != true) await nyrnaWindow.show();
+  if (startHiddenInTray != true) await appWindow.show();
 }
 
 /// Message to be displayed if Nyrna is called with an unknown argument.
