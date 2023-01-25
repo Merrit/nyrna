@@ -12,8 +12,8 @@ class SystemTrayManager {
 
   Future<void> initialize() async {
     String iconPath = Platform.isWindows
-        ? 'assets/icons/nyrna.ico'
-        : 'assets/icons/nyrna.png';
+        ? 'assets/icons/codes.merritt.Nyrna.ico'
+        : 'assets/icons/codes.merritt.Nyrna.png';
 
     await trayManager.setIcon(iconPath);
 

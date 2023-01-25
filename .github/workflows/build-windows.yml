@@ -17,7 +17,7 @@ env:
   app-display-name: "Nyrna"
   author: "Merritt Codes"
   identifier: "codes.merritt.Nyrna"
-  msix-icon-path: "assets\\icons\\nyrna.png"
+  msix-icon-path: "assets\\icons\\codes.merritt.Nyrna.png"
 
 jobs:
   build-windows:
