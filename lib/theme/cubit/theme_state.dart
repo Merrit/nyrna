@@ -20,8 +20,6 @@ class ThemeState extends Equatable {
     );
     final cardColor = isPitchBlack ? pitchBlack : null;
     final scaffoldBackgroundColor = isPitchBlack ? pitchBlack : null;
-    final toggleableActiveColor =
-        isPitchBlack ? Colors.blue[900] : Colors.lightBlueAccent;
     final tooltipThemeData = TooltipThemeData(
       decoration: BoxDecoration(
         color: Colors.grey[700]!.withOpacity(0.9),
@@ -39,7 +37,6 @@ class ThemeState extends Equatable {
       brightness: brightness,
       cardColor: cardColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-      toggleableActiveColor: toggleableActiveColor,
       tooltipTheme: tooltipThemeData,
     );
   }
