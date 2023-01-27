@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:helpers/helpers.dart';
 import 'package:libadwaita/libadwaita.dart';
 
 import '../../app/app.dart';
@@ -48,45 +49,86 @@ class _WindowTileState extends State<WindowTile> {
 
     return BlocProvider(
       create: (context) => WindowCubit(window),
-      child: Card(
-        child: Stack(
-          children: [
-            ListTile(
-              leading: Container(
-                height: 25,
-                width: 25,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: (loading) ? null : statusColor,
+      child: _GestureDetector(
+        child: Card(
+          child: Stack(
+            children: [
+              ListTile(
+                leading: Container(
+                  height: 25,
+                  width: 25,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: (loading) ? null : statusColor,
+                  ),
+                  child: (loading) ? const CircularProgressIndicator() : null,
                 ),
-                child: (loading) ? const CircularProgressIndicator() : null,
-              ),
-              title: Text(window.title),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('PID: ${window.process.pid}'),
-                  Text(window.process.executable),
-                ],
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 2,
-                horizontal: 20,
-              ),
-              onTap: () async {
-                log.v('WindowTile clicked: $window');
+                title: Text(window.title),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('PID: ${window.process.pid}'),
+                    Text(window.process.executable),
+                  ],
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 2,
+                  horizontal: 20,
+                ),
+                onTap: () async {
+                  log.v('WindowTile clicked: $window');
 
-                setState(() => loading = true);
-                await context.read<AppsListCubit>().toggle(window);
+                  setState(() => loading = true);
+                  await context.read<AppsListCubit>().toggle(window);
 
-                if (!mounted) return;
-                setState(() => loading = false);
-              },
-              trailing: const _DetailsButton(),
-            ),
-          ],
+                  if (!mounted) return;
+                  setState(() => loading = false);
+                },
+                trailing: const _DetailsButton(),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+/// Handles right-click on the WindowTile by showing a context menu.
+class _GestureDetector extends StatelessWidget {
+  final Widget child;
+
+  const _GestureDetector({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<WindowCubit, Window>(
+      builder: (context, window) {
+        final availableAction = (window.process.status == ProcessStatus.normal)
+            ? 'Suspend'
+            : 'Resume';
+
+        return GestureDetector(
+          onSecondaryTapUp: (details) {
+            showContextMenu(
+              context: context,
+              offset: details.globalPosition,
+              items: [
+                PopupMenuItem(
+                  onTap: () => appsListCubit.toggleAll(window),
+                  child: Text(
+                    '$availableAction all instances of ${window.process.executable}',
+                  ),
+                ),
+              ],
+            );
+          },
+          child: child,
+        );
+      },
     );
   }
 }
