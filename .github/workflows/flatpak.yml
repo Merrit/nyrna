@@ -22,6 +22,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
+          ref: main
           path: code
           token: ${{ secrets.GIT_AUTO_COMMIT_TOKEN }}
 
