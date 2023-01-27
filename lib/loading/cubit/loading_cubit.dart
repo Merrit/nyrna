@@ -24,9 +24,16 @@ class LoadingCubit extends Cubit<LoadingState> {
     // Make sure we are not running under Wayland.
     if (Platform.isLinux) {
       final sessionType = await (nativePlatform as Linux).sessionType();
-      if (sessionType != 'x11') {
-        emit(const LoadingWaylandError());
-        return;
+      switch (sessionType) {
+        case 'wayland':
+          emit(const LoadingWaylandError());
+          return;
+        case 'x11':
+          break;
+        default:
+          log.e('''
+Unable to determine session type. The XDG_SESSION_TYPE environment variable is set to "$sessionType".
+Please note that Wayland is not currently supported.''');
       }
     }
 
