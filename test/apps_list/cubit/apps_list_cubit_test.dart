@@ -16,6 +16,9 @@ class MockProcessRepository extends Mock implements ProcessRepository {}
 
 class MockStorageRepository extends Mock implements StorageRepository {}
 
+late AppsListCubit cubit;
+AppsListState get state => cubit.state;
+
 const msPaintProcess = Process(
   executable: 'mspaint.exe',
   pid: 3716,
@@ -28,8 +31,37 @@ const msPaintWindow = Window(
   title: 'Untitled - Paint',
 );
 
-late AppsListCubit cubit;
-AppsListState get state => cubit.state;
+Window get msPaintWindowState => state //
+    .windows
+    .singleWhere((element) => element.id == msPaintWindow.id);
+
+const mpvWindow1 = Window(
+  id: 180355074,
+  process: Process(
+    executable: 'mpv',
+    pid: 1355281,
+    status: ProcessStatus.normal,
+  ),
+  title: 'No file - mpv',
+);
+
+Window get mpvWindow1State => state //
+    .windows
+    .singleWhere((element) => element.id == mpvWindow1.id);
+
+const mpvWindow2 = Window(
+  id: 197132290,
+  process: Process(
+    executable: 'mpv',
+    pid: 1355477,
+    status: ProcessStatus.normal,
+  ),
+  title: 'No file - mpv',
+);
+
+Window get mpvWindow2State => state //
+    .windows
+    .singleWhere((element) => element.id == mpvWindow2.id);
 
 void main() {
   final nativePlatform = MockNativePlatform();
@@ -244,6 +276,114 @@ void main() {
         expect(interactionError, isNotNull);
         expect(interactionError!.interactionType, InteractionType.suspend);
         expect(interactionError.statusAfterInteraction, ProcessStatus.normal);
+      });
+    });
+
+    group('toggleAll', () {
+      test('suspends multiple instances correctly', () async {
+        // Initial setup.
+        expect(state.windows.isEmpty, true);
+        when(() => nativePlatform.windows(
+              showHidden: any(named: 'showHidden'),
+            )).thenAnswer((_) async => [
+              msPaintWindow,
+              mpvWindow1,
+              mpvWindow2,
+            ]);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 3);
+        expect(msPaintWindowState.process.status, ProcessStatus.normal);
+        expect(mpvWindow1State.process.status, ProcessStatus.normal);
+        expect(mpvWindow2State.process.status, ProcessStatus.normal);
+
+        // Trigger toggleAll() to suspend mpv instances and verify.
+        await cubit.toggleAll(mpvWindow1);
+        when(() => processRepository.getProcessStatus(mpvWindow1.process.pid))
+            .thenAnswer((_) async => ProcessStatus.suspended);
+        when(() => processRepository.getProcessStatus(mpvWindow2.process.pid))
+            .thenAnswer((_) async => ProcessStatus.suspended);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 3);
+        expect(msPaintWindowState.process.status, ProcessStatus.normal);
+        expect(mpvWindow1State.process.status, ProcessStatus.suspended);
+        expect(mpvWindow2State.process.status, ProcessStatus.suspended);
+      });
+
+      test('resumes multiple instances correctly', () async {
+        // Initial setup.
+        expect(state.windows.isEmpty, true);
+        when(() => processRepository.getProcessStatus(mpvWindow1.process.pid))
+            .thenAnswer((_) async => ProcessStatus.suspended);
+        when(() => processRepository.getProcessStatus(mpvWindow2.process.pid))
+            .thenAnswer((_) async => ProcessStatus.suspended);
+        when(() => nativePlatform.windows(
+              showHidden: any(named: 'showHidden'),
+            )).thenAnswer((_) async => [
+              msPaintWindow,
+              mpvWindow1.copyWith(
+                process: mpvWindow1.process.copyWith(
+                  status: ProcessStatus.suspended,
+                ),
+              ),
+              mpvWindow2.copyWith(
+                process: mpvWindow2.process.copyWith(
+                  status: ProcessStatus.suspended,
+                ),
+              ),
+            ]);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 3);
+        expect(msPaintWindowState.process.status, ProcessStatus.normal);
+        expect(mpvWindow1State.process.status, ProcessStatus.suspended);
+        expect(mpvWindow2State.process.status, ProcessStatus.suspended);
+
+        // Trigger toggleAll() to resume mpv instances and verify.
+        await cubit.toggleAll(mpvWindow1);
+        when(() => processRepository.getProcessStatus(mpvWindow1.process.pid))
+            .thenAnswer((_) async => ProcessStatus.normal);
+        when(() => processRepository.getProcessStatus(mpvWindow2.process.pid))
+            .thenAnswer((_) async => ProcessStatus.normal);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 3);
+        expect(msPaintWindowState.process.status, ProcessStatus.normal);
+        expect(mpvWindow1State.process.status, ProcessStatus.normal);
+        expect(mpvWindow2State.process.status, ProcessStatus.normal);
+      });
+
+      test('only suspends if some are already suspended', () async {
+        // Initial setup.
+        expect(state.windows.isEmpty, true);
+        when(() => processRepository.getProcessStatus(mpvWindow2.process.pid))
+            .thenAnswer((_) async => ProcessStatus.suspended);
+        when(() => nativePlatform.windows(
+              showHidden: any(named: 'showHidden'),
+            )).thenAnswer((_) async => [
+              msPaintWindow,
+              mpvWindow1,
+              mpvWindow2.copyWith(
+                process: mpvWindow2.process.copyWith(
+                  status: ProcessStatus.suspended,
+                ),
+              ),
+            ]);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 3);
+        expect(msPaintWindowState.process.status, ProcessStatus.normal);
+        expect(mpvWindow1State.process.status, ProcessStatus.normal);
+        expect(mpvWindow2State.process.status, ProcessStatus.suspended);
+
+        // Trigger toggleAll() to suspend mpv instances and verify,
+        // the already suspended instance should not have resumed.
+        await cubit.toggleAll(mpvWindow1);
+        when(() => processRepository.getProcessStatus(mpvWindow1.process.pid))
+            .thenAnswer((_) async => ProcessStatus.suspended);
+        when(() => processRepository.getProcessStatus(mpvWindow2.process.pid))
+            .thenAnswer((_) async => ProcessStatus.suspended);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 3);
+        expect(msPaintWindowState.process.status, ProcessStatus.normal);
+        expect(mpvWindow1State.process.status, ProcessStatus.suspended);
+        expect(mpvWindow2State.process.status, ProcessStatus.suspended);
       });
     });
   });

@@ -150,6 +150,25 @@ class AppsListCubit extends Cubit<AppsListState> {
     return successful;
   }
 
+  /// Toggle suspend/resume for all instances of [window.process.executable].
+  ///
+  /// For example, if called on mpv and there are multiple windows / instances
+  /// of the app running, they will all be suspended.
+  Future<void> toggleAll(Window window) async {
+    final matchingWindows = state //
+        .windows
+        .where((e) =>
+            (e.process.executable == window.process.executable) &&
+            // Ensure we only perform the intended action. Eg, if we are
+            // suspending all but some are already suspended we don't want the
+            // already suspended instances to resume.
+            (e.process.status == window.process.status));
+
+    for (var match in matchingWindows) {
+      await toggle(match);
+    }
+  }
+
   Future<bool> _resume(Window window) async {
     final successful = await _processRepository.resume(window.process.pid);
 
