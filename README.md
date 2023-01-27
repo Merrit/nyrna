@@ -45,7 +45,7 @@ Nyrna works on Linux with X11 and Microsoft Windows.
 [Nyrna Website](https://nyrna.merritt.codes)
 
 
-# Disclaimer
+## Disclaimer
 
 Modifying running applications comes with the possibility that the application will crash.
 
@@ -54,13 +54,17 @@ While this is rare, it is a known possibility that Nyrna can do nothing about.
 Please make sure to **save** your data or game before attempting to use Nyrna.
 
 
-# FAQ
+## Install
+
+View install options on the [website](https://nyrna.merritt.codes/download).
+
+## FAQ
 
 **Can I suspend to disk so that I can restore after reboot / free up RAM usage / etc?**
 
 Unfortunately no. [CRIU](https://criu.org/) looks very promising to allow us to do this (on Linux), however it [does not currently support suspending GUI applications](https://criu.org/X_applications).
 
 
-# Compiling
+## Compiling
 
 See [COMPILING](COMPILING.MD)
