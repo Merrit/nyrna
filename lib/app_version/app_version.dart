@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pub_semver/pub_semver.dart' as semver;
@@ -41,13 +42,22 @@ class AppVersion {
       final data = List<Map>.from(json);
       final tag = data.firstWhere((element) => element['prerelease'] == false);
       final tagName = tag['tag_name'] as String;
-      // Strip the leading `v` and anything trailing.
-      // May need to be updated if we starting using postfixes like `beta`.
-      _latest = tagName.substring(1, 6);
+      _latest = parseVersionTag(tagName);
     } else {
       log.w('Issue getting latest version info from GitHub, '
           'status code: ${response.statusCode}\n');
     }
     return _latest;
+  }
+
+  /// Returns the version number without the leading `v` or any postfix.
+  ///
+  /// Examples:
+  /// `v1.2.3` becomes `1.2.3`.
+  /// `v1.2.3-beta` becomes `1.2.3`.
+  @visibleForTesting
+  String parseVersionTag(String tag) {
+    final version = tag.split('v').last.split('-').first;
+    return version;
   }
 }
