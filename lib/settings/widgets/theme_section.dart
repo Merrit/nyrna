@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../theme/theme.dart';
 
@@ -28,21 +29,29 @@ class _ThemeChooser extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Theme'),
+            Text(
+              AppLocalizations.of(context)!.themeTitle,
+            ),
             RadioListTile<AppTheme>(
-              title: const Text('Dark'),
+              title: Text(
+                AppLocalizations.of(context)!.dark,
+              ),
               groupValue: state.appTheme,
               value: AppTheme.dark,
               onChanged: (value) => themeCubit.changeTheme(value!),
             ),
             RadioListTile<AppTheme>(
-              title: const Text('Pitch Black'),
+              title: Text(
+                AppLocalizations.of(context)!.pitchBlack,
+              ),
               groupValue: state.appTheme,
               value: AppTheme.pitchBlack,
               onChanged: (value) => themeCubit.changeTheme(value!),
             ),
             RadioListTile<AppTheme>(
-              title: const Text('Light'),
+              title: Text(
+                AppLocalizations.of(context)!.light,
+              ),
               groupValue: state.appTheme,
               value: AppTheme.light,
               onChanged: (value) => themeCubit.changeTheme(value!),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../theme/styles.dart';
 import '../settings.dart';
@@ -12,12 +13,14 @@ class IntegrationSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         Spacers.verticalMedium,
-        Text('System Integration'),
+        Text(
+          AppLocalizations.of(context)!.systemIntegrationTitle,
+        ),
         Spacers.verticalXtraSmall,
-        _AutostartTile(),
-        _StartHiddenTile(),
+        const _AutostartTile(),
+        const _StartHiddenTile(),
       ],
     );
   }
@@ -32,7 +35,9 @@ class _AutostartTile extends StatelessWidget {
       builder: (context, state) {
         return SwitchListTile(
           secondary: const Icon(Icons.start),
-          title: const Text('Start automatically at system boot'),
+          title: Text(
+            AppLocalizations.of(context)!.startAutomatically,
+          ),
           value: state.autoStart,
           onChanged: (value) async {
             await settingsCubit.updateAutoStart(value);
@@ -56,7 +61,9 @@ class _StartHiddenTile extends StatelessWidget {
 
         return SwitchListTile(
           secondary: const Icon(Icons.auto_awesome),
-          title: const Text('Start hidden in system tray'),
+          title: Text(
+            AppLocalizations.of(context)!.startInTray,
+          ),
           value: state.startHiddenInTray,
           onChanged: (value) async {
             await settingsCubit.updateStartHiddenInTray(value);

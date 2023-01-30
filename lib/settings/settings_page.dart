@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../logs/logs.dart';
 import '../theme/styles.dart';
@@ -14,7 +15,9 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.settingsTitle),
+      ),
       body: Scrollbar(
         controller: scrollController,
         thumbVisibility: true,
@@ -32,10 +35,14 @@ class SettingsPage extends StatelessWidget {
             const ThemeSection(),
             const IntegrationSection(),
             Spacers.verticalMedium,
-            const Text('Troubleshooting'),
+            Text(
+              AppLocalizations.of(context)!.troubleshootingTitle,
+            ),
             ListTile(
               leading: const Icon(Icons.article_outlined),
-              title: const Text('Logs'),
+              title: Text(
+                AppLocalizations.of(context)!.logs,
+              ),
               onTap: () => Navigator.pushNamed(context, LogPage.id),
             ),
             Spacers.verticalMedium,

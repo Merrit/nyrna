@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:helpers/helpers.dart';
 import 'package:libadwaita/libadwaita.dart';
@@ -187,29 +188,37 @@ class _DetailsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GtkDialog(
-      title: const Center(child: Text('Details')),
+      title: Center(
+        child: Text(
+          AppLocalizations.of(context)!.detailsDialogTitle,
+        ),
+      ),
       padding: const EdgeInsets.all(12),
       children: [
         _ErrorMessage(interactionError),
         ListTile(
-          title: const Text('Window Title'),
+          title: Text(
+            AppLocalizations.of(context)!.detailsDialogWindowTitle,
+          ),
           subtitle: SelectableText(window.title),
-          // trailing: Text(window.title),
         ),
         ListTile(
-          title: const Text('Executable Name'),
+          title: Text(
+            AppLocalizations.of(context)!.detailsDialogExecutableName,
+          ),
           subtitle: SelectableText(window.process.executable),
-          // trailing: Text(window.title),
         ),
         ListTile(
-          title: const Text('PID'),
+          title: Text(
+            AppLocalizations.of(context)!.detailsDialogPID,
+          ),
           subtitle: SelectableText(window.process.pid.toString()),
-          // trailing: Text(window.title),
         ),
         ListTile(
-          title: const Text('Current Status'),
+          title: Text(
+            AppLocalizations.of(context)!.detailsDialogCurrentStatus,
+          ),
           subtitle: SelectableText(window.process.status.name),
-          // trailing: Text(window.title),
         ),
       ],
     );

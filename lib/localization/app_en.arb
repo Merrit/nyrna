@@ -1,0 +1,153 @@
+{
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Label for a cancel button"
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Label for a confirm button"
+  },
+  "@_DETAILS_DIALOG": {},
+  "detailsDialogTitle": "Details",
+  "@detailsDialogTitle": {
+    "description": "The title of the details dialog"
+  },
+  "detailsDialogWindowTitle": "Window Title",
+  "@detailsDialogWindowTitle": {
+    "description": "Label for the window title field in the details dialog"
+  },
+  "detailsDialogExecutableName": "Executable Name",
+  "@detailsDialogExecutableName": {
+    "description": "Label for the executable name field in the details dialog"
+  },
+  "detailsDialogPID": "PID",
+  "@detailsDialogPID": {
+    "description": "Label for the PID field in the details dialog"
+  },
+  "detailsDialogCurrentStatus": "Current Status",
+  "@detailsDialogCurrentStatus": {
+    "description": "Label for the current status field in the details dialog"
+  },
+  "@_LOGS_PAGE": {},
+  "copyLogs": "Copy logs",
+  "@copyLogs": {
+    "description": "Label for the copy logs button"
+  },
+  "logsCopiedNotification": "Logs copied to clipboard",
+  "@logsCopiedNotification": {
+    "description": "Notification displayed when logs are copied to clipboard"
+  },
+  "@_SETTINGS": {},
+  "donate": "Donate",
+  "@donate": {
+    "description": "Label for the donate button"
+  },
+  "donateMessage": "If you like this application, please consider donating to support its development.",
+  "@donateMessage": {
+    "description": "Message displayed on the donate page"
+  },
+  "madeBy": "Made with 💙 by ",
+  "@madeBy": {
+    "description": "Introduction to application author"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "The title of the settings page"
+  },
+  "@_SETTINGS_BEHAVIOUR_SECTION": {},
+  "behaviourTitle": "Behaviour",
+  "@behaviourTitle": {
+    "description": "The title of the behaviour section of the settings page."
+  },
+  "autoRefresh": "Auto Refresh",
+  "@autoRefresh": {
+    "description": "Label for the auto refresh setting"
+  },
+  "autoRefreshDescription": "Update window & process info automatically",
+  "@autoRefreshDescription": {
+    "description": "Description for the auto refresh setting"
+  },
+  "autoRefreshInterval": "Auto Refresh Interval",
+  "@autoRefreshInterval": {
+    "description": "Label for the auto refresh interval setting"
+  },
+  "autoRefreshIntervalAmount": "{interval} seconds",
+  "@autoRefreshIntervalAmount": {
+    "description": "The amount of time between auto refreshes",
+    "placeholders": {
+      "interval": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "closeToTray": "Close to tray",
+  "@closeToTray": {
+    "description": "Label for the close to tray setting"
+  },
+  "minimizeAndRestoreWindows": "Minimize / restore windows",
+  "@minimizeAndRestoreWindows": {
+    "description": "Label for the minimize / restore windows setting"
+  },
+  "showHiddenWindows": "Show hidden windows",
+  "@showHiddenWindows": {
+    "description": "Label for the show hidden windows setting"
+  },
+  "showHiddenWindowsTooltip": "Includes windows from other virtual desktops and special windows that are not normally detected.",
+  "@showHiddenWindowsTooltip": {
+    "description": "Tooltip for the show hidden windows setting"
+  },
+  "@_SETTINGS_THEME_SECTION": {},
+  "themeTitle": "Theme",
+  "dark": "Dark",
+  "@dark": {
+    "description": "Label for the dark theme setting"
+  },
+  "light": "Light",
+  "@light": {
+    "description": "Label for the light theme setting"
+  },
+  "pitchBlack": "Pitch Black",
+  "@pitchBlack": {
+    "description": "Label for the pitch black theme setting"
+  },
+  "@_SETTINGS_INTEGRATION_SECTION": {},
+  "systemIntegrationTitle": "System Integration",
+  "@systemIntegrationTitle": {
+    "description": "The title of the system integration section of the settings page."
+  },
+  "startAutomatically": "Start automatically at system boot",
+  "@startAutomatically": {
+    "description": "Label for the start automatically at system boot setting"
+  },
+  "startInTray": "Start hidden in system tray",
+  "@startInTray": {
+    "description": "Label for the start hidden in system tray setting"
+  },
+  "@_SETTINGS_TROUBLESHOOTING_SECTION": {},
+  "troubleshootingTitle": "Troubleshooting",
+  "@troubleshootingTitle": {
+    "description": "The title of the troubleshooting section of the settings page."
+  },
+  "logs": "Logs",
+  "@logs": {
+    "description": "Label for the logs button"
+  },
+  "@_SETTINGS_ABOUT_SECTION": {},
+  "aboutTitle": "About",
+  "@aboutTitle": {
+    "description": "The title of the about section of the settings page."
+  },
+  "version": "Nyrna version",
+  "@version": {
+    "description": "Label for the version number"
+  },
+  "homepage": "Nyrna homepage",
+  "@homepage": {
+    "description": "Label for the homepage link"
+  },
+  "repository": "GitHub repository",
+  "@repository": {
+    "description": "Label for the repository link"
+  }
+}

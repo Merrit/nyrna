@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'logs.dart';
 
@@ -26,6 +27,7 @@ class LogPage extends StatelessWidget {
                 builder: (context, state) {
                   return ElevatedButton(
                     onPressed: () async {
+                      final appLocalizations = AppLocalizations.of(context)!;
                       final scaffoldMessenger = ScaffoldMessenger.of(context);
                       // Copy the visible logs to user's clipboard.
                       await Clipboard.setData(
@@ -33,12 +35,16 @@ class LogPage extends StatelessWidget {
                       );
 
                       scaffoldMessenger.showSnackBar(
-                        const SnackBar(
-                          content: Text('Logs copied to clipboard'),
+                        SnackBar(
+                          content: Text(
+                            appLocalizations.logsCopiedNotification,
+                          ),
                         ),
                       );
                     },
-                    child: const Text('Copy logs'),
+                    child: Text(
+                      AppLocalizations.of(context)!.copyLogs,
+                    ),
                   );
                 },
               ),
