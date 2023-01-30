@@ -45,4 +45,4 @@ jobs:
 
       - name: Run integration tests
         run: |
-          flutter test integration_test
+          xvfb-run -a flutter test integration_test
