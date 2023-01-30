@@ -17,6 +17,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.0
+  flutter_localizations:
+    sdk: flutter
   flutter_markdown: ^0.6.9+1
   flutter_window_close: ^0.2.2
   hive_flutter: ^1.1.0
@@ -30,6 +32,7 @@ dependencies:
       url: https://github.com/leanflutter/hotkey_manager.git
       ref: 604523dd6edfb54e643f577512ea698c8debb96d
   # hotkey_manager: ^0.1.7
+  intl: any
   http: ^0.13.3
   libadwaita: ^1.2.5
   logger: ^1.1.0
@@ -51,7 +54,7 @@ dev_dependencies:
   flutter_app_builder:
     git:
       url: https://github.com/Merrit/flutter_app_builder.git
-      ref: 5253d9d368f8bc6ea43a81492e711d9dabaa23b6
+      ref: 1ff10c3b097396ad138d6dcabe160497a1e81b44
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
@@ -63,6 +66,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/icons/
     - packaging/linux/codes.merritt.Nyrna.desktop

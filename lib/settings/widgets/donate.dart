@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../app/app.dart';
 import '../../theme/styles.dart';
@@ -18,8 +19,12 @@ class Donate extends StatelessWidget {
               Text.rich(
                 TextSpan(
                   children: [
-                    const TextSpan(
-                        text: 'Nyrna is free software, made with 💙 by '),
+                    TextSpan(
+                      text: AppLocalizations.of(context)!.madeBy,
+                      style: const TextStyle(
+                        fontFamily: emojiFont,
+                      ),
+                    ),
                     TextSpan(
                       text: 'Kristen McWilliam',
                       style: const TextStyle(color: Colors.lightBlueAccent),
@@ -32,6 +37,10 @@ class Donate extends StatelessWidget {
                   ],
                 ),
               ),
+              Text(
+                AppLocalizations.of(context)!.donateMessage,
+                textAlign: TextAlign.center,
+              ),
               Spacers.verticalXtraSmall,
               FilledButton.icon(
                 onPressed: () {
@@ -41,7 +50,9 @@ class Donate extends StatelessWidget {
                   Icons.favorite,
                   color: Colors.red,
                 ),
-                label: const Text('Donate'),
+                label: Text(
+                  AppLocalizations.of(context)!.donate,
+                ),
               ),
             ],
           ),

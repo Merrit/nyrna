@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -70,6 +71,8 @@ class _AppState extends State<App> with TrayListener, WindowListener {
           title: 'Nyrna',
           debugShowCheckedModeBanner: false,
           theme: state.themeData,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           routes: {
             LoadingPage.id: (context) => const LoadingPage(),
             LogPage.id: (context) => LogPage(),

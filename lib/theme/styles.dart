@@ -8,6 +8,10 @@ abstract class BorderRadii {
   static BorderRadius gentlyRounded = BorderRadius.circular(10);
 }
 
+/// It is required to use the emoji font, otherwise emojis
+/// all appear as simple black and white glyphs.
+const emojiFont = 'Noto Color Emoji';
+
 abstract class Spacers {
   static const horizontalSmall = SizedBox(width: 20);
 

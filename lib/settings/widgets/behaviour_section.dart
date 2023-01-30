@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../../core/core.dart';
@@ -17,12 +18,18 @@ class BehaviourSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Behaviour'),
+        Text(
+          AppLocalizations.of(context)!.behaviourTitle,
+        ),
         Spacers.verticalXtraSmall,
         ListTile(
-          title: const Text('Auto Refresh'),
+          title: Text(
+            AppLocalizations.of(context)!.autoRefresh,
+          ),
           leading: const Icon(Icons.refresh),
-          subtitle: const Text('Update window & process info automatically'),
+          subtitle: Text(
+            AppLocalizations.of(context)!.autoRefreshDescription,
+          ),
           trailing: BlocBuilder<SettingsCubit, SettingsState>(
             builder: (context, state) {
               return Switch(
@@ -38,8 +45,13 @@ class BehaviourSection extends StatelessWidget {
           builder: (context, state) {
             return ListTile(
               leading: const Icon(Icons.timelapse),
-              title: const Text('Auto Refresh Interval'),
-              trailing: Text('${state.refreshInterval} seconds'),
+              title: Text(
+                AppLocalizations.of(context)!.autoRefreshInterval,
+              ),
+              trailing: Text(
+                AppLocalizations.of(context)!
+                    .autoRefreshIntervalAmount(state.refreshInterval),
+              ),
               enabled: state.autoRefresh,
               onTap: () => _showRefreshIntervalDialog(context),
             );
@@ -47,7 +59,9 @@ class BehaviourSection extends StatelessWidget {
         ),
         const HotkeyConfigWidget(),
         ListTile(
-          title: const Text('Close to tray'),
+          title: Text(
+            AppLocalizations.of(context)!.closeToTray,
+          ),
           leading: const Icon(Icons.bedtime),
           trailing: BlocBuilder<SettingsCubit, SettingsState>(
             builder: (context, state) {
@@ -61,7 +75,9 @@ class BehaviourSection extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: const Text('Minimize / restore windows'),
+          title: Text(
+            AppLocalizations.of(context)!.minimizeAndRestoreWindows,
+          ),
           leading: const Icon(Icons.minimize),
           trailing: BlocBuilder<SettingsCubit, SettingsState>(
             builder: (context, state) {
@@ -84,7 +100,7 @@ class BehaviourSection extends StatelessWidget {
     final result = await showInputDialog(
       context: context,
       type: InputDialogs.onlyInt,
-      title: 'Auto Refresh Interval',
+      title: AppLocalizations.of(context)!.autoRefreshInterval,
       initialValue: settingsCubit.state.refreshInterval.toString(),
     );
     if (result == null) return;
@@ -215,17 +231,16 @@ class ShowHiddenTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      // title: const Text('Show hidden windows'),
-      title: const Text.rich(
+      title: Text.rich(
         TextSpan(
           children: [
-            TextSpan(text: 'Show hidden windows   '),
+            TextSpan(
+              text: '${AppLocalizations.of(context)!.showHiddenWindows}   ',
+            ),
             WidgetSpan(
               child: Tooltip(
-                message: 'Includes windows from other virtual desktops '
-                    'and special windows that are not normally detected.',
-                // textStyle: TextStyle(fontSize: 16),
-                child: Icon(
+                message: AppLocalizations.of(context)!.showHiddenWindowsTooltip,
+                child: const Icon(
                   Icons.help_outline,
                   size: 18,
                 ),
@@ -235,8 +250,6 @@ class ShowHiddenTile extends StatelessWidget {
         ),
       ),
       leading: const Icon(Icons.refresh),
-      // subtitle: const Text('Includes windows from other virtual desktops '
-      //     'and special windows that are not normally detected'),
       trailing: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
           return Switch(
