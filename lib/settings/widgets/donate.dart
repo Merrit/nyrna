@@ -33,7 +33,7 @@ class Donate extends StatelessWidget {
                 ),
               ),
               Spacers.verticalXtraSmall,
-              ElevatedButton.icon(
+              FilledButton.icon(
                 onPressed: () {
                   AppCubit.instance.launchURL('https://merritt.codes/support');
                 },
