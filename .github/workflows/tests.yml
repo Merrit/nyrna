@@ -38,6 +38,7 @@ jobs:
         if: runner.os == 'Linux'
         shell: bash
         run: |
+          sudo apt-get update -y
           # libappindicator required for tray_manager
           sudo apt-get install -y appindicator3-0.1 libappindicator3-dev
           # keybinder required for global hotkeys
