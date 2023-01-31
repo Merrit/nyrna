@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nyrna/active_window/active_window.dart';
+import 'package:nyrna/argument_parser/argument_parser.dart';
 import 'package:nyrna/logs/logs.dart';
-import 'package:nyrna/main.dart';
 import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/storage/storage_repository.dart';
 import 'package:test/test.dart';
