@@ -154,7 +154,7 @@ class ActiveWindow {
   /// Checks for a user preference on whether to minimize/restore windows.
   Future<bool> _getShouldMinimize() async {
     // If minimize preference was set by flag it overrides UI-based preference.
-    final minimizeArg = argParser.minimize;
+    final minimizeArg = ArgumentParser.instance.minimize;
     if (minimizeArg != null) {
       log.v('Received no-minimize flag, affecting window state: $minimizeArg');
       return minimizeArg;

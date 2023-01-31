@@ -30,7 +30,7 @@ Future<void> main(List<String> args) async {
   await windowManager.ensureInitialized();
 
   // Parse command-line arguments.
-  argParser = ArgumentParser() //
+  final argParser = ArgumentParser() //
     ..parseArgs(args);
 
   final storage = await StorageRepository.initialize(Hive);
@@ -122,13 +122,18 @@ Supported arguments:
 
 ''';
 
-late ArgumentParser argParser;
-
 /// Parse command-line arguments.
 class ArgumentParser {
   bool? minimize;
   bool toggleActiveWindow = false;
   bool verbose = false;
+
+  /// Singleton instance.
+  static late ArgumentParser instance;
+
+  ArgumentParser() {
+    instance = this;
+  }
 
   final _parser = ArgParser(usageLineLength: 80);
 
