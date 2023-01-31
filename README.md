@@ -65,6 +65,6 @@ View install options on the [website](https://nyrna.merritt.codes/download).
 Unfortunately no. [CRIU](https://criu.org/) looks very promising to allow us to do this (on Linux), however it [does not currently support suspending GUI applications](https://criu.org/X_applications).
 
 
-## Compiling
+## Building
 
-See [COMPILING](COMPILING.MD)
+See [BUILDING](BUILDING.md)
