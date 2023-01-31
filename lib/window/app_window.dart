@@ -9,6 +9,7 @@ import '../logs/logs.dart';
 import '../settings/settings.dart';
 import '../storage/storage_repository.dart';
 
+/// Represents the main window of the app.
 class AppWindow {
   final StorageRepository _storage;
 
@@ -40,13 +41,16 @@ class AppWindow {
     await windowManager.setPreventClose(shouldPreventClose);
   }
 
+  /// Closes the app.
   void close() => exit(0);
 
+  /// Hides the app window.
   Future<void> hide() async {
     await saveWindowSize();
     await windowManager.hide();
   }
 
+  /// Shows the app window.
   Future<void> show() async {
     final Rect? savedWindowSize = await getSavedWindowSize();
     if (savedWindowSize != null) windowManager.setBounds(savedWindowSize);
