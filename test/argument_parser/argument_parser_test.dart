@@ -1,4 +1,4 @@
-import 'package:nyrna/main.dart';
+import 'package:nyrna/argument_parser/argument_parser.dart';
 import 'package:test/test.dart';
 
 void main() {

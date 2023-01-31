@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nyrna/main.dart';
+import 'package:nyrna/argument_parser/argument_parser.dart';
 
 void main() {
   group('ArgumentParser:', () {

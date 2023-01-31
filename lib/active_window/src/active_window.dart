@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../../argument_parser/argument_parser.dart';
 import '../../logs/logs.dart';
-import '../../main.dart';
 import '../../native_platform/native_platform.dart';
 import '../../storage/storage_repository.dart';
 
