@@ -54,7 +54,7 @@ dev_dependencies:
   flutter_app_builder:
     git:
       url: https://github.com/Merrit/flutter_app_builder.git
-      ref: 1ff10c3b097396ad138d6dcabe160497a1e81b44
+      ref: 74eff504bf0c161e360f05e6bb8a7cb983feeaae
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
@@ -75,6 +75,9 @@ flutter_app_builder:
   app_display_name: "Nyrna"
   author: "Merritt Codes"
   identifier: codes.merritt.Nyrna
+  languages:
+    - en-us
+    - de
   msix_identity_name: 33694MerrittCodes.Nyrna
   msix_publisher: CN=0AA9BC0E-36DF-4B4F-BFF4-E300B746CB9D
   msix_icon_path: assets\icons\codes.merritt.Nyrna.png
