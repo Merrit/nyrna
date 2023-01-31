@@ -11,6 +11,7 @@ import 'loading/loading_page.dart';
 import 'settings/settings.dart';
 import 'window/app_window.dart';
 
+/// The root widget of the app.
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
 
