@@ -30,6 +30,7 @@ const testWindow = Window(
 );
 
 void main() {
+  late ArgumentParser argParser;
   late NativePlatform nativePlatform;
   late ProcessRepository processRepository;
   late StorageRepository storageRepository;
@@ -38,6 +39,7 @@ void main() {
 
   setUpAll(() async {
     argParser = MockArgParser();
+    ArgumentParser.instance = argParser;
     when(() => argParser.minimize).thenReturn(null);
 
     await LoggingManager.initialize(verbose: false);

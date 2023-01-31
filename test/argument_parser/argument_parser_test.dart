@@ -1,14 +1,18 @@
 import 'package:nyrna/main.dart';
 import 'package:test/test.dart';
 
-late ArgumentParser argParser;
-
 void main() {
+  late ArgumentParser argParser;
+
   setUp(() {
     argParser = ArgumentParser();
   });
 
   group('ArgumentParser', () {
+    test('singleton instance is accessible', () {
+      expect(ArgumentParser.instance, isNotNull);
+    });
+
     test('has expected values when given no arguments', () {
       expect(argParser.minimize, isNull);
       expect(argParser.toggleActiveWindow, isFalse);
