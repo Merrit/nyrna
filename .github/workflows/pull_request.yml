@@ -1,0 +1,29 @@
+# Verify tests pass and builds succeed for pull requests.
+
+name: Verify Pull Request
+
+on:
+  # Enable manual run
+  workflow_dispatch:
+  pull_request:
+
+concurrency:
+  group: ci-verify-pr-${{ github.ref }}-1
+  cancel-in-progress: true
+
+jobs:
+  call-tests:
+    uses: ./.github/workflows/tests.yml
+
+  call-build-linux:
+    needs: call-tests
+    uses: ./.github/workflows/build-linux.yml
+    with:
+      pre-release: true
+    secrets: inherit
+  call-build-windows:
+    needs: call-tests
+    uses: ./.github/workflows/build-windows.yml
+    with:
+      pre-release: true
+    secrets: inherit
