@@ -2,6 +2,7 @@
 *.AppImage
 *.exe
 *.snap
+*.tar.gz
 *.zsync
 appimage-builder-cache
 packaging/linux/appimage/AppDir
