@@ -1,8 +1,6 @@
 name: Run tests
 
 on:
-  # Run on pull requests
-  pull_request:
   # Allow being called by other workflows
   workflow_call:
   # Allow being called manually
