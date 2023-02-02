@@ -22,7 +22,6 @@ import 'settings/cubit/settings_cubit.dart';
 import 'storage/storage_repository.dart';
 import 'system_tray/system_tray_manager.dart';
 import 'theme/theme.dart';
-import 'url_launcher/url_launcher.dart';
 import 'window/app_window.dart';
 
 Future<void> main(List<String> args) async {
@@ -76,10 +75,7 @@ Future<void> main(List<String> args) async {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AppCubit(
-            storage,
-            UrlLauncher(),
-          ),
+          create: (context) => AppCubit(storage),
           lazy: false,
         ),
         BlocProvider.value(value: settingsCubit),
