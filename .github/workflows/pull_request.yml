@@ -27,3 +27,10 @@ jobs:
     with:
       pre-release: true
     secrets: inherit
+
+  verify-pull-request:
+    name: Verify Pull Request
+    needs: [call-tests, call-build-linux, call-build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Requirements passed, PR looks good!"
