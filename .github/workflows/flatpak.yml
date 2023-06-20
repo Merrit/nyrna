@@ -53,6 +53,13 @@ jobs:
 
       # --------------------------- Create FlatHub update -------------------------- #
 
+      # Wait for the commit to be pushed to the repo
+      # 
+      # This ensures the updated metadata file is available to the updater 
+      # script when it runs, otherwise it has the wrong version number.
+      - name: Wait for commit to be pushed
+        run: sleep 10
+
       - name: Checkout flathub repository
         uses: actions/checkout@v3
         with:
