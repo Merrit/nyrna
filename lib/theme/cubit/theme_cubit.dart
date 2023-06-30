@@ -25,7 +25,7 @@ class ThemeCubit extends Cubit<ThemeState> {
   }
 
   static Future<AppTheme> _getAppTheme(StorageRepository storage) async {
-    String? savedTheme = await storage.getValue('appTheme');
+    final String? savedTheme = await storage.getValue('appTheme');
     switch (savedTheme) {
       case null:
         return AppTheme.dark;

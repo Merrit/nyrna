@@ -66,7 +66,7 @@ class AppWindow {
 
   /// Returns if available the last window size and position.
   Future<Rect?> getSavedWindowSize() async {
-    String? rectJson = await _storage.getValue('windowSize');
+    final String? rectJson = await _storage.getValue('windowSize');
     if (rectJson == null) return null;
     log.v('Retrieved saved window info:\n$rectJson');
     final windowRect = RectConverter.fromJson(rectJson);

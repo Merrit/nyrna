@@ -4,14 +4,11 @@ publish_to: "none"
 version: 2.11.1
 
 environment:
-  sdk: ">=2.16.1 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   args: ^2.2.0
   collection: ^1.16.0
-  desktop_integration:
-    git:
-      url: https://github.com/Merrit/desktop_integration.git
   equatable: ^2.0.3
   ffi: ^2.0.1
   flutter:
@@ -21,10 +18,11 @@ dependencies:
     sdk: flutter
   flutter_markdown: ^0.6.9+1
   flutter_window_close: ^0.2.2
-  hive_flutter: ^1.1.0
   helpers:
     git:
       url: https://github.com/Merrit/helpers.git
+      ref: 3b8b7acebb96f43932579f15dcf136e282f6602c
+  hive_flutter: ^1.1.0
   # Using git while waiting for merged fix to be in a new release:
   # https://github.com/leanflutter/hotkey_manager/pull/25
   hotkey_manager:
@@ -32,23 +30,25 @@ dependencies:
       url: https://github.com/leanflutter/hotkey_manager.git
       ref: 604523dd6edfb54e643f577512ea698c8debb96d
   # hotkey_manager: ^0.1.7
+  http: ^1.1.0
   intl: any
-  http: ^0.13.3
-  libadwaita: ^1.2.5
+  launch_at_startup: ^0.2.2
+  libadwaita: ^2.0.1
   logger: ^1.1.0
-  package_info_plus: ^1.3.0
+  package_info_plus: ^4.0.2
   path_provider: ^2.0.1
   pub_semver: ^2.0.0
   tray_manager: ^0.2.0
   url_launcher: ^6.0.4
-  win32: ^2.2.5
-  win32_suspend_process: ^1.0.0
+  win32: ^5.0.5
+  win32_suspend_process: ^1.1.0
   window_manager: ^0.3.0
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/window_size
       ref: 03d957e8b5c99fc83cd4a781031b154ab3de8753
+  xdg_desktop_portal: ^0.1.12
 
 dev_dependencies:
   flutter_app_builder:

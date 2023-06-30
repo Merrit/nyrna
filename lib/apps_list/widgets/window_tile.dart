@@ -148,7 +148,7 @@ class _DetailsButton extends StatelessWidget {
             .singleWhereOrNull((element) => element.windowId == window.id);
 
         final errorText = (interactionError != null) ? '❗' : '';
-        Widget errorIndicator = Text(
+        final Widget errorIndicator = Text(
           errorText,
           style: const TextStyle(fontFamily: 'Noto Color Emoji'),
         );

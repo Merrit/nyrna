@@ -31,7 +31,7 @@ class _AppsListPageState extends State<AppsListPage>
   @override
   void initState() {
     super.initState();
-    _appWindowSize = WidgetsBinding.instance.window.physicalSize;
+    _appWindowSize = View.of(context).physicalSize;
     // Listen for changes to the application's window size.
     WidgetsBinding.instance.addObserver(this);
   }
@@ -54,7 +54,7 @@ class _AppsListPageState extends State<AppsListPage>
 
   @override
   void didChangeMetrics() {
-    final updatedWindowSize = WidgetsBinding.instance.window.physicalSize;
+    final updatedWindowSize = View.of(context).physicalSize;
     if (_appWindowSize != updatedWindowSize) {
       _appWindowSize = updatedWindowSize;
       AppWindow.instance.saveWindowSize();

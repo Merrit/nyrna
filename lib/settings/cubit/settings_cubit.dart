@@ -1,11 +1,13 @@
 import 'dart:convert';
 
-import 'package:desktop_integration/desktop_integration.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:helpers/helpers.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../../apps_list/apps_list.dart';
+import '../../autostart/autostart_service.dart';
 import '../../core/core.dart';
 import '../../hotkey/hotkey_service.dart';
 import '../../storage/storage_repository.dart';
@@ -16,12 +18,13 @@ part 'settings_state.dart';
 late SettingsCubit settingsCubit;
 
 class SettingsCubit extends Cubit<SettingsState> {
-  final DesktopIntegration _desktopIntegration;
+  /// Service for managing autostart.
+  final AutostartService _autostartService;
   final HotkeyService _hotkeyService;
   final StorageRepository _storage;
 
   SettingsCubit._(
-    this._desktopIntegration,
+    this._autostartService,
     this._hotkeyService,
     this._storage, {
     required SettingsState initialState,
@@ -32,31 +35,32 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   static Future<SettingsCubit> init({
-    required DesktopIntegration desktopIntegration,
+    required AutostartService autostartService,
     required HotkeyService hotkeyService,
     required StorageRepository storage,
   }) async {
-    bool autoStart = await storage.getValue('autoStart') ?? false;
-    bool autoRefresh = await storage.getValue('autoRefresh') ?? true;
-    bool closeToTray = await storage.getValue('closeToTray') ?? false;
+    final bool autoStart = await storage.getValue('autoStart') ?? false;
+    final bool autoRefresh = await storage.getValue('autoRefresh') ?? true;
+    final bool closeToTray = await storage.getValue('closeToTray') ?? false;
 
     HotKey hotkey;
-    String? savedHotkey = await storage.getValue('hotkey');
+    final String? savedHotkey = await storage.getValue('hotkey');
     if (savedHotkey != null) {
       hotkey = HotKey.fromJson(jsonDecode(savedHotkey));
     } else {
       hotkey = defaultHotkey;
     }
 
-    bool minimizeWindows = await storage.getValue('minimizeWindows') ?? true;
-    int refreshInterval = await storage.getValue('refreshInterval') ?? 5;
-    bool showHiddenWindows =
+    final bool minimizeWindows =
+        await storage.getValue('minimizeWindows') ?? true;
+    final int refreshInterval = await storage.getValue('refreshInterval') ?? 5;
+    final bool showHiddenWindows =
         await storage.getValue('showHiddenWindows') ?? false;
-    bool startHiddenInTray =
+    final bool startHiddenInTray =
         await storage.getValue('startHiddenInTray') ?? false;
 
     return SettingsCubit._(
-      desktopIntegration,
+      autostartService,
       hotkeyService,
       storage,
       initialState: SettingsState(
@@ -82,17 +86,6 @@ class SettingsCubit extends Cubit<SettingsState> {
       await _storage.saveValue(key: 'refreshInterval', value: interval);
       emit(state.copyWith(refreshInterval: interval));
     }
-  }
-
-  Future<void> updateAutoStart(bool shouldAutostart) async {
-    if (shouldAutostart) {
-      await _desktopIntegration.enableAutostart();
-    } else {
-      await _desktopIntegration.disableAutostart();
-    }
-
-    await _storage.saveValue(key: 'autoStart', value: shouldAutostart);
-    emit(state.copyWith(autoStart: shouldAutostart));
   }
 
   Future<void> updateAutoRefresh(bool? enabled) async {
@@ -139,6 +132,20 @@ class SettingsCubit extends Cubit<SettingsState> {
     await _hotkeyService.updateHotkey(defaultHotkey);
     emit(state.copyWith(hotKey: defaultHotkey));
     await _storage.deleteValue('hotkey');
+  }
+
+  /// Toggle autostart on Desktop.
+  Future<void> toggleAutostart() async {
+    assert(defaultTargetPlatform.isDesktop);
+
+    if (state.autoStart) {
+      await _autostartService.disable();
+    } else {
+      await _autostartService.enable();
+    }
+
+    emit(state.copyWith(autoStart: !state.autoStart));
+    await _storage.saveValue(key: 'autoStart', value: state.autoStart);
   }
 
   Future<void> updateHotkey(HotKey newHotKey) async {

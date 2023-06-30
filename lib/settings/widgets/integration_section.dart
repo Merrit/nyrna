@@ -39,8 +39,8 @@ class _AutostartTile extends StatelessWidget {
             AppLocalizations.of(context)!.startAutomatically,
           ),
           value: state.autoStart,
-          onChanged: (value) async {
-            await settingsCubit.updateAutoStart(value);
+          onChanged: (_) async {
+            await settingsCubit.toggleAutostart();
           },
         );
       },

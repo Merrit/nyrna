@@ -246,7 +246,7 @@ class WindowBuilder {
     DwmGetWindowAttribute(hWnd, DWMWA_CLOAKED, result, sizeOf<Uint32>());
 
     // Pull the value from the pointer.
-    var cloakedReason = result.value;
+    final cloakedReason = result.value;
 
     // Free the memory now that we have the value.
     calloc.free(result);
