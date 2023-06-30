@@ -54,7 +54,7 @@ class AppsListCubit extends Cubit<AppsListState> {
 
   /// Populate the list of visible windows.
   Future<void> _fetchWindows() async {
-    var windows = await _nativePlatform.windows(
+    final windows = await _nativePlatform.windows(
       showHidden: _prefsCubit.state.showHiddenWindows,
     );
 

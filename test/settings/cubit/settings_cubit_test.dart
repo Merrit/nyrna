@@ -1,24 +1,17 @@
-import 'package:desktop_integration/desktop_integration.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nyrna/apps_list/cubit/apps_list_cubit.dart';
+import 'package:nyrna/autostart/autostart_service.dart';
 import 'package:nyrna/hotkey/hotkey_service.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/storage/storage_repository.dart';
 import 'package:nyrna/window/app_window.dart';
 
-class FakeDesktopIntegration extends Fake implements DesktopIntegration {
-  @override
-  Future<void> disableAutostart() async {}
-
-  @override
-  Future<void> enableAutostart() async {}
-}
-
-/// Mocks
-
 class MockAppsListCubit extends Mock implements AppsListCubit {}
+
+class MockAutostartService extends Mock implements AutostartService {}
 
 class MockHotkeyService extends Mock implements HotkeyService {}
 
@@ -26,6 +19,7 @@ class MockAppWindow extends Mock implements AppWindow {}
 
 class MockStorageRepository extends Mock implements StorageRepository {}
 
+MockAutostartService autostartService = MockAutostartService();
 HotkeyService hotkeyService = MockHotkeyService();
 StorageRepository storage = MockStorageRepository();
 
@@ -47,6 +41,10 @@ void main() {
   }));
 
   setUp((() async {
+    reset(autostartService);
+    when(() => autostartService.enable()).thenAnswer((_) async {});
+    when(() => autostartService.disable()).thenAnswer((_) async {});
+
     when(() => hotkeyService.updateHotkey(any())).thenAnswer((_) async {});
     when(() => hotkeyService.removeHotkey()).thenAnswer((_) async {});
 
@@ -79,7 +77,7 @@ void main() {
         )).thenAnswer((_) async {});
 
     cubit = await SettingsCubit.init(
-      desktopIntegration: FakeDesktopIntegration(),
+      autostartService: autostartService,
       hotkeyService: hotkeyService,
       storage: storage,
     );
@@ -191,15 +189,17 @@ void main() {
       });
 
       test('updating saves preference to storage', () async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.windows;
         expect(state.autoStart, false);
-        await cubit.updateAutoStart(true);
+        await cubit.toggleAutostart();
         expect(state.autoStart, true);
         verify(() => storage.saveValue(key: 'autoStart', value: true))
             .called(1);
-        await cubit.updateAutoStart(false);
+        await cubit.toggleAutostart();
         expect(state.autoStart, false);
         verify(() => storage.saveValue(key: 'autoStart', value: false))
             .called(1);
+        debugDefaultTargetPlatformOverride = null;
       });
     });
 
@@ -228,7 +228,7 @@ void main() {
               '{"keyCode":"insert","modifiers":[],"identifier":"7fe60a47-35b9-4d40-8f74-ec77b83687b3","scope":"system"}',
         );
         cubit = await SettingsCubit.init(
-          desktopIntegration: FakeDesktopIntegration(),
+          autostartService: autostartService,
           hotkeyService: hotkeyService,
           storage: storage,
         );

@@ -1,6 +1,9 @@
 part of 'settings_cubit.dart';
 
 class SettingsState extends Equatable {
+  /// True if the app should be automatically started on login.
+  ///
+  /// This is only used on desktop platforms.
   final bool autoStart;
 
   /// Whether or not to automatically refresh the list of open windows.

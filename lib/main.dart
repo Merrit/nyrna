@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:desktop_integration/desktop_integration.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:helpers/helpers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:window_manager/window_manager.dart';
@@ -15,6 +13,7 @@ import 'app/app.dart';
 import 'app_version/app_version.dart';
 import 'apps_list/apps_list.dart';
 import 'argument_parser/argument_parser.dart';
+import 'autostart/autostart_service.dart';
 import 'hotkey/hotkey_service.dart';
 import 'logs/logs.dart';
 import 'native_platform/native_platform.dart';
@@ -61,7 +60,7 @@ Future<void> main(List<String> args) async {
 
   // Created outside runApp so it can be accessed for window settings below.
   final settingsCubit = await SettingsCubit.init(
-    desktopIntegration: await _initDesktopIntegration(),
+    autostartService: AutostartService(),
     hotkeyService: HotkeyService(activeWindow),
     storage: storage,
   );
@@ -102,29 +101,7 @@ Future<void> main(List<String> args) async {
   final systemTray = SystemTrayManager(appWindow);
   await systemTray.initialize();
 
-  bool? startHiddenInTray = await storage.getValue('startHiddenInTray');
+  final bool? startHiddenInTray = await storage.getValue('startHiddenInTray');
 
   if (startHiddenInTray != true) await appWindow.show();
-}
-
-/// Instantiates DesktopIntegration for DI.
-Future<DesktopIntegration> _initDesktopIntegration() async {
-  File? desktopFile;
-  if (Platform.isLinux) {
-    desktopFile = await assetToTempDir(
-      'packaging/linux/codes.merritt.Nyrna.desktop',
-    );
-  }
-
-  final iconFileSuffix = Platform.isWindows ? 'ico' : 'svg';
-  final iconFile = await assetToTempDir(
-    'assets/icons/codes.merritt.Nyrna.$iconFileSuffix',
-  );
-
-  return DesktopIntegration(
-    desktopFilePath: desktopFile?.path ?? '',
-    iconPath: iconFile.path,
-    packageName: 'codes.merritt.nyrna',
-    linkFileName: 'Nyrna',
-  );
 }
