@@ -1,11 +1,12 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import '../../logs/logs.dart';
 import '../../storage/storage_repository.dart';
 
+part 'app_cubit.freezed.dart';
 part 'app_state.dart';
 
 /// A function that launches a [url] in the default browser.
