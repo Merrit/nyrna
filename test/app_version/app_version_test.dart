@@ -1,9 +1,14 @@
-import 'package:mocktail/mocktail.dart';
+import 'package:mockito/annotations.dart';
 import 'package:nyrna/app_version/app_version.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:test/test.dart';
 
-class MockPackageInfo extends Mock implements PackageInfo {}
+@GenerateNiceMocks(<MockSpec>[
+  MockSpec<PackageInfo>(),
+])
+import 'app_version_test.mocks.dart';
+
+// class MockPackageInfo extends Mock implements PackageInfo {}
 
 final packageInfo = MockPackageInfo();
 
