@@ -1,27 +1,13 @@
 part of 'app_cubit.dart';
 
-class AppState extends Equatable {
-  /// True if this appears to be the app's first run.
-  final bool firstRun;
+@freezed
+class AppState with _$AppState {
+  const factory AppState({
+    /// True if this appears to be the app's first run.
+    required bool firstRun,
+  }) = _AppState;
 
-  const AppState({
-    required this.firstRun,
-  });
-
-  factory AppState.initial() {
-    return const AppState(
-      firstRun: false,
-    );
-  }
-
-  @override
-  List<Object> get props => [firstRun];
-
-  AppState copyWith({
-    bool? firstRun,
-  }) {
-    return AppState(
-      firstRun: firstRun ?? this.firstRun,
-    );
-  }
+  factory AppState.initial() => const AppState(
+        firstRun: false,
+      );
 }
