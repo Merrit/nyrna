@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:nyrna/apps_list/cubit/apps_list_cubit.dart';
 import 'package:nyrna/autostart/autostart_service.dart';
 import 'package:nyrna/hotkey/hotkey_service.dart';
@@ -9,19 +10,20 @@ import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/storage/storage_repository.dart';
 import 'package:nyrna/window/app_window.dart';
 
-class MockAppsListCubit extends Mock implements AppsListCubit {}
+@GenerateNiceMocks(<MockSpec>[
+  MockSpec<AppsListCubit>(),
+  MockSpec<AutostartService>(),
+  MockSpec<HotkeyService>(),
+  MockSpec<AppWindow>(),
+  MockSpec<StorageRepository>(),
+])
+import 'settings_cubit_test.mocks.dart';
 
-class MockAutostartService extends Mock implements AutostartService {}
-
-class MockHotkeyService extends Mock implements HotkeyService {}
-
-class MockAppWindow extends Mock implements AppWindow {}
-
-class MockStorageRepository extends Mock implements StorageRepository {}
-
-MockAutostartService autostartService = MockAutostartService();
-HotkeyService hotkeyService = MockHotkeyService();
-StorageRepository storage = MockStorageRepository();
+final _appsListCubit = MockAppsListCubit();
+final appWindow = MockAppWindow();
+final autostartService = MockAutostartService();
+final hotkeyService = MockHotkeyService();
+final storage = MockStorageRepository();
 
 /// Cubit being tested
 
@@ -30,51 +32,58 @@ SettingsState get state => cubit.state;
 
 void main() {
   setUpAll((() {
-    AppWindow.instance = MockAppWindow();
-    appsListCubit = MockAppsListCubit();
-    when(() => appsListCubit.setAutoRefresh(
-          autoRefresh: any(named: 'autoRefresh'),
-          refreshInterval: any(named: 'refreshInterval'),
-        )).thenReturn(null);
+    // TODO: Make appsListCubit not a singleton.
+    appsListCubit = _appsListCubit;
+    AppWindow.instance = appWindow;
 
-    registerFallbackValue(HotKey(KeyCode.abort));
+    // when(appsListCubit.setAutoRefresh(
+    //   autoRefresh: anyNamed('autoRefresh'),
+    //   refreshInterval: anyNamed('refreshInterval'),
+    // )).thenReturn(null);
+
+    // registerFallbackValue(HotKey(KeyCode.abort));
   }));
 
   setUp((() async {
+    reset(_appsListCubit);
+    reset(appWindow);
     reset(autostartService);
-    when(() => autostartService.enable()).thenAnswer((_) async {});
-    when(() => autostartService.disable()).thenAnswer((_) async {});
+    reset(hotkeyService);
+    reset(storage);
 
-    when(() => hotkeyService.updateHotkey(any())).thenAnswer((_) async {});
-    when(() => hotkeyService.removeHotkey()).thenAnswer((_) async {});
+    when(autostartService.enable()).thenAnswer((_) async {});
+    when(autostartService.disable()).thenAnswer((_) async {});
 
-    when(() => AppWindow.instance.preventClose(any())).thenAnswer((_) async {});
+    when(hotkeyService.updateHotkey(any)).thenAnswer((_) async {});
+    when(hotkeyService.removeHotkey()).thenAnswer((_) async {});
 
-    when(() => storage.getValue('hotkey')).thenAnswer((_) async {});
-    when(() => storage.deleteValue(any())).thenAnswer((_) async {});
-    when(() => storage.saveValue(
-          key: any(named: 'key'),
-          value: any(named: 'value'),
-        )).thenAnswer((_) async {});
-    when(() => storage.saveValue(
-          key: any(named: 'key'),
-          value: any(named: 'value'),
-        )).thenAnswer((_) async {});
-    when(() => storage.saveValue(
-          key: any(named: 'key'),
-          value: any(named: 'value'),
-        )).thenAnswer((_) async {});
+    when(appWindow.preventClose(any)).thenAnswer((_) async {});
+
+    when(storage.getValue('hotkey')).thenAnswer((_) async {});
+    when(storage.deleteValue(any)).thenAnswer((_) async {});
+    when(storage.saveValue(
+      key: anyNamed('key'),
+      value: anyNamed('value'),
+    )).thenAnswer((_) async {});
+    when(storage.saveValue(
+      key: anyNamed('key'),
+      value: anyNamed('value'),
+    )).thenAnswer((_) async {});
+    when(storage.saveValue(
+      key: anyNamed('key'),
+      value: anyNamed('value'),
+    )).thenAnswer((_) async {});
 
     // StorageRepository
-    when(() => storage.getValue(
-          any(),
-          storageArea: any(named: 'storageArea'),
-        )).thenAnswer((_) async => null);
-    when(() => storage.saveValue(
-          key: any(named: 'key'),
-          value: any(named: 'value'),
-          storageArea: any(named: 'storageArea'),
-        )).thenAnswer((_) async {});
+    when(storage.getValue(
+      any,
+      storageArea: anyNamed('storageArea'),
+    )).thenAnswer((_) async => null);
+    when(storage.saveValue(
+      key: anyNamed('key'),
+      value: anyNamed('value'),
+      storageArea: anyNamed('storageArea'),
+    )).thenAnswer((_) async {});
 
     cubit = await SettingsCubit.init(
       autostartService: autostartService,
@@ -104,10 +113,10 @@ void main() {
 
     test('ignoring update works', () async {
       await cubit.ignoreUpdate('1.0.0');
-      verify(() => storage.saveValue(
-            key: 'ignoredUpdate',
-            value: '1.0.0',
-          )).called(1);
+      verify(storage.saveValue(
+        key: 'ignoredUpdate',
+        value: '1.0.0',
+      )).called(1);
     });
 
     test('setRefreshInterval works', () async {
@@ -116,30 +125,30 @@ void main() {
       expect(state.refreshInterval, defaultInterval);
       await cubit.setRefreshInterval(newInterval);
       expect(state.refreshInterval, newInterval);
-      verify((() => storage.saveValue(
-            key: 'refreshInterval',
-            value: newInterval,
-          ))).called(1);
+      verify(storage.saveValue(
+        key: 'refreshInterval',
+        value: newInterval,
+      )).called(1);
     });
 
     test('updating autoRefresh works', () async {
       expect(state.autoRefresh, true);
       await cubit.updateAutoRefresh(false);
       expect(state.autoRefresh, false);
-      verify((() => storage.saveValue(
-            key: 'autoRefresh',
-            value: false,
-          ))).called(1);
+      verify(storage.saveValue(
+        key: 'autoRefresh',
+        value: false,
+      )).called(1);
     });
 
     test('updateCloseToTray works', () async {
       expect(state.closeToTray, false);
       await cubit.updateCloseToTray(true);
       expect(state.closeToTray, true);
-      verify((() => storage.saveValue(
-            key: 'closeToTray',
-            value: true,
-          ))).called(1);
+      verify(storage.saveValue(
+        key: 'closeToTray',
+        value: true,
+      )).called(1);
     });
 
     test('updateMinimizeWindows works', () async {
@@ -147,40 +156,36 @@ void main() {
       expect(state.minimizeWindows, true);
       await cubit.updateMinimizeWindows(false);
       expect(state.minimizeWindows, false);
-      verify(
-        () => storage.saveValue(
-          key: 'minimizeWindows',
-          value: false,
-        ),
-      ).called(1);
+      verify(storage.saveValue(
+        key: 'minimizeWindows',
+        value: false,
+      )).called(1);
       await cubit.updateMinimizeWindows(true);
       expect(state.minimizeWindows, true);
-      verify(
-        () => storage.saveValue(
-          key: 'minimizeWindows',
-          value: true,
-        ),
-      ).called(1);
+      verify(storage.saveValue(
+        key: 'minimizeWindows',
+        value: true,
+      )).called(1);
     });
 
     test('updateShowHiddenWindows works', () async {
       expect(state.showHiddenWindows, false);
       await cubit.updateShowHiddenWindows(true);
       expect(state.showHiddenWindows, true);
-      verify((() => storage.saveValue(
-            key: 'showHiddenWindows',
-            value: true,
-          ))).called(1);
+      verify(storage.saveValue(
+        key: 'showHiddenWindows',
+        value: true,
+      )).called(1);
     });
 
     test('updateStartHiddenInTray works', () async {
       expect(state.startHiddenInTray, false);
       await cubit.updateStartHiddenInTray(true);
       expect(state.startHiddenInTray, true);
-      verify((() => storage.saveValue(
-            key: 'startHiddenInTray',
-            value: true,
-          ))).called(1);
+      verify(storage.saveValue(
+        key: 'startHiddenInTray',
+        value: true,
+      )).called(1);
     });
 
     group('autostart:', () {
@@ -193,12 +198,10 @@ void main() {
         expect(state.autoStart, false);
         await cubit.toggleAutostart();
         expect(state.autoStart, true);
-        verify(() => storage.saveValue(key: 'autoStart', value: true))
-            .called(1);
+        verify(storage.saveValue(key: 'autoStart', value: true)).called(1);
         await cubit.toggleAutostart();
         expect(state.autoStart, false);
-        verify(() => storage.saveValue(key: 'autoStart', value: false))
-            .called(1);
+        verify(storage.saveValue(key: 'autoStart', value: false)).called(1);
         debugDefaultTargetPlatformOverride = null;
       });
     });
@@ -211,7 +214,7 @@ void main() {
 
       test('removeHotkey works', () async {
         await cubit.removeHotkey();
-        verify(() => hotkeyService.removeHotkey()).called(1);
+        verify(hotkeyService.removeHotkey()).called(1);
       });
 
       test('resetting hotkey restores Pause default', () async {
@@ -219,11 +222,11 @@ void main() {
         expect(state.hotKey.keyCode, KeyCode.insert);
         await cubit.resetHotkey();
         expect(state.hotKey.keyCode, KeyCode.pause);
-        verify(() => storage.deleteValue('hotkey')).called(1);
+        verify(storage.deleteValue('hotkey')).called(1);
       });
 
       test('saved hotkey is loaded', () async {
-        when(() => storage.getValue('hotkey')).thenAnswer(
+        when(storage.getValue('hotkey')).thenAnswer(
           (_) async =>
               '{"keyCode":"insert","modifiers":[],"identifier":"7fe60a47-35b9-4d40-8f74-ec77b83687b3","scope":"system"}',
         );
@@ -241,10 +244,10 @@ void main() {
         expect(state.hotKey.keyCode, KeyCode.pause);
         await cubit.updateHotkey(newHotkey);
         expect(state.hotKey.keyCode, KeyCode.f12);
-        verify(() => hotkeyService.updateHotkey(newHotkey)).called(1);
+        verify(hotkeyService.updateHotkey(newHotkey)).called(1);
         await cubit.resetHotkey();
         expect(state.hotKey.keyCode, KeyCode.pause);
-        verify(() => storage.deleteValue('hotkey')).called(1);
+        verify(storage.deleteValue('hotkey')).called(1);
       });
     });
   });
