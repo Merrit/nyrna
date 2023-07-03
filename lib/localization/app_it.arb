@@ -5,7 +5,6 @@
   "detailsDialogTitle": "Dettagli",
   "detailsDialogWindowTitle": "Titolo finestra",
   "detailsDialogExecutableName": "Nome eseguibile",
-  "@detailsDialogExecutableName": {
   "detailsDialogPID": "PID",
   "detailsDialogCurrentStatus": "Stato attuale",
   "@_LOGS_PAGE": {},
@@ -42,5 +41,5 @@
   "aboutTitle": "Informazioni",
   "version": "Versione di Nyrna",
   "homepage": "Homepage di Nyrna",
-  "repository": "Repository GitHub",
-  }
+  "repository": "Repository GitHub"
+}
