@@ -20,7 +20,7 @@
   "autoRefresh": "Aggiornamento automtico",
   "autoRefreshDescription": "Aggiorna automaticamente le informazioni sulla finestra e sul processo",
   "autoRefreshInterval": "Intervallo di aggiornamento automatico",
-  "autoRefreshIntervalAmount": "{intervallo} secondi",
+  "autoRefreshIntervalAmount": "{interval} secondi",
   "closeToTray": "Vicino alla barra delle applicazioni",
   "minimizeAndRestoreWindows": "Minimizza / ripristina finestre",
   "showHiddenWindows": "Mostra finestre nascoste",
