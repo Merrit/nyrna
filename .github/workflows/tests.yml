@@ -15,7 +15,7 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2.3.0
+      - uses: subosito/flutter-action@v2.10.0
 
       - name: Get Linux dependencies
         if: runner.os == 'Linux'
@@ -28,6 +28,18 @@ jobs:
         run: |
           flutter upgrade
           flutter pub get
+
+      - name: Verify formatting
+        run: dart format -o none --set-exit-if-changed .
+
+      - name: Run code generation
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Run i18n generation
+        run: flutter gen-l10n
+
+      - name: Run lint
+        run: flutter analyze
 
       - name: Run tests
         run: flutter test
