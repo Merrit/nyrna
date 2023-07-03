@@ -1,4 +1,17 @@
-# Packaging output
+# ---------------------------------------------------------------------------- #
+#                                    Custom                                    #
+# ---------------------------------------------------------------------------- #
+
+# Freezed
+*.freezed.dart
+*.g.dart
+
+# Generated code
+generated*
+Generated*
+*.mocks.dart
+
+# Packaging
 *.AppImage
 *.exe
 *.snap
@@ -12,6 +25,9 @@ packaging/output/
 build-dir
 output
 
+# Test coverage
+lcov.info
+
 # PKGBUILD extras
 packaging/PKGBUILD/.SRCINFO
 packaging/PKGBUILD/.gitignore
@@ -22,6 +38,8 @@ lcov.info
 # Local-only files
 nyrna-release.txt
 
+# ---------------------------------------------------------------------------- #
+#                                    Default                                   #
 # ---------------------------------------------------------------------------- #
 
 # Miscellaneous
