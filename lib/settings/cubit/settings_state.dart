@@ -1,74 +1,29 @@
 part of 'settings_cubit.dart';
 
-class SettingsState extends Equatable {
-  /// True if the app should be automatically started on login.
-  ///
-  /// This is only used on desktop platforms.
-  final bool autoStart;
+@freezed
+class SettingsState with _$SettingsState {
+  const factory SettingsState({
+    /// True if the app should be automatically started on login.
+    ///
+    /// This is only used on desktop platforms.
+    required bool autoStart,
 
-  /// Whether or not to automatically refresh the list of open windows.
-  final bool autoRefresh;
+    /// Whether or not to automatically refresh the list of open windows.
+    required bool autoRefresh,
 
-  /// Whether the app should continue running in the tray when closed.
-  final bool closeToTray;
+    /// Whether the app should continue running in the tray when closed.
+    required bool closeToTray,
 
-  /// The hotkey to toggle active application suspend.
-  final HotKey hotKey;
+    /// The hotkey to toggle active application suspend.
+    required HotKey hotKey,
 
-  /// If true the window will be automatically minimized when suspending and
-  /// restored when resuming.
-  final bool minimizeWindows;
+    /// If true the window will be automatically minimized when suspending and
+    /// restored when resuming.
+    required bool minimizeWindows,
 
-  /// How often to automatically refresh the list of open windows, in seconds.
-  final int refreshInterval;
-
-  final bool showHiddenWindows;
-  final bool startHiddenInTray;
-
-  const SettingsState({
-    required this.autoStart,
-    required this.autoRefresh,
-    required this.closeToTray,
-    required this.hotKey,
-    required this.minimizeWindows,
-    required this.refreshInterval,
-    required this.showHiddenWindows,
-    required this.startHiddenInTray,
-  });
-
-  @override
-  List<Object> get props {
-    return [
-      autoStart,
-      autoRefresh,
-      closeToTray,
-      hotKey,
-      minimizeWindows,
-      refreshInterval,
-      showHiddenWindows,
-      startHiddenInTray,
-    ];
-  }
-
-  SettingsState copyWith({
-    bool? autoStart,
-    bool? autoRefresh,
-    bool? closeToTray,
-    HotKey? hotKey,
-    bool? minimizeWindows,
-    int? refreshInterval,
-    bool? showHiddenWindows,
-    bool? startHiddenInTray,
-  }) {
-    return SettingsState(
-      autoStart: autoStart ?? this.autoStart,
-      autoRefresh: autoRefresh ?? this.autoRefresh,
-      closeToTray: closeToTray ?? this.closeToTray,
-      hotKey: hotKey ?? this.hotKey,
-      minimizeWindows: minimizeWindows ?? this.minimizeWindows,
-      refreshInterval: refreshInterval ?? this.refreshInterval,
-      showHiddenWindows: showHiddenWindows ?? this.showHiddenWindows,
-      startHiddenInTray: startHiddenInTray ?? this.startHiddenInTray,
-    );
-  }
+    /// How often to automatically refresh the list of open windows, in seconds.
+    required int refreshInterval,
+    required bool showHiddenWindows,
+    required bool startHiddenInTray,
+  }) = _SettingsState;
 }
