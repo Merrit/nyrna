@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:io' as io;
 
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../app_version/app_version.dart';
@@ -14,6 +13,7 @@ import '../../storage/storage_repository.dart';
 import '../apps_list.dart';
 
 part 'apps_list_state.dart';
+part 'apps_list_cubit.freezed.dart';
 
 /// Convenience access to the main app cubit.
 late AppsListCubit appsListCubit;
