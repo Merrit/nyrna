@@ -1,16 +1,22 @@
+import 'package:helpers/helpers.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:nyrna/app/app.dart';
 import 'package:nyrna/logs/logs.dart';
 import 'package:nyrna/storage/storage_repository.dart';
+import 'package:nyrna/updates/updates.dart';
 import 'package:test/test.dart';
 
 @GenerateNiceMocks(<MockSpec>[
+  MockSpec<ReleaseNotesService>(),
   MockSpec<StorageRepository>(),
+  MockSpec<UpdateService>(),
 ])
 import 'app_cubit_test.mocks.dart';
 
-MockStorageRepository mockStorageRepository = MockStorageRepository();
+final mockReleaseNotesService = MockReleaseNotesService();
+final mockStorageRepo = MockStorageRepository();
+final mockUpdateService = MockUpdateService();
 
 late AppCubit cubit;
 AppState get state => cubit.state;
@@ -21,10 +27,17 @@ void main() {
   });
 
   setUp(() {
-    reset(mockStorageRepository);
+    reset(mockReleaseNotesService);
+    reset(mockStorageRepo);
+    reset(mockUpdateService);
+
+    when(mockUpdateService.getVersionInfo())
+        .thenAnswer((_) async => VersionInfo.empty());
 
     cubit = AppCubit(
-      mockStorageRepository,
+      mockReleaseNotesService,
+      mockStorageRepo,
+      mockUpdateService,
     );
   });
 

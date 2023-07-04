@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:helpers/helpers.dart';
 
 import '../app/app.dart';
+import '../core/core.dart';
 import '../settings/cubit/settings_cubit.dart';
 import '../theme/theme.dart';
 import '../window/app_window.dart';
@@ -31,7 +33,6 @@ class _AppsListPageState extends State<AppsListPage>
   @override
   void initState() {
     super.initState();
-    _appWindowSize = View.of(context).physicalSize;
     // Listen for changes to the application's window size.
     WidgetsBinding.instance.addObserver(this);
   }
@@ -74,41 +75,73 @@ class _AppsListPageState extends State<AppsListPage>
 
   @override
   Widget build(BuildContext context) {
+    _appWindowSize = View.of(context).physicalSize;
+
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: BlocBuilder<AppsListCubit, AppsListState>(
+      body: BlocBuilder<AppCubit, AppState>(
         builder: (context, state) {
-          return Stack(
-            children: [
-              Scrollbar(
-                controller: scrollController,
-                thumbVisibility: true,
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(10),
-                  children: [
-                    if (!state.loading && state.windows.isEmpty) ...[
-                      const _NoWindowsCard(),
-                    ] else ...[
-                      ...state.windows
-                          .map(
-                            (window) => WindowTile(
-                              key: ValueKey(window),
-                              window: window,
-                            ),
-                          )
-                          .toList(),
-                    ],
-                  ],
-                ),
-              ),
-              const _ProgressOverlay(),
-            ],
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            if (state.releaseNotes != null) {
+              _showReleaseNotesDialog(context, state.releaseNotes!);
+            }
+          });
+
+          return BlocBuilder<AppsListCubit, AppsListState>(
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  Scrollbar(
+                    controller: scrollController,
+                    thumbVisibility: true,
+                    child: ListView(
+                      controller: scrollController,
+                      padding: const EdgeInsets.all(10),
+                      children: [
+                        if (!state.loading && state.windows.isEmpty) ...[
+                          const _NoWindowsCard(),
+                        ] else ...[
+                          ...state.windows
+                              .map(
+                                (window) => WindowTile(
+                                  key: ValueKey(window),
+                                  window: window,
+                                ),
+                              )
+                              .toList(),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const _ProgressOverlay(),
+                ],
+              );
+            },
           );
         },
       ),
       // We don't show a manual refresh button with a short auto-refresh.
       floatingActionButton: const _FloatingActionButton(),
+    );
+  }
+
+  Future<void> _showReleaseNotesDialog(
+    BuildContext context,
+    ReleaseNotes releaseNotes,
+  ) {
+    final appCubit = context.read<AppCubit>();
+
+    return showDialog(
+      context: context,
+      builder: (context) => ReleaseNotesDialog(
+        releaseNotes: releaseNotes,
+        donateCallback: () => appCubit.launchURL(kDonateUrl),
+        launchURL: (url) => appCubit.launchURL(url),
+        onClose: () {
+          appCubit.dismissReleaseNotesDialog();
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 }
