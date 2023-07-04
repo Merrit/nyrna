@@ -1,13 +1,14 @@
 import 'dart:io';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../../native_platform/src/linux/linux.dart';
 
 part 'loading_state.dart';
+part 'loading_cubit.freezed.dart';
 
 class LoadingCubit extends Cubit<LoadingState> {
   final NativePlatform nativePlatform;
@@ -24,16 +25,24 @@ class LoadingCubit extends Cubit<LoadingState> {
     // Make sure we are not running under Wayland.
     if (Platform.isLinux) {
       final sessionType = await (nativePlatform as Linux).sessionType();
+
+      final unknownSessionMsg = '''
+Unable to determine session type. The XDG_SESSION_TYPE environment variable is set to "$sessionType".
+Please note that Wayland is not currently supported.''';
+
+      const waylandNotSupportedMsg = '''
+Wayland is not currently supported.
+
+[Sign in using X11 instead](https://docs.fedoraproject.org/en-US/quick-docs/configuring-xorg-as-default-gnome-session/).''';
+
       switch (sessionType) {
         case 'wayland':
-          emit(const LoadingWaylandError());
+          emit(const LoadingError(errorMsg: waylandNotSupportedMsg));
           return;
         case 'x11':
           break;
         default:
-          log.e('''
-Unable to determine session type. The XDG_SESSION_TYPE environment variable is set to "$sessionType".
-Please note that Wayland is not currently supported.''');
+          log.e(unknownSessionMsg);
       }
     }
 
@@ -42,7 +51,13 @@ Please note that Wayland is not currently supported.''');
     LoadingState newState;
     newState = (dependenciesSatisfied) //
         ? const LoadingSuccess()
-        : const LoadingDependencyError();
+        : const LoadingError(errorMsg: '''
+Dependency check failed.
+
+Install the dependencies from your system's package manager:
+
+- `xdotool`
+- `wmctrl`''');
 
     emit(newState);
   }
