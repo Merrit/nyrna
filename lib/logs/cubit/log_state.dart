@@ -1,23 +1,11 @@
 part of 'log_cubit.dart';
 
-class LogState extends Equatable {
-  /// The cumulative text of the logs.
-  final String logsText;
+@freezed
+class LogState with _$LogState {
+  const factory LogState({
+    /// The cumulative text of the logs.
+    required String logsText,
+  }) = _LogState;
 
-  const LogState({
-    required this.logsText,
-  });
-
-  const LogState.initial() : logsText = '';
-
-  @override
-  List<Object> get props => [logsText];
-
-  LogState copyWith({
-    String? logsText,
-  }) {
-    return LogState(
-      logsText: logsText ?? this.logsText,
-    );
-  }
+  factory LogState.initial() => const LogState(logsText: '');
 }
