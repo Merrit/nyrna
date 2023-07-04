@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:helpers/helpers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -21,6 +23,7 @@ import 'settings/cubit/settings_cubit.dart';
 import 'storage/storage_repository.dart';
 import 'system_tray/system_tray_manager.dart';
 import 'theme/theme.dart';
+import 'updates/updates.dart';
 import 'window/app_window.dart';
 
 Future<void> main(List<String> args) async {
@@ -70,13 +73,19 @@ Future<void> main(List<String> args) async {
   // Provides information on this app from the pubspec.yaml.
   final packageInfo = await PackageInfo.fromPlatform();
 
+  final appCubit = AppCubit(
+    ReleaseNotesService(
+      client: http.Client(),
+      repository: 'merrit/nyrna',
+    ),
+    storage,
+    UpdateService(),
+  );
+
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => AppCubit(storage),
-          lazy: false,
-        ),
+        BlocProvider.value(value: appCubit),
         BlocProvider.value(value: settingsCubit),
         BlocProvider.value(value: themeCubit),
       ],
