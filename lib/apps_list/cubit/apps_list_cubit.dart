@@ -7,38 +7,42 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../app_version/app_version.dart';
+import '../../hotkey/hotkey_service.dart';
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../../storage/storage_repository.dart';
+import '../../system_tray/system_tray_manager.dart';
 import '../apps_list.dart';
 
 part 'apps_list_state.dart';
 part 'apps_list_cubit.freezed.dart';
 
-/// Convenience access to the main app cubit.
-late AppsListCubit appsListCubit;
-
 class AppsListCubit extends Cubit<AppsListState> {
+  final HotkeyService _hotkeyService;
   final NativePlatform _nativePlatform;
   final SettingsCubit _prefsCubit;
   final ProcessRepository _processRepository;
   final StorageRepository _storage;
+  final SystemTrayManager _systemTrayManager;
   final AppVersion _appVersion;
 
   AppsListCubit({
+    required HotkeyService hotkeyService,
     required NativePlatform nativePlatform,
     required SettingsCubit prefsCubit,
     required ProcessRepository processRepository,
     required StorageRepository storage,
+    required SystemTrayManager systemTrayManager,
     required AppVersion appVersion,
     bool testing = false,
-  })  : _nativePlatform = nativePlatform,
+  })  : _hotkeyService = hotkeyService,
+        _nativePlatform = nativePlatform,
         _prefsCubit = prefsCubit,
         _processRepository = processRepository,
         _storage = storage,
+        _systemTrayManager = systemTrayManager,
         _appVersion = appVersion,
         super(AppsListState.initial()) {
-    appsListCubit = this;
     _initialize();
   }
 
@@ -49,6 +53,8 @@ class AppsListCubit extends Cubit<AppsListState> {
       autoRefresh: _prefsCubit.state.autoRefresh,
       refreshInterval: _prefsCubit.state.refreshInterval,
     );
+    _listenForHotkey();
+    _listenForSystemTrayShowEvent();
     await fetchVersionData();
   }
 
@@ -167,6 +173,20 @@ class AppsListCubit extends Cubit<AppsListState> {
     for (var match in matchingWindows) {
       await toggle(match);
     }
+  }
+
+  /// After the hotkey is pressed, refresh the list of windows.
+  void _listenForHotkey() {
+    _hotkeyService.hotkeyTriggeredStream.listen((_) async {
+      await manualRefresh();
+    });
+  }
+
+  /// After the window is shown via the system tray, refresh the list of windows.
+  void _listenForSystemTrayShowEvent() {
+    _systemTrayManager.windowShownStream.listen((_) async {
+      await manualRefresh();
+    });
   }
 
   Future<bool> _resume(Window window) async {

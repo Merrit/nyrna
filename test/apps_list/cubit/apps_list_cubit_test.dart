@@ -4,17 +4,21 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:nyrna/app_version/app_version.dart';
 import 'package:nyrna/apps_list/apps_list.dart';
+import 'package:nyrna/hotkey/hotkey_service.dart';
 import 'package:nyrna/logs/logs.dart';
 import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/storage/storage_repository.dart';
+import 'package:nyrna/system_tray/system_tray_manager.dart';
 import 'package:test/test.dart';
 
 @GenerateNiceMocks(<MockSpec>[
+  MockSpec<HotkeyService>(),
   MockSpec<NativePlatform>(),
   MockSpec<SettingsCubit>(),
   MockSpec<ProcessRepository>(),
   MockSpec<StorageRepository>(),
+  MockSpec<SystemTrayManager>(),
   MockSpec<AppVersion>(),
 ])
 import 'apps_list_cubit_test.mocks.dart';
@@ -66,10 +70,12 @@ Window get mpvWindow2State => state //
     .windows
     .singleWhere((element) => element.id == mpvWindow2.id);
 
+final hotkeyService = MockHotkeyService();
 final nativePlatform = MockNativePlatform();
 final prefsCubit = MockSettingsCubit();
 final processRepository = MockProcessRepository();
 final storage = MockStorageRepository();
+final systemTrayManager = MockSystemTrayManager();
 final appVersion = MockAppVersion();
 
 void main() {
@@ -78,10 +84,12 @@ void main() {
   });
 
   setUp(() {
+    reset(hotkeyService);
     reset(nativePlatform);
     reset(prefsCubit);
     reset(processRepository);
     reset(storage);
+    reset(systemTrayManager);
     reset(appVersion);
 
     when(appVersion.latest()).thenAnswer((_) async => '1.0.0');
@@ -117,11 +125,13 @@ void main() {
     when(storage.getValue('minimizeWindows')).thenAnswer((_) async => true);
 
     cubit = AppsListCubit(
+      hotkeyService: hotkeyService,
       nativePlatform: nativePlatform,
       prefsCubit: prefsCubit,
       processRepository: processRepository,
       storage: storage,
       appVersion: appVersion,
+      systemTrayManager: systemTrayManager,
       testing: true,
     );
   });

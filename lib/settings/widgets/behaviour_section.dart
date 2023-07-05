@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
+import '../../apps_list/apps_list.dart';
 import '../../core/core.dart';
 import '../../hotkey/hotkey_service.dart';
 import '../../theme/styles.dart';
@@ -35,7 +36,12 @@ class BehaviourSection extends StatelessWidget {
               return Switch(
                 value: state.autoRefresh,
                 onChanged: (value) async {
+                  final appsListCubit = context.read<AppsListCubit>();
                   await settingsCubit.updateAutoRefresh(value);
+                  appsListCubit.setAutoRefresh(
+                    autoRefresh: value,
+                    refreshInterval: state.refreshInterval,
+                  );
                 },
               );
             },

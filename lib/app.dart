@@ -48,7 +48,7 @@ class _AppState extends State<App> with TrayListener, WindowListener {
 
   @override
   void onWindowRestore() {
-    appsListCubit.manualRefresh();
+    context.read<AppsListCubit>().manualRefresh();
     super.onWindowRestore();
   }
 

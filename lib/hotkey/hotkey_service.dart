@@ -1,17 +1,26 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../active_window/active_window.dart';
-import '../apps_list/apps_list.dart';
 import '../logs/logs.dart';
 
 class HotkeyService {
   final ActiveWindow _activeWindow;
 
-  const HotkeyService(
+  HotkeyService(
     this._activeWindow,
   );
+
+  /// Stream that fires when the hotkey is triggered.
+  ///
+  /// Allows dependent services to react to the hotkey being triggered.
+  Stream<bool> get hotkeyTriggeredStream =>
+      _hotkeyTriggeredStreamController.stream;
+
+  /// Controller for the refresh stream.
+  final _hotkeyTriggeredStreamController = StreamController<bool>.broadcast();
 
   Future<void> removeHotkey() async {
     await hotKeyManager.unregisterAll();
@@ -36,7 +45,7 @@ class HotkeyService {
   Future<bool> _toggleActiveWindow() async {
     log.v('Triggering toggle from hotkey press.');
     final successful = await _activeWindow.toggle();
-    await appsListCubit.manualRefresh();
+    _hotkeyTriggeredStreamController.add(true);
     return successful;
   }
 }

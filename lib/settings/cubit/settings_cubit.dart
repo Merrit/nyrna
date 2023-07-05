@@ -6,7 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
-import '../../apps_list/apps_list.dart';
 import '../../autostart/autostart_service.dart';
 import '../../core/core.dart';
 import '../../hotkey/hotkey_service.dart';
@@ -93,11 +92,6 @@ class SettingsCubit extends Cubit<SettingsState> {
     if (enabled == null) return;
 
     await _storage.saveValue(key: 'autoRefresh', value: enabled);
-    appsListCubit.setAutoRefresh(
-      autoRefresh: enabled,
-      refreshInterval: state.refreshInterval,
-    );
-
     emit(state.copyWith(autoRefresh: enabled));
   }
 
