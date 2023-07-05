@@ -1,12 +1,13 @@
 part of 'theme_cubit.dart';
 
-@immutable
-class ThemeState extends Equatable {
-  final AppTheme appTheme;
+@freezed
+class ThemeState with _$ThemeState {
+  const factory ThemeState({
+    required AppTheme appTheme,
+  }) = _ThemeState;
 
-  const ThemeState({
-    required this.appTheme,
-  });
+  /// Private constructor required for Freezed getters.
+  const ThemeState._();
 
   ThemeData get themeData {
     switch (appTheme) {
@@ -18,15 +19,4 @@ class ThemeState extends Equatable {
         return pitchBlackTheme;
     }
   }
-
-  ThemeState copyWith({
-    AppTheme? appTheme,
-  }) {
-    return ThemeState(
-      appTheme: appTheme ?? this.appTheme,
-    );
-  }
-
-  @override
-  List<Object> get props => [appTheme];
 }
