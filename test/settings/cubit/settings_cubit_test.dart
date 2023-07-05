@@ -35,13 +35,6 @@ void main() {
     // TODO: Make appsListCubit not a singleton.
     appsListCubit = _appsListCubit;
     AppWindow.instance = appWindow;
-
-    // when(appsListCubit.setAutoRefresh(
-    //   autoRefresh: anyNamed('autoRefresh'),
-    //   refreshInterval: anyNamed('refreshInterval'),
-    // )).thenReturn(null);
-
-    // registerFallbackValue(HotKey(KeyCode.abort));
   }));
 
   setUp((() async {
