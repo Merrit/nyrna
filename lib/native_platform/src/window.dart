@@ -1,41 +1,22 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'process/models/process.dart';
 
-/// Friendly representation of a visible window.
-class Window extends Equatable {
-  /// The unique window ID number associated with this window.
-  final int id;
+part 'window.freezed.dart';
 
-  /// The process associated with this window.
-  final Process process;
+/// Represents a visible window.
+@freezed
+class Window with _$Window {
+  const factory Window({
+    /// The unique window ID number associated with this window.
+    required int id,
 
-  /// The title of this window, often shown on the window's 'Title Bar'.
-  ///
-  /// Can & does change, for example a browser shows the title of the page.
-  final String title;
+    /// The process associated with this window.
+    required Process process,
 
-  const Window({
-    required this.id,
-    required this.process,
-    required this.title,
-  });
-
-  @override
-  List<Object> get props => [id, process, title];
-
-  Window copyWith({
-    int? id,
-    Process? process,
-    String? title,
-  }) {
-    return Window(
-      id: id ?? this.id,
-      process: process ?? this.process,
-      title: title ?? this.title,
-    );
-  }
-
-  @override
-  String toString() => 'Window(id: $id, process: $process, title: $title)';
+    /// The title of this window, often shown on the window's 'Title Bar'.
+    ///
+    /// Can & does change, for example a browser shows the title of the page.
+    required String title,
+  }) = _Window;
 }
