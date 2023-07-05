@@ -61,10 +61,11 @@ Future<void> main(List<String> args) async {
 
   final appWindow = AppWindow(storage);
 
-  // Created outside runApp so it can be accessed for window settings below.
+  final hotkeyService = HotkeyService(activeWindow);
+
   final settingsCubit = await SettingsCubit.init(
     autostartService: AutostartService(),
-    hotkeyService: HotkeyService(activeWindow),
+    hotkeyService: hotkeyService,
     storage: storage,
   );
 
@@ -82,33 +83,30 @@ Future<void> main(List<String> args) async {
     UpdateService(),
   );
 
+  final systemTray = SystemTrayManager(appWindow);
+  await systemTray.initialize();
+
+  final appsListCubit = AppsListCubit(
+    hotkeyService: hotkeyService,
+    nativePlatform: nativePlatform,
+    prefsCubit: settingsCubit,
+    processRepository: processRepository,
+    storage: storage,
+    systemTrayManager: systemTray,
+    appVersion: AppVersion(packageInfo),
+  );
+
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider.value(value: appCubit),
+        BlocProvider.value(value: appsListCubit),
         BlocProvider.value(value: settingsCubit),
         BlocProvider.value(value: themeCubit),
       ],
-      child: Builder(
-        builder: (context) {
-          return BlocProvider(
-            create: (context) => AppsListCubit(
-              nativePlatform: nativePlatform,
-              prefsCubit: context.read<SettingsCubit>(),
-              processRepository: processRepository,
-              storage: storage,
-              appVersion: AppVersion(packageInfo),
-            ),
-            lazy: true,
-            child: const App(),
-          );
-        },
-      ),
+      child: const App(),
     ),
   );
-
-  final systemTray = SystemTrayManager(appWindow);
-  await systemTray.initialize();
 
   final bool? startHiddenInTray = await storage.getValue('startHiddenInTray');
 

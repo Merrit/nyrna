@@ -206,7 +206,9 @@ class _FloatingActionButton extends StatelessWidget {
                     backgroundColor: (state.appTheme == AppTheme.pitchBlack)
                         ? Colors.black
                         : null,
-                    onPressed: () => appsListCubit.manualRefresh(),
+                    onPressed: () {
+                      context.read<AppsListCubit>().manualRefresh();
+                    },
                     child: const Icon(Icons.refresh),
                   );
                 },

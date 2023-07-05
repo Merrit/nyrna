@@ -119,7 +119,7 @@ class _GestureDetector extends StatelessWidget {
               offset: details.globalPosition,
               items: [
                 PopupMenuItem(
-                  onTap: () => appsListCubit.toggleAll(window),
+                  onTap: () => context.read<AppsListCubit>().toggleAll(window),
                   child: Text(
                     '$availableAction all instances of ${window.process.executable}',
                   ),

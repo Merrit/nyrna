@@ -19,26 +19,23 @@ import 'package:nyrna/window/app_window.dart';
 ])
 import 'settings_cubit_test.mocks.dart';
 
-final _appsListCubit = MockAppsListCubit();
+final appsListCubit = MockAppsListCubit();
 final appWindow = MockAppWindow();
 final autostartService = MockAutostartService();
 final hotkeyService = MockHotkeyService();
 final storage = MockStorageRepository();
 
 /// Cubit being tested
-
 late SettingsCubit cubit;
 SettingsState get state => cubit.state;
 
 void main() {
   setUpAll((() {
-    // TODO: Make appsListCubit not a singleton.
-    appsListCubit = _appsListCubit;
     AppWindow.instance = appWindow;
   }));
 
   setUp((() async {
-    reset(_appsListCubit);
+    reset(appsListCubit);
     reset(appWindow);
     reset(autostartService);
     reset(hotkeyService);

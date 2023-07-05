@@ -39,6 +39,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// Inform user about new version of Nyrna, download link, etc.
   Future<void> _showUpdateDialog(BuildContext context) async {
+    final appsListCubit = context.read<AppsListCubit>();
     final state = appsListCubit.state;
     final currentVersion = state.runningVersion;
     final latestVersion = state.updateVersion;
