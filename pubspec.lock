@@ -404,12 +404,11 @@ packages:
   hotkey_manager:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "604523dd6edfb54e643f577512ea698c8debb96d"
-      resolved-ref: "604523dd6edfb54e643f577512ea698c8debb96d"
-      url: "https://github.com/leanflutter/hotkey_manager.git"
-    source: git
-    version: "0.1.7"
+      name: hotkey_manager
+      sha256: "8aaa0aeaca7015b8c561a58d02eb7ebba95e93357fc9540398c5751ee24afd7c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.8"
   http:
     dependency: "direct main"
     description:
