@@ -59,9 +59,10 @@ Future<void> main(List<String> args) async {
     exit(0);
   } else {}
 
-  final appWindow = AppWindow(storage);
-
   final hotkeyService = HotkeyService(activeWindow);
+
+  final appWindow = AppWindow(storage);
+  appWindow.initialize();
 
   final settingsCubit = await SettingsCubit.init(
     autostartService: AutostartService(),
@@ -107,8 +108,4 @@ Future<void> main(List<String> args) async {
       child: const App(),
     ),
   );
-
-  final bool? startHiddenInTray = await storage.getValue('startHiddenInTray');
-
-  if (startHiddenInTray != true) await appWindow.show();
 }

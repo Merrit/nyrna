@@ -1,12 +1,10 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../core/helpers/json_converters.dart';
 import '../logs/logs.dart';
-import '../settings/settings.dart';
 import '../storage/storage_repository.dart';
 
 /// Represents the main window of the app.
@@ -17,23 +15,16 @@ class AppWindow {
 
   AppWindow(this._storage) {
     instance = this;
-    _listenForWindowClose();
   }
 
-  void _listenForWindowClose() {
-    if (!Platform.isLinux) return;
+  void initialize() {
+    windowManager.waitUntilReadyToShow().then((_) async {
+      final bool? startHiddenInTray =
+          await _storage.getValue('startHiddenInTray');
 
-    /// For now using `flutter_window_close` on Linux, because the
-    /// `onWindowClose` from `window_manager` is only working on Windows for
-    /// some reason. Probably best to switch to only using `window_manager` if
-    /// it starts also working on Linux in the future.
-    FlutterWindowClose.setWindowShouldCloseHandler(() async {
-      await hide();
-      final shouldExitProgram = (settingsCubit.state.closeToTray) //
-          ? false
-          : true;
-
-      return shouldExitProgram;
+      if (startHiddenInTray != true) {
+        await show();
+      }
     });
   }
 
