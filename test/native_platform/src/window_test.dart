@@ -16,7 +16,7 @@ void main() {
 
   group('Window:', () {
     test('can instantiate', () {
-      expect(window.runtimeType, Window);
+      expect(window, isA<Window>());
     });
 
     test('can be copied', () {
