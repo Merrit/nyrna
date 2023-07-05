@@ -9,7 +9,6 @@ environment:
 dependencies:
   args: ^2.2.0
   collection: ^1.16.0
-  equatable: ^2.0.3
   ffi: ^2.0.1
   flutter:
     sdk: flutter
