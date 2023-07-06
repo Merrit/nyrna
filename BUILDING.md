@@ -26,7 +26,8 @@ Run these commands from the root directory of the repo:
 
 1. `flutter clean`
 2. `flutter pub get`
-3. `flutter build linux` or `flutter build windows`
+3. `dart run build_runner build --delete-conflicting-outputs`
+4. `flutter build linux` or `flutter build windows`
 
 
 Compiled app location:
