@@ -58,7 +58,7 @@ jobs:
       # This ensures the updated metadata file is available to the updater 
       # script when it runs, otherwise it has the wrong version number.
       - name: Wait for commit to be pushed
-        run: sleep 10
+        run: sleep 60
 
       - name: Checkout flathub repository
         uses: actions/checkout@v3
