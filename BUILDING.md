@@ -5,7 +5,7 @@
 
 1. Requires a working instance of [Flutter](https://docs.flutter.dev/get-started/install).
 
-2. Requires `libappindicator` and `keybinder`.
+2. Linux requires `libappindicator` and `keybinder`.
     
     Fedora:
 
