@@ -6,6 +6,7 @@ import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xdg_desktop_portal/xdg_desktop_portal.dart';
 
+import '../logs/logging_manager.dart';
 import '../native_platform/src/linux/flatpak.dart';
 
 /// Service to enable/disable autostart on desktop platforms.
@@ -56,6 +57,11 @@ class AutostartService {
 
   Future<void> _setupLaunchAtStartup() async {
     final packageInfo = await PackageInfo.fromPlatform();
+
+    log.w(
+      'packageName: ${packageInfo.packageName}\n'
+      'resolvedExecutable: ${Platform.resolvedExecutable}',
+    );
 
     launchAtStartup.setup(
       appName: packageInfo.appName,
