@@ -87,13 +87,28 @@ class AutostartService {
     \$s.Save()
   ''';
 
-    await Process.run(
+    final result = await Process.run(
       'powershell',
       ['-Command', script],
       runInShell: true,
     );
 
-    log.i('Created shortcut in Startup folder.');
+    log.i('Result: ${result.stdout}');
+
+    if (result.stderr != null && result.stderr!.isNotEmpty) {
+      log.e('Error: ${result.stderr}');
+    }
+
+    final createdShortcut = File(
+      '${Platform.environment['USERPROFILE']}\\Start Menu\\Programs\\Startup\\Nyrna.lnk',
+    );
+
+    if (!await createdShortcut.exists()) {
+      log.e('Failed to create shortcut in Startup folder.');
+      return;
+    } else {
+      log.i('Created shortcut in Startup folder.');
+    }
   }
 
   /// Returns whether the app is running in an msix package from the Microsoft
