@@ -54,7 +54,6 @@ class AutostartService {
     await Process.run(
       'powershell',
       ['-Command', script],
-      runInShell: true,
     );
 
     log.i('Removed shortcut from Startup folder.');
@@ -86,7 +85,6 @@ class AutostartService {
     final result = await Process.run(
       'powershell',
       ['-Command', script],
-      runInShell: true,
     );
 
     log.i('Result: ${result.stdout}');
