@@ -6,6 +6,7 @@ import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:xdg_desktop_portal/xdg_desktop_portal.dart';
 
+import '../core/constants.dart';
 import '../logs/logging_manager.dart';
 import '../native_platform/src/linux/flatpak.dart';
 
@@ -47,7 +48,7 @@ class AutostartService {
     log.i('Disabling autostart for MSIX app.');
 
     const String script = '''
-    Remove-Item -Path '%userprofile%\\Start Menu\\Programs\\Startup\\Nyrna.lnk'
+    Remove-Item -Path "\$env:USERPROFILE\\Start Menu\\Programs\\Startup\\$kAppName.lnk"
   ''';
 
     await Process.run(
@@ -73,18 +74,13 @@ class AutostartService {
   Future<void> _enableForMSIX() async {
     log.i('Setting up autostart for MSIX app.');
 
-    final String resolvedExecutable = Platform.resolvedExecutable;
-    final String currentDirectory = Directory.current.path;
-    final String appExeDir = currentDirectory;
-
-    final String script = '''
-    \$s=(New-Object -COM WScript.Shell).CreateShortcut('%userprofile%\\Start Menu\\Programs\\Startup\\Nyrna.lnk');
-    \$s.TargetPath='$resolvedExecutable';
-    \$s.Arguments='';
-    \$s.IconLocation='%userprofile%\\Start Menu\\Programs\\Nyrna.lnk';
-    \$s.WorkingDirectory='$appExeDir';
-    \$s.WindowStyle=7;
-    \$s.Save()
+    const String script = '''
+    \$TargetPath = "shell:AppsFolder\\$kWindowsAppPackageName"
+    \$ShortcutFile = "\$env:USERPROFILE\\Start Menu\\Programs\\Startup\\$kAppName.lnk"
+    \$WScriptShell = New-Object -ComObject WScript.Shell
+    \$Shortcut = \$WScriptShell.CreateShortcut(\$ShortcutFile)
+    \$Shortcut.TargetPath = \$TargetPath
+    \$Shortcut.Save()
   ''';
 
     final result = await Process.run(
@@ -100,7 +96,7 @@ class AutostartService {
     }
 
     final createdShortcut = File(
-      '${Platform.environment['USERPROFILE']}\\Start Menu\\Programs\\Startup\\Nyrna.lnk',
+      '${Platform.environment['USERPROFILE']}\\Start Menu\\Programs\\Startup\\$kAppName.lnk',
     );
 
     if (!await createdShortcut.exists()) {
@@ -118,7 +114,6 @@ class AutostartService {
     // The path to the executable will be something like:
     // C:\Program Files\WindowsApps\33694MerrittCodes.Nyrna_2.14.0.0_x64__9kjrd3yy77d9e\nyrna.exe
     // We want to check if the path contains "WindowsApps" and "33694MerrittCodes.Nyrna".
-    const kMicrosoftStorePackageName = '33694MerrittCodes.Nyrna';
     final bool isMsix = resolvedExecutable.contains('WindowsApps') &&
         resolvedExecutable.contains(kMicrosoftStorePackageName);
     log.i('Running in MSIX: $isMsix');
@@ -140,7 +135,7 @@ class AutostartService {
   Future<void> _setupLaunchAtStartup() async {
     final packageInfo = await PackageInfo.fromPlatform();
 
-    log.w(
+    log.i(
       'packageName: ${packageInfo.packageName}\n'
       'resolvedExecutable: ${Platform.resolvedExecutable}',
     );
