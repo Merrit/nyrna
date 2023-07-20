@@ -25,5 +25,9 @@ class SettingsState with _$SettingsState {
     required int refreshInterval,
     required bool showHiddenWindows,
     required bool startHiddenInTray,
+
+    /// True if the app is currently working on something and a loading
+    /// indicator should be shown.
+    required bool working,
   }) = _SettingsState;
 }

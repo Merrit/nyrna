@@ -72,6 +72,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         refreshInterval: refreshInterval,
         showHiddenWindows: showHiddenWindows,
         startHiddenInTray: startHiddenInTray,
+        working: false,
       ),
     );
   }
@@ -133,13 +134,15 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> toggleAutostart() async {
     assert(defaultTargetPlatform.isDesktop);
 
+    emit(state.copyWith(working: true));
+
     if (state.autoStart) {
       await _autostartService.disable();
     } else {
       await _autostartService.enable();
     }
 
-    emit(state.copyWith(autoStart: !state.autoStart));
+    emit(state.copyWith(autoStart: !state.autoStart, working: false));
     await _storage.saveValue(key: 'autoStart', value: state.autoStart);
   }
 

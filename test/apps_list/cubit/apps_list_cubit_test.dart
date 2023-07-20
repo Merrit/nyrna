@@ -113,6 +113,7 @@ void main() {
         refreshInterval: 5,
         showHiddenWindows: false,
         startHiddenInTray: false,
+        working: false,
       ),
     );
 
