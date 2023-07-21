@@ -31,6 +31,10 @@ jobs:
             with:
               path: artifacts
 
+          - name: Debug print directory structure
+            run: |
+              ls -R artifacts
+
           - name: Publish to Store
             uses: isaacrlevin/windows-store-action@main
             with:
