@@ -32,7 +32,7 @@ jobs:
               path: artifacts
 
           - name: Publish to Store
-            uses: isaacrlevin/windows-store-action
+            uses: isaacrlevin/windows-store-action@main
             with:
                 tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
                 client-id: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
