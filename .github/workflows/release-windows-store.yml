@@ -12,9 +12,6 @@ concurrency:
     group: ci-release-${{ github.ref }}-1
     cancel-in-progress: true
 
-env:
-    project-name: Nyrna
-
 jobs:
     call-build-windows:
         uses: ./.github/workflows/build-windows.yml
@@ -31,10 +28,6 @@ jobs:
             with:
               path: artifacts
 
-          - name: Debug print directory structure
-            run: |
-              ls -R artifacts
-
           - name: Publish to Store
             uses: isaacrlevin/windows-store-action@main
             with:
@@ -42,5 +35,5 @@ jobs:
                 client-id: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
                 client-secret: ${{ secrets.AZURE_AD_APPLICATION_SECRET }}
                 app-id: ${{ secrets.MICROSOFT_STORE_APP_ID }}
-                package-path: "${{ github.workspace }}/artifacts/windows-store-artifact/${{ env.project-name }}-Windows-Store-Installer.msix"
+                package-path: "${{ github.workspace }}/artifacts/windows-store-artifact/"
                 delete-pending: true
