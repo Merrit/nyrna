@@ -19,9 +19,34 @@ class IntegrationSection extends StatelessWidget {
           AppLocalizations.of(context)!.systemIntegrationTitle,
         ),
         Spacers.verticalXtraSmall,
+        const _CloseToTrayTile(),
         const _AutostartTile(),
         const _StartHiddenTile(),
       ],
+    );
+  }
+}
+
+class _CloseToTrayTile extends StatelessWidget {
+  const _CloseToTrayTile();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(
+        AppLocalizations.of(context)!.closeToTray,
+      ),
+      leading: const Icon(Icons.bedtime),
+      trailing: BlocBuilder<SettingsCubit, SettingsState>(
+        builder: (context, state) {
+          return Switch(
+            value: state.closeToTray,
+            onChanged: (value) async {
+              await settingsCubit.updateCloseToTray(value);
+            },
+          );
+        },
+      ),
     );
   }
 }
