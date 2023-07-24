@@ -34,6 +34,8 @@ jobs:
                 tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
                 client-id: ${{ secrets.AZURE_AD_APPLICATION_CLIENT_ID }}
                 client-secret: ${{ secrets.AZURE_AD_APPLICATION_SECRET }}
+                # "app-id" is the Store ID as listed in Partner Center
+                # https://github.com/isaacrlevin/windows-store-action/issues/5#issuecomment-1086893615
                 app-id: ${{ secrets.MICROSOFT_STORE_APP_ID }}
                 package-path: "${{ github.workspace }}/artifacts/windows-store-artifact/"
                 delete-pending: true
