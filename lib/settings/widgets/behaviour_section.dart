@@ -66,22 +66,6 @@ class BehaviourSection extends StatelessWidget {
         const HotkeyConfigWidget(),
         ListTile(
           title: Text(
-            AppLocalizations.of(context)!.closeToTray,
-          ),
-          leading: const Icon(Icons.bedtime),
-          trailing: BlocBuilder<SettingsCubit, SettingsState>(
-            builder: (context, state) {
-              return Switch(
-                value: state.closeToTray,
-                onChanged: (value) async {
-                  await settingsCubit.updateCloseToTray(value);
-                },
-              );
-            },
-          ),
-        ),
-        ListTile(
-          title: Text(
             AppLocalizations.of(context)!.minimizeAndRestoreWindows,
           ),
           leading: const Icon(Icons.minimize),
