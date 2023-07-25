@@ -72,7 +72,7 @@ Window get mpvWindow2State => state //
 
 final hotkeyService = MockHotkeyService();
 final nativePlatform = MockNativePlatform();
-final prefsCubit = MockSettingsCubit();
+final settingsCubit = MockSettingsCubit();
 final processRepository = MockProcessRepository();
 final storage = MockStorageRepository();
 final systemTrayManager = MockSystemTrayManager();
@@ -86,7 +86,7 @@ void main() {
   setUp(() {
     reset(hotkeyService);
     reset(nativePlatform);
-    reset(prefsCubit);
+    reset(settingsCubit);
     reset(processRepository);
     reset(storage);
     reset(systemTrayManager);
@@ -103,7 +103,7 @@ void main() {
 
     when(storage.getValue('ignoredUpdate')).thenAnswer((_) async {});
 
-    when(prefsCubit.state).thenReturn(
+    when(settingsCubit.state).thenReturn(
       SettingsState(
         autoStart: false,
         autoRefresh: false,
@@ -128,7 +128,7 @@ void main() {
     cubit = AppsListCubit(
       hotkeyService: hotkeyService,
       nativePlatform: nativePlatform,
-      prefsCubit: prefsCubit,
+      settingsCubit: settingsCubit,
       processRepository: processRepository,
       storage: storage,
       appVersion: appVersion,

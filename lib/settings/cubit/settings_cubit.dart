@@ -30,7 +30,8 @@ class SettingsCubit extends Cubit<SettingsState> {
     required SettingsState initialState,
   }) : super(initialState) {
     settingsCubit = this;
-    _hotkeyService.updateHotkey(state.hotKey);
+    _hotkeyService.addHotkey(state.hotKey);
+
     AppWindow.instance.preventClose(state.closeToTray);
   }
 
@@ -121,11 +122,11 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   Future<void> removeHotkey() async {
-    await _hotkeyService.removeHotkey();
+    await _hotkeyService.removeHotkey(state.hotKey);
   }
 
   Future<void> resetHotkey() async {
-    await _hotkeyService.updateHotkey(defaultHotkey);
+    await _hotkeyService.addHotkey(defaultHotkey);
     emit(state.copyWith(hotKey: defaultHotkey));
     await _storage.deleteValue('hotkey');
   }
@@ -147,7 +148,7 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   Future<void> updateHotkey(HotKey newHotKey) async {
-    await _hotkeyService.updateHotkey(newHotKey);
+    await _hotkeyService.addHotkey(newHotKey);
     emit(state.copyWith(hotKey: newHotKey));
     await _storage.saveValue(
       key: 'hotkey',

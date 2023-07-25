@@ -56,10 +56,22 @@ Future<void> main(List<String> args) async {
   // window and then exit without showing the GUI.
   if (argParser.toggleActiveWindow) {
     await activeWindow.toggle();
+
+    // On Windows the program stays running in the background, so we don't want
+    // to close these resources.
+    if (defaultTargetPlatform == TargetPlatform.linux) {
+      await storage.close();
+      LoggingManager.instance.close();
+    }
+
+    // Add a slight delay, because Logger doesn't await closing its file output.
+    // This will hopefully ensure the log file gets fully written.
+    await Future.delayed(const Duration(milliseconds: 500));
+
     exit(0);
   } else {}
 
-  final hotkeyService = HotkeyService(activeWindow);
+  final hotkeyService = HotkeyService();
 
   final appWindow = AppWindow(storage);
   appWindow.initialize();
@@ -90,7 +102,7 @@ Future<void> main(List<String> args) async {
   final appsListCubit = AppsListCubit(
     hotkeyService: hotkeyService,
     nativePlatform: nativePlatform,
-    prefsCubit: settingsCubit,
+    settingsCubit: settingsCubit,
     processRepository: processRepository,
     storage: storage,
     systemTrayManager: systemTray,

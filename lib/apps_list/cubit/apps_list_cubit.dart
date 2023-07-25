@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../settings/cubit/settings_cubit.dart';
+import '../../active_window/active_window.dart';
 import '../../app_version/app_version.dart';
 import '../../hotkey/hotkey_service.dart';
 import '../../logs/logs.dart';
@@ -20,8 +21,8 @@ part 'apps_list_cubit.freezed.dart';
 class AppsListCubit extends Cubit<AppsListState> {
   final HotkeyService _hotkeyService;
   final NativePlatform _nativePlatform;
-  final SettingsCubit _prefsCubit;
   final ProcessRepository _processRepository;
+  final SettingsCubit _settingsCubit;
   final StorageRepository _storage;
   final SystemTrayManager _systemTrayManager;
   final AppVersion _appVersion;
@@ -29,15 +30,15 @@ class AppsListCubit extends Cubit<AppsListState> {
   AppsListCubit({
     required HotkeyService hotkeyService,
     required NativePlatform nativePlatform,
-    required SettingsCubit prefsCubit,
     required ProcessRepository processRepository,
+    required SettingsCubit settingsCubit,
     required StorageRepository storage,
     required SystemTrayManager systemTrayManager,
     required AppVersion appVersion,
     bool testing = false,
   })  : _hotkeyService = hotkeyService,
         _nativePlatform = nativePlatform,
-        _prefsCubit = prefsCubit,
+        _settingsCubit = settingsCubit,
         _processRepository = processRepository,
         _storage = storage,
         _systemTrayManager = systemTrayManager,
@@ -50,8 +51,8 @@ class AppsListCubit extends Cubit<AppsListState> {
     await _fetchWindows();
     emit(state.copyWith(loading: false));
     setAutoRefresh(
-      autoRefresh: _prefsCubit.state.autoRefresh,
-      refreshInterval: _prefsCubit.state.refreshInterval,
+      autoRefresh: _settingsCubit.state.autoRefresh,
+      refreshInterval: _settingsCubit.state.refreshInterval,
     );
     _listenForHotkey();
     _listenForSystemTrayShowEvent();
@@ -61,7 +62,7 @@ class AppsListCubit extends Cubit<AppsListState> {
   /// Populate the list of visible windows.
   Future<void> _fetchWindows() async {
     final windows = await _nativePlatform.windows(
-      showHidden: _prefsCubit.state.showHiddenWindows,
+      showHidden: _settingsCubit.state.showHiddenWindows,
     );
 
     // Filter out windows that are likely not desired or workable,
@@ -155,6 +156,15 @@ class AppsListCubit extends Cubit<AppsListState> {
 
     return successful;
   }
+  Future<bool> toggleActiveWindow() async {
+    final activeWindow = ActiveWindow(
+      _nativePlatform,
+      _processRepository,
+      _storage,
+    );
+
+    return await activeWindow.toggle();
+  }
 
   /// Toggle suspend/resume for all instances of [window.process.executable].
   ///
@@ -175,10 +185,15 @@ class AppsListCubit extends Cubit<AppsListState> {
     }
   }
 
-  /// After the hotkey is pressed, refresh the list of windows.
+  /// React when a configured hotkey is pressed.
   void _listenForHotkey() {
-    _hotkeyService.hotkeyTriggeredStream.listen((_) async {
+    _hotkeyService.hotkeyTriggeredStream.listen((hotkey) async {
       await manualRefresh();
+
+      if (hotkey == _settingsCubit.state.hotKey) {
+        log.v('Triggering toggle from hotkey press.');
+        await toggleActiveWindow();
+      } 
     });
   }
 
@@ -209,7 +224,7 @@ class AppsListCubit extends Cubit<AppsListState> {
   }
 
   Future<void> _minimize(Window window) async {
-    if (!_prefsCubit.state.minimizeWindows) return;
+    if (!_settingsCubit.state.minimizeWindows) return;
 
     // Minimize the window before suspending or it might not minimize.
     await _nativePlatform.minimizeWindow(window.id);
@@ -222,7 +237,7 @@ class AppsListCubit extends Cubit<AppsListState> {
   }
 
   Future<void> _restore(Window window) async {
-    if (!_prefsCubit.state.minimizeWindows) return;
+    if (!_settingsCubit.state.minimizeWindows) return;
 
     await _nativePlatform.restoreWindow(window.id);
   }

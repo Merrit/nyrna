@@ -38,17 +38,6 @@ class ActiveWindow {
       if (!successful) log.e('Failed to suspend successfully.');
     }
 
-    // On Windows the program stays running in the background, so we don't want
-    // to close these resources.
-    if (defaultTargetPlatform == TargetPlatform.linux) {
-      await _storageRepository.close();
-      LoggingManager.instance.close();
-    }
-
-    // Add a slight delay, because Logger doesn't await closing its file output.
-    // This will hopefully ensure the log file gets fully written.
-    await Future.delayed(const Duration(milliseconds: 500));
-
     return successful;
   }
 
