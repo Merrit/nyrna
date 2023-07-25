@@ -156,6 +156,21 @@ class AppsListCubit extends Cubit<AppsListState> {
 
     return successful;
   }
+
+  /// Toggle suspend/resume for all instances of [executable].
+  ///
+  /// For example, if called on mpv and there are multiple windows / instances
+  /// of the app running, they will all be suspended.
+  Future<void> toggleExecutable(String executable) async {
+    final matchingWindows = state //
+        .windows
+        .where((e) => e.process.executable == executable);
+
+    for (var match in matchingWindows) {
+      await toggle(match);
+    }
+  }
+
   Future<bool> toggleActiveWindow() async {
     final activeWindow = ActiveWindow(
       _nativePlatform,
@@ -193,7 +208,16 @@ class AppsListCubit extends Cubit<AppsListState> {
       if (hotkey == _settingsCubit.state.hotKey) {
         log.v('Triggering toggle from hotkey press.');
         await toggleActiveWindow();
-      } 
+      } else {
+        final appSpecificHotkey = _settingsCubit.state.appSpecificHotKeys
+            .firstWhereOrNull((e) => e.hotkey == hotkey);
+        if (appSpecificHotkey == null) return;
+
+        log.v('Triggering toggle from app-specific hotkey press.\n'
+            'Hotkey: $hotkey\n'
+            'Executable: ${appSpecificHotkey.executable}');
+        await toggleExecutable(appSpecificHotkey.executable);
+      }
     });
   }
 
