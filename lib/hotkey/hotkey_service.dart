@@ -3,50 +3,39 @@ import 'dart:io';
 
 import 'package:hotkey_manager/hotkey_manager.dart';
 
-import '../active_window/active_window.dart';
 import '../logs/logs.dart';
 
 class HotkeyService {
-  final ActiveWindow _activeWindow;
-
-  HotkeyService(
-    this._activeWindow,
-  );
-
-  /// Stream that fires when the hotkey is triggered.
+  /// Stream that fires when a hotkey is triggered.
   ///
-  /// Allows dependent services to react to the hotkey being triggered.
-  Stream<bool> get hotkeyTriggeredStream =>
+  /// Allows dependent services to react when a hotkey is triggered.
+  Stream<HotKey> get hotkeyTriggeredStream =>
       _hotkeyTriggeredStreamController.stream;
 
-  /// Controller for the refresh stream.
-  final _hotkeyTriggeredStreamController = StreamController<bool>.broadcast();
+  /// Controller for the hotkey triggered stream.
+  final _hotkeyTriggeredStreamController = StreamController<HotKey>.broadcast();
 
-  Future<void> removeHotkey() async {
-    await hotKeyManager.unregisterAll();
-  }
-
-  Future<void> updateHotkey(HotKey hotKey) async {
+  Future<void> addHotkey(HotKey hotKey) async {
     // Hotkey service not working properly on Linux..
     // - The method channel doesn't seem able to register `Pause` at all.
     // - Hotkeys don't seem to work on Wayland.
     if (Platform.isLinux) return;
 
-    await hotKeyManager.unregisterAll();
+    await hotKeyManager.unregister(hotKey);
 
     await hotKeyManager.register(
       hotKey,
-      keyDownHandler: (hotKey) => _toggleActiveWindow(),
+      keyDownHandler: (hotKey) {
+        log.v('Hotkey triggered: ${hotKey.toStringHelper()}');
+        _hotkeyTriggeredStreamController.add(hotKey);
+      },
     );
 
     log.v('Registered hotkey: ${hotKey.toStringHelper()}');
   }
 
-  Future<bool> _toggleActiveWindow() async {
-    log.v('Triggering toggle from hotkey press.');
-    final successful = await _activeWindow.toggle();
-    _hotkeyTriggeredStreamController.add(true);
-    return successful;
+  Future<void> removeHotkey(HotKey hotkey) async {
+    await hotKeyManager.unregister(hotkey);
   }
 }
 

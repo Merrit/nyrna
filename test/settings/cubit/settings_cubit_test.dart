@@ -44,8 +44,8 @@ void main() {
     when(autostartService.enable()).thenAnswer((_) async {});
     when(autostartService.disable()).thenAnswer((_) async {});
 
-    when(hotkeyService.updateHotkey(any)).thenAnswer((_) async {});
-    when(hotkeyService.removeHotkey()).thenAnswer((_) async {});
+    when(hotkeyService.addHotkey(any)).thenAnswer((_) async {});
+    when(hotkeyService.removeHotkey(any)).thenAnswer((_) async {});
 
     when(appWindow.preventClose(any)).thenAnswer((_) async {});
 
@@ -204,7 +204,7 @@ void main() {
 
       test('removeHotkey works', () async {
         await cubit.removeHotkey();
-        verify(hotkeyService.removeHotkey()).called(1);
+        verify(hotkeyService.removeHotkey(any)).called(1);
       });
 
       test('resetting hotkey restores Pause default', () async {
@@ -234,7 +234,7 @@ void main() {
         expect(state.hotKey.keyCode, KeyCode.pause);
         await cubit.updateHotkey(newHotkey);
         expect(state.hotKey.keyCode, KeyCode.f12);
-        verify(hotkeyService.updateHotkey(newHotkey)).called(1);
+        verify(hotkeyService.addHotkey(newHotkey)).called(1);
         await cubit.resetHotkey();
         expect(state.hotKey.keyCode, KeyCode.pause);
         verify(storage.deleteValue('hotkey')).called(1);
