@@ -105,6 +105,7 @@ void main() {
 
     when(settingsCubit.state).thenReturn(
       SettingsState(
+        appSpecificHotKeys: [],
         autoStart: false,
         autoRefresh: false,
         closeToTray: false,

@@ -32,6 +32,10 @@ class SettingsCubit extends Cubit<SettingsState> {
     settingsCubit = this;
     _hotkeyService.addHotkey(state.hotKey);
 
+    for (final hotkey in state.appSpecificHotKeys) {
+      _hotkeyService.addHotkey(hotkey.hotkey);
+    }
+
     AppWindow.instance.preventClose(state.closeToTray);
   }
 
@@ -40,6 +44,13 @@ class SettingsCubit extends Cubit<SettingsState> {
     required HotkeyService hotkeyService,
     required StorageRepository storage,
   }) async {
+    final List<String>? appSpecificHotkeysJson =
+        await storage.getValue('appSpecificHotKeys');
+    final List<AppSpecificHotkey> appSpecificHotKeys = appSpecificHotkeysJson
+            ?.map((e) => AppSpecificHotkey.fromJson(jsonDecode(e)))
+            .toList() ??
+        [];
+
     final bool autoStart = await storage.getValue('autoStart') ?? false;
     final bool autoRefresh = await storage.getValue('autoRefresh') ?? true;
     final bool closeToTray = await storage.getValue('closeToTray') ?? false;
@@ -65,6 +76,7 @@ class SettingsCubit extends Cubit<SettingsState> {
       hotkeyService,
       storage,
       initialState: SettingsState(
+        appSpecificHotKeys: appSpecificHotKeys,
         autoStart: autoStart,
         autoRefresh: autoRefresh,
         closeToTray: closeToTray,
@@ -75,6 +87,27 @@ class SettingsCubit extends Cubit<SettingsState> {
         startHiddenInTray: startHiddenInTray,
         working: false,
       ),
+    );
+  }
+
+  /// Add a new hotkey for a specific application.
+  Future<void> addAppSpecificHotkey(
+    String executable,
+    HotKey newHotKey,
+  ) async {
+    final List<AppSpecificHotkey> appSpecificHotkeys = [
+      ...state.appSpecificHotKeys,
+      AppSpecificHotkey(
+        executable: executable,
+        hotkey: newHotKey,
+      ),
+    ];
+
+    emit(state.copyWith(appSpecificHotKeys: appSpecificHotkeys));
+    await _hotkeyService.addHotkey(newHotKey);
+    await _storage.saveValue(
+      key: 'appSpecificHotKeys',
+      value: appSpecificHotkeys.map((e) => jsonEncode(e.toJson())).toList(),
     );
   }
 
@@ -121,6 +154,24 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(state.copyWith(startHiddenInTray: value));
   }
 
+  /// Remove the hotkey for a specific application.
+  Future<void> removeAppSpecificHotkey(String executable) async {
+    final AppSpecificHotkey appSpecificHotkey =
+        state.appSpecificHotKeys.firstWhere((e) => e.executable == executable);
+
+    final List<AppSpecificHotkey> appSpecificHotkeys = state.appSpecificHotKeys
+        .where((e) => e.executable != executable)
+        .toList();
+
+    emit(state.copyWith(appSpecificHotKeys: appSpecificHotkeys));
+    await _hotkeyService.removeHotkey(appSpecificHotkey.hotkey);
+    await _storage.saveValue(
+      key: 'appSpecificHotKeys',
+      value: appSpecificHotkeys.map((e) => jsonEncode(e.toJson())).toList(),
+    );
+  }
+
+  /// Remove the hotkey that toggles the active window.
   Future<void> removeHotkey() async {
     await _hotkeyService.removeHotkey(state.hotKey);
   }
