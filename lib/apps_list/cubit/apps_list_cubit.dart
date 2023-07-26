@@ -294,6 +294,12 @@ class AppsListCubit extends Cubit<AppsListState> {
       interactionErrors: errors,
     ));
   }
+
+  @override
+  Future<void> close() async {
+    _timer?.cancel();
+    await super.close();
+  }
 }
 
 extension on List<InteractionError> {

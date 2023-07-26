@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:helpers/helpers.dart';
 import 'package:libadwaita/libadwaita.dart';
 
@@ -11,9 +12,28 @@ import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../apps_list.dart';
 
-/// Passes the instance of [window] to child widgets.
-class WindowCubit extends Cubit<Window> {
-  WindowCubit(Window window) : super(window);
+part 'window_tile.freezed.dart';
+
+/// Passes the instance of [Window] to child widgets.
+class WindowCubit extends Cubit<WindowState> {
+  WindowCubit(Window window)
+      : super(WindowState(
+          window: window,
+          loading: false,
+        ));
+
+  /// Set loading state.
+  void setLoading(bool loading) {
+    emit(state.copyWith(loading: loading));
+  }
+}
+
+@freezed
+class WindowState with _$WindowState {
+  const factory WindowState({
+    required Window window,
+    required bool loading,
+  }) = _WindowState;
 }
 
 /// Represents a visible window on the desktop, running state and actions.
@@ -30,8 +50,6 @@ class WindowTile extends StatefulWidget {
 }
 
 class _WindowTileState extends State<WindowTile> {
-  bool loading = false;
-
   @override
   Widget build(BuildContext context) {
     final window = widget.window;
@@ -55,14 +73,20 @@ class _WindowTileState extends State<WindowTile> {
           child: Stack(
             children: [
               ListTile(
-                leading: Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: (loading) ? null : statusColor,
-                  ),
-                  child: (loading) ? const CircularProgressIndicator() : null,
+                leading: BlocBuilder<WindowCubit, WindowState>(
+                  builder: (context, state) {
+                    return Container(
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: (state.loading) ? null : statusColor,
+                      ),
+                      child: (state.loading)
+                          ? const CircularProgressIndicator()
+                          : null,
+                    );
+                  },
                 ),
                 title: Text(window.title),
                 subtitle: Column(
@@ -76,15 +100,6 @@ class _WindowTileState extends State<WindowTile> {
                   vertical: 2,
                   horizontal: 20,
                 ),
-                onTap: () async {
-                  log.v('WindowTile clicked: $window');
-
-                  setState(() => loading = true);
-                  await context.read<AppsListCubit>().toggle(window);
-
-                  if (!mounted) return;
-                  setState(() => loading = false);
-                },
                 trailing: const _DetailsButton(),
               ),
             ],
@@ -106,13 +121,22 @@ class _GestureDetector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WindowCubit, Window>(
-      builder: (context, window) {
+    return BlocBuilder<WindowCubit, WindowState>(
+      builder: (context, state) {
+        final Window window = state.window;
+
         final availableAction = (window.process.status == ProcessStatus.normal)
             ? 'Suspend'
             : 'Resume';
 
         return GestureDetector(
+          onTap: () async {
+            log.v('WindowTile clicked: $window');
+            final windowCubit = context.read<WindowCubit>();
+            windowCubit.setLoading(true);
+            await context.read<AppsListCubit>().toggle(window);
+            windowCubit.setLoading(false);
+          },
           onSecondaryTapUp: (details) {
             showContextMenu(
               context: context,
@@ -139,7 +163,7 @@ class _DetailsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final window = context.select((WindowCubit cubit) => cubit.state);
+    final window = context.select((WindowCubit cubit) => cubit.state.window);
 
     return BlocBuilder<AppsListCubit, AppsListState>(
       builder: (context, state) {
