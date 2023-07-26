@@ -33,4 +33,17 @@ class SettingsState with _$SettingsState {
     /// indicator should be shown.
     required bool working,
   }) = _SettingsState;
+
+  factory SettingsState.initial() => SettingsState(
+        appSpecificHotKeys: [],
+        autoStart: false,
+        autoRefresh: true,
+        closeToTray: false,
+        hotKey: defaultHotkey,
+        minimizeWindows: true,
+        refreshInterval: 5,
+        showHiddenWindows: false,
+        startHiddenInTray: false,
+        working: false,
+      );
 }
