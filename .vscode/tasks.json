@@ -1,10 +1,14 @@
 {
 	"version": "2.0.0",
 	"tasks": [
+		// Code generation (continuous)
 		{
-			"type": "dart",
-			"command": "dart",
+			"label": "build_runner watch",
+			"detail": "Code generation (continuous)",
+			"type": "flutter",
+			"command": "flutter",
 			"args": [
+				"pub",
 				"run",
 				"build_runner",
 				"watch",
@@ -17,8 +21,40 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"label": "build_runner watch",
-			"detail": ""
+			"presentation": {
+				"panel": "dedicated",
+			},
+			// "dependsOn": [
+			// 	"easy_localization:generate"
+			// ],
+		},
+		// Translations generation with easy_localization
+		{
+			"label": "easy_localization:generate",
+			"detail": "Translations generation with easy_localization",
+			"type": "flutter",
+			"command": "flutter",
+			"args": [
+				"pub",
+				"run",
+				"easy_localization:generate",
+				"--source-dir",
+				"translations",
+				"--output-dir",
+				"lib/generated",
+				"--output-file",
+				"locale_keys.g.dart",
+				"--format",
+				"keys",
+				"--skip-unnecessary-keys",
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"presentation": {
+				"reveal": "silent"
+			},
 		}
 	]
 }
