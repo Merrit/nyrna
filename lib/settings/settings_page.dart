@@ -82,12 +82,37 @@ class SettingsPage extends StatelessWidget {
                 ),
                 onTap: () => Navigator.pushNamed(context, LogPage.id),
               ),
+              const _VerboseLoggingTile(),
               Spacers.verticalMedium,
               const AboutSection(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _VerboseLoggingTile extends StatefulWidget {
+  const _VerboseLoggingTile();
+
+  @override
+  State<_VerboseLoggingTile> createState() => _VerboseLoggingTileState();
+}
+
+class _VerboseLoggingTileState extends State<_VerboseLoggingTile> {
+  bool isVerbose = LoggingManager.instance.verbose;
+
+  @override
+  Widget build(BuildContext context) {
+    return SwitchListTile(
+      secondary: const Icon(Icons.bug_report_outlined),
+      title: const Text('Verbose logging'),
+      value: isVerbose,
+      onChanged: (value) async {
+        setState(() => isVerbose = value);
+        await LoggingManager.initialize(verbose: value);
+      },
     );
   }
 }
