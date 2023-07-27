@@ -4,19 +4,23 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Globally available instance available for easy logging.
-late final Logger log;
+late Logger log;
 
 /// Manages logging for the app.
 class LoggingManager {
   /// The file to which logs are saved.
   final File _logFile;
 
+  /// Whether verbose logging is enabled.
+  final bool verbose;
+
   /// Singleton instance for easy access.
-  static late final LoggingManager instance;
+  static late LoggingManager instance;
 
   LoggingManager._(
-    this._logFile,
-  ) {
+    this._logFile, {
+    required this.verbose,
+  }) {
     instance = this;
   }
 
@@ -24,8 +28,8 @@ class LoggingManager {
     final testing = Platform.environment.containsKey('FLUTTER_TEST');
     if (testing) {
       // Set the logger to a dummy logger during unit tests.
-      log = Logger(level: Level.nothing);
-      return LoggingManager._(File(''));
+      log = Logger(level: Level.off);
+      return LoggingManager._(File(''), verbose: verbose);
     }
 
     final dataDir = await getApplicationSupportDirectory();
@@ -40,7 +44,7 @@ class LoggingManager {
 
     log = Logger(
       filter: ProductionFilter(),
-      level: (verbose) ? Level.verbose : Level.warning,
+      level: (verbose) ? Level.trace : Level.warning,
       output: MultiOutput(outputs),
       // Colors false because it outputs ugly escape characters to log file.
       printer: PrefixPrinter(PrettyPrinter(colors: false)),
@@ -50,6 +54,7 @@ class LoggingManager {
 
     return LoggingManager._(
       logFile,
+      verbose: verbose,
     );
   }
 
