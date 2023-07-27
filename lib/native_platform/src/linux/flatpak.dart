@@ -5,7 +5,7 @@ import '../typedefs.dart';
 
 /// Run commands from within a Flatpak environment, directly on the host.
 RunFunction flatpakRun = (String executable, List<String> args) async {
-  log.v('''
+  log.i('''
 Running command from flatpak; using flatpakRun..
 executable: $executable
 args: $args''');

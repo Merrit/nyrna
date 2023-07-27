@@ -174,13 +174,13 @@ Make sure these are installed on your host system.''',
   /// Return is `x11` or `wayland` depending on which session type is running.
   Future<String> sessionType() async {
     final sessionType = io.Platform.environment['XDG_SESSION_TYPE'];
-    log.v('Current session type: $sessionType');
+    log.i('Current session type: $sessionType');
     return sessionType!;
   }
 
   @override
   Future<bool> minimizeWindow(int windowId) async {
-    log.v('Minimizing window with id $windowId');
+    log.i('Minimizing window with id $windowId');
     final result = await _run(
       'xdotool',
       ['windowminimize', '$windowId'],
@@ -190,7 +190,7 @@ Make sure these are installed on your host system.''',
 
   @override
   Future<bool> restoreWindow(int windowId) async {
-    log.v('Restoring window with id $windowId');
+    log.i('Restoring window with id $windowId');
     final result = await _run(
       'xdotool',
       ['windowactivate', '$windowId'],

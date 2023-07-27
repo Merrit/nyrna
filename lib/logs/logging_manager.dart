@@ -46,7 +46,7 @@ class LoggingManager {
       printer: PrefixPrinter(PrettyPrinter(colors: false)),
     );
 
-    log.v('Logger initialized.');
+    log.i('Logger initialized.');
 
     return LoggingManager._(
       logFile,

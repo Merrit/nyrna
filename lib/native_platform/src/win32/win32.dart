@@ -101,14 +101,14 @@ class Win32 implements NativePlatform {
 
   @override
   Future<bool> minimizeWindow(int windowId) async {
-    log.v('Minimizing window with id $windowId');
+    log.i('Minimizing window with id $windowId');
     ShowWindow(windowId, SW_FORCEMINIMIZE);
     return true; // [ShowWindow] return value doesn't confirm success.
   }
 
   @override
   Future<bool> restoreWindow(int windowId) async {
-    log.v('Restoring window with id $windowId');
+    log.i('Restoring window with id $windowId');
     ShowWindow(windowId, SW_RESTORE);
     return true; // [ShowWindow] return value doesn't confirm success.
   }

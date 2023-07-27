@@ -22,7 +22,7 @@ class ActiveWindow {
 
   /// Toggle suspend / resume for the active, foreground window.
   Future<bool> toggle() async {
-    log.v('Toggling active window.');
+    log.i('Toggling active window.');
 
     final savedPid = await _storageRepository.getValue(
       'pid',
@@ -42,7 +42,7 @@ class ActiveWindow {
   }
 
   Future<bool> _resume(int savedPid) async {
-    log.v('resuming, pid: $savedPid');
+    log.i('resuming, pid: $savedPid');
 
     final resumed = await _processRepository.resume(savedPid);
     if (!resumed) {
@@ -63,7 +63,7 @@ class ActiveWindow {
       await _restore(windowId);
     }
 
-    log.v('Resumed $savedPid successfully.');
+    log.i('Resumed $savedPid successfully.');
 
     return true;
   }
@@ -77,11 +77,11 @@ class ActiveWindow {
   }
 
   Future<bool> _suspend() async {
-    log.v('Suspending');
+    log.i('Suspending');
 
     final window = await _nativePlatform.activeWindow();
 
-    log.v('Active window: $window');
+    log.i('Active window: $window');
 
     if (defaultTargetPlatform == TargetPlatform.windows) {
       // Once in a blue moon on Windows we get "explorer.exe" as the active
@@ -117,7 +117,7 @@ class ActiveWindow {
       value: window.id,
       storageArea: 'activeWindow',
     );
-    log.v('Suspended ${window.process.pid} successfully');
+    log.i('Suspended ${window.process.pid} successfully');
 
     return true;
   }
@@ -126,7 +126,7 @@ class ActiveWindow {
     final shouldMinimize = await _getShouldMinimize();
     if (!shouldMinimize) return;
 
-    log.v('Starting minimize');
+    log.i('Starting minimize');
     final minimized = await _nativePlatform.minimizeWindow(windowId);
     if (!minimized) log.e('Failed to minimize window.');
   }
@@ -135,7 +135,7 @@ class ActiveWindow {
     final shouldRestore = await _getShouldMinimize();
     if (!shouldRestore) return;
 
-    log.v('Starting restore');
+    log.i('Starting restore');
     final minimized = await _nativePlatform.restoreWindow(windowId);
     if (!minimized) log.e('Failed to restore window.');
   }
@@ -145,13 +145,13 @@ class ActiveWindow {
     // If minimize preference was set by flag it overrides UI-based preference.
     final minimizeArg = ArgumentParser.instance.minimize;
     if (minimizeArg != null) {
-      log.v('Received no-minimize flag, affecting window state: $minimizeArg');
+      log.i('Received no-minimize flag, affecting window state: $minimizeArg');
       return minimizeArg;
     }
 
     bool? minimize = await _storageRepository.getValue('minimizeWindows');
     minimize ??= true;
-    log.v('Minimizing / restoring window: $minimize');
+    log.i('Minimizing / restoring window: $minimize');
     return minimize;
   }
 }
