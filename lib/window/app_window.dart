@@ -51,7 +51,7 @@ class AppWindow {
   Future<void> saveWindowSize() async {
     final windowInfo = await windowManager.getBounds();
     final rectJson = windowInfo.toJson();
-    log.v('Saving window info:\n$rectJson');
+    log.i('Saving window info:\n$rectJson');
     await _storage.saveValue(key: 'windowSize', value: rectJson);
   }
 
@@ -59,7 +59,7 @@ class AppWindow {
   Future<Rect?> getSavedWindowSize() async {
     final String? rectJson = await _storage.getValue('windowSize');
     if (rectJson == null) return null;
-    log.v('Retrieved saved window info:\n$rectJson');
+    log.i('Retrieved saved window info:\n$rectJson');
     final windowRect = RectConverter.fromJson(rectJson);
     return windowRect;
   }

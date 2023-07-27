@@ -131,7 +131,7 @@ class _GestureDetector extends StatelessWidget {
 
         return GestureDetector(
           onTap: () async {
-            log.v('WindowTile clicked: $window');
+            log.i('WindowTile clicked: $window');
             final windowCubit = context.read<WindowCubit>();
             windowCubit.setLoading(true);
             await context.read<AppsListCubit>().toggle(window);

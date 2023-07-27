@@ -28,7 +28,7 @@ dependencies:
   json_annotation: ^4.8.1
   launch_at_startup: ^0.2.2
   libadwaita: ^2.0.1
-  logger: ^1.1.0
+  logger: ^2.0.1
   package_info_plus: ^4.0.2
   path_provider: ^2.0.1
   pub_semver: ^2.0.0
@@ -49,7 +49,7 @@ dev_dependencies:
   flutter_app_builder:
     git:
       url: https://github.com/Merrit/flutter_app_builder.git
-      ref: d989a05913de3dedcfa8f6d4653d0c6d55e23757
+      ref: c1b6d965ba8dd5c4cf792d536f6ae83746fda18c
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter

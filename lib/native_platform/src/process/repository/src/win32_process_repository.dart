@@ -80,7 +80,7 @@ class Win32ProcessRepository extends ProcessRepository {
     ProcessStatus status;
 
     if (result.stderr != '') {
-      log.w('Unable to get process status', result.stderr);
+      log.w('Unable to get process status', error: result.stderr);
       return ProcessStatus.unknown;
     }
 
@@ -112,7 +112,7 @@ class Win32ProcessRepository extends ProcessRepository {
     final processHandle = OpenProcess(PROCESS_SUSPEND_RESUME, FALSE, pid);
     final result = NtResumeProcess(processHandle);
     final successful = (result == 0);
-    log.v('Resuming $pid was successful: $successful');
+    log.i('Resuming $pid was successful: $successful');
     CloseHandle(processHandle);
     return successful;
   }
@@ -122,7 +122,7 @@ class Win32ProcessRepository extends ProcessRepository {
     final processHandle = OpenProcess(PROCESS_SUSPEND_RESUME, FALSE, pid);
     final result = NtSuspendProcess(processHandle);
     final successful = (result == 0);
-    log.v('Suspending $pid was successful: $successful');
+    log.i('Suspending $pid was successful: $successful');
     CloseHandle(processHandle);
     return successful;
   }

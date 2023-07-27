@@ -26,12 +26,12 @@ class HotkeyService {
     await hotKeyManager.register(
       hotKey,
       keyDownHandler: (hotKey) {
-        log.v('Hotkey triggered: ${hotKey.toStringHelper()}');
+        log.i('Hotkey triggered: ${hotKey.toStringHelper()}');
         _hotkeyTriggeredStreamController.add(hotKey);
       },
     );
 
-    log.v('Registered hotkey: ${hotKey.toStringHelper()}');
+    log.i('Registered hotkey: ${hotKey.toStringHelper()}');
   }
 
   Future<void> removeHotkey(HotKey hotkey) async {

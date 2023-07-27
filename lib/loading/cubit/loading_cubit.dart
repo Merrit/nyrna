@@ -20,7 +20,7 @@ class LoadingCubit extends Cubit<LoadingState> {
   }
 
   Future<void> checkDependencies() async {
-    log.v('Checking dependencies..');
+    log.i('Checking dependencies..');
 
     // Make sure we are not running under Wayland.
     if (Platform.isLinux) {
