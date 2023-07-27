@@ -119,14 +119,16 @@ class AutostartService {
   }
 
   Future<void> _setForFlatpak(bool enable) async {
+    log.i('Setting up autostart for Flatpak app.');
     final client = XdgDesktopPortalClient();
 
-    await client.background.requestBackground(
-      reason: 'Autostarting Adventure List',
+    final result = await client.background.requestBackground(
+      reason: 'Autostarting Nyrna',
       autostart: enable,
-      commandLine: ['flatpak', 'run', 'codes.merritt.adventurelist'],
+      commandLine: ['nyrna'],
     ).first;
 
+    log.i('Result: $result');
     await client.close();
   }
 
