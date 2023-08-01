@@ -404,10 +404,11 @@ packages:
   hotkey_manager:
     dependency: "direct main"
     description:
-      name: hotkey_manager
-      sha256: "8aaa0aeaca7015b8c561a58d02eb7ebba95e93357fc9540398c5751ee24afd7c"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "893e0c7fb880347fa0978787a312629dc874bd2c"
+      resolved-ref: "893e0c7fb880347fa0978787a312629dc874bd2c"
+      url: "https://github.com/Merrit/hotkey_manager.git"
+    source: git
     version: "0.1.8"
   http:
     dependency: "direct main"

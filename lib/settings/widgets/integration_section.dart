@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -113,9 +111,6 @@ class _HotkeyConfigWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Hotkey service not working properly on Linux..
-    if (Platform.isLinux) return const SizedBox();
-
     return ListTile(
       title: const Text('Hotkey'),
       leading: const Icon(Icons.keyboard),
@@ -227,8 +222,6 @@ class _AppSpecificHotkeys extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isLinux) return const SizedBox();
-
     return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (context, state) {
         return Card(

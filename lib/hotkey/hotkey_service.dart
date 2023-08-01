@@ -1,9 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../logs/logs.dart';
+
+/// The default hotkey to use if none is set.
+final HotKey defaultHotkey = HotKey(KeyCode.pause);
 
 class HotkeyService {
   /// Stream that fires when a hotkey is triggered.
@@ -16,11 +18,6 @@ class HotkeyService {
   final _hotkeyTriggeredStreamController = StreamController<HotKey>.broadcast();
 
   Future<void> addHotkey(HotKey hotKey) async {
-    // Hotkey service not working properly on Linux..
-    // - The method channel doesn't seem able to register `Pause` at all.
-    // - Hotkeys don't seem to work on Wayland.
-    if (Platform.isLinux) return;
-
     await hotKeyManager.unregister(hotKey);
 
     await hotKeyManager.register(

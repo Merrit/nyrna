@@ -1,9 +1,6 @@
-import 'package:hotkey_manager/hotkey_manager.dart';
-
 /// The app's name.
 const String kAppName = 'Nyrna';
 
-final HotKey defaultHotkey = HotKey(KeyCode.pause);
 const String kDonateUrl = 'https://merritt.codes/support/';
 
 /// The app's package name in the Microsoft Store.
