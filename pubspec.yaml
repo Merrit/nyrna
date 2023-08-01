@@ -22,7 +22,16 @@ dependencies:
       url: https://github.com/Merrit/helpers.git
       ref: 3b8b7acebb96f43932579f15dcf136e282f6602c
   hive_flutter: ^1.1.0
-  hotkey_manager: ^0.1.8
+
+  # Using a fork of hotkey_manager to fix a bug.
+  # Revert to the original package once the bug is fixed.
+  # See: https://github.com/leanflutter/hotkey_manager/pull/32
+  # hotkey_manager: ^0.1.8
+  hotkey_manager:
+    git:
+      url: https://github.com/Merrit/hotkey_manager.git
+      ref: 893e0c7fb880347fa0978787a312629dc874bd2c
+
   http: ^1.1.0
   intl: any
   json_annotation: ^4.8.1
