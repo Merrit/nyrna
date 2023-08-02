@@ -18,7 +18,10 @@ class HotkeyService {
   final _hotkeyTriggeredStreamController = StreamController<HotKey>.broadcast();
 
   Future<void> addHotkey(HotKey hotKey) async {
-    await hotKeyManager.unregister(hotKey);
+    if (hotKeyManager.registeredHotKeyList.contains(hotKey)) {
+      log.w('Hotkey already registered: ${hotKey.toStringHelper()}');
+      return;
+    }
 
     await hotKeyManager.register(
       hotKey,
