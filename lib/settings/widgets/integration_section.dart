@@ -309,6 +309,7 @@ class _AddAppSpecificHotkeyDialog extends StatelessWidget {
                     child: Text(executable),
                   );
                 }).toList(),
+                isExpanded: true,
                 onChanged: (executable) async {
                   if (executable == null) return;
 
