@@ -146,12 +146,16 @@ class _RecordHotKeyDialog extends StatefulWidget {
 }
 
 class _RecordHotKeyDialogState extends State<_RecordHotKeyDialog> {
+  @override
+  void initState() {
+    super.initState();
+    settingsCubit.removeHotkey();
+  }
+
   HotKey? _hotKey;
 
   @override
   Widget build(BuildContext context) {
-    settingsCubit.removeHotkey();
-
     return AlertDialog(
       content: SingleChildScrollView(
         child: ListBody(
