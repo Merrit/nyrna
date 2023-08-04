@@ -9,6 +9,7 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 import '../../autostart/autostart_service.dart';
 import '../../core/core.dart';
 import '../../hotkey/hotkey_service.dart';
+import '../../logs/logging_manager.dart';
 import '../../storage/storage_repository.dart';
 import '../../window/app_window.dart';
 
@@ -180,6 +181,12 @@ class SettingsCubit extends Cubit<SettingsState> {
     await _hotkeyService.addHotkey(defaultHotkey);
     emit(state.copyWith(hotKey: defaultHotkey));
     await _storage.deleteValue('hotkey');
+  }
+
+  /// Set whether or not to show verbose logging.
+  Future<void> setVerboseLogging(bool value) async {
+    await LoggingManager.initialize(verbose: value);
+    await _storage.saveValue(key: 'verboseLogging', value: value);
   }
 
   /// Toggle autostart on Desktop.
