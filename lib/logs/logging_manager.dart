@@ -9,7 +9,9 @@ late Logger log;
 /// Manages logging for the app.
 class LoggingManager {
   /// The file to which logs are saved.
-  final File _logFile;
+  ///
+  /// If there was an issue creating the log file, this will be null.
+  final File? _logFile;
 
   /// Whether verbose logging is enabled.
   final bool verbose;
@@ -32,14 +34,11 @@ class LoggingManager {
       return LoggingManager._(File(''), verbose: verbose);
     }
 
-    final dataDir = await getApplicationSupportDirectory();
-    final logFile = File('${dataDir.path}${Platform.pathSeparator}log.txt');
-    if (await logFile.exists()) await logFile.delete();
-    await logFile.create();
+    final File? logFile = await _getLogFile();
 
     final List<LogOutput> outputs = [
       ConsoleOutput(),
-      FileOutput(file: logFile),
+      if (logFile != null) FileOutput(file: logFile),
     ];
 
     log = Logger(
@@ -58,9 +57,43 @@ class LoggingManager {
     );
   }
 
-  /// Read the logs from this run from the log file.
-  Future<String> getLogs() async => await _logFile.readAsString();
+  /// Read the logs for this run from the log file.
+  Future<String> getLogs() async {
+    if (_logFile == null) {
+      return 'There was an issue creating the log file.';
+    }
+
+    return await _logFile!.readAsString();
+  }
 
   /// Close the logger and release resources.
   void close() => log.close();
+}
+
+/// Get the log file.
+///
+/// If the log file does not exist, it will be created.
+///
+/// If the log file cannot be created, returns null.
+Future<File?> _getLogFile() async {
+  final dataDir = await getApplicationSupportDirectory();
+  final File logFile = File('${dataDir.path}${Platform.pathSeparator}log.txt');
+
+  if (await logFile.exists()) {
+    try {
+      await logFile.delete();
+    } on Exception catch (e) {
+      log.e('Could not delete log file.', error: e);
+      return null;
+    }
+  }
+
+  try {
+    await logFile.create();
+  } on Exception catch (e) {
+    log.e('Could not create log file.', error: e);
+    return null;
+  }
+
+  return logFile;
 }
