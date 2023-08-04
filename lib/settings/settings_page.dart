@@ -111,7 +111,7 @@ class _VerboseLoggingTileState extends State<_VerboseLoggingTile> {
       value: isVerbose,
       onChanged: (value) async {
         setState(() => isVerbose = value);
-        await LoggingManager.initialize(verbose: value);
+        context.read<SettingsCubit>().setVerboseLogging(value);
       },
     );
   }

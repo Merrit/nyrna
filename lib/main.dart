@@ -36,7 +36,13 @@ Future<void> main(List<String> args) async {
 
   final storage = await StorageRepository.initialize(Hive);
   final nativePlatform = NativePlatform();
-  await LoggingManager.initialize(verbose: argParser.verbose);
+
+  bool verbose = argParser.verbose;
+  if (!verbose) {
+    verbose = await storage.getValue('verboseLogging') ?? false;
+  }
+
+  await LoggingManager.initialize(verbose: verbose);
 
   // Handle platform errors not caught by Flutter.
   PlatformDispatcher.instance.onError = (error, stack) {
