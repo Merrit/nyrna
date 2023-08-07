@@ -19,9 +19,13 @@ class AppVersion {
   String running() => _packageInfo.version;
 
   Future<bool> updateAvailable() async {
-    final runningVersion = semver.Version.parse(_packageInfo.version);
-    final latestVersion = semver.Version.parse(await latest());
-    return (runningVersion < latestVersion) ? true : false;
+    try {
+      final runningVersion = semver.Version.parse(_packageInfo.version);
+      final latestVersion = semver.Version.parse(await latest());
+      return (runningVersion < latestVersion) ? true : false;
+    } on Exception {
+      return false;
+    }
   }
 
   /// Cached variable for `latest()`.
