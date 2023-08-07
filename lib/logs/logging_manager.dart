@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'logs.dart';
+
 /// Globally available instance available for easy logging.
 late Logger log;
 
@@ -34,7 +36,11 @@ class LoggingManager {
       return LoggingManager._(File(''), verbose: verbose);
     }
 
-    final File? logFile = await _getLogFile();
+    final dataDir = await getApplicationSupportDirectory();
+    final String logDirPath = '${dataDir.path}${Platform.pathSeparator}logs';
+    final Directory logDir = Directory(logDirPath);
+    final logFileService = LogFileService(logDir);
+    final File? logFile = await logFileService.getLogFile();
 
     final List<LogOutput> outputs = [
       ConsoleOutput(),
@@ -68,32 +74,4 @@ class LoggingManager {
 
   /// Close the logger and release resources.
   void close() => log.close();
-}
-
-/// Get the log file.
-///
-/// If the log file does not exist, it will be created.
-///
-/// If the log file cannot be created, returns null.
-Future<File?> _getLogFile() async {
-  final dataDir = await getApplicationSupportDirectory();
-  final File logFile = File('${dataDir.path}${Platform.pathSeparator}log.txt');
-
-  if (await logFile.exists()) {
-    try {
-      await logFile.delete();
-    } on Exception catch (e) {
-      log.e('Could not delete log file.', error: e);
-      return null;
-    }
-  }
-
-  try {
-    await logFile.create();
-  } on Exception catch (e) {
-    log.e('Could not create log file.', error: e);
-    return null;
-  }
-
-  return logFile;
 }
