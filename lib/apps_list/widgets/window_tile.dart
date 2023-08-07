@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:helpers/helpers.dart';
 import 'package:libadwaita/libadwaita.dart';
 
 import '../../app/app.dart';
@@ -37,7 +36,7 @@ class WindowState with _$WindowState {
 }
 
 /// Represents a visible window on the desktop, running state and actions.
-class WindowTile extends StatefulWidget {
+class WindowTile extends StatelessWidget {
   final Window window;
 
   const WindowTile({
@@ -46,13 +45,7 @@ class WindowTile extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<WindowTile> createState() => _WindowTileState();
-}
-
-class _WindowTileState extends State<WindowTile> {
-  @override
   Widget build(BuildContext context) {
-    final window = widget.window;
     Color statusColor;
 
     switch (window.process.status) {
@@ -68,92 +61,47 @@ class _WindowTileState extends State<WindowTile> {
 
     return BlocProvider(
       create: (context) => WindowCubit(window),
-      child: _GestureDetector(
-        child: Card(
-          child: Stack(
-            children: [
-              ListTile(
-                leading: BlocBuilder<WindowCubit, WindowState>(
-                  builder: (context, state) {
-                    return Container(
-                      height: 25,
-                      width: 25,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: (state.loading) ? null : statusColor,
-                      ),
-                      child: (state.loading)
-                          ? const CircularProgressIndicator()
-                          : null,
-                    );
-                  },
-                ),
-                title: Text(window.title),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('PID: ${window.process.pid}'),
-                    Text(window.process.executable),
-                  ],
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 2,
-                  horizontal: 20,
-                ),
-                trailing: const _DetailsButton(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Handles right-click on the WindowTile by showing a context menu.
-class _GestureDetector extends StatelessWidget {
-  final Widget child;
-
-  const _GestureDetector({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<WindowCubit, WindowState>(
-      builder: (context, state) {
-        final Window window = state.window;
-
-        final availableAction = (window.process.status == ProcessStatus.normal)
-            ? 'Suspend'
-            : 'Resume';
-
-        return GestureDetector(
-          onTap: () async {
-            log.i('WindowTile clicked: $window');
-            final windowCubit = context.read<WindowCubit>();
-            windowCubit.setLoading(true);
-            await context.read<AppsListCubit>().toggle(window);
-            windowCubit.setLoading(false);
-          },
-          onSecondaryTapUp: (details) {
-            showContextMenu(
-              context: context,
-              offset: details.globalPosition,
-              items: [
-                PopupMenuItem(
-                  onTap: () => context.read<AppsListCubit>().toggleAll(window),
-                  child: Text(
-                    '$availableAction all instances of ${window.process.executable}',
+      child: Builder(builder: (context) {
+        return Card(
+          child: ListTile(
+            leading: BlocBuilder<WindowCubit, WindowState>(
+              builder: (context, state) {
+                return Container(
+                  height: 25,
+                  width: 25,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: (state.loading) ? null : statusColor,
                   ),
-                ),
+                  child: (state.loading)
+                      ? const CircularProgressIndicator()
+                      : null,
+                );
+              },
+            ),
+            title: Text(window.title),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('PID: ${window.process.pid}'),
+                Text(window.process.executable),
               ],
-            );
-          },
-          child: child,
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 2,
+              horizontal: 20,
+            ),
+            trailing: const _DetailsButton(),
+            onTap: () async {
+              log.i('WindowTile clicked: $window');
+              final windowCubit = context.read<WindowCubit>();
+              windowCubit.setLoading(true);
+              await context.read<AppsListCubit>().toggle(window);
+              windowCubit.setLoading(false);
+            },
+          ),
         );
-      },
+      }),
     );
   }
 }
@@ -164,6 +112,9 @@ class _DetailsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final window = context.select((WindowCubit cubit) => cubit.state.window);
+
+    final availableAction =
+        (window.process.status == ProcessStatus.normal) ? 'Suspend' : 'Resume';
 
     return BlocBuilder<AppsListCubit, AppsListState>(
       builder: (context, state) {
@@ -177,11 +128,27 @@ class _DetailsButton extends StatelessWidget {
           style: const TextStyle(fontFamily: 'Noto Color Emoji'),
         );
 
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            errorIndicator,
-            IconButton(
+        final toggleAllButton = MenuItemButton(
+          child: Text('$availableAction all instances'),
+          onPressed: () => context.read<AppsListCubit>().toggleAll(window),
+        );
+
+        final Widget moreActionsButton = MenuAnchor(
+          builder: (context, controller, child) {
+            return IconButton(
+              onPressed: () {
+                if (controller.isOpen) {
+                  controller.close();
+                } else {
+                  controller.open();
+                }
+              },
+              icon: const Icon(Icons.more_vert),
+            );
+          },
+          menuChildren: [
+            MenuItemButton(
+              child: Text(AppLocalizations.of(context)!.detailsDialogTitle),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -190,8 +157,16 @@ class _DetailsButton extends StatelessWidget {
                   },
                 );
               },
-              icon: const Icon(Icons.keyboard_arrow_right),
             ),
+            toggleAllButton,
+          ],
+        );
+
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            errorIndicator,
+            moreActionsButton,
           ],
         );
       },
