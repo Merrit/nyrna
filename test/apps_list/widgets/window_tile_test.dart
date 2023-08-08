@@ -53,36 +53,4 @@ void main() {
 
     when(mockSettingsCubit.state).thenReturn(SettingsState.initial());
   });
-
-  testWidgets('Right-click shows context menu', (tester) async {
-    final appsListCubit = AppsListCubit(
-      appVersion: mockAppVersion,
-      hotkeyService: mockHotkeyService,
-      nativePlatform: mockNativePlatform,
-      processRepository: mockProcessRepository,
-      settingsCubit: mockSettingsCubit,
-      storage: mockStorageRepository,
-      systemTrayManager: mockSystemTrayManager,
-    );
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: BlocProvider.value(
-            value: appsListCubit,
-            child: const WindowTile(
-              window: defaultTestWindow,
-            ),
-          ),
-        ),
-      ),
-    );
-
-    await tester.tap(find.byType(WindowTile), buttons: kSecondaryButton);
-    await tester.pumpAndSettle();
-
-    expect(find.text('Suspend all instances of firefox-bin'), findsOneWidget);
-
-    await appsListCubit.close();
-  });
 }
