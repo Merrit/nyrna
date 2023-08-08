@@ -1,6 +1,5 @@
 #define MyAppName "Nyrna"
 #define MyAppNameNoSpaces "Nyrna"
-#define MyAppVersion "2.9.0"
 #define MyAppPublisher "Merritt Codes"
 #define MyAppURL "https://nyrna.merritt.codes/"
 #define MyAppExeName "nyrna.exe"
@@ -10,8 +9,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{F728720C-4ACF-4DF2-A7E9-3D160F52C9DF}
 AppName={#MyAppName}
-AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+AppVersion={param:DAppVersion}
+;AppVerName={#MyAppName} {param:DAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
