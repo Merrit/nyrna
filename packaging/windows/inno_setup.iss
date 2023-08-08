@@ -9,7 +9,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{F728720C-4ACF-4DF2-A7E9-3D160F52C9DF}
 AppName={#MyAppName}
-AppVersion={param:DAppVersion}
+AppVersion={#AppVersion}
 ;AppVerName={#MyAppName} {param:DAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
