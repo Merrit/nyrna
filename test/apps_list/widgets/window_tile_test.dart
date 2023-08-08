@@ -1,6 +1,6 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -52,5 +52,40 @@ void main() {
     reset(mockSystemTrayManager);
 
     when(mockSettingsCubit.state).thenReturn(SettingsState.initial());
+  });
+
+  testWidgets('Clicking more actions button shows context menu',
+      (tester) async {
+    final appsListCubit = AppsListCubit(
+      appVersion: mockAppVersion,
+      hotkeyService: mockHotkeyService,
+      nativePlatform: mockNativePlatform,
+      processRepository: mockProcessRepository,
+      settingsCubit: mockSettingsCubit,
+      storage: mockStorageRepository,
+      systemTrayManager: mockSystemTrayManager,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: BlocProvider.value(
+            value: appsListCubit,
+            child: const WindowTile(
+              window: defaultTestWindow,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(IconButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Suspend all instances'), findsOneWidget);
+
+    await appsListCubit.close();
   });
 }
