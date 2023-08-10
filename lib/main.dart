@@ -93,17 +93,19 @@ Future<void> main(List<String> args) async {
   // Provides information on this app from the pubspec.yaml.
   final packageInfo = await PackageInfo.fromPlatform();
 
+  final systemTray = SystemTrayManager();
+  await systemTray.initialize();
+
   final appCubit = AppCubit(
+    appWindow,
     ReleaseNotesService(
       client: http.Client(),
       repository: 'merrit/nyrna',
     ),
     storage,
+    systemTray,
     UpdateService(),
   );
-
-  final systemTray = SystemTrayManager(appWindow);
-  await systemTray.initialize();
 
   final appsListCubit = AppsListCubit(
     hotkeyService: hotkeyService,

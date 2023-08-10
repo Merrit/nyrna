@@ -4,18 +4,24 @@ import 'package:mockito/mockito.dart';
 import 'package:nyrna/app/app.dart';
 import 'package:nyrna/logs/logs.dart';
 import 'package:nyrna/storage/storage_repository.dart';
+import 'package:nyrna/system_tray/system_tray.dart';
 import 'package:nyrna/updates/updates.dart';
+import 'package:nyrna/window/app_window.dart';
 import 'package:test/test.dart';
 
 @GenerateNiceMocks(<MockSpec>[
+  MockSpec<AppWindow>(),
   MockSpec<ReleaseNotesService>(),
   MockSpec<StorageRepository>(),
+  MockSpec<SystemTrayManager>(),
   MockSpec<UpdateService>(),
 ])
 import 'app_cubit_test.mocks.dart';
 
+final mockAppWindow = MockAppWindow();
 final mockReleaseNotesService = MockReleaseNotesService();
 final mockStorageRepo = MockStorageRepository();
+final mockSystemTrayManager = MockSystemTrayManager();
 final mockUpdateService = MockUpdateService();
 
 late AppCubit cubit;
@@ -27,16 +33,20 @@ void main() {
   });
 
   setUp(() {
+    reset(mockAppWindow);
     reset(mockReleaseNotesService);
     reset(mockStorageRepo);
+    reset(mockSystemTrayManager);
     reset(mockUpdateService);
 
     when(mockUpdateService.getVersionInfo())
         .thenAnswer((_) async => VersionInfo.empty());
 
     cubit = AppCubit(
+      mockAppWindow,
       mockReleaseNotesService,
       mockStorageRepo,
+      mockSystemTrayManager,
       mockUpdateService,
     );
   });
