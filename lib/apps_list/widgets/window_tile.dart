@@ -18,25 +18,18 @@ class WindowCubit extends Cubit<WindowState> {
   WindowCubit(Window window)
       : super(WindowState(
           window: window,
-          loading: false,
         ));
-
-  /// Set loading state.
-  void setLoading(bool loading) {
-    emit(state.copyWith(loading: loading));
-  }
 }
 
 @freezed
 class WindowState with _$WindowState {
   const factory WindowState({
     required Window window,
-    required bool loading,
   }) = _WindowState;
 }
 
 /// Represents a visible window on the desktop, running state and actions.
-class WindowTile extends StatelessWidget {
+class WindowTile extends StatefulWidget {
   final Window window;
 
   const WindowTile({
@@ -45,10 +38,17 @@ class WindowTile extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<WindowTile> createState() => _WindowTileState();
+}
+
+class _WindowTileState extends State<WindowTile> {
+  bool loading = false;
+
+  @override
   Widget build(BuildContext context) {
     Color statusColor;
 
-    switch (window.process.status) {
+    switch (widget.window.process.status) {
       case ProcessStatus.normal:
         statusColor = Colors.green;
         break;
@@ -60,7 +60,7 @@ class WindowTile extends StatelessWidget {
     }
 
     return BlocProvider(
-      create: (context) => WindowCubit(window),
+      create: (context) => WindowCubit(widget.window),
       child: Builder(builder: (context) {
         return Card(
           child: ListTile(
@@ -71,20 +71,18 @@ class WindowTile extends StatelessWidget {
                   width: 25,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: (state.loading) ? null : statusColor,
+                    color: (loading) ? null : statusColor,
                   ),
-                  child: (state.loading)
-                      ? const CircularProgressIndicator()
-                      : null,
+                  child: (loading) ? const CircularProgressIndicator() : null,
                 );
               },
             ),
-            title: Text(window.title),
+            title: Text(widget.window.title),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('PID: ${window.process.pid}'),
-                Text(window.process.executable),
+                Text('PID: ${widget.window.process.pid}'),
+                Text(widget.window.process.executable),
               ],
             ),
             contentPadding: const EdgeInsets.symmetric(
@@ -93,11 +91,13 @@ class WindowTile extends StatelessWidget {
             ),
             trailing: const _DetailsButton(),
             onTap: () async {
-              log.i('WindowTile clicked: $window');
-              final windowCubit = context.read<WindowCubit>();
-              windowCubit.setLoading(true);
-              await context.read<AppsListCubit>().toggle(window);
-              windowCubit.setLoading(false);
+              log.i('WindowTile clicked: ${widget.window}');
+
+              setState(() => loading = true);
+              await context.read<AppsListCubit>().toggle(widget.window);
+
+              if (!mounted) return;
+              setState(() => loading = false);
             },
           ),
         );
