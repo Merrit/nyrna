@@ -12,7 +12,7 @@ import '../../hotkey/hotkey_service.dart';
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../../storage/storage_repository.dart';
-import '../../system_tray/system_tray_manager.dart';
+import '../../system_tray/system_tray.dart';
 import '../apps_list.dart';
 
 part 'apps_list_state.dart';
@@ -223,8 +223,10 @@ class AppsListCubit extends Cubit<AppsListState> {
 
   /// After the window is shown via the system tray, refresh the list of windows.
   void _listenForSystemTrayShowEvent() {
-    _systemTrayManager.windowShownStream.listen((_) async {
-      await manualRefresh();
+    _systemTrayManager.eventStream.listen((event) async {
+      if (event == SystemTrayEvent.windowShow) {
+        await manualRefresh();
+      }
     });
   }
 

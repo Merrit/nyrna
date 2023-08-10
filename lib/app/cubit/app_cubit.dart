@@ -9,7 +9,9 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import '../../logs/logs.dart';
 import '../../storage/storage_repository.dart';
+import '../../system_tray/system_tray.dart';
 import '../../updates/updates.dart';
+import '../../window/app_window.dart';
 
 part 'app_cubit.freezed.dart';
 part 'app_state.dart';
@@ -17,10 +19,16 @@ part 'app_state.dart';
 /// Handles general app-related functionality, like launching urls and checking
 /// for app updates.
 class AppCubit extends Cubit<AppState> {
+  /// Service for managing the app window.
+  final AppWindow _appWindow;
+
   /// Service for fetching release notes.
   final ReleaseNotesService _releaseNotesService;
 
   final StorageRepository _storageRepository;
+
+  /// Service for managing the system tray.
+  final SystemTrayManager _systemTrayManager;
 
   /// Service for fetching version info.
   final UpdateService _updateService;
@@ -28,8 +36,10 @@ class AppCubit extends Cubit<AppState> {
   static late AppCubit instance;
 
   AppCubit(
+    this._appWindow,
     this._releaseNotesService,
     this._storageRepository,
+    this._systemTrayManager,
     this._updateService,
   ) : super(AppState.initial()) {
     instance = this;
@@ -44,6 +54,7 @@ class AppCubit extends Cubit<AppState> {
     await _checkForFirstRun();
     await _fetchVersionData();
     await _fetchReleaseNotes();
+    _listenToSystemTrayEvents();
   }
 
   /// Checks if this is the first run of the app.
@@ -83,6 +94,26 @@ class AppCubit extends Cubit<AppState> {
     if (releaseNotes == null) return;
 
     emit(state.copyWith(releaseNotes: releaseNotes));
+  }
+
+  /// Listens and reacts to system tray events.
+  void _listenToSystemTrayEvents() {
+    _systemTrayManager.eventStream.listen((event) {
+      switch (event) {
+        case SystemTrayEvent.exit:
+          _appWindow.close();
+          break;
+        case SystemTrayEvent.windowHide:
+          _appWindow.hide();
+          break;
+        case SystemTrayEvent.windowReset:
+          _appWindow.reset();
+          break;
+        case SystemTrayEvent.windowShow:
+          _appWindow.show();
+          break;
+      }
+    });
   }
 
   /// The user has dismissed the release notes dialog.

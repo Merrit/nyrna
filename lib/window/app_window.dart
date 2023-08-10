@@ -41,6 +41,13 @@ class AppWindow {
     await windowManager.hide();
   }
 
+  /// Reset the app window position.
+  ///
+  /// This can be useful if the window has been moved off-screen.
+  Future<void> reset() async {
+    await windowManager.center();
+  }
+
   /// Shows the app window.
   Future<void> show() async {
     final Rect? savedWindowSize = await getSavedWindowSize();
