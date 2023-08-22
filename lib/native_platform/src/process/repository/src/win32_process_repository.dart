@@ -69,11 +69,12 @@ class Win32ProcessRepository extends ProcessRepository {
       'powershell',
       [
         '-NoProfile',
-        '\$process=[System.Diagnostics.Process]::GetProcessById($pid)',
-        ';',
-        '\$threads=\$process.Threads',
-        ';',
-        '\$threads | select Id,ThreadState,WaitReason',
+        '-c',
+        '''
+\$process=[System.Diagnostics.Process]::GetProcessById($pid);
+\$threads=\$process.Threads;
+\$threads | select Id,ThreadState,WaitReason
+''',
       ],
     );
 
