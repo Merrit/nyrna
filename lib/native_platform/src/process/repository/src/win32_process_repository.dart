@@ -5,14 +5,22 @@ import 'package:win32/win32.dart';
 import 'package:win32_suspend_process/win32_suspend_process.dart';
 
 import '../../../../../logs/logs.dart';
-import '../../../typedefs.dart';
 import '../../process.dart';
+
+/// Natuve library that provides a function to check if a process is suspended.
+final DynamicLibrary _nativeLibrary = DynamicLibrary.open(
+  r'assets/lib/windows/NativeLibrary.dll',
+);
+
+/// Native function that returns 1 if the process is suspended, 0 otherwise.
+final int Function(int pid) _isProcessSuspendedNative =
+    _nativeLibrary.lookupFunction<Int32 Function(Int32), int Function(int)>(
+  'IsProcessSuspended',
+);
 
 /// Provides interaction access with host system processes on Windows.
 class Win32ProcessRepository extends ProcessRepository {
-  final RunFunction _run;
-
-  const Win32ProcessRepository(this._run);
+  const Win32ProcessRepository();
 
   @override
   Future<bool> exists(int pid) async {
@@ -65,46 +73,8 @@ class Win32ProcessRepository extends ProcessRepository {
 
   @override
   Future<ProcessStatus> getProcessStatus(int pid) async {
-    final result = await _run(
-      'powershell',
-      [
-        '-NoProfile',
-        '\$process=[System.Diagnostics.Process]::GetProcessById($pid)',
-        ';',
-        '\$threads=\$process.Threads',
-        ';',
-        '\$threads | select Id,ThreadState,WaitReason',
-      ],
-    );
-
-    ProcessStatus status;
-
-    if (result.stderr != '') {
-      log.w('Unable to get process status', error: result.stderr);
-      return ProcessStatus.unknown;
-    }
-
-    var threads = result.stdout.toString().trim().split('\n');
-    // Strip out the column headers
-    threads = threads.sublist(2);
-
-    final suspended = <bool>[];
-    // Check each thread's status, track in [suspended] variable.
-    for (var thread in threads) {
-      final threadWaitReason = thread.split(' ').last.trim();
-      if (threadWaitReason == 'Suspended') {
-        suspended.add(true);
-      } else {
-        suspended.add(false);
-      }
-    }
-
-    // If every thread has the `Suspended` status, process is suspended.
-    status = suspended.contains(false)
-        ? ProcessStatus.normal
-        : ProcessStatus.suspended;
-
-    return status;
+    final isSuspended = _isProcessSuspended(pid);
+    return isSuspended ? ProcessStatus.suspended : ProcessStatus.normal;
   }
 
   @override
@@ -125,5 +95,10 @@ class Win32ProcessRepository extends ProcessRepository {
     log.i('Suspending $pid was successful: $successful');
     CloseHandle(processHandle);
     return successful;
+  }
+
+  /// Returns true if the process is suspended, false otherwise.
+  bool _isProcessSuspended(int pid) {
+    return _isProcessSuspendedNative(pid) == 1;
   }
 }

@@ -75,6 +75,7 @@ flutter:
   generate: true
   assets:
     - assets/icons/
+    - assets/lib/
     - packaging/linux/codes.merritt.Nyrna.desktop
 
 flutter_app_builder:
