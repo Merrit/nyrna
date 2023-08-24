@@ -20,7 +20,7 @@ abstract class ProcessRepository {
           : io.Process.killPid;
       return LinuxProcessRepository(killFunction, runFunction);
     } else {
-      return const Win32ProcessRepository();
+      return Win32ProcessRepository();
     }
   }
 

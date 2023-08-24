@@ -1,26 +1,39 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
+import 'package:flutter/foundation.dart';
 import 'package:win32/win32.dart';
 import 'package:win32_suspend_process/win32_suspend_process.dart';
 
 import '../../../../../logs/logs.dart';
 import '../../process.dart';
 
-/// Natuve library that provides a function to check if a process is suspended.
-final DynamicLibrary _nativeLibrary = DynamicLibrary.open(
-  r'assets/lib/windows/NativeLibrary.dll',
-);
-
-/// Native function that returns 1 if the process is suspended, 0 otherwise.
-final int Function(int pid) _isProcessSuspendedNative =
-    _nativeLibrary.lookupFunction<Int32 Function(Int32), int Function(int)>(
-  'IsProcessSuspended',
-);
-
 /// Provides interaction access with host system processes on Windows.
 class Win32ProcessRepository extends ProcessRepository {
-  const Win32ProcessRepository();
+  /// Native function that returns 1 if the process is suspended, 0 otherwise.
+  final int Function(int pid) _isProcessSuspendedNative;
+
+  Win32ProcessRepository._(this._isProcessSuspendedNative);
+
+  factory Win32ProcessRepository() {
+    /// Load the native library.
+    final String nativeLibraryPath;
+    if (kReleaseMode) {
+      nativeLibraryPath =
+          r'data\flutter_assets\assets\lib\windows\NativeLibrary.dll';
+    } else {
+      nativeLibraryPath = r'assets\lib\windows\NativeLibrary.dll';
+    }
+
+    final nativeLibrary = DynamicLibrary.open(nativeLibraryPath);
+
+    final isProcessSuspendedNative =
+        nativeLibrary.lookupFunction<Int32 Function(Int32), int Function(int)>(
+      'IsProcessSuspended',
+    );
+
+    return Win32ProcessRepository._(isProcessSuspendedNative);
+  }
 
   @override
   Future<bool> exists(int pid) async {
