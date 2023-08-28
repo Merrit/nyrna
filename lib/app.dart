@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -36,12 +38,34 @@ class _AppState extends State<App> with TrayListener, WindowListener {
 
   @override
   void onWindowClose() {
+    final appWindow = context.read<AppWindow>();
+
     if (settingsCubit.state.closeToTray) {
-      AppWindow.instance.hide();
-      return;
+      appWindow.hide();
     } else {
-      super.onWindowClose();
+      appWindow.close();
     }
+  }
+
+  Timer? timer;
+
+  @override
+  void onWindowEvent(String eventName) {
+    if (eventName == 'move' || eventName == 'resize') {
+      /// Set a timer between events that trigger saving the window size and
+      /// location. This is required because there is no notification available
+      /// for when these events *finish*, and therefore it would be triggered
+      /// hundreds of times otherwise during a move event.
+      timer?.cancel();
+      timer = null;
+      timer = Timer(
+        const Duration(seconds: 5),
+        () {
+          context.read<AppWindow>().saveWindowSizeAndPosition();
+        },
+      );
+    }
+    super.onWindowEvent(eventName);
   }
 
   @override

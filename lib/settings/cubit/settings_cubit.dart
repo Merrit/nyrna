@@ -11,7 +11,6 @@ import '../../core/core.dart';
 import '../../hotkey/hotkey_service.dart';
 import '../../logs/logging_manager.dart';
 import '../../storage/storage_repository.dart';
-import '../../window/app_window.dart';
 
 part 'settings_state.dart';
 part 'settings_cubit.freezed.dart';
@@ -36,8 +35,6 @@ class SettingsCubit extends Cubit<SettingsState> {
     for (final hotkey in state.appSpecificHotKeys) {
       _hotkeyService.addHotkey(hotkey.hotkey);
     }
-
-    AppWindow.instance.preventClose(state.closeToTray);
   }
 
   static Future<SettingsCubit> init({
@@ -134,7 +131,6 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateCloseToTray([bool? closeToTray]) async {
     if (closeToTray == null) return;
 
-    await AppWindow.instance.preventClose(closeToTray);
     await _storage.saveValue(key: 'closeToTray', value: closeToTray);
     emit(state.copyWith(closeToTray: closeToTray));
   }

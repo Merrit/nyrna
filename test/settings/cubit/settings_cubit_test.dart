@@ -30,10 +30,6 @@ late SettingsCubit cubit;
 SettingsState get state => cubit.state;
 
 void main() {
-  setUpAll((() {
-    AppWindow.instance = appWindow;
-  }));
-
   setUp((() async {
     reset(appsListCubit);
     reset(appWindow);
@@ -46,8 +42,6 @@ void main() {
 
     when(hotkeyService.addHotkey(any)).thenAnswer((_) async {});
     when(hotkeyService.removeHotkey(any)).thenAnswer((_) async {});
-
-    when(appWindow.preventClose(any)).thenAnswer((_) async {});
 
     when(storage.getValue('hotkey')).thenAnswer((_) async {});
     when(storage.deleteValue(any)).thenAnswer((_) async {});

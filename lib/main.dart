@@ -7,7 +7,6 @@ import 'package:helpers/helpers.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:window_manager/window_manager.dart';
 
 import 'active_window/active_window.dart';
 import 'app.dart';
@@ -28,7 +27,6 @@ import 'window/app_window.dart';
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
 
   // Parse command-line arguments.
   final argParser = ArgumentParser() //
@@ -118,14 +116,19 @@ Future<void> main(List<String> args) async {
   );
 
   runApp(
-    MultiBlocProvider(
+    MultiRepositoryProvider(
       providers: [
-        BlocProvider.value(value: appCubit),
-        BlocProvider.value(value: appsListCubit),
-        BlocProvider.value(value: settingsCubit),
-        BlocProvider.value(value: themeCubit),
+        RepositoryProvider.value(value: appWindow),
       ],
-      child: const App(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: appCubit),
+          BlocProvider.value(value: appsListCubit),
+          BlocProvider.value(value: settingsCubit),
+          BlocProvider.value(value: themeCubit),
+        ],
+        child: const App(),
+      ),
     ),
   );
 }

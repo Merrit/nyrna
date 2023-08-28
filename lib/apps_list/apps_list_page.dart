@@ -7,7 +7,6 @@ import '../app/app.dart';
 import '../core/core.dart';
 import '../settings/cubit/settings_cubit.dart';
 import '../theme/theme.dart';
-import '../window/app_window.dart';
 import 'apps_list.dart';
 
 /// The main screen for Nyrna.
@@ -22,27 +21,7 @@ class AppsListPage extends StatefulWidget {
   State<AppsListPage> createState() => _AppsListPageState();
 }
 
-class _AppsListPageState extends State<AppsListPage>
-    with WidgetsBindingObserver {
-  /// Tracks the current window size.
-  ///
-  /// Updated in [initState], [dispose], and [didChangeMetrics] so that
-  /// we can save the window size when the user resizes the window.
-  late Size _appWindowSize;
-
-  @override
-  void initState() {
-    super.initState();
-    // Listen for changes to the application's window size.
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
+class _AppsListPageState extends State<AppsListPage> {
   @override
   void didChangeDependencies() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -51,16 +30,6 @@ class _AppsListPageState extends State<AppsListPage>
     });
 
     super.didChangeDependencies();
-  }
-
-  @override
-  void didChangeMetrics() {
-    final updatedWindowSize = View.of(context).physicalSize;
-    if (_appWindowSize != updatedWindowSize) {
-      _appWindowSize = updatedWindowSize;
-      AppWindow.instance.saveWindowSize();
-    }
-    super.didChangeMetrics();
   }
 
   final ScrollController scrollController = ScrollController();
@@ -75,8 +44,6 @@ class _AppsListPageState extends State<AppsListPage>
 
   @override
   Widget build(BuildContext context) {
-    _appWindowSize = View.of(context).physicalSize;
-
     return Scaffold(
       appBar: const CustomAppBar(),
       body: BlocBuilder<AppCubit, AppState>(
