@@ -85,6 +85,7 @@ flutter_app_builder:
   languages:
     - en-us
     - de
+    - it
   msix_identity_name: 33694MerrittCodes.Nyrna
   msix_publisher: CN=0AA9BC0E-36DF-4B4F-BFF4-E300B746CB9D
   msix_icon_path: assets\icons\codes.merritt.Nyrna.png
