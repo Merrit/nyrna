@@ -69,6 +69,15 @@ class AppWindow {
   /// If the window size and position has been saved previously, it will be
   /// restored. Otherwise, the window will be centered on the primary screen.
   Future<void> setWindowSizeAndPosition() async {
+    /// Window size and position is not supported on Windows.
+    /// (Works fine on Linux.)
+    ///
+    /// The window doesn't account for scaling correctly, and it doesn't
+    /// seem worthwhile to spend a lot of time on this until they have finished
+    /// their work on the new Flutter multi window support that is causing all
+    /// kinds of changes and depreciations.
+    if (Platform.isWindows) return;
+
     log.t('Setting window size and position.');
     final screenConfigurationId = await _getScreenConfigurationId();
     final windowInfo = await window_size.getWindowInfo();
