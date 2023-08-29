@@ -20,7 +20,7 @@ dependencies:
   helpers:
     git:
       url: https://github.com/Merrit/helpers.git
-      ref: 3b8b7acebb96f43932579f15dcf136e282f6602c
+      ref: 25abb2f2d4758ffbf1cc166adc3047df5117aa4d
   hive_flutter: ^1.1.0
 
   # Using a fork of hotkey_manager to fix a bug.
