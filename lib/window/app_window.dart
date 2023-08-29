@@ -5,7 +5,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart' as window_size;
-import 'package:window_size/window_size.dart' show PlatformWindow, Screen;
 
 import '../logs/logging_manager.dart';
 import '../storage/storage_repository.dart';
@@ -47,37 +46,21 @@ class AppWindow {
   ///
   /// Allows us to restore the window size and position on the next run.
   Future<void> saveWindowSizeAndPosition() async {
-    // final windowInfo = await window_size.getWindowInfo();
-    // final Rect frame = windowInfo.frame;
-    // final String screenConfigurationId = await _getScreenConfigurationId();
-
-    // log.t(
-    //   'Saving window size and position. \n'
-    //   'Screen configuration ID: $screenConfigurationId \n'
-    //   'Window bounds: left: ${frame.left}, top: ${frame.top}, '
-    //   'width: ${frame.width}, height: ${frame.height}',
-    // );
-
-    // await _storageRepository.saveValue(
-    //   storageArea: 'windowSizeAndPosition',
-    //   key: screenConfigurationId,
-    //   value: frame.toJson(),
-    // );
-
-    // `window_size` uses screen coordinates, so we need to convert them to
-    // logical pixels using the screen's `scaleFactor`.
-    final String screenConfigurationId = await _getScreenConfigurationId();
     final windowInfo = await window_size.getWindowInfo();
+    final Rect frame = windowInfo.frame;
+    final String screenConfigurationId = await _getScreenConfigurationId();
 
-    double? scaleFactor = windowInfo.screen?.scaleFactor ?? 1.0;
-    if (scaleFactor == 0) scaleFactor = 1.0;
+    log.t(
+      'Saving window size and position. \n'
+      'Screen configuration ID: $screenConfigurationId \n'
+      'Window bounds: left: ${frame.left}, top: ${frame.top}, '
+      'width: ${frame.width}, height: ${frame.height}',
+    );
 
-    Rect frame = windowInfo.frame;
-    frame = Rect.fromLTWH(
-      frame.left / scaleFactor,
-      frame.top / scaleFactor,
-      frame.width / scaleFactor,
-      frame.height / scaleFactor,
+    await _storageRepository.saveValue(
+      storageArea: 'windowSizeAndPosition',
+      key: screenConfigurationId,
+      value: frame.toJson(),
     );
   }
 
@@ -90,7 +73,6 @@ class AppWindow {
     final screenConfigurationId = await _getScreenConfigurationId();
     final windowInfo = await window_size.getWindowInfo();
     final Rect currentWindowFrame = windowInfo.frame;
-    final double scaleFactor = windowInfo.scaleFactor;
 
     final String? savedWindowRectJson = await _storageRepository.getValue(
       screenConfigurationId,
@@ -98,22 +80,10 @@ class AppWindow {
     );
 
     Rect targetWindowFrame;
-    // Adjust for the scale factor.
     if (savedWindowRectJson != null) {
       targetWindowFrame = _rectFromJson(savedWindowRectJson);
-      targetWindowFrame = Rect.fromLTWH(
-        targetWindowFrame.left,
-        targetWindowFrame.top,
-        targetWindowFrame.width * scaleFactor,
-        targetWindowFrame.height * scaleFactor,
-      );
     } else {
-      targetWindowFrame = Rect.fromLTWH(
-        0,
-        0,
-        530 * scaleFactor,
-        600 * scaleFactor,
-      );
+      targetWindowFrame = const Rect.fromLTWH(0, 0, 530, 600);
     }
 
     if (targetWindowFrame == currentWindowFrame) {
@@ -161,27 +131,6 @@ class AppWindow {
   }
 }
 
-extension _PlatformWindowHelper on PlatformWindow {
-  Map<String, dynamic> toMap() {
-    return {
-      'frame': frame.toMap(),
-      'scaleFactor': scaleFactor,
-      'screen': screen?.toMap(),
-    };
-  }
-
-  String toJson() => json.encode(toMap());
-}
-
-PlatformWindow _platformWindowFromJson(String source) {
-  final Map<String, dynamic> map = json.decode(source);
-  return PlatformWindow(
-    _rectFromJson(map['frame']),
-    map['scaleFactor'],
-    map['screen'] != null ? _screenFromJson(map['screen']) : null,
-  );
-}
-
 extension _RectHelper on Rect {
   Map<String, dynamic> toMap() {
     return {
@@ -202,26 +151,5 @@ Rect _rectFromJson(String source) {
     map['top'],
     map['width'],
     map['height'],
-  );
-}
-
-extension _ScreenHelper on Screen {
-  Map<String, dynamic> toMap() {
-    return {
-      'frame': frame.toMap(),
-      'visibleFrame': visibleFrame.toMap(),
-      'scaleFactor': scaleFactor,
-    };
-  }
-
-  String toJson() => json.encode(toMap());
-}
-
-Screen _screenFromJson(String source) {
-  final Map<String, dynamic> map = json.decode(source);
-  return Screen(
-    _rectFromJson(map['frame']),
-    _rectFromJson(map['visibleFrame']),
-    map['scaleFactor'],
   );
 }
