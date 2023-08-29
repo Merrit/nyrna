@@ -1,7 +1,7 @@
 name: nyrna
 description: Suspend any game or application.
 publish_to: "none"
-version: 2.16.1
+version: 2.17.0
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -50,7 +50,7 @@ dependencies:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/window_size
-      ref: 03d957e8b5c99fc83cd4a781031b154ab3de8753
+      ref: 6c66ad23ee79749f30a8eece542cf54eaf157ed8
   xdg_desktop_portal: ^0.1.12
 
 dev_dependencies:
