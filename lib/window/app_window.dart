@@ -16,12 +16,14 @@ class AppWindow {
 
   Future<void> initialize() async {
     await windowManager.ensureInitialized();
+    final bool startHiddenInTray =
+        await _storageRepository.getValue('startHiddenInTray') ?? false;
 
     const WindowOptions windowOptions = WindowOptions();
     windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.setPreventClose(true);
       await setWindowSizeAndPosition();
-      await windowManager.show();
+      if (!startHiddenInTray) await windowManager.show();
     });
   }
 
