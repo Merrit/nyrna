@@ -46,8 +46,12 @@ class _CloseToTrayTile extends StatelessWidget {
         builder: (context, state) {
           return Switch(
             value: state.closeToTray,
-            onChanged: (value) async {
+            onChanged: (bool value) async {
               await settingsCubit.updateCloseToTray(value);
+
+              if (state.startHiddenInTray && !value) {
+                await settingsCubit.updateStartHiddenInTray(false);
+              }
             },
           );
         },
@@ -69,8 +73,12 @@ class _AutostartTile extends StatelessWidget {
             AppLocalizations.of(context)!.startAutomatically,
           ),
           value: state.autoStart,
-          onChanged: (_) async {
+          onChanged: (bool value) async {
             await settingsCubit.toggleAutostart();
+
+            if (state.startHiddenInTray && !value) {
+              await settingsCubit.updateStartHiddenInTray(false);
+            }
           },
         );
       },
@@ -85,17 +93,21 @@ class _StartHiddenTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (context, state) {
-        if (!state.closeToTray || !state.autoStart) {
-          return const SizedBox();
-        }
-
         return SwitchListTile(
           secondary: const Icon(Icons.auto_awesome),
           title: Text(
             AppLocalizations.of(context)!.startInTray,
           ),
           value: state.startHiddenInTray,
-          onChanged: (value) async {
+          onChanged: (bool value) async {
+            if (!state.closeToTray && value) {
+              await settingsCubit.updateCloseToTray(true);
+            }
+
+            if (!state.autoStart && value) {
+              await settingsCubit.toggleAutostart();
+            }
+
             await settingsCubit.updateStartHiddenInTray(value);
           },
         );
