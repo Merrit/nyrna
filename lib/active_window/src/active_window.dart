@@ -81,6 +81,12 @@ class ActiveWindow {
 
     final window = await _nativePlatform.activeWindow();
 
+    final String executable = window.process.executable;
+    if (executable == 'nyrna' || executable == 'nyrna.exe') {
+      log.w('Active window is Nyrna, not suspending.');
+      return false;
+    }
+
     log.i('Active window: $window');
 
     if (defaultTargetPlatform == TargetPlatform.windows) {
