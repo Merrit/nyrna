@@ -48,6 +48,10 @@ Future<void> main(List<String> args) async {
     return true;
   };
 
+  // Provides information on this app from the pubspec.yaml.
+  final packageInfo = await PackageInfo.fromPlatform();
+  log.i('Starting Nyrna v${packageInfo.version}');
+
   final processRepository = ProcessRepository.init();
 
   final activeWindow = ActiveWindow(
@@ -87,9 +91,6 @@ Future<void> main(List<String> args) async {
   );
 
   final themeCubit = await ThemeCubit.init(storage);
-
-  // Provides information on this app from the pubspec.yaml.
-  final packageInfo = await PackageInfo.fromPlatform();
 
   final systemTray = SystemTrayManager();
   await systemTray.initialize();
