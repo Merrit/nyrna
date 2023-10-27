@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pub_semver/pub_semver.dart';
 
@@ -46,10 +47,17 @@ class UpdateService {
       'https://api.github.com/repos/merrit/nyrna/releases',
     );
 
-    final response = await http.get(
-      uri,
-      headers: {'Accept': 'application/vnd.github.v3+json'},
-    );
+    final Response response;
+
+    try {
+      response = await http.get(
+        uri,
+        headers: {'Accept': 'application/vnd.github.v3+json'},
+      );
+    } on Exception catch (e) {
+      log.w('Issue getting latest version info from GitHub: $e\n');
+      return null;
+    }
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as List;
