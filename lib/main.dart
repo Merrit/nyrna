@@ -97,6 +97,7 @@ Future<void> main(List<String> args) async {
 
   final appCubit = AppCubit(
     appWindow,
+    nativePlatform,
     ReleaseNotesService(
       client: http.Client(),
       repository: 'merrit/nyrna',

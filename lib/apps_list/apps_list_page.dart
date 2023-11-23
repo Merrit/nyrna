@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:helpers/helpers.dart';
 
 import '../app/app.dart';
 import '../core/core.dart';
+import '../logs/logging_manager.dart';
 import '../settings/cubit/settings_cubit.dart';
 import '../theme/theme.dart';
 import 'apps_list.dart';
@@ -47,12 +49,38 @@ class _AppsListPageState extends State<AppsListPage> {
     return Scaffold(
       appBar: const CustomAppBar(),
       body: BlocBuilder<AppCubit, AppState>(
-        builder: (context, state) {
+        builder: (context, appState) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            if (state.releaseNotes != null) {
-              _showReleaseNotesDialog(context, state.releaseNotes!);
+            if (appState.releaseNotes != null) {
+              _showReleaseNotesDialog(context, appState.releaseNotes!);
             }
           });
+
+          final Widget linuxSessionWarningWidget;
+          if (appState.linuxSessionMessage == null) {
+            linuxSessionWarningWidget = const SizedBox();
+          } else {
+            linuxSessionWarningWidget = Card(
+              child: Container(
+                padding: const EdgeInsets.all(20.0),
+                child: ListTile(
+                  leading: const Icon(Icons.warning),
+                  title: const Text('Potential session issue'),
+                  subtitle: MarkdownBody(
+                    data: appState.linuxSessionMessage!,
+                    onTapLink: (text, href, title) {
+                      if (href == null) {
+                        log.e('Broken link: $href');
+                        return;
+                      }
+
+                      AppCubit.instance.launchURL(href);
+                    },
+                  ),
+                ),
+              ),
+            );
+          }
 
           return BlocBuilder<AppsListCubit, AppsListState>(
             builder: (context, state) {
@@ -65,6 +93,7 @@ class _AppsListPageState extends State<AppsListPage> {
                       controller: scrollController,
                       padding: const EdgeInsets.all(10),
                       children: [
+                        linuxSessionWarningWidget,
                         if (!state.loading && state.windows.isEmpty) ...[
                           const _NoWindowsCard(),
                         ] else ...[

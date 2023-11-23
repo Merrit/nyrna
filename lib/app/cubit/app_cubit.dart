@@ -8,6 +8,8 @@ import 'package:helpers/helpers.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import '../../logs/logs.dart';
+import '../../native_platform/native_platform.dart';
+import '../../native_platform/src/linux/linux.dart';
 import '../../storage/storage_repository.dart';
 import '../../system_tray/system_tray.dart';
 import '../../updates/updates.dart';
@@ -21,6 +23,9 @@ part 'app_state.dart';
 class AppCubit extends Cubit<AppState> {
   /// Service for managing the app window.
   final AppWindow _appWindow;
+
+  /// Class for interacting with the host platform.
+  final NativePlatform _nativePlatform;
 
   /// Service for fetching release notes.
   final ReleaseNotesService _releaseNotesService;
@@ -37,6 +42,7 @@ class AppCubit extends Cubit<AppState> {
 
   AppCubit(
     this._appWindow,
+    this._nativePlatform,
     this._releaseNotesService,
     this._storageRepository,
     this._systemTrayManager,
@@ -52,6 +58,7 @@ class AppCubit extends Cubit<AppState> {
   /// blocking the UI, since none of the data fetched here is critical.
   Future<void> _init() async {
     await _checkForFirstRun();
+    await _checkLinuxSessionType();
     await _fetchVersionData();
     await _fetchReleaseNotes();
     _listenToSystemTrayEvents();
@@ -63,6 +70,34 @@ class AppCubit extends Cubit<AppState> {
     if (firstRun == null) {
       emit(state.copyWith(firstRun: true));
       _storageRepository.saveValue(key: 'firstRun', value: false);
+    }
+  }
+
+  /// For Linux, checks if the session type is Wayland.
+  Future<void> _checkLinuxSessionType() async {
+    if (!Platform.isLinux) return;
+
+    final sessionType = await (_nativePlatform as Linux).sessionType();
+
+    final unknownSessionMsg = '''
+Unable to determine session type. The XDG_SESSION_TYPE environment variable is set to "$sessionType".
+Please note that Wayland is not currently supported.''';
+
+    const waylandNotSupportedMsg = '''
+Wayland is not currently supported. Only xwayland apps will be detected.
+
+[Consider signing in using X11 instead](https://docs.fedoraproject.org/en-US/quick-docs/configuring-xorg-as-default-gnome-session/).''';
+
+    switch (sessionType) {
+      case 'wayland':
+        log.w(waylandNotSupportedMsg);
+        emit(state.copyWith(linuxSessionMessage: waylandNotSupportedMsg));
+        return;
+      case 'x11':
+        break;
+      default:
+        log.w(unknownSessionMsg);
+        emit(state.copyWith(linuxSessionMessage: unknownSessionMsg));
     }
   }
 
