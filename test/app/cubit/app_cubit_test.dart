@@ -3,6 +3,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:nyrna/app/app.dart';
 import 'package:nyrna/logs/logs.dart';
+import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/storage/storage_repository.dart';
 import 'package:nyrna/system_tray/system_tray.dart';
 import 'package:nyrna/updates/updates.dart';
@@ -11,6 +12,7 @@ import 'package:test/test.dart';
 
 @GenerateNiceMocks(<MockSpec>[
   MockSpec<AppWindow>(),
+  MockSpec<NativePlatform>(),
   MockSpec<ReleaseNotesService>(),
   MockSpec<StorageRepository>(),
   MockSpec<SystemTrayManager>(),
@@ -19,6 +21,7 @@ import 'package:test/test.dart';
 import 'app_cubit_test.mocks.dart';
 
 final mockAppWindow = MockAppWindow();
+final mockNativePlatform = MockNativePlatform();
 final mockReleaseNotesService = MockReleaseNotesService();
 final mockStorageRepo = MockStorageRepository();
 final mockSystemTrayManager = MockSystemTrayManager();
@@ -34,6 +37,7 @@ void main() {
 
   setUp(() {
     reset(mockAppWindow);
+    reset(mockNativePlatform);
     reset(mockReleaseNotesService);
     reset(mockStorageRepo);
     reset(mockSystemTrayManager);
@@ -44,6 +48,7 @@ void main() {
 
     cubit = AppCubit(
       mockAppWindow,
+      mockNativePlatform,
       mockReleaseNotesService,
       mockStorageRepo,
       mockSystemTrayManager,

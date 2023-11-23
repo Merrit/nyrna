@@ -3,6 +3,10 @@ part of 'app_cubit.dart';
 @freezed
 class AppState with _$AppState {
   const factory AppState({
+    /// Message for the user if they are running Nyrna on Wayland, or if their
+    /// session type is unknown.
+    String? linuxSessionMessage,
+
     /// True if this is the first run of the app.
     required bool firstRun,
     required String runningVersion,
