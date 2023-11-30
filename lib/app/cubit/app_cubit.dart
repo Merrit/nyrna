@@ -75,7 +75,7 @@ class AppCubit extends Cubit<AppState> {
 
   /// For Linux, checks if the session type is Wayland.
   Future<void> _checkLinuxSessionType() async {
-    if (!Platform.isLinux) return;
+    if (defaultTargetPlatform != TargetPlatform.linux) return;
 
     final sessionType = await (_nativePlatform as Linux).sessionType();
 
