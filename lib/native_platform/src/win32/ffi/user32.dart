@@ -1,6 +1,7 @@
 /// Win32 wrapper for user32.dll API syscalls.
 ///
 /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/
+library;
 
 // ignore_for_file: non_constant_identifier_names, no_leading_underscores_for_local_identifiers
 

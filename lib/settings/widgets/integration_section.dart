@@ -10,7 +10,7 @@ import '../settings.dart';
 
 /// Add shortcuts and icons for portable builds or autostart.
 class IntegrationSection extends StatelessWidget {
-  const IntegrationSection({Key? key}) : super(key: key);
+  const IntegrationSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class _CloseToTrayTile extends StatelessWidget {
 }
 
 class _AutostartTile extends StatelessWidget {
-  const _AutostartTile({Key? key}) : super(key: key);
+  const _AutostartTile();
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,7 @@ class _AutostartTile extends StatelessWidget {
 }
 
 class _StartHiddenTile extends StatelessWidget {
-  const _StartHiddenTile({Key? key}) : super(key: key);
+  const _StartHiddenTile();
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +117,7 @@ class _StartHiddenTile extends StatelessWidget {
 }
 
 class _HotkeyConfigWidget extends StatelessWidget {
-  const _HotkeyConfigWidget({
-    Key? key,
-  }) : super(key: key);
+  const _HotkeyConfigWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -148,9 +146,8 @@ class _RecordHotKeyDialog extends StatefulWidget {
   final HotKey initialHotkey;
 
   const _RecordHotKeyDialog({
-    Key? key,
     required this.initialHotkey,
-  }) : super(key: key);
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -234,7 +231,7 @@ class _RecordHotKeyDialogState extends State<_RecordHotKeyDialog> {
 
 /// Hotkeys to toggle specific apps.
 class _AppSpecificHotkeys extends StatelessWidget {
-  const _AppSpecificHotkeys({Key? key}) : super(key: key);
+  const _AppSpecificHotkeys();
 
   @override
   Widget build(BuildContext context) {
@@ -295,7 +292,7 @@ class _AppSpecificHotkeys extends StatelessWidget {
 }
 
 class _AddAppSpecificHotkeyDialog extends StatelessWidget {
-  const _AddAppSpecificHotkeyDialog({Key? key}) : super(key: key);
+  const _AddAppSpecificHotkeyDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -349,9 +346,8 @@ class _RecordAppSpecificHotkeyDialog extends StatefulWidget {
   final String executable;
 
   const _RecordAppSpecificHotkeyDialog({
-    Key? key,
     required this.executable,
-  }) : super(key: key);
+  });
 
   @override
   _RecordAppSpecificHotkeyDialogState createState() =>

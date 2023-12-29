@@ -5,7 +5,7 @@ import '../../app/app.dart';
 
 /// Greets the user with a disclaimer about using the application.
 class FirstRunDialog extends StatelessWidget {
-  const FirstRunDialog({Key? key}) : super(key: key);
+  const FirstRunDialog({super.key});
 
   @override
   Widget build(BuildContext context) {

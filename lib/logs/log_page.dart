@@ -9,7 +9,7 @@ import 'logs.dart';
 class LogPage extends StatelessWidget {
   static const id = 'log_page';
 
-  LogPage({Key? key}) : super(key: key);
+  LogPage({super.key});
 
   final ScrollController scrollController = ScrollController();
 

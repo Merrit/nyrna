@@ -8,7 +8,7 @@ import '../../theme/styles.dart';
 import '../cubit/settings_cubit.dart';
 
 class BehaviourSection extends StatelessWidget {
-  const BehaviourSection({Key? key}) : super(key: key);
+  const BehaviourSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +96,7 @@ class BehaviourSection extends StatelessWidget {
 }
 
 class ShowHiddenTile extends StatelessWidget {
-  const ShowHiddenTile({Key? key}) : super(key: key);
+  const ShowHiddenTile({super.key});
 
   @override
   Widget build(BuildContext context) {

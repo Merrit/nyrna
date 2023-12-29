@@ -33,9 +33,9 @@ class WindowTile extends StatefulWidget {
   final Window window;
 
   const WindowTile({
-    Key? key,
+    super.key,
     required this.window,
-  }) : super(key: key);
+  });
 
   @override
   State<WindowTile> createState() => _WindowTileState();
@@ -107,7 +107,7 @@ class _WindowTileState extends State<WindowTile> {
 }
 
 class _DetailsButton extends StatelessWidget {
-  const _DetailsButton({Key? key}) : super(key: key);
+  const _DetailsButton();
 
   @override
   Widget build(BuildContext context) {
@@ -178,11 +178,7 @@ class _DetailsDialog extends StatelessWidget {
   final InteractionError? interactionError;
   final Window window;
 
-  const _DetailsDialog(
-    this.interactionError,
-    this.window, {
-    Key? key,
-  }) : super(key: key);
+  const _DetailsDialog(this.interactionError, this.window);
 
   @override
   Widget build(BuildContext context) {
@@ -227,10 +223,7 @@ class _DetailsDialog extends StatelessWidget {
 class _ErrorMessage extends StatelessWidget {
   final InteractionError? interactionError;
 
-  const _ErrorMessage(
-    this.interactionError, {
-    Key? key,
-  }) : super(key: key);
+  const _ErrorMessage(this.interactionError);
 
   @override
   Widget build(BuildContext context) {

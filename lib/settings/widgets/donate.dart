@@ -6,7 +6,7 @@ import '../../app/app.dart';
 import '../../theme/styles.dart';
 
 class Donate extends StatelessWidget {
-  const Donate({Key? key}) : super(key: key);
+  const Donate({super.key});
 
   @override
   Widget build(BuildContext context) {

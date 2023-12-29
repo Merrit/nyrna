@@ -39,7 +39,7 @@ void _showLoadingDialog(BuildContext context) {
 class SettingsPage extends StatelessWidget {
   static const id = 'settings_page';
 
-  SettingsPage({Key? key}) : super(key: key);
+  SettingsPage({super.key});
 
   final ScrollController scrollController = ScrollController();
 
