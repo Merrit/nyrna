@@ -36,7 +36,6 @@ dependencies:
   intl: any
   json_annotation: ^4.8.1
   launch_at_startup: ^0.2.2
-  libadwaita: ^2.0.1
   logger: ^2.0.1
   package_info_plus: ^4.0.2
   path_provider: ^2.0.1
