@@ -297,14 +297,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.18+2"
-  flutter_svg:
-    dependency: transitive
-    description:
-      name: flutter_svg
-      sha256: d39e7f95621fc84376bc0f7d504f05c3a41488c562f4a8ad410569127507402c
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.9"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -368,14 +360,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
-  gsettings:
-    dependency: transitive
-    description:
-      name: gsettings
-      sha256: "1b0ce661f5436d2db1e51f3c4295a49849f03d304003a7ba177d01e3a858249c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.8"
   helpers:
     dependency: "direct main"
     description:
@@ -495,22 +479,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
-  libadwaita:
-    dependency: "direct main"
-    description:
-      name: libadwaita
-      sha256: "1c1079587b21018e71173f0a0682797c255d166ef79fd470c636eedbd69f7fa3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.2"
-  libadwaita_core:
-    dependency: transitive
-    description:
-      name: libadwaita_core
-      sha256: "1a7689e4130e96be4b0ec615863fded25cd86c2b95a682e7cec9659d420de37c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.4"
   lints:
     dependency: transitive
     description:
@@ -647,14 +615,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
-  path_parsing:
-    dependency: transitive
-    description:
-      name: path_parsing
-      sha256: e3e67b1629e6f7e8100b367d3db6ba6af4b1f0bb80f64db18ef1fbabd2fa9ccf
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   path_provider:
     dependency: "direct main"
     description:
@@ -743,14 +703,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
-  popover_gtk:
-    dependency: transitive
-    description:
-      name: popover_gtk
-      sha256: c293bfa3bcb9436fe189f20f6397199ce996ba40d4b081e26793adcf3ceac45b
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.6+3"
   process:
     dependency: transitive
     description:
@@ -1044,30 +996,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.7"
-  vector_graphics:
-    dependency: transitive
-    description:
-      name: vector_graphics
-      sha256: "0f0c746dd2d6254a0057218ff980fc7f5670fd0fcf5e4db38a490d31eed4ad43"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.9+1"
-  vector_graphics_codec:
-    dependency: transitive
-    description:
-      name: vector_graphics_codec
-      sha256: "0edf6d630d1bfd5589114138ed8fada3234deacc37966bec033d3047c29248b7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.9+1"
-  vector_graphics_compiler:
-    dependency: transitive
-    description:
-      name: vector_graphics_compiler
-      sha256: d24333727332d9bd20990f1483af4e09abdb9b1fc7c3db940b56ab5c42790c26
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.9+1"
   vector_math:
     dependency: transitive
     description:

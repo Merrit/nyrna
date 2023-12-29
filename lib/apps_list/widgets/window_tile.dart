@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:libadwaita/libadwaita.dart';
 
 import '../../app/app.dart';
 import '../../logs/logs.dart';
@@ -182,38 +181,46 @@ class _DetailsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GtkDialog(
+    return AlertDialog(
       title: Center(
         child: Text(
           AppLocalizations.of(context)!.detailsDialogTitle,
         ),
       ),
-      padding: const EdgeInsets.all(12),
-      children: [
-        _ErrorMessage(interactionError),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.detailsDialogWindowTitle,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _ErrorMessage(interactionError),
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.detailsDialogWindowTitle,
+            ),
+            subtitle: SelectableText(window.title),
           ),
-          subtitle: SelectableText(window.title),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.detailsDialogExecutableName,
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.detailsDialogExecutableName,
+            ),
+            subtitle: SelectableText(window.process.executable),
           ),
-          subtitle: SelectableText(window.process.executable),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.detailsDialogPID,
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.detailsDialogPID,
+            ),
+            subtitle: SelectableText(window.process.pid.toString()),
           ),
-          subtitle: SelectableText(window.process.pid.toString()),
-        ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.detailsDialogCurrentStatus,
+          ListTile(
+            title: Text(
+              AppLocalizations.of(context)!.detailsDialogCurrentStatus,
+            ),
+            subtitle: SelectableText(window.process.status.name),
           ),
-          subtitle: SelectableText(window.process.status.name),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Close'),
         ),
       ],
     );
