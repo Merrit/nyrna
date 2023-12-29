@@ -37,7 +37,7 @@ dependencies:
   json_annotation: ^4.8.1
   launch_at_startup: ^0.2.2
   logger: ^2.0.1
-  package_info_plus: ^4.0.2
+  package_info_plus: ^5.0.1
   path_provider: ^2.0.1
   pub_semver: ^2.0.0
   tray_manager: ^0.2.0
