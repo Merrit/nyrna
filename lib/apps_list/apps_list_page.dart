@@ -56,32 +56,6 @@ class _AppsListPageState extends State<AppsListPage> {
             }
           });
 
-          final Widget linuxSessionWarningWidget;
-          if (appState.linuxSessionMessage == null) {
-            linuxSessionWarningWidget = const SizedBox();
-          } else {
-            linuxSessionWarningWidget = Card(
-              child: Container(
-                padding: const EdgeInsets.all(20.0),
-                child: ListTile(
-                  leading: const Icon(Icons.warning),
-                  title: const Text('Potential session issue'),
-                  subtitle: MarkdownBody(
-                    data: appState.linuxSessionMessage!,
-                    onTapLink: (text, href, title) {
-                      if (href == null) {
-                        log.e('Broken link: $href');
-                        return;
-                      }
-
-                      AppCubit.instance.launchURL(href);
-                    },
-                  ),
-                ),
-              ),
-            );
-          }
-
           return BlocBuilder<AppsListCubit, AppsListState>(
             builder: (context, state) {
               return Stack(
@@ -93,7 +67,6 @@ class _AppsListPageState extends State<AppsListPage> {
                       controller: scrollController,
                       padding: const EdgeInsets.all(10),
                       children: [
-                        linuxSessionWarningWidget,
                         if (!state.loading && state.windows.isEmpty) ...[
                           const _NoWindowsCard(),
                         ] else ...[

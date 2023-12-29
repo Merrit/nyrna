@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../../settings/settings_page.dart';
 import '../../app/app.dart';
+import '../../logs/logs.dart';
 import '../apps_list.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -29,6 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 : Container();
           },
         ),
+        const _WaylandWarningButton(),
         IconButton(
           icon: const Icon(Icons.settings),
           onPressed: () => Navigator.pushNamed(context, SettingsPage.id),
@@ -77,6 +80,58 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               child: const Text('Dismiss'),
             ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Shows a warning button if running on Wayland.
+class _WaylandWarningButton extends StatelessWidget {
+  const _WaylandWarningButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AppCubit, AppState>(
+      builder: (context, state) {
+        if (state.linuxSessionMessage == null) {
+          return const SizedBox();
+        }
+
+        return IconButton(
+          icon: const Icon(Icons.warning),
+          onPressed: () =>
+              _showWarningDialog(context, state.linuxSessionMessage!),
+        );
+      },
+    );
+  }
+
+  Future<void> _showWarningDialog(
+    BuildContext context,
+    String linuxSessionMessage,
+  ) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: MarkdownBody(
+            data: linuxSessionMessage,
+            onTapLink: (text, href, title) {
+              if (href == null) {
+                log.e('Broken link: $href');
+                return;
+              }
+
+              AppCubit.instance.launchURL(href);
+            },
+          ),
+          actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Close'),
