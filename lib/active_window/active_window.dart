@@ -13,5 +13,6 @@
 /// - Resume the suspended process
 /// - Restore / unminimize the associated window
 /// - Delete the file containing the PID & window id so next call will suspend.
+library;
 
 export 'src/active_window.dart';

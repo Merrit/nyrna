@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:helpers/helpers.dart';
 
 import '../app/app.dart';
 import '../core/core.dart';
-import '../logs/logging_manager.dart';
 import '../settings/cubit/settings_cubit.dart';
 import '../theme/theme.dart';
 import 'apps_list.dart';
@@ -17,7 +15,7 @@ import 'apps_list.dart';
 class AppsListPage extends StatefulWidget {
   static const id = 'running_apps_screen';
 
-  const AppsListPage({Key? key}) : super(key: key);
+  const AppsListPage({super.key});
 
   @override
   State<AppsListPage> createState() => _AppsListPageState();
@@ -70,14 +68,12 @@ class _AppsListPageState extends State<AppsListPage> {
                         if (!state.loading && state.windows.isEmpty) ...[
                           const _NoWindowsCard(),
                         ] else ...[
-                          ...state.windows
-                              .map(
-                                (window) => WindowTile(
-                                  key: ValueKey(window),
-                                  window: window,
-                                ),
-                              )
-                              .toList(),
+                          ...state.windows.map(
+                            (window) => WindowTile(
+                              key: ValueKey(window),
+                              window: window,
+                            ),
+                          ),
                         ],
                       ],
                     ),
@@ -116,9 +112,7 @@ class _AppsListPageState extends State<AppsListPage> {
 }
 
 class _NoWindowsCard extends StatelessWidget {
-  const _NoWindowsCard({
-    Key? key,
-  }) : super(key: key);
+  const _NoWindowsCard();
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +128,7 @@ class _NoWindowsCard extends StatelessWidget {
 }
 
 class _ProgressOverlay extends StatelessWidget {
-  const _ProgressOverlay({Key? key}) : super(key: key);
+  const _ProgressOverlay();
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +151,7 @@ class _ProgressOverlay extends StatelessWidget {
 }
 
 class _FloatingActionButton extends StatelessWidget {
-  const _FloatingActionButton({Key? key}) : super(key: key);
+  const _FloatingActionButton();
 
   @override
   Widget build(BuildContext context) {

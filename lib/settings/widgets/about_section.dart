@@ -6,7 +6,7 @@ import '../../app/app.dart';
 import '../../apps_list/apps_list.dart';
 
 class AboutSection extends StatelessWidget {
-  const AboutSection({Key? key}) : super(key: key);
+  const AboutSection({super.key});
 
   @override
   Widget build(BuildContext context) {

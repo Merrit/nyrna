@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../theme/theme.dart';
 
 class ThemeSection extends StatelessWidget {
-  const ThemeSection({Key? key}) : super(key: key);
+  const ThemeSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +18,7 @@ class ThemeSection extends StatelessWidget {
 }
 
 class _ThemeChooser extends StatelessWidget {
-  const _ThemeChooser({
-    Key? key,
-  }) : super(key: key);
+  const _ThemeChooser();
 
   @override
   Widget build(BuildContext context) {

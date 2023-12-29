@@ -12,7 +12,7 @@ import 'loading.dart';
 class LoadingPage extends StatelessWidget {
   static const id = 'loading_screen';
 
-  const LoadingPage({Key? key}) : super(key: key);
+  const LoadingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
