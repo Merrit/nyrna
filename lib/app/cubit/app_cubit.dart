@@ -84,9 +84,19 @@ Unable to determine session type. The XDG_SESSION_TYPE environment variable is s
 Please note that Wayland is not currently supported.''';
 
     const waylandNotSupportedMsg = '''
-Wayland is not currently supported. Only xwayland apps will be detected.
+Wayland is not currently supported.
 
-[Consider signing in using X11 instead](https://docs.fedoraproject.org/en-US/quick-docs/configuring-xorg-as-default-gnome-session/).''';
+Only xwayland apps will be detected.
+
+If Wayland support is important to you, consider voting on the issue:
+
+https://github.com/flatpak/xdg-desktop-portal/issues/304
+
+If you need Nyrna to work with a specific app, you can try running it with XWayland:
+
+`env XDG_SESSION_TYPE=x11 <app>`
+
+Otherwise, [consider signing in using X11 instead](https://docs.fedoraproject.org/en-US/quick-docs/configuring-xorg-as-default-gnome-session/).''';
 
     switch (sessionType) {
       case 'wayland':
