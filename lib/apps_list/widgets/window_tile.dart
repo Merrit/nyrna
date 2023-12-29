@@ -253,6 +253,8 @@ class _ErrorMessage extends StatelessWidget {
           children: [
             const Text(
               '''
+This is sometimes resolved by running Nyrna with root / administrator privileges.
+
 Interacting with applications can go wrong for several reasons. In general, manipulating processes like this is known to be able to cause unpredictable results and there is usually not much Nyrna can do if it responds poorly, not at all, or crashes.
 
 This is why Nyrna comes with the disclaimer that things can go wrong, and you should be sure to always save your work and games.''',
