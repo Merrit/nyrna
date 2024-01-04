@@ -5,7 +5,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:nyrna/apps_list/cubit/apps_list_cubit.dart';
 import 'package:nyrna/autostart/autostart_service.dart';
-import 'package:nyrna/hotkey/hotkey_service.dart';
+import 'package:nyrna/hotkey/global/hotkey_service.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/storage/storage_repository.dart';
 import 'package:nyrna/window/app_window.dart';

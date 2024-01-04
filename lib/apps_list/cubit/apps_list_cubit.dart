@@ -8,7 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../active_window/active_window.dart';
 import '../../app_version/app_version.dart';
-import '../../hotkey/hotkey_service.dart';
+import '../../hotkey/global/hotkey_service.dart';
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../../storage/storage_repository.dart';

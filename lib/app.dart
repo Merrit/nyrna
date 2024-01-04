@@ -9,6 +9,7 @@ import 'package:window_manager/window_manager.dart';
 import '../apps_list/apps_list.dart';
 import '../logs/log_page.dart';
 import '../theme/theme.dart';
+import 'hotkey/hotkey.dart';
 import 'loading/loading_page.dart';
 import 'settings/settings.dart';
 import 'window/app_window.dart';
@@ -88,23 +89,25 @@ class _AppState extends State<App> with TrayListener, WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeState>(
-      builder: (context, state) {
-        return MaterialApp(
-          title: 'Nyrna',
-          debugShowCheckedModeBanner: false,
-          theme: state.themeData,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          routes: {
-            LoadingPage.id: (context) => const LoadingPage(),
-            LogPage.id: (context) => LogPage(),
-            AppsListPage.id: (context) => const AppsListPage(),
-            SettingsPage.id: (conext) => SettingsPage(),
-          },
-          home: const LoadingPage(),
-        );
-      },
+    return AppShortcuts(
+      child: BlocBuilder<ThemeCubit, ThemeState>(
+        builder: (context, state) {
+          return MaterialApp(
+            title: 'Nyrna',
+            debugShowCheckedModeBanner: false,
+            theme: state.themeData,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            routes: {
+              LoadingPage.id: (context) => const LoadingPage(),
+              LogPage.id: (context) => LogPage(),
+              AppsListPage.id: (context) => const AppsListPage(),
+              SettingsPage.id: (conext) => SettingsPage(),
+            },
+            home: const LoadingPage(),
+          );
+        },
+      ),
     );
   }
 }
