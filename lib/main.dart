@@ -15,7 +15,7 @@ import 'app_version/app_version.dart';
 import 'apps_list/apps_list.dart';
 import 'argument_parser/argument_parser.dart';
 import 'autostart/autostart_service.dart';
-import 'hotkey/hotkey_service.dart';
+import 'hotkey/global/hotkey_service.dart';
 import 'logs/logs.dart';
 import 'native_platform/native_platform.dart';
 import 'settings/cubit/settings_cubit.dart';

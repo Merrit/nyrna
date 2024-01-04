@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../../apps_list/apps_list.dart';
-import '../../hotkey/hotkey_service.dart';
+import '../../hotkey/global/hotkey_service.dart';
 import '../../theme/styles.dart';
 import '../settings.dart';
 

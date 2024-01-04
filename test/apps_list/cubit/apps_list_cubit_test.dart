@@ -4,7 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:nyrna/app_version/app_version.dart';
 import 'package:nyrna/apps_list/apps_list.dart';
-import 'package:nyrna/hotkey/hotkey_service.dart';
+import 'package:nyrna/hotkey/global/hotkey_service.dart';
 import 'package:nyrna/logs/logs.dart';
 import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/settings/settings.dart';

@@ -8,7 +8,7 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../../autostart/autostart_service.dart';
 import '../../core/core.dart';
-import '../../hotkey/hotkey_service.dart';
+import '../../hotkey/global/hotkey_service.dart';
 import '../../logs/logging_manager.dart';
 import '../../storage/storage_repository.dart';
 

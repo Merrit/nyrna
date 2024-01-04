@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:hotkey_manager/hotkey_manager.dart';
 
-import '../logs/logs.dart';
+import '../../logs/logs.dart';
 
 /// The default hotkey to use if none is set.
 final HotKey defaultHotkey = HotKey(KeyCode.pause);
 
+/// Handles global (system-wide) hotkeys.
 class HotkeyService {
   /// Stream that fires when a hotkey is triggered.
   ///
