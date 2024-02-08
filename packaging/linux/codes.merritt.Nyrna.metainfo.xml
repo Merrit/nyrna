@@ -8,8 +8,12 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   <name>Nyrna</name>
   <summary>Suspend games and applications</summary>
   <developer_name>Merritt Codes</developer_name>
+  <url type="bugtracker">https://github.com/Merrit/nyrna/issues/</url>
+  <url type="contact">https://merritt.codes/contact/</url>
   <url type="homepage">https://nyrna.merritt.codes/</url>
   <url type="donation">https://merritt.codes/support/</url>
+  <!-- vcs-browser is the link to the source code repository -->
+  <url type="vcs-browser">https://github.com/Merrit/nyrna/</url>
   <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <supports>
