@@ -122,6 +122,7 @@ class _WaylandWarningButton extends StatelessWidget {
         return AlertDialog(
           content: MarkdownBody(
             data: linuxSessionMessage,
+            selectable: true,
             onTapLink: (text, href, title) {
               if (href == null) {
                 log.e('Broken link: $href');

@@ -94,7 +94,9 @@ https://github.com/flatpak/xdg-desktop-portal/issues/304
 
 If you need Nyrna to work with a specific app, you can try running it with XWayland:
 
-`env XDG_SESSION_TYPE=x11 <app>`
+```
+env XDG_SESSION_TYPE=x11 <app>
+```
 
 Otherwise, [consider signing in using X11 instead](https://docs.fedoraproject.org/en-US/quick-docs/configuring-xorg-as-default-gnome-session/).''';
 
