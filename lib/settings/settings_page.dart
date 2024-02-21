@@ -13,7 +13,13 @@ import 'settings.dart';
 void _showLoadingDialog(BuildContext context) {
   showDialog(
     context: context,
-    barrierDismissible: false,
+    // Barrier is dismissible because the SettingsCubit.toggleAutostart() method
+    // can fail for Flatpak, and for some reason we can't catch the error.
+    //
+    // This way, the user can dismiss the barrier instead of being stuck.
+    //
+    // https://github.com/Merrit/nyrna/issues/202
+    barrierDismissible: true,
     builder: (context) {
       // If working is already false because it was a quick operation, we don't
       // need to show the dialog.
