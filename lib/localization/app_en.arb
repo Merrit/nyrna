@@ -94,6 +94,14 @@
   "@minimizeAndRestoreWindows": {
     "description": "Label for the minimize / restore windows setting"
   },
+  "pinSuspendedWindows": "Pin suspended windows",
+  "@pinSuspendedWindows": {
+    "description": "Whether to pin suspended windows to the top of the window list"
+  },
+  "pinSuspendedWindowsTooltip": "If enabled, suspended windows will always be shown at the top of the window list.",
+  "@pinSuspendedWindowsTooltip": {
+    "description": "Tooltip for the pin suspended windows setting"
+  },
   "showHiddenWindows": "Show hidden windows",
   "@showHiddenWindows": {
     "description": "Label for the show hidden windows setting"

@@ -63,6 +63,8 @@ class SettingsCubit extends Cubit<SettingsState> {
 
     final bool minimizeWindows =
         await storage.getValue('minimizeWindows') ?? true;
+    final bool pinSuspendedWindows =
+        await storage.getValue('pinSuspendedWindows') ?? false;
     final int refreshInterval = await storage.getValue('refreshInterval') ?? 5;
     final bool showHiddenWindows =
         await storage.getValue('showHiddenWindows') ?? false;
@@ -80,6 +82,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         closeToTray: closeToTray,
         hotKey: hotkey,
         minimizeWindows: minimizeWindows,
+        pinSuspendedWindows: pinSuspendedWindows,
         refreshInterval: refreshInterval,
         showHiddenWindows: showHiddenWindows,
         startHiddenInTray: startHiddenInTray,
@@ -139,6 +142,12 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateMinimizeWindows(bool value) async {
     emit(state.copyWith(minimizeWindows: value));
     await _storage.saveValue(key: 'minimizeWindows', value: value);
+  }
+
+  /// Update the preference for pinning suspended windows to the top of the list.
+  Future<void> updatePinSuspendedWindows(bool value) async {
+    emit(state.copyWith(pinSuspendedWindows: value));
+    await _storage.saveValue(key: 'pinSuspendedWindows', value: value);
   }
 
   Future<void> updateShowHiddenWindows(bool value) async {

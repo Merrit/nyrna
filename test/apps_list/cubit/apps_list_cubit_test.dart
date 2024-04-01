@@ -111,6 +111,7 @@ void main() {
         closeToTray: false,
         hotKey: HotKey(KeyCode.again),
         minimizeWindows: true,
+        pinSuspendedWindows: false,
         refreshInterval: 5,
         showHiddenWindows: false,
         startHiddenInTray: false,
