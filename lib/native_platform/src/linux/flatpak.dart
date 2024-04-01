@@ -33,6 +33,3 @@ KillFunction flatpakKill = (
   flatpakRun('kill', ['-${signal.toString()}', '$pid']);
   return true;
 };
-
-/// True if the application is running inside a Flatpak container.
-final bool runningInFlatpak = Platform.environment.containsKey('FLATPAK_ID');

@@ -8,7 +8,6 @@ import 'package:xdg_desktop_portal/xdg_desktop_portal.dart';
 
 import '../core/constants.dart';
 import '../logs/logging_manager.dart';
-import '../native_platform/src/linux/flatpak.dart';
 
 /// Service to enable/disable autostart on desktop platforms.
 class AutostartService {
@@ -16,7 +15,7 @@ class AutostartService {
   Future<void> disable() async {
     assert(defaultTargetPlatform.isDesktop);
 
-    if (runningInFlatpak) {
+    if (runningInFlatpak()) {
       await _setForFlatpak(false);
     } else if (defaultTargetPlatform.isWindows && await _isRunningInMsix()) {
       await _disableForMSIX();
@@ -29,7 +28,7 @@ class AutostartService {
   Future<void> enable() async {
     assert(defaultTargetPlatform.isDesktop);
 
-    if (runningInFlatpak) {
+    if (runningInFlatpak()) {
       await _setForFlatpak(true);
     } else if (defaultTargetPlatform.isWindows && await _isRunningInMsix()) {
       await _enableForMSIX();
