@@ -1,8 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:helpers/helpers.dart';
 import 'package:tray_manager/tray_manager.dart';
 
+import '../core/core.dart';
+import '../logs/logging_manager.dart';
 import 'system_tray.dart';
 
 class SystemTrayManager {
@@ -16,10 +19,18 @@ class SystemTrayManager {
   final _eventStreamController = StreamController<SystemTrayEvent>.broadcast();
 
   Future<void> initialize() async {
-    final String iconPath = Platform.isWindows
-        ? 'assets/icons/codes.merritt.Nyrna.ico'
-        : 'assets/icons/codes.merritt.Nyrna.png';
+    final String iconPath;
 
+    if (runningInFlatpak() || runningInSnap()) {
+      // When running in Flatpak the icon must be specified by the icon's name, not the path.
+      iconPath = kPackageId;
+    } else {
+      iconPath = (defaultTargetPlatform.isWindows) //
+          ? AppIcons.windows
+          : AppIcons.linux;
+    }
+
+    log.t('Setting system tray icon to $iconPath');
     await trayManager.setIcon(iconPath);
 
     final Menu menu = Menu(
