@@ -1,4 +1,5 @@
 {
+  "@@locale": "en",
   "cancel": "Cancel",
   "@cancel": {
     "description": "Label for a cancel button"
