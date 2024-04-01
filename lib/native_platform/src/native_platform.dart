@@ -1,5 +1,7 @@
 import 'dart:io' as io;
 
+import 'package:helpers/helpers.dart';
+
 import 'linux/flatpak.dart';
 import 'linux/linux.dart';
 import 'win32/win32.dart';
@@ -13,7 +15,7 @@ abstract class NativePlatform {
   // Return correct subtype depending on the current operating system.
   factory NativePlatform() {
     if (io.Platform.isLinux) {
-      final runFunction = (runningInFlatpak) ? flatpakRun : io.Process.run;
+      final runFunction = (runningInFlatpak()) ? flatpakRun : io.Process.run;
       return Linux(runFunction);
     } else {
       return Win32();

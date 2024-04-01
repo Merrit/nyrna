@@ -1,5 +1,7 @@
 import 'dart:io' as io;
 
+import 'package:helpers/helpers.dart';
+
 import '../../linux/flatpak.dart';
 import '../models/process.dart';
 import 'src/linux_process_repository.dart';
@@ -14,8 +16,8 @@ abstract class ProcessRepository {
 
   static ProcessRepository init() {
     if (io.Platform.isLinux) {
-      final runFunction = (runningInFlatpak) ? flatpakRun : io.Process.run;
-      final killFunction = (runningInFlatpak) //
+      final runFunction = (runningInFlatpak()) ? flatpakRun : io.Process.run;
+      final killFunction = (runningInFlatpak()) //
           ? flatpakKill
           : io.Process.killPid;
       return LinuxProcessRepository(killFunction, runFunction);
