@@ -13,6 +13,9 @@ class AppsListState with _$AppsListState {
     /// Contains [InteractionError]s for any window that had an error.
     required List<InteractionError> interactionErrors,
     required List<Window> windows,
+
+    /// Pattern to filter windows by.
+    required String windowFilter,
   }) = _AppsListState;
 
   factory AppsListState.initial() {
@@ -23,6 +26,7 @@ class AppsListState with _$AppsListState {
       updateAvailable: false,
       interactionErrors: [],
       windows: <Window>[],
+      windowFilter: '',
     );
   }
 }

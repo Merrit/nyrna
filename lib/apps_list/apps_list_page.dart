@@ -5,6 +5,7 @@ import 'package:helpers/helpers.dart';
 
 import '../app/app.dart';
 import '../core/core.dart';
+import '../native_platform/src/window.dart';
 import '../settings/cubit/settings_cubit.dart';
 import '../theme/theme.dart';
 import 'apps_list.dart';
@@ -56,6 +57,9 @@ class _AppsListPageState extends State<AppsListPage> {
 
           return BlocBuilder<AppsListCubit, AppsListState>(
             builder: (context, state) {
+              List<Window> windows = state.windows;
+              windows = _filterWindows(windows, state.windowFilter);
+
               return Stack(
                 children: [
                   Scrollbar(
@@ -68,7 +72,7 @@ class _AppsListPageState extends State<AppsListPage> {
                         if (!state.loading && state.windows.isEmpty) ...[
                           const _NoWindowsCard(),
                         ] else ...[
-                          ...state.windows.map(
+                          ...windows.map(
                             (window) => WindowTile(
                               key: ValueKey(window),
                               window: window,
@@ -108,6 +112,16 @@ class _AppsListPageState extends State<AppsListPage> {
         },
       ),
     );
+  }
+
+  /// Filters the list of windows based on the [windowFilter].
+  List<Window> _filterWindows(List<Window> windows, String windowFilter) {
+    return windows.where((window) {
+      final executable = window.process.executable.toLowerCase();
+      final title = window.title.toLowerCase();
+
+      return executable.contains(windowFilter) || title.contains(windowFilter);
+    }).toList();
   }
 }
 

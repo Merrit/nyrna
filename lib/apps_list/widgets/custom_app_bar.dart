@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../../settings/settings_page.dart';
 import '../../app/app.dart';
 import '../../logs/logs.dart';
+import '../../native_platform/native_platform.dart';
 import '../apps_list.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -36,6 +39,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
 
     return AppBar(
+      title: const _SearchBar(),
       actions: [
         updateAvailableButton,
         const _WaylandWarningButton(),
@@ -90,6 +94,60 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ],
         );
+      },
+    );
+  }
+}
+
+/// Search bar for filtering apps.
+class _SearchBar extends StatelessWidget {
+  const _SearchBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return TypeAheadField<Window>(
+      builder: (context, controller, focusNode) {
+        final Widget clearButton = BlocBuilder<AppsListCubit, AppsListState>(
+          builder: (context, state) {
+            if (state.windowFilter.isEmpty) {
+              return const SizedBox();
+            }
+
+            return IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: () {
+                controller.clear();
+                context.read<AppsListCubit>().setWindowFilter('');
+              },
+            );
+          },
+        );
+
+        return SizedBox(
+          // Prevent the search bar from filling the entire app bar.
+          height: 40,
+          child: SearchBar(
+            controller: controller,
+            focusNode: focusNode,
+            hintText: AppLocalizations.of(context)!.filterWindows,
+            elevation: MaterialStateProperty.all(2),
+            trailing: <Widget>[
+              clearButton,
+            ],
+          ),
+        );
+      },
+      emptyBuilder: (context) => const SizedBox(),
+      itemBuilder: (context, suggestion) => const SizedBox(),
+      onSelected: (window) {},
+      suggestionsCallback: (String pattern) {
+        // We call the filter method here because it benefits from the debounce
+        // provided by the TypeAheadField.
+        context.read<AppsListCubit>().setWindowFilter(pattern);
+
+        /// We return an empty list because we don't want to show any
+        /// suggestions, but rather let the [AppsListCubit] filter the windows.
+        return [];
       },
     );
   }
