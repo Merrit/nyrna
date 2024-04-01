@@ -118,6 +118,11 @@ class AppsListCubit extends Cubit<AppsListState> {
     emit(state.copyWith(loading: false));
   }
 
+  /// Set a filter for the windows shown in the list.
+  Future<void> setWindowFilter(String pattern) async {
+    emit(state.copyWith(windowFilter: pattern.toLowerCase()));
+  }
+
   /// Toggle suspend / resume for the process associated with the given window.
   Future<bool> toggle(Window window) async {
     window = await _refreshWindowProcess(window);

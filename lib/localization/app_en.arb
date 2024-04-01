@@ -7,6 +7,10 @@
   "@confirm": {
     "description": "Label for a confirm button"
   },
+  "filterWindows": "Filter windows",
+  "@filterWindows": {
+    "description": "Hint text for searchbox that allows the user to filter windows"
+  },
   "@_DETAILS_DIALOG": {},
   "detailsDialogTitle": "Details",
   "@detailsDialogTitle": {

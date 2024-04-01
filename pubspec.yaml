@@ -16,6 +16,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.6.9+1
+  flutter_typeahead: ^5.2.0
   freezed_annotation: ^2.2.0
   helpers:
     git:
