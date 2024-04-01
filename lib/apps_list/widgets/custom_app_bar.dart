@@ -16,26 +16,30 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsButton = IconButton(
+      icon: const Icon(Icons.settings),
+      onPressed: () => Navigator.pushNamed(context, SettingsPage.id),
+    );
+
+    final updateAvailableButton = BlocBuilder<AppsListCubit, AppsListState>(
+      builder: (context, state) {
+        return state.updateAvailable
+            ? IconButton(
+                icon: Icon(
+                  Icons.notifications_active,
+                  color: Colors.pink[400],
+                ),
+                onPressed: () => _showUpdateDialog(context),
+              )
+            : Container();
+      },
+    );
+
     return AppBar(
       actions: [
-        BlocBuilder<AppsListCubit, AppsListState>(
-          builder: (context, state) {
-            return state.updateAvailable
-                ? IconButton(
-                    icon: Icon(
-                      Icons.notifications_active,
-                      color: Colors.pink[400],
-                    ),
-                    onPressed: () => _showUpdateDialog(context),
-                  )
-                : Container();
-          },
-        ),
+        updateAvailableButton,
         const _WaylandWarningButton(),
-        IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () => Navigator.pushNamed(context, SettingsPage.id),
-        ),
+        settingsButton,
       ],
     );
   }
