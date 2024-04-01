@@ -75,6 +75,7 @@ class BehaviourSection extends StatelessWidget {
             },
           ),
         ),
+        const _PinSuspendedWindowsTile(),
         const ShowHiddenTile(),
       ],
     );
@@ -92,6 +93,47 @@ class BehaviourSection extends StatelessWidget {
     final newInterval = int.tryParse(result);
     if (newInterval == null) return;
     await settingsCubit.setRefreshInterval(newInterval);
+  }
+}
+
+/// Toggle pinning suspended windows to the top of the window list.
+class _PinSuspendedWindowsTile extends StatelessWidget {
+  const _PinSuspendedWindowsTile();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: '${AppLocalizations.of(context)!.pinSuspendedWindows}   ',
+            ),
+            WidgetSpan(
+              child: Tooltip(
+                message:
+                    AppLocalizations.of(context)!.pinSuspendedWindowsTooltip,
+                child: const Icon(
+                  Icons.help_outline,
+                  size: 18,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      leading: const Icon(Icons.push_pin_outlined),
+      trailing: BlocBuilder<SettingsCubit, SettingsState>(
+        builder: (context, state) {
+          return Switch(
+            value: state.pinSuspendedWindows,
+            onChanged: (value) async {
+              await settingsCubit.updatePinSuspendedWindows(value);
+            },
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -125,7 +167,9 @@ class ShowHiddenTile extends StatelessWidget {
           return Switch(
             value: state.showHiddenWindows,
             onChanged: (value) async {
+              final appsListCubit = context.read<AppsListCubit>();
               await settingsCubit.updateShowHiddenWindows(value);
+              await appsListCubit.manualRefresh();
             },
           );
         },

@@ -73,7 +73,7 @@ class AppsListCubit extends Cubit<AppsListState> {
       windows[i] = await _refreshWindowProcess(windows[i]);
     }
 
-    windows.sortWindows();
+    windows.sortWindows(_settingsCubit.state.pinSuspendedWindows);
 
     emit(state.copyWith(windows: windows));
   }
@@ -154,6 +154,8 @@ class AppsListCubit extends Cubit<AppsListState> {
       index + 1,
       [window],
     );
+
+    windows.sortWindows(_settingsCubit.state.pinSuspendedWindows);
 
     emit(state.copyWith(
       windows: windows,
@@ -318,7 +320,22 @@ extension on List<InteractionError> {
 
 extension on List<Window> {
   /// Sort the windows by executable name.
-  void sortWindows() {
-    sortBy((window) => window.process.executable.toLowerCase());
+  ///
+  /// If the user has enabled pinning suspended windows to the top of the list,
+  /// those windows will be sorted to the top.
+  void sortWindows(bool pinSuspendedWindows) {
+    sort((a, b) {
+      final aIsSuspended = a.process.status == ProcessStatus.suspended;
+      final bIsSuspended = b.process.status == ProcessStatus.suspended;
+
+      if (pinSuspendedWindows) {
+        if (aIsSuspended && !bIsSuspended) return -1;
+        if (!aIsSuspended && bIsSuspended) return 1;
+      }
+
+      return a.process.executable.toLowerCase().compareTo(
+            b.process.executable.toLowerCase(),
+          );
+    });
   }
 }

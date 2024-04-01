@@ -24,6 +24,9 @@ class SettingsState with _$SettingsState {
     /// restored when resuming.
     required bool minimizeWindows,
 
+    /// If true suspended windows will be shown at the top of the list.
+    required bool pinSuspendedWindows,
+
     /// How often to automatically refresh the list of open windows, in seconds.
     required int refreshInterval,
     required bool showHiddenWindows,
@@ -41,6 +44,7 @@ class SettingsState with _$SettingsState {
         closeToTray: false,
         hotKey: defaultHotkey,
         minimizeWindows: true,
+        pinSuspendedWindows: false,
         refreshInterval: 5,
         showHiddenWindows: false,
         startHiddenInTray: false,
