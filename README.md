@@ -65,6 +65,11 @@ View install options on the [website](https://nyrna.merritt.codes/download).
 Unfortunately no. [CRIU](https://criu.org/) looks very promising to allow us to do this (on Linux), however it [does not currently support suspending GUI applications](https://criu.org/X_applications).
 
 
+## Troubleshooting
+
+If you use Microsoft Windows, issues are often resolved by running Nyrna as an administrator.
+
+
 ## Building
 
 See [BUILDING](BUILDING.md)
