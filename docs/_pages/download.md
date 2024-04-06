@@ -51,7 +51,8 @@ Windows
 
 *Purchase from the Microsoft Store for automatic updates and to support my work.*
 
-<a href="ms-windows-store://pdp/?ProductId=9P9S8KZ41GRJ&mode=mini">
+<a href="https://apps.microsoft.com/detail/Nyrna/9p9s8kz41grj?launch=true
+	&mode=mini">
    <img src="https://get.microsoft.com/images/en-us%20dark.svg" width='240' alt="Download Nyrna" />
 </a>
 
