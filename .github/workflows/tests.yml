@@ -16,6 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2.10.0
+        # Specify the Flutter version to work around bug in new version:
+        # https://github.com/flutter/flutter/issues/144873
+        with:
+          flutter-version: '3.19.6'
 
       - name: Get Linux dependencies
         if: runner.os == 'Linux'
@@ -26,7 +30,6 @@ jobs:
 
       - name: Setup
         run: |
-          flutter upgrade
           flutter pub get
 
       - name: Verify formatting
