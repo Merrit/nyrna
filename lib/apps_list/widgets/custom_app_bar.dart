@@ -182,17 +182,18 @@ class _WaylandWarningButton extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          content: MarkdownBody(
-            data: linuxSessionMessage,
-            selectable: true,
-            onTapLink: (text, href, title) {
-              if (href == null) {
-                log.e('Broken link: $href');
-                return;
-              }
+          content: SelectionArea(
+            child: MarkdownBody(
+              data: linuxSessionMessage,
+              onTapLink: (text, href, title) {
+                if (href == null) {
+                  log.e('Broken link: $href');
+                  return;
+                }
 
-              AppCubit.instance.launchURL(href);
-            },
+                AppCubit.instance.launchURL(href);
+              },
+            ),
           ),
           actions: [
             TextButton(
