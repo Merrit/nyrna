@@ -81,7 +81,7 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byType(IconButton));
+    await tester.tap(find.byType(MenuAnchor));
     await tester.pumpAndSettle();
 
     expect(find.text('Suspend all instances'), findsOneWidget);

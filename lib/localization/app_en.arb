@@ -12,6 +12,15 @@
   "@filterWindows": {
     "description": "Hint text for searchbox that allows the user to filter windows"
   },
+  "@_APPS_LIST_PAGE": {},
+  "favoriteButtonTooltipAdd": "Add to favorites",
+  "@favoriteButtonTooltipAdd": {
+    "description": "Tooltip for the add to favorites button"
+  },
+  "favoriteButtonTooltipRemove": "Remove from favorites",
+  "@favoriteButtonTooltipRemove": {
+    "description": "Tooltip for the remove from favorites button"
+  },
   "@_DETAILS_DIALOG": {},
   "detailsDialogTitle": "Details",
   "@detailsDialogTitle": {
