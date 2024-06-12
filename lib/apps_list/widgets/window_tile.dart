@@ -88,7 +88,13 @@ class _WindowTileState extends State<WindowTile> {
               vertical: 2,
               horizontal: 20,
             ),
-            trailing: const _DetailsButton(),
+            trailing: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _FavoriteButton(),
+                _DetailsButton(),
+              ],
+            ),
             onTap: () async {
               log.i('WindowTile clicked: ${widget.window}');
 
@@ -101,6 +107,30 @@ class _WindowTileState extends State<WindowTile> {
           ),
         );
       }),
+    );
+  }
+}
+
+/// Button to toggle the favorite status of a window.
+class _FavoriteButton extends StatelessWidget {
+  const _FavoriteButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final appsListCubit = context.read<AppsListCubit>();
+
+    final window = context.select((WindowCubit cubit) => cubit.state.window);
+    final isFavorite = window.process.isFavorite;
+
+    return IconButton(
+      icon: Icon(
+        (isFavorite) ? Icons.star : Icons.star_border,
+        color: (isFavorite) ? Colors.yellow : null,
+      ),
+      onPressed: () => appsListCubit.setFavorite(window, !isFavorite),
+      tooltip: (isFavorite)
+          ? AppLocalizations.of(context)!.favoriteButtonTooltipRemove
+          : AppLocalizations.of(context)!.favoriteButtonTooltipAdd,
     );
   }
 }

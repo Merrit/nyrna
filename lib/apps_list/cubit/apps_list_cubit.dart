@@ -61,13 +61,16 @@ class AppsListCubit extends Cubit<AppsListState> {
 
   /// Populate the list of visible windows.
   Future<void> _fetchWindows() async {
-    final windows = await _nativePlatform.windows(
+    List<Window> windows = await _nativePlatform.windows(
       showHidden: _settingsCubit.state.showHiddenWindows,
     );
 
     // Filter out windows that are likely not desired or workable,
     // for example the root window, unknown (0) pid, etc.
     windows.removeWhere((element) => element.process.pid < 10);
+
+    // Update windows with favorite data.
+    windows = await _windowsWithFavoriteData(windows);
 
     for (var i = 0; i < windows.length; i++) {
       windows[i] = await _refreshWindowProcess(windows[i]);
@@ -76,6 +79,24 @@ class AppsListCubit extends Cubit<AppsListState> {
     windows.sortWindows(_settingsCubit.state.pinSuspendedWindows);
 
     emit(state.copyWith(windows: windows));
+  }
+
+  /// Updates the list of windows with favorite data.
+  ///
+  /// This method takes a list of windows and retrieves the favorite data for
+  /// each window from local storage.
+  ///
+  /// A window is considered a favorite if its executable name has been saved
+  /// to the 'favorites' key in local storage.
+  Future<List<Window>> _windowsWithFavoriteData(List<Window> windows) async {
+    final List<String> favorites = await _storage.getValue('favorites') ?? [];
+
+    return windows.map((window) {
+      final isFavorite = favorites.contains(window.process.executable);
+      return window.copyWith(
+        process: window.process.copyWith(isFavorite: isFavorite),
+      );
+    }).toList();
   }
 
   Timer? _timer;
@@ -116,6 +137,21 @@ class AppsListCubit extends Cubit<AppsListState> {
     emit(state.copyWith(loading: true));
     await _fetchWindows();
     emit(state.copyWith(loading: false));
+  }
+
+  /// Set a window as a favorite or not.
+  Future<void> setFavorite(Window window, bool favorite) async {
+    final List<String> favorites = await _storage.getValue('favorites') ?? [];
+
+    if (favorite) {
+      assert(!favorites.contains(window.process.executable));
+      favorites.add(window.process.executable);
+    } else {
+      favorites.remove(window.process.executable);
+    }
+
+    await _storage.saveValue(key: 'favorites', value: favorites);
+    await manualRefresh();
   }
 
   /// Set a filter for the windows shown in the list.
@@ -322,16 +358,23 @@ extension on List<Window> {
   /// Sort the windows by executable name.
   ///
   /// If the user has enabled pinning suspended windows to the top of the list,
-  /// those windows will be sorted to the top.
+  /// or the window's process has been favorited by the user, those windows will
+  /// be sorted to the top.
   void sortWindows(bool pinSuspendedWindows) {
     sort((a, b) {
       final aIsSuspended = a.process.status == ProcessStatus.suspended;
       final bIsSuspended = b.process.status == ProcessStatus.suspended;
 
+      final aIsFavorite = a.process.isFavorite;
+      final bIsFavorite = b.process.isFavorite;
+
       if (pinSuspendedWindows) {
         if (aIsSuspended && !bIsSuspended) return -1;
         if (!aIsSuspended && bIsSuspended) return 1;
       }
+
+      if (aIsFavorite && !bIsFavorite) return -1;
+      if (!aIsFavorite && bIsFavorite) return 1;
 
       return a.process.executable.toLowerCase().compareTo(
             b.process.executable.toLowerCase(),

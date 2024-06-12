@@ -24,6 +24,10 @@ class Process with _$Process {
     /// Name of the executable, for example 'firefox' or 'firefox-bin'.
     required String executable,
 
+    /// Whether the application has been marked as a favorite.
+    @Default(false) //
+    bool isFavorite,
+
     /// The Process ID (PID) of the given process.
     required int pid,
 
