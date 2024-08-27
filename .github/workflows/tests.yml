@@ -33,7 +33,7 @@ jobs:
           flutter pub get
 
       - name: Verify formatting
-        run: dart format -o none --set-exit-if-changed .
+        run: dart format -o none --set-exit-if-changed --line-length=90 .
 
       - name: Run code generation
         run: flutter pub run build_runner build --delete-conflicting-outputs
