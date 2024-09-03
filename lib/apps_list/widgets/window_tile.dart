@@ -124,8 +124,8 @@ class _FavoriteButton extends StatelessWidget {
 
     return IconButton(
       icon: Icon(
-        (isFavorite) ? Icons.star : Icons.star_border,
-        color: (isFavorite) ? Colors.yellow : null,
+        (isFavorite) ? Icons.favorite : Icons.favorite_border,
+        color: (isFavorite) ? Colors.red : null,
       ),
       onPressed: () => appsListCubit.setFavorite(window, !isFavorite),
       tooltip: (isFavorite)
