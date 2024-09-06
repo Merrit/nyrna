@@ -130,7 +130,7 @@ class _SearchBar extends StatelessWidget {
             controller: controller,
             focusNode: focusNode,
             hintText: AppLocalizations.of(context)!.filterWindows,
-            elevation: MaterialStateProperty.all(2),
+            elevation: WidgetStateProperty.all(2),
             trailing: <Widget>[
               clearButton,
             ],
