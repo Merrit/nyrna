@@ -13,5 +13,11 @@
     "git.ignoredRepositories": [
         "packaging/linux/flatpak/shared-modules"
     ],
-    "git.detectSubmodules": false
+    "git.detectSubmodules": false,
+    "dart.lineLength": 90,
+    "[dart]": {
+        "editor.rulers": [
+            90
+        ]
+    }
 }

@@ -101,10 +101,9 @@ void main() {
 
     test('explorer.exe executable aborts on Win32', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.windows;
-      when(nativePlatform.activeWindow())
-          .thenAnswer((_) async => testWindow.copyWith(
-                process: testProcess.copyWith(executable: 'explorer.exe'),
-              ));
+      when(nativePlatform.activeWindow()).thenAnswer((_) async => testWindow.copyWith(
+            process: testProcess.copyWith(executable: 'explorer.exe'),
+          ));
       final successful = await activeWindow.toggle();
       expect(successful, false);
       verifyNever(processRepository.suspend(any));
@@ -135,18 +134,15 @@ void main() {
         verifyNever(nativePlatform.minimizeWindow(any));
       });
 
-      test('no-minimize flag received & no preference does not minimize',
-          () async {
+      test('no-minimize flag received & no preference does not minimize', () async {
         when(argParser.minimize).thenReturn(false);
         final successful = await activeWindow.toggle();
         expect(successful, true);
         verifyNever(nativePlatform.minimizeWindow(any));
       });
 
-      test('no-minimize flag received & preference=true does not minimize',
-          () async {
-        when(storageRepository.getValue('minimizeWindows'))
-            .thenAnswer((_) async => true);
+      test('no-minimize flag received & preference=true does not minimize', () async {
+        when(storageRepository.getValue('minimizeWindows')).thenAnswer((_) async => true);
         when(argParser.minimize).thenReturn(false);
         final successful = await activeWindow.toggle();
         expect(successful, true);

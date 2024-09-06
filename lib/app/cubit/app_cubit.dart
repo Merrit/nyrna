@@ -126,8 +126,7 @@ Otherwise, [consider signing in using X11 instead](https://docs.fedoraproject.or
       runningVersion: versionInfo.currentVersion,
       updateVersion: versionInfo.latestVersion,
       updateAvailable: versionInfo.updateAvailable,
-      showUpdateButton:
-          (defaultTargetPlatform.isDesktop && versionInfo.updateAvailable),
+      showUpdateButton: (defaultTargetPlatform.isDesktop && versionInfo.updateAvailable),
     ));
   }
 

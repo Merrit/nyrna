@@ -43,8 +43,7 @@ void main() {
     reset(mockSystemTrayManager);
     reset(mockUpdateService);
 
-    when(mockUpdateService.getVersionInfo())
-        .thenAnswer((_) async => VersionInfo.empty());
+    when(mockUpdateService.getVersionInfo()).thenAnswer((_) async => VersionInfo.empty());
 
     cubit = AppCubit(
       mockAppWindow,

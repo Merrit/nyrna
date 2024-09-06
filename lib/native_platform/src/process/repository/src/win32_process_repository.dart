@@ -19,8 +19,7 @@ class Win32ProcessRepository extends ProcessRepository {
     /// Load the native library.
     final String nativeLibraryPath;
     if (kReleaseMode) {
-      nativeLibraryPath =
-          r'data\flutter_assets\assets\lib\windows\NativeLibrary.dll';
+      nativeLibraryPath = r'data\flutter_assets\assets\lib\windows\NativeLibrary.dll';
     } else {
       nativeLibraryPath = r'assets\lib\windows\NativeLibrary.dll';
     }

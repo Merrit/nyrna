@@ -188,7 +188,9 @@ class WindowBuilder {
   /// duration of the current isolate's lifetime."
   /// https://api.flutter.dev/flutter/dart-ffi/Pointer/fromFunction.html
   static final _callback = Pointer.fromFunction<EnumWindowsProc>(
-      WindowBuilder.enumWindowsCallback, 0);
+    WindowBuilder.enumWindowsCallback,
+    0,
+  );
 
   /// Callback for each window found by `EnumWindows()`.
   ///

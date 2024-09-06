@@ -111,8 +111,7 @@ class _PinSuspendedWindowsTile extends StatelessWidget {
             ),
             WidgetSpan(
               child: Tooltip(
-                message:
-                    AppLocalizations.of(context)!.pinSuspendedWindowsTooltip,
+                message: AppLocalizations.of(context)!.pinSuspendedWindowsTooltip,
                 child: const Icon(
                   Icons.help_outline,
                   size: 18,

@@ -67,8 +67,8 @@ class Linux implements NativePlatform {
 
     // Which virtual desktop this window is on.
     final windowDesktop = int.tryParse(parts[1]);
-    final windowOnCurrentDesktop = (windowDesktop == _desktop ||
-        windowDesktop == _kStickyWindowIdentifier);
+    final windowOnCurrentDesktop =
+        (windowDesktop == _desktop || windowDesktop == _kStickyWindowIdentifier);
     if (!windowOnCurrentDesktop && !showHidden) return null;
 
     final pid = int.tryParse(parts[2]);

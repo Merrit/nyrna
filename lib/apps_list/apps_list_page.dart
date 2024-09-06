@@ -180,7 +180,7 @@ class _FloatingActionButton extends StatelessWidget {
             ? BlocBuilder<ThemeCubit, ThemeState>(
                 builder: (context, state) {
                   return FloatingActionButton(
-                    backgroundColor: (state.appTheme == AppTheme.pitchBlack)
+                    backgroundColor: (state.appTheme == AppTheme.pitchBlack) //
                         ? Colors.black
                         : null,
                     onPressed: () {

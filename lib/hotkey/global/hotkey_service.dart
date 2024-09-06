@@ -12,8 +12,7 @@ class HotkeyService {
   /// Stream that fires when a hotkey is triggered.
   ///
   /// Allows dependent services to react when a hotkey is triggered.
-  Stream<HotKey> get hotkeyTriggeredStream =>
-      _hotkeyTriggeredStreamController.stream;
+  Stream<HotKey> get hotkeyTriggeredStream => _hotkeyTriggeredStreamController.stream;
 
   /// Controller for the hotkey triggered stream.
   final _hotkeyTriggeredStreamController = StreamController<HotKey>.broadcast();
