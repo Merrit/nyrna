@@ -98,6 +98,12 @@ If you need Nyrna to work with a specific app, you can try running it with XWayl
 env XDG_SESSION_TYPE=x11 <app>
 ```
 
+or
+
+```
+env QT_QPA_PLATFORM=xcb <app>
+```
+
 Otherwise, [consider signing in using X11 instead](https://docs.fedoraproject.org/en-US/quick-docs/configuring-xorg-as-default-gnome-session/).''';
 
     switch (sessionType) {
