@@ -54,8 +54,7 @@ void main() {
     when(mockSettingsCubit.state).thenReturn(SettingsState.initial());
   });
 
-  testWidgets('Clicking more actions button shows context menu',
-      (tester) async {
+  testWidgets('Clicking more actions button shows context menu', (tester) async {
     final appsListCubit = AppsListCubit(
       appVersion: mockAppVersion,
       hotkeyService: mockHotkeyService,

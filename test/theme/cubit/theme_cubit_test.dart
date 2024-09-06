@@ -45,14 +45,12 @@ void main() {
     });
 
     test('saved dark theme preference loads dark theme', () async {
-      when(mockStorageRepo.getValue('appTheme'))
-          .thenAnswer((_) async => 'AppTheme.dark');
+      when(mockStorageRepo.getValue('appTheme')).thenAnswer((_) async => 'AppTheme.dark');
       cubit = await ThemeCubit.init(mockStorageRepo);
       expect(state.appTheme, AppTheme.dark);
     });
 
-    test('saved pitch black theme preference loads pitch black theme',
-        () async {
+    test('saved pitch black theme preference loads pitch black theme', () async {
       when(mockStorageRepo.getValue('appTheme'))
           .thenAnswer((_) async => 'AppTheme.pitchBlack');
       cubit = await ThemeCubit.init(mockStorageRepo);

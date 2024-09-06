@@ -29,9 +29,7 @@ Future<String?> showInputDialog({
       keyboardType = TextInputType.number;
       break;
     case InputDialogs.onlyDouble:
-      formatter = [
-        FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
-      ];
+      formatter = [FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))];
       keyboardType = TextInputType.number;
       break;
     case InputDialogs.multiLine:

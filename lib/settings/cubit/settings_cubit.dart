@@ -61,15 +61,12 @@ class SettingsCubit extends Cubit<SettingsState> {
       hotkey = defaultHotkey;
     }
 
-    final bool minimizeWindows =
-        await storage.getValue('minimizeWindows') ?? true;
+    final bool minimizeWindows = await storage.getValue('minimizeWindows') ?? true;
     final bool pinSuspendedWindows =
         await storage.getValue('pinSuspendedWindows') ?? false;
     final int refreshInterval = await storage.getValue('refreshInterval') ?? 5;
-    final bool showHiddenWindows =
-        await storage.getValue('showHiddenWindows') ?? false;
-    final bool startHiddenInTray =
-        await storage.getValue('startHiddenInTray') ?? false;
+    final bool showHiddenWindows = await storage.getValue('showHiddenWindows') ?? false;
+    final bool startHiddenInTray = await storage.getValue('startHiddenInTray') ?? false;
 
     return SettingsCubit._(
       autostartService,
@@ -165,7 +162,8 @@ class SettingsCubit extends Cubit<SettingsState> {
     final AppSpecificHotkey appSpecificHotkey =
         state.appSpecificHotKeys.firstWhere((e) => e.executable == executable);
 
-    final List<AppSpecificHotkey> appSpecificHotkeys = state.appSpecificHotKeys
+    final List<AppSpecificHotkey> appSpecificHotkeys = state //
+        .appSpecificHotKeys
         .where((e) => e.executable != executable)
         .toList();
 

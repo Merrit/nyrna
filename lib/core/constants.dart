@@ -15,5 +15,4 @@ const String websiteUrl = 'https://nyrna.merritt.codes/';
 ///
 /// This is distinct from the package name the Microsoft Store uses, and is
 /// required for some things like creating shortcuts.
-const String kWindowsAppPackageName =
-    '33694MerrittCodes.Nyrna_9kjrd3yy77d9e!nyrna';
+const String kWindowsAppPackageName = '33694MerrittCodes.Nyrna_9kjrd3yy77d9e!nyrna';

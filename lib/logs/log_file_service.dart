@@ -84,7 +84,7 @@ class LogFileService {
 
     final List<FileSystemEntity> files = _logDir.listSync();
 
-    final List<File> logFiles = files
+    final List<File> logFiles = files //
         .whereType<File>()
         .where((file) => file.path.endsWith('.txt'))
         .toList();
@@ -135,8 +135,7 @@ $currentTime
   Future<void> _deleteOldLogFiles() async {
     final List<File> logFiles = await getAllLogFiles()
       // Remove any numbered log files.
-      ..removeWhere(
-          (file) => file.path.split(Platform.pathSeparator).last.contains('_'));
+      ..removeWhere((file) => file.path.split(Platform.pathSeparator).last.contains('_'));
 
     if (logFiles.length <= 7) {
       return;
@@ -160,8 +159,8 @@ $currentTime
     }
 
     // Remove any log files that are not numbered.
-    todayLogFiles.removeWhere((file) =>
-        file.path.split(Platform.pathSeparator).last.contains('_') == false);
+    todayLogFiles.removeWhere(
+        (file) => file.path.split(Platform.pathSeparator).last.contains('_') == false);
 
     final int highestNumber = todayLogFiles
         .map((file) => int.parse(file.path.split('_').last.split('.').first))
@@ -195,8 +194,7 @@ $currentTime
     final int highestNumber = _getHighestNumber(todayLogFiles);
     final String newFileName = '${_today}_${highestNumber + 1}.txt';
 
-    final File newLogFile =
-        File('${_logDir.path}${Platform.pathSeparator}$newFileName');
+    final File newLogFile = File('${_logDir.path}${Platform.pathSeparator}$newFileName');
 
     await newLogFile.create();
 

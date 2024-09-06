@@ -262,8 +262,9 @@ class _AppSpecificHotkeys extends StatelessWidget {
                           backgroundColor: Colors.grey.shade700,
                           padding: const EdgeInsets.all(10),
                         ),
-                        onPressed: () => settingsCubit
-                            .removeAppSpecificHotkey(hotkey.executable),
+                        onPressed: () => settingsCubit.removeAppSpecificHotkey(
+                          hotkey.executable,
+                        ),
                         child: const Icon(Icons.delete),
                       ),
                     ),
@@ -299,7 +300,8 @@ class _AddAppSpecificHotkeyDialog extends StatelessWidget {
     return AlertDialog(
       content: BlocBuilder<AppsListCubit, AppsListState>(
         builder: (context, state) {
-          final executables = state.windows
+          final executables = state //
+              .windows
               .map((window) => window.process.executable)
               .toSet()
               .toList();
@@ -354,8 +356,7 @@ class _RecordAppSpecificHotkeyDialog extends StatefulWidget {
       _RecordAppSpecificHotkeyDialogState();
 }
 
-class _RecordAppSpecificHotkeyDialogState
-    extends State<_RecordAppSpecificHotkeyDialog> {
+class _RecordAppSpecificHotkeyDialogState extends State<_RecordAppSpecificHotkeyDialog> {
   HotKey? _hotKey;
 
   @override

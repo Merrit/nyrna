@@ -167,8 +167,7 @@ class _WaylandWarningButton extends StatelessWidget {
 
         return IconButton(
           icon: const Icon(Icons.warning),
-          onPressed: () =>
-              _showWarningDialog(context, state.linuxSessionMessage!),
+          onPressed: () => _showWarningDialog(context, state.linuxSessionMessage!),
         );
       },
     );
