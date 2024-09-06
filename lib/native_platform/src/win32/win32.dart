@@ -102,20 +102,20 @@ class Win32 implements NativePlatform {
   @override
   Future<bool> minimizeWindow(int windowId) async {
     log.i('Minimizing window with id $windowId');
-    ShowWindow(windowId, SW_FORCEMINIMIZE);
+    ShowWindow(windowId, SHOW_WINDOW_CMD.SW_FORCEMINIMIZE);
     return true; // [ShowWindow] return value doesn't confirm success.
   }
 
   @override
   Future<bool> restoreWindow(int windowId) async {
     log.i('Restoring window with id $windowId');
-    ShowWindow(windowId, SW_RESTORE);
+    ShowWindow(windowId, SHOW_WINDOW_CMD.SW_RESTORE);
     return true; // [ShowWindow] return value doesn't confirm success.
   }
 
   Future<String> getExecutableName(int pid) async {
     final processHandle = OpenProcess(
-      PROCESS_QUERY_LIMITED_INFORMATION,
+      PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_LIMITED_INFORMATION,
       FALSE,
       pid,
     );
@@ -187,7 +187,7 @@ class WindowBuilder {
   /// "The pointer returned will remain alive for the
   /// duration of the current isolate's lifetime."
   /// https://api.flutter.dev/flutter/dart-ffi/Pointer/fromFunction.html
-  static final _callback = Pointer.fromFunction<EnumWindowsProc>(
+  static final _callback = Pointer.fromFunction<WNDENUMPROC>(
     WindowBuilder.enumWindowsCallback,
     0,
   );
