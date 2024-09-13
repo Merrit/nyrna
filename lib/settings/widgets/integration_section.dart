@@ -125,7 +125,6 @@ class _HotkeyConfigWidget extends StatelessWidget {
       title: const Text('Hotkey'),
       leading: const Icon(Icons.keyboard),
       trailing: ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade700),
         onPressed: () => showDialog(
           context: context,
           builder: (context) => _RecordHotKeyDialog(
@@ -258,10 +257,6 @@ class _AppSpecificHotkeys extends StatelessWidget {
                       leading: Text(hotkey.hotkey.toStringHelper()),
                       title: Text(hotkey.executable),
                       trailing: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey.shade700,
-                          padding: const EdgeInsets.all(10),
-                        ),
                         onPressed: () => settingsCubit.removeAppSpecificHotkey(
                           hotkey.executable,
                         ),
@@ -271,10 +266,6 @@ class _AppSpecificHotkeys extends StatelessWidget {
                   ),
                 ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade700,
-                  padding: const EdgeInsets.all(10),
-                ),
                 onPressed: () {
                   showDialog(
                     context: context,
