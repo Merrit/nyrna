@@ -13,12 +13,14 @@ import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../../storage/storage_repository.dart';
 import '../../system_tray/system_tray.dart';
+import '../../window/app_window.dart';
 import '../apps_list.dart';
 
 part 'apps_list_state.dart';
 part 'apps_list_cubit.freezed.dart';
 
 class AppsListCubit extends Cubit<AppsListState> {
+  final AppWindow _appWindow;
   final HotkeyService _hotkeyService;
   final NativePlatform _nativePlatform;
   final ProcessRepository _processRepository;
@@ -28,6 +30,7 @@ class AppsListCubit extends Cubit<AppsListState> {
   final AppVersion _appVersion;
 
   AppsListCubit({
+    required AppWindow appWindow,
     required HotkeyService hotkeyService,
     required NativePlatform nativePlatform,
     required ProcessRepository processRepository,
@@ -36,7 +39,8 @@ class AppsListCubit extends Cubit<AppsListState> {
     required SystemTrayManager systemTrayManager,
     required AppVersion appVersion,
     bool testing = false,
-  })  : _hotkeyService = hotkeyService,
+  })  : _appWindow = appWindow,
+        _hotkeyService = hotkeyService,
         _nativePlatform = nativePlatform,
         _settingsCubit = settingsCubit,
         _processRepository = processRepository,
@@ -216,6 +220,7 @@ class AppsListCubit extends Cubit<AppsListState> {
 
   Future<bool> toggleActiveWindow() async {
     final activeWindow = ActiveWindow(
+      _appWindow,
       _nativePlatform,
       _processRepository,
       _storage,
