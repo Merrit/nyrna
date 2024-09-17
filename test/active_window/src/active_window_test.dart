@@ -6,9 +6,12 @@ import 'package:nyrna/argument_parser/argument_parser.dart';
 import 'package:nyrna/logs/logs.dart';
 import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/storage/storage_repository.dart';
+import 'package:nyrna/window/app_window.dart';
 import 'package:test/test.dart';
 
+import '../../helpers.dart';
 @GenerateNiceMocks(<MockSpec>[
+  MockSpec<AppWindow>(),
   MockSpec<ArgumentParser>(),
   MockSpec<NativePlatform>(),
   MockSpec<ProcessRepository>(),
@@ -30,6 +33,7 @@ const testWindow = Window(
   title: 'Untitled-2 - Visual Studio Code - Insiders',
 );
 
+MockAppWindow appWindow = MockAppWindow();
 MockArgumentParser argParser = MockArgumentParser();
 MockNativePlatform nativePlatform = MockNativePlatform();
 MockProcessRepository processRepository = MockProcessRepository();
@@ -50,6 +54,9 @@ void main() {
     reset(storageRepository);
 
     // Setup initial dummy responses for mocks.
+
+    // AppWindow
+    when(appWindow.hide()).thenAnswer((_) async => true);
 
     // NativePlatform
     when(nativePlatform.activeWindow()).thenAnswer((_) async => testWindow);
@@ -76,6 +83,7 @@ void main() {
     when(storageRepository.close()).thenAnswer((_) async {});
 
     activeWindow = ActiveWindow(
+      appWindow,
       nativePlatform,
       processRepository,
       storageRepository,
@@ -115,6 +123,36 @@ void main() {
       when(processRepository.suspend(any)).thenAnswer((_) async => false);
       final successful = await activeWindow.toggle();
       expect(successful, false);
+    });
+
+    test('active window being Nyrna calls hide on window and tries again (Linux)',
+        () async {
+      final nyrnaWindow = testWindow.copyWith(
+        process: testProcess.copyWith(executable: 'nyrna'),
+      );
+      when(nativePlatform.activeWindow()).thenAnswerInOrder([
+        Future.value(nyrnaWindow),
+        Future.value(testWindow),
+      ]);
+      final successful = await activeWindow.toggle();
+      expect(successful, true);
+      verify(nativePlatform.activeWindow()).called(2);
+      verify(appWindow.hide()).called(1);
+    });
+
+    test('active window being Nyrna calls hide on window and tries again (Windows)',
+        () async {
+      final nyrnaWindow = testWindow.copyWith(
+        process: testProcess.copyWith(executable: 'nyrna.exe'),
+      );
+      when(nativePlatform.activeWindow()).thenAnswerInOrder([
+        Future.value(nyrnaWindow),
+        Future.value(testWindow),
+      ]);
+      final successful = await activeWindow.toggle();
+      expect(successful, true);
+      verify(nativePlatform.activeWindow()).called(2);
+      verify(appWindow.hide()).called(1);
     });
 
     group('minimizing & restoring:', () {

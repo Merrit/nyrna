@@ -11,9 +11,11 @@ import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/storage/storage_repository.dart';
 import 'package:nyrna/system_tray/system_tray_manager.dart';
+import 'package:nyrna/window/app_window.dart';
 
 @GenerateNiceMocks(<MockSpec>[
   MockSpec<AppVersion>(),
+  MockSpec<AppWindow>(),
   MockSpec<HotkeyService>(),
   MockSpec<NativePlatform>(),
   MockSpec<ProcessRepository>(),
@@ -24,6 +26,7 @@ import 'package:nyrna/system_tray/system_tray_manager.dart';
 import 'window_tile_test.mocks.dart';
 
 final mockAppVersion = MockAppVersion();
+final mockAppWindow = MockAppWindow();
 final mockHotkeyService = MockHotkeyService();
 final mockNativePlatform = MockNativePlatform();
 final mockProcessRepository = MockProcessRepository();
@@ -57,6 +60,7 @@ void main() {
   testWidgets('Clicking more actions button shows context menu', (tester) async {
     final appsListCubit = AppsListCubit(
       appVersion: mockAppVersion,
+      appWindow: mockAppWindow,
       hotkeyService: mockHotkeyService,
       nativePlatform: mockNativePlatform,
       processRepository: mockProcessRepository,

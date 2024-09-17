@@ -10,9 +10,11 @@ import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/settings/settings.dart';
 import 'package:nyrna/storage/storage_repository.dart';
 import 'package:nyrna/system_tray/system_tray_manager.dart';
+import 'package:nyrna/window/app_window.dart';
 import 'package:test/test.dart';
 
 @GenerateNiceMocks(<MockSpec>[
+  MockSpec<AppWindow>(),
   MockSpec<HotkeyService>(),
   MockSpec<NativePlatform>(),
   MockSpec<SettingsCubit>(),
@@ -70,6 +72,7 @@ Window get mpvWindow2State => state //
     .windows
     .singleWhere((element) => element.id == mpvWindow2.id);
 
+final appWindow = MockAppWindow();
 final hotkeyService = MockHotkeyService();
 final nativePlatform = MockNativePlatform();
 final settingsCubit = MockSettingsCubit();
@@ -128,6 +131,7 @@ void main() {
     when(storage.getValue('minimizeWindows')).thenAnswer((_) async => true);
 
     cubit = AppsListCubit(
+      appWindow: appWindow,
       hotkeyService: hotkeyService,
       nativePlatform: nativePlatform,
       settingsCubit: settingsCubit,

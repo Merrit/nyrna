@@ -4,21 +4,27 @@ import '../../argument_parser/argument_parser.dart';
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../../storage/storage_repository.dart';
+import '../../window/app_window.dart';
 
 /// Manage the active window.
 ///
 /// We use extra logging here in order to debug issues since this has
 /// no user interface.
 class ActiveWindow {
+  final AppWindow _appWindow;
   final NativePlatform _nativePlatform;
   final ProcessRepository _processRepository;
   final StorageRepository _storageRepository;
 
   const ActiveWindow(
+    this._appWindow,
     this._nativePlatform,
     this._processRepository,
     this._storageRepository,
   );
+
+  /// Maximum number of retries to suspend the active window.
+  static const int _maxRetries = 3;
 
   /// Toggle suspend / resume for the active, foreground window.
   Future<bool> toggle() async {
@@ -79,53 +85,60 @@ class ActiveWindow {
   Future<bool> _suspend() async {
     log.i('Suspending');
 
-    final window = await _nativePlatform.activeWindow();
+    for (int attempt = 0; attempt < _maxRetries; attempt++) {
+      final window = await _nativePlatform.activeWindow();
+      final String executable = window.process.executable;
 
-    final String executable = window.process.executable;
-    if (executable == 'nyrna' || executable == 'nyrna.exe') {
-      log.w('Active window is Nyrna, not suspending.');
-      return false;
-    }
+      if (executable == 'nyrna' || executable == 'nyrna.exe') {
+        log.w('Active window is Nyrna, hiding and retrying.');
+        await _appWindow.hide();
+        await Future.delayed(const Duration(milliseconds: 500));
+        continue;
+      }
 
-    log.i('Active window: $window');
+      log.i('Active window: $window');
 
-    if (defaultTargetPlatform == TargetPlatform.windows) {
-      // Once in a blue moon on Windows we get "explorer.exe" as the active
-      // window, even when no file explorer windows are open / the desktop
-      // is not the active element, etc. So we filter it just in case.
-      if (window.process.executable == 'explorer.exe') {
-        log.e('Only got explorer as active window!');
+      if (defaultTargetPlatform == TargetPlatform.windows) {
+        // Once in a blue moon on Windows we get "explorer.exe" as the active
+        // window, even when no file explorer windows are open / the desktop
+        // is not the active element, etc. So we filter it just in case.
+        if (window.process.executable == 'explorer.exe') {
+          log.e('Only got explorer as active window!');
+          return false;
+        }
+      }
+
+      await _minimize(window.id);
+
+      // Small delay on Windows to ensure the window actually minimizes.
+      // Doesn't seem to be necessary on Linux.
+      if (defaultTargetPlatform == TargetPlatform.windows) {
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+
+      final suspended = await _processRepository.suspend(window.process.pid);
+      if (!suspended) {
+        log.e('Failed to suspend active window.');
         return false;
       }
+
+      await _storageRepository.saveValue(
+        key: 'pid',
+        value: window.process.pid,
+        storageArea: 'activeWindow',
+      );
+      await _storageRepository.saveValue(
+        key: 'windowId',
+        value: window.id,
+        storageArea: 'activeWindow',
+      );
+      log.i('Suspended ${window.process.pid} successfully');
+
+      return true;
     }
 
-    await _minimize(window.id);
-
-    // Small delay on Windows to ensure the window actually minimizes.
-    // Doesn't seem to be necessary on Linux.
-    if (defaultTargetPlatform == TargetPlatform.windows) {
-      await Future.delayed(const Duration(milliseconds: 500));
-    }
-
-    final suspended = await _processRepository.suspend(window.process.pid);
-    if (!suspended) {
-      log.e('Failed to suspend active window.');
-      return false;
-    }
-
-    await _storageRepository.saveValue(
-      key: 'pid',
-      value: window.process.pid,
-      storageArea: 'activeWindow',
-    );
-    await _storageRepository.saveValue(
-      key: 'windowId',
-      value: window.id,
-      storageArea: 'activeWindow',
-    );
-    log.i('Suspended ${window.process.pid} successfully');
-
-    return true;
+    log.e('Failed to suspend after $_maxRetries attempts.');
+    return false;
   }
 
   Future<void> _minimize(int windowId) async {

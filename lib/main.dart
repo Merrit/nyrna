@@ -54,7 +54,11 @@ Future<void> main(List<String> args) async {
 
   final processRepository = ProcessRepository.init();
 
+  final appWindow = AppWindow(storage);
+  appWindow.initialize();
+
   final activeWindow = ActiveWindow(
+    appWindow,
     nativePlatform,
     processRepository,
     storage,
@@ -81,9 +85,6 @@ Future<void> main(List<String> args) async {
 
   final hotkeyService = HotkeyService();
 
-  final appWindow = AppWindow(storage);
-  appWindow.initialize();
-
   final settingsCubit = await SettingsCubit.init(
     autostartService: AutostartService(),
     hotkeyService: hotkeyService,
@@ -108,6 +109,7 @@ Future<void> main(List<String> args) async {
   );
 
   final appsListCubit = AppsListCubit(
+    appWindow: appWindow,
     hotkeyService: hotkeyService,
     nativePlatform: nativePlatform,
     settingsCubit: settingsCubit,
