@@ -7,13 +7,15 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   <id>codes.merritt.Nyrna</id>
   <name>Nyrna</name>
   <summary>Suspend games and applications</summary>
-  <developer_name>Merritt Codes</developer_name>
-  <url type="bugtracker">https://github.com/Merrit/nyrna/issues/</url>
-  <url type="contact">https://merritt.codes/contact/</url>
-  <url type="homepage">https://nyrna.merritt.codes/</url>
-  <url type="donation">https://merritt.codes/support/</url>
+  <developer id="codes.merritt.nyrna">
+    <name>Merritt Codes</name>
+  </developer>
+  <url type="bugtracker">https://github.com/Merrit/nyrna/issues</url>
+  <url type="contact">https://merritt.codes/contact</url>
+  <url type="homepage">https://nyrna.merritt.codes</url>
+  <url type="donation">https://merritt.codes/support</url>
   <!-- vcs-browser is the link to the source code repository -->
-  <url type="vcs-browser">https://github.com/Merrit/nyrna/</url>
+  <url type="vcs-browser">https://github.com/Merrit/nyrna</url>
   <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <supports>
@@ -21,13 +23,6 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
     <control>keyboard</control>
     <control>touch</control>
   </supports>
-  <keywords>
-    <keyword>sleep</keyword>
-    <keyword>suspend</keyword>
-    <keyword>pause</keyword>
-    <keyword>games</keyword>
-    <keyword>resources</keyword>
-  </keywords>
   <description>
     <p>Similar to the incredibly useful sleep/suspend function found in consoles like the Nintendo Switch and Sony PlayStation; suspend your game (and its resource usage) at any time, and resume whenever you wish - at the push of a button.</p>
     <p>Suspend Games</p>
@@ -49,12 +44,18 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   <launchable type="desktop-id">codes.merritt.Nyrna.desktop</launchable>
   <screenshots>
     <screenshot type="default">
-      <image>https://github.com/Merrit/nyrna/raw/main/assets/images/promo/promo.jpg</image>
+      <image>https://raw.githubusercontent.com/Merrit/nyrna/02fe3cb50cb07263bf696cbf98121b2e4baf599a/assets/screenshots/linux/screenshot1-dark.png</image>
+      <caption>Example usage shows multiple open applications, one suspended and favorited - dark theme</caption>
     </screenshot>
     <screenshot>
-      <image>https://nyrna.merritt.codes/assets/images/nyrna-window.png</image>
+      <image>https://raw.githubusercontent.com/Merrit/nyrna/02fe3cb50cb07263bf696cbf98121b2e4baf599a/assets/screenshots/linux/screenshot1-light.png</image>
+      <caption>Example usage shows multiple open applications, one suspended and favorited - light theme</caption>
     </screenshot>
   </screenshots>
+  <branding>
+    <color type="primary" scheme_preference="light">#00618b</color>
+    <color type="primary" scheme_preference="dark">#005173</color>
+  </branding>
   <content_rating type="oars-1.1"/>
   <releases>
     <release version="2.21.0" date="2024-07-18">
