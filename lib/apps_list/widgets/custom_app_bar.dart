@@ -21,7 +21,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final settingsButton = IconButton(
       icon: const Icon(Icons.settings),
-      onPressed: () => Navigator.pushNamed(context, SettingsPage.id),
+      onPressed: () {
+        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        Navigator.pushNamed(context, SettingsPage.id);
+      },
     );
 
     final updateAvailableButton = BlocBuilder<AppsListCubit, AppsListState>(

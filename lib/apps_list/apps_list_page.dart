@@ -55,7 +55,11 @@ class _AppsListPageState extends State<AppsListPage> {
             }
           });
 
-          return BlocBuilder<AppsListCubit, AppsListState>(
+          return BlocConsumer<AppsListCubit, AppsListState>(
+            listenWhen: (previous, current) {
+              return current.interactionErrors.isNotEmpty;
+            },
+            listener: (context, state) => showErrorBanner(context, state),
             builder: (context, state) {
               List<Window> windows = state.windows;
               windows = _filterWindows(windows, state.windowFilter);
@@ -91,6 +95,63 @@ class _AppsListPageState extends State<AppsListPage> {
       ),
       // We don't show a manual refresh button with a short auto-refresh.
       floatingActionButton: const _FloatingActionButton(),
+    );
+  }
+
+  // Show a MaterialBanner with the error message.
+  void showErrorBanner(BuildContext context, AppsListState state) {
+    ScaffoldMessenger.of(context).showMaterialBanner(
+      MaterialBanner(
+        leading: const Icon(Icons.error, color: Colors.red),
+        content: const Text('There was an error...'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () async {
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              final appsListCubit = context.read<AppsListCubit>();
+
+              // Show a dialog with the error message.
+              await showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    actionsPadding: const EdgeInsets.all(8),
+                    title: const Text('Error'),
+                    icon: const Icon(Icons.error, color: Colors.red),
+                    scrollable: true,
+                    content: NyrnaErrorMessage(state.interactionErrors.first),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Close'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          context.read<AppsListCubit>().clearInteractionErrors();
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Dismiss'),
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              if (appsListCubit.state.interactionErrors.isEmpty) {
+                scaffoldMessenger.clearMaterialBanners();
+              }
+            },
+            child: const Text('OPEN'),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<AppsListCubit>().clearInteractionErrors();
+              ScaffoldMessenger.of(context).clearMaterialBanners();
+            },
+            child: const Text('DISMISS'),
+          ),
+        ],
+      ),
     );
   }
 

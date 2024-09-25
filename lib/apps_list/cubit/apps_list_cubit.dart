@@ -345,6 +345,13 @@ class AppsListCubit extends Cubit<AppsListState> {
     ));
   }
 
+  /// Clear all interaction errors.
+  void clearInteractionErrors() {
+    emit(state.copyWith(
+      interactionErrors: [],
+    ));
+  }
+
   @override
   Future<void> close() async {
     _timer?.cancel();
