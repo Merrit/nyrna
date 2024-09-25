@@ -39,7 +39,11 @@ class NyrnaErrorMessage extends StatelessWidget {
               data: '''
 If this is a game, check if it uses `Easy Anti-Cheat` by searching for it at [pcgamingwiki.com](https://www.pcgamingwiki.com) and checking if the "Middleware" section lists Easy Anti-Cheat.
 
-Due to the restricted and obfuscated nature of Easy Anti-Cheat Nyrna cannot manage titles that use this.''',
+Due to the restricted and obfuscated nature of Easy Anti-Cheat Nyrna cannot manage titles that use this.
+
+Also, some games grab exclusive control of the mouse and keyboard, which can cause Nyrna's shortcuts to not work. This is a limitation of the game, not Nyrna. Known examples:
+
+- `Doom (2016)`''',
               onTapLink: (String text, String? href, String title) {
                 if (href == null) return;
                 AppCubit.instance.launchURL(href);
