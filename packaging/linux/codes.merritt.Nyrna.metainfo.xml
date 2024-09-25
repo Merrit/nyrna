@@ -58,6 +58,29 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   </branding>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.22.0" date="2024-09-25">
+      <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.22.0</url>
+      <description>
+        <p>Features</p>
+        <ul>
+          <li>Made the favorite icon a heart.</li>
+          <li>Added new Linux screenshots.</li>
+          <li>Display errors in a banner to make them more visible.</li>
+          <li>Added a message for games that grab exclusive input in error messages.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed an issue where window icons were missing in Wayland on Linux.</li>
+          <li>Fixed Nyrna's icon layout.</li>
+          <li>Fixed an issue with unreadable buttons in settings.</li>
+          <li>Fixed an issue with the hotkey getting Nyrna for the active window.</li>
+        </ul>
+        <p>Documentation</p>
+        <ul>
+          <li>Improved the Wayland warning message.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.21.0" date="2024-07-18">
       <description/>
     </release>
