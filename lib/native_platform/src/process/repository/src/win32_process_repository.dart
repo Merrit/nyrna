@@ -7,6 +7,7 @@ import 'package:win32_suspend_process/win32_suspend_process.dart';
 
 import '../../../../../logs/logs.dart';
 import '../../process.dart';
+import 'win32/win32.dart';
 
 /// Provides interaction access with host system processes on Windows.
 class Win32ProcessRepository extends ProcessRepository {
@@ -101,6 +102,15 @@ class Win32ProcessRepository extends ProcessRepository {
     final successful = (result == 0);
     log.i('Resuming $pid was successful: $successful');
     CloseHandle(processHandle);
+
+    if (successful) {
+      // Resume child processes recursively.
+      final childPids = await _getChildProcesses(pid);
+      for (final childPid in childPids) {
+        await resume(childPid);
+      }
+    }
+
     return successful;
   }
 
@@ -116,7 +126,44 @@ class Win32ProcessRepository extends ProcessRepository {
     final successful = (result == 0);
     log.i('Suspending $pid was successful: $successful');
     CloseHandle(processHandle);
+
+    if (successful) {
+      // Suspend child processes recursively.
+      final childPids = await _getChildProcesses(pid);
+      for (final childPid in childPids) {
+        await suspend(childPid);
+      }
+    }
+
     return successful;
+  }
+
+  /// Returns a list of child processes for the provided [pid].
+  Future<List<int>> _getChildProcesses(int pid) async {
+    final childPids = <int>[];
+    final snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (snapshot == INVALID_HANDLE_VALUE) {
+      log.w('Failed to create snapshot: ${GetLastError()}');
+      return childPids;
+    }
+
+    final processEntry = calloc<PROCESSENTRY32>();
+    processEntry.ref.dwSize = sizeOf<PROCESSENTRY32>();
+
+    final isProcessFound = Process32First(snapshot, processEntry) == TRUE;
+    if (isProcessFound) {
+      do {
+        if (processEntry.ref.th32ParentProcessID == pid) {
+          childPids.add(processEntry.ref.th32ProcessID);
+        }
+      } while (Process32Next(snapshot, processEntry) == TRUE);
+    } else {
+      log.w('Failed to retrieve first process: ${GetLastError()}');
+    }
+
+    CloseHandle(snapshot);
+    calloc.free(processEntry);
+    return childPids;
   }
 
   /// Returns true if the process is suspended, false otherwise.
