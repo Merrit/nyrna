@@ -50,6 +50,10 @@ class Linux implements NativePlatform {
       if (window != null) windows.add(window);
     }
 
+    // Remove any instances of plasmashell, which is the KDE desktop.
+    // It appears to show up on X11 sessions, for each monitor and virtual desktop.
+    windows.removeWhere((window) => window.process.executable == 'plasmashell');
+
     return windows;
   }
 
