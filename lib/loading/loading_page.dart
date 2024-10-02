@@ -30,19 +30,22 @@ class LoadingPage extends StatelessWidget {
             builder: (context, state) {
               switch (state) {
                 case LoadingError():
-                  return Card(
-                    child: Container(
-                      padding: const EdgeInsets.all(20.0),
-                      child: MarkdownBody(
-                        data: state.errorMsg,
-                        onTapLink: (text, href, title) {
-                          if (href == null) {
-                            log.e('Broken link: $href');
-                            return;
-                          }
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Card(
+                      child: Container(
+                        padding: const EdgeInsets.all(20.0),
+                        child: MarkdownBody(
+                          data: state.errorMsg,
+                          onTapLink: (text, href, title) {
+                            if (href == null) {
+                              log.e('Broken link: $href');
+                              return;
+                            }
 
-                          AppCubit.instance.launchURL(href);
-                        },
+                            AppCubit.instance.launchURL(href);
+                          },
+                        ),
                       ),
                     ),
                   );
