@@ -25,12 +25,10 @@ class LoadingCubit extends Cubit<LoadingState> {
     newState = (dependenciesSatisfied) //
         ? const LoadingSuccess()
         : const LoadingError(errorMsg: '''
-Dependency check failed.
+Missing dependencies.
 
-Install the dependencies from your system's package manager:
-
-- `xdotool`
-- `wmctrl`''');
+Please see the instructions at https://nyrna.merritt.codes/docs/linux-requirements and 
+relaunch Nyrna after installing the dependencies.''');
 
     emit(newState);
   }
