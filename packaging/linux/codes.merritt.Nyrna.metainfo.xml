@@ -58,6 +58,24 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   </branding>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.23.0" date="2024-10-03">
+      <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.23.0</url>
+      <description>
+        <p>Features</p>
+        <ul>
+          <li>Improved reliability and effectiveness on Windows for apps with child processes.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Linux: Fixed dependency error message taking entire view width.</li>
+          <li>Linux: Fixed an issue where the plasmashell process was incorrectly shown in X11 sessions.</li>
+        </ul>
+        <p>Documentation</p>
+        <ul>
+          <li>Made the dependency error message easier to understand and resolve.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.22.0" date="2024-09-25">
       <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.22.0</url>
       <description>
