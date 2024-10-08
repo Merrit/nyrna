@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -46,6 +47,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         updateAvailableButton,
         const _WaylandWarningButton(),
+        const _DebugButton(),
         settingsButton,
       ],
     );
@@ -205,6 +207,45 @@ class _WaylandWarningButton extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+/// A button that shows the debug menu.
+class _DebugButton extends StatelessWidget {
+  const _DebugButton();
+
+  @override
+  Widget build(BuildContext context) {
+    if (!kDebugMode) return const SizedBox();
+
+    final appsListCubit = context.read<AppsListCubit>();
+
+    return MenuAnchor(
+      builder: (context, controller, child) {
+        return IconButton(
+          onPressed: () {
+            if (controller.isOpen) {
+              controller.close();
+            } else {
+              controller.open();
+            }
+          },
+          icon: const Icon(Icons.bug_report),
+        );
+      },
+      menuChildren: [
+        MenuItemButton(
+          child: const Text('Add Interaction Error'),
+          onPressed: () async {
+            // ignore: invalid_use_of_visible_for_testing_member
+            await appsListCubit.addInteractionError(
+              appsListCubit.state.windows.first,
+              InteractionType.suspend,
+            );
+          },
+        ),
+      ],
     );
   }
 }
