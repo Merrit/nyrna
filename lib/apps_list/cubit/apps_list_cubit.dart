@@ -184,7 +184,7 @@ class AppsListCubit extends Cubit<AppsListState> {
     window = await _refreshWindowProcess(window);
     log.i('Window after interaction: $window');
 
-    if (!successful) await _addInteractionError(window, interaction);
+    if (!successful) await addInteractionError(window, interaction);
 
     // Create a copy of the state of windows, with this window's info refreshed.
     final windows = [...state.windows];
@@ -327,7 +327,10 @@ class AppsListCubit extends Cubit<AppsListState> {
   }
 
   /// Refresh the process status and add an [InteractionError].
-  Future<void> _addInteractionError(
+  ///
+  /// Visible so it can be used by the debug menu.
+  @visibleForTesting
+  Future<void> addInteractionError(
     Window window,
     InteractionType interaction,
   ) async {
