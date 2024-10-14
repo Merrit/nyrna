@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -100,55 +101,48 @@ class _AppsListPageState extends State<AppsListPage> {
 
   // Show a MaterialBanner with the error message.
   void showErrorBanner(BuildContext context, AppsListState state) {
+    final interactionError = state.interactionErrors.first;
+
+    final Window? window = context.read<AppsListCubit>().state.windows.firstWhereOrNull(
+          (window) => window.id == interactionError.windowId,
+        );
+
+    String errorMessageText =
+        'Encountered a problem attempting to ${interactionError.interactionType.name} ';
+
+    if (window != null) {
+      errorMessageText += window.process.executable;
+    }
+
     ScaffoldMessenger.of(context).showMaterialBanner(
       MaterialBanner(
         leading: const Icon(Icons.error, color: Colors.red),
-        content: const Text('There was an error...'),
+        content: Text(errorMessageText),
         actions: <Widget>[
-          TextButton(
-            onPressed: () async {
-              final scaffoldMessenger = ScaffoldMessenger.of(context);
-              final appsListCubit = context.read<AppsListCubit>();
-
-              // Show a dialog with the error message.
-              await showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    actionsPadding: const EdgeInsets.all(8),
-                    title: const Text('Error'),
-                    icon: const Icon(Icons.error, color: Colors.red),
-                    scrollable: true,
-                    content: NyrnaErrorMessage(state.interactionErrors.first),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Close'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          context.read<AppsListCubit>().clearInteractionErrors();
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Dismiss'),
-                      ),
-                    ],
-                  );
-                },
-              );
-
-              if (appsListCubit.state.interactionErrors.isEmpty) {
-                scaffoldMessenger.clearMaterialBanners();
-              }
-            },
-            child: const Text('OPEN'),
-          ),
           TextButton(
             onPressed: () {
               context.read<AppsListCubit>().clearInteractionErrors();
               ScaffoldMessenger.of(context).clearMaterialBanners();
             },
-            child: const Text('DISMISS'),
+            child: const Text('Dismiss'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+              final launched = await AppCubit.instance.launchURL(
+                kTroubleshootingGuideUrl,
+              );
+
+              if (!launched) {
+                scaffoldMessenger.showSnackBar(
+                  const SnackBar(
+                    content: Text('Error launching browser'),
+                  ),
+                );
+              }
+            },
+            child: const Text('Troubleshooting guide'),
           ),
         ],
       ),
