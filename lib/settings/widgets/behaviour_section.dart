@@ -12,6 +12,45 @@ class BehaviourSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appsListCubit = context.read<AppsListCubit>();
+
+    final Widget autoRefreshTile = BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        return SwitchListTile(
+          title: Text(
+            AppLocalizations.of(context)!.autoRefresh,
+          ),
+          secondary: const Icon(Icons.refresh),
+          subtitle: Text(
+            AppLocalizations.of(context)!.autoRefreshDescription,
+          ),
+          value: state.autoRefresh,
+          onChanged: (value) async {
+            await settingsCubit.updateAutoRefresh(value);
+            appsListCubit.setAutoRefresh(
+              autoRefresh: value,
+              refreshInterval: state.refreshInterval,
+            );
+          },
+        );
+      },
+    );
+
+    final Widget minimizeAndRestoreTile = BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        return SwitchListTile(
+          title: Text(
+            AppLocalizations.of(context)!.minimizeAndRestoreWindows,
+          ),
+          secondary: const Icon(Icons.minimize),
+          value: state.minimizeWindows,
+          onChanged: (value) async {
+            await settingsCubit.updateMinimizeWindows(value);
+          },
+        );
+      },
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -19,30 +58,7 @@ class BehaviourSection extends StatelessWidget {
           AppLocalizations.of(context)!.behaviourTitle,
         ),
         Spacers.verticalXtraSmall,
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.autoRefresh,
-          ),
-          leading: const Icon(Icons.refresh),
-          subtitle: Text(
-            AppLocalizations.of(context)!.autoRefreshDescription,
-          ),
-          trailing: BlocBuilder<SettingsCubit, SettingsState>(
-            builder: (context, state) {
-              return Switch(
-                value: state.autoRefresh,
-                onChanged: (value) async {
-                  final appsListCubit = context.read<AppsListCubit>();
-                  await settingsCubit.updateAutoRefresh(value);
-                  appsListCubit.setAutoRefresh(
-                    autoRefresh: value,
-                    refreshInterval: state.refreshInterval,
-                  );
-                },
-              );
-            },
-          ),
-        ),
+        autoRefreshTile,
         BlocBuilder<SettingsCubit, SettingsState>(
           builder: (context, state) {
             return ListTile(
@@ -59,22 +75,7 @@ class BehaviourSection extends StatelessWidget {
             );
           },
         ),
-        ListTile(
-          title: Text(
-            AppLocalizations.of(context)!.minimizeAndRestoreWindows,
-          ),
-          leading: const Icon(Icons.minimize),
-          trailing: BlocBuilder<SettingsCubit, SettingsState>(
-            builder: (context, state) {
-              return Switch(
-                value: state.minimizeWindows,
-                onChanged: (value) async {
-                  await settingsCubit.updateMinimizeWindows(value);
-                },
-              );
-            },
-          ),
-        ),
+        minimizeAndRestoreTile,
         const _PinSuspendedWindowsTile(),
         const ShowHiddenTile(),
       ],
@@ -102,36 +103,34 @@ class _PinSuspendedWindowsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text.rich(
-        TextSpan(
-          children: [
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        return SwitchListTile(
+          title: Text.rich(
             TextSpan(
-              text: '${AppLocalizations.of(context)!.pinSuspendedWindows}   ',
-            ),
-            WidgetSpan(
-              child: Tooltip(
-                message: AppLocalizations.of(context)!.pinSuspendedWindowsTooltip,
-                child: const Icon(
-                  Icons.help_outline,
-                  size: 18,
+              children: [
+                TextSpan(
+                  text: '${AppLocalizations.of(context)!.pinSuspendedWindows}   ',
                 ),
-              ),
+                WidgetSpan(
+                  child: Tooltip(
+                    message: AppLocalizations.of(context)!.pinSuspendedWindowsTooltip,
+                    child: const Icon(
+                      Icons.help_outline,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-      leading: const Icon(Icons.push_pin_outlined),
-      trailing: BlocBuilder<SettingsCubit, SettingsState>(
-        builder: (context, state) {
-          return Switch(
-            value: state.pinSuspendedWindows,
-            onChanged: (value) async {
-              await settingsCubit.updatePinSuspendedWindows(value);
-            },
-          );
-        },
-      ),
+          ),
+          secondary: const Icon(Icons.push_pin_outlined),
+          value: state.pinSuspendedWindows,
+          onChanged: (value) async {
+            await settingsCubit.updatePinSuspendedWindows(value);
+          },
+        );
+      },
     );
   }
 }
@@ -141,38 +140,36 @@ class ShowHiddenTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text.rich(
-        TextSpan(
-          children: [
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        return SwitchListTile(
+          title: Text.rich(
             TextSpan(
-              text: '${AppLocalizations.of(context)!.showHiddenWindows}   ',
-            ),
-            WidgetSpan(
-              child: Tooltip(
-                message: AppLocalizations.of(context)!.showHiddenWindowsTooltip,
-                child: const Icon(
-                  Icons.help_outline,
-                  size: 18,
+              children: [
+                TextSpan(
+                  text: '${AppLocalizations.of(context)!.showHiddenWindows}   ',
                 ),
-              ),
+                WidgetSpan(
+                  child: Tooltip(
+                    message: AppLocalizations.of(context)!.showHiddenWindowsTooltip,
+                    child: const Icon(
+                      Icons.help_outline,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-      leading: const Icon(Icons.refresh),
-      trailing: BlocBuilder<SettingsCubit, SettingsState>(
-        builder: (context, state) {
-          return Switch(
-            value: state.showHiddenWindows,
-            onChanged: (value) async {
-              final appsListCubit = context.read<AppsListCubit>();
-              await settingsCubit.updateShowHiddenWindows(value);
-              await appsListCubit.manualRefresh();
-            },
-          );
-        },
-      ),
+          ),
+          secondary: const Icon(Icons.refresh),
+          value: state.showHiddenWindows,
+          onChanged: (value) async {
+            final appsListCubit = context.read<AppsListCubit>();
+            await settingsCubit.updateShowHiddenWindows(value);
+            await appsListCubit.manualRefresh();
+          },
+        );
+      },
     );
   }
 }
