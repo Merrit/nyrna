@@ -37,25 +37,23 @@ class _CloseToTrayTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        AppLocalizations.of(context)!.closeToTray,
-      ),
-      leading: const Icon(Icons.bedtime),
-      trailing: BlocBuilder<SettingsCubit, SettingsState>(
-        builder: (context, state) {
-          return Switch(
-            value: state.closeToTray,
-            onChanged: (bool value) async {
-              await settingsCubit.updateCloseToTray(value);
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        return SwitchListTile(
+          title: Text(
+            AppLocalizations.of(context)!.closeToTray,
+          ),
+          secondary: const Icon(Icons.bedtime),
+          value: state.closeToTray,
+          onChanged: (bool value) async {
+            await settingsCubit.updateCloseToTray(value);
 
-              if (state.startHiddenInTray && !value) {
-                await settingsCubit.updateStartHiddenInTray(false);
-              }
-            },
-          );
-        },
-      ),
+            if (state.startHiddenInTray && !value) {
+              await settingsCubit.updateStartHiddenInTray(false);
+            }
+          },
+        );
+      },
     );
   }
 }
