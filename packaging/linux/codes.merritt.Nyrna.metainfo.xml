@@ -58,6 +58,20 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   </branding>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.24.0" date="2024-10-16">
+      <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.24.0</url>
+      <description>
+        <p>Features</p>
+        <ul>
+          <li>Added a link to the troubleshooting guide in error messages.</li>
+          <li>Added a debug menu.</li>
+        </ul>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>Fixed an issue where the entire settings tiles were not clickable.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.23.0" date="2024-10-03">
       <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.23.0</url>
       <description>
