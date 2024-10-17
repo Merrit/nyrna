@@ -18,7 +18,7 @@
   "settingsTitle": "Impostazioni",
   "@_SETTINGS_BEHAVIOUR_SECTION": {},
   "behaviourTitle": "Comportamento",
-  "autoRefresh": "Aggiornamento automtico",
+  "autoRefresh": "Aggiornamento automatico",
   "autoRefreshDescription": "Aggiorna automaticamente le informazioni sulla finestra e sul processo",
   "autoRefreshInterval": "Intervallo di aggiornamento automatico",
   "autoRefreshIntervalAmount": "{interval} secondi",
