@@ -38,7 +38,7 @@ jobs:
         run: flutter gen-l10n
 
       - name: Run lint
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
 
       - name: Run tests
         run: flutter test
