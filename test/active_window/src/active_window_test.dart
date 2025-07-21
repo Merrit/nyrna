@@ -28,7 +28,7 @@ const testProcess = Process(
 );
 
 const testWindow = Window(
-  id: 130023427,
+  id: '130023427',
   process: testProcess,
   title: 'Untitled-2 - Visual Studio Code - Insiders',
 );
@@ -59,7 +59,7 @@ void main() {
     when(appWindow.hide()).thenAnswer((_) async => true);
 
     // NativePlatform
-    when(nativePlatform.activeWindow()).thenAnswer((_) async => testWindow);
+    when(nativePlatform.activeWindow).thenReturn(testWindow);
     when(nativePlatform.minimizeWindow(any)).thenAnswer((_) async => true);
     when(nativePlatform.restoreWindow(any)).thenAnswer((_) async => true);
 
@@ -109,7 +109,7 @@ void main() {
 
     test('explorer.exe executable aborts on Win32', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.windows;
-      when(nativePlatform.activeWindow()).thenAnswer((_) async => testWindow.copyWith(
+      when(nativePlatform.activeWindow).thenReturn(testWindow.copyWith(
             process: testProcess.copyWith(executable: 'explorer.exe'),
           ));
       final successful = await activeWindow.toggle();
@@ -130,13 +130,14 @@ void main() {
       final nyrnaWindow = testWindow.copyWith(
         process: testProcess.copyWith(executable: 'nyrna'),
       );
-      when(nativePlatform.activeWindow()).thenAnswerInOrder([
-        Future.value(nyrnaWindow),
-        Future.value(testWindow),
+      when(nativePlatform.activeWindow).thenReturnInOrder([
+        nyrnaWindow,
+        testWindow,
       ]);
+      await nativePlatform.checkActiveWindow();
       final successful = await activeWindow.toggle();
       expect(successful, true);
-      verify(nativePlatform.activeWindow()).called(2);
+      verify(nativePlatform.checkActiveWindow()).called(2);
       verify(appWindow.hide()).called(1);
     });
 
@@ -145,13 +146,14 @@ void main() {
       final nyrnaWindow = testWindow.copyWith(
         process: testProcess.copyWith(executable: 'nyrna.exe'),
       );
-      when(nativePlatform.activeWindow()).thenAnswerInOrder([
-        Future.value(nyrnaWindow),
-        Future.value(testWindow),
+      when(nativePlatform.activeWindow).thenReturnInOrder([
+        nyrnaWindow,
+        testWindow,
       ]);
+      await nativePlatform.checkActiveWindow();
       final successful = await activeWindow.toggle();
       expect(successful, true);
-      verify(nativePlatform.activeWindow()).called(2);
+      verify(nativePlatform.checkActiveWindow()).called(2);
       verify(appWindow.hide()).called(1);
     });
 

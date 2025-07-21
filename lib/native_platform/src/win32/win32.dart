@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
@@ -43,18 +44,40 @@ class Win32 implements NativePlatform {
   }
 
   @override
-  Future<Window> activeWindow() async {
+  Window? activeWindow;
+
+  /// Win32 uses this signal and slot system rather than a function that returns directly
+  /// because it inherits from the abstract class [NativePlatform], and the Linux class
+  /// needs to use a signal and slot system.
+  final _activeWindowController = StreamController<Window>.broadcast();
+
+  @override
+  Stream<Window> get activeWindowStream => _activeWindowController.stream;
+
+  @override
+  Future<void> checkActiveWindow() async {
     final windowId = await _activeWindowId();
     final pid = await _pidFromWindowId(windowId);
     final executable = await getExecutableName(pid);
+
     final process = Process(
       pid: pid,
       executable: executable,
       status: ProcessStatus.unknown,
     );
+
     final title = getWindowTitle(windowId);
 
-    return Window(id: windowId, process: process, title: title);
+    // return Window(id: windowId.toString(), process: process, title: title);
+
+    final window = Window(
+      id: windowId.toString(),
+      process: process,
+      title: title,
+    );
+
+    activeWindow = window;
+    // _activeWindowController.add(window);
   }
 
   Future<int> _activeWindowId() async => GetForegroundWindow();
@@ -100,16 +123,16 @@ class Win32 implements NativePlatform {
   }
 
   @override
-  Future<bool> minimizeWindow(int windowId) async {
+  Future<bool> minimizeWindow(String windowId) async {
     log.i('Minimizing window with id $windowId');
-    ShowWindow(windowId, SHOW_WINDOW_CMD.SW_FORCEMINIMIZE);
+    ShowWindow(int.parse(windowId), SHOW_WINDOW_CMD.SW_FORCEMINIMIZE);
     return true; // [ShowWindow] return value doesn't confirm success.
   }
 
   @override
-  Future<bool> restoreWindow(int windowId) async {
+  Future<bool> restoreWindow(String windowId) async {
     log.i('Restoring window with id $windowId');
-    ShowWindow(windowId, SHOW_WINDOW_CMD.SW_RESTORE);
+    ShowWindow(int.parse(windowId), SHOW_WINDOW_CMD.SW_RESTORE);
     return true; // [ShowWindow] return value doesn't confirm success.
   }
 
@@ -147,6 +170,13 @@ class Win32 implements NativePlatform {
 
     return executable;
   }
+
+  @override
+  Future<void> dispose() async {
+    // No cleanup needed.
+  }
+  
+
 }
 
 // Static methods required because the win32 callback is required to be static.
@@ -171,7 +201,7 @@ class WindowBuilder {
     final correctedWindows = <Window>[];
 
     for (var window in _windows) {
-      final process = await Win32().processFromWindowId(window.id);
+      final process = await Win32().processFromWindowId(int.parse(window.id));
 
       if (_filteredWindows.contains(process.executable)) continue;
 
@@ -212,7 +242,7 @@ class WindowBuilder {
 
     _windows.add(
       Window(
-        id: hWnd,
+        id: hWnd.toString(),
         process: const Process(
           executable: '',
           pid: 0,

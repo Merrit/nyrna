@@ -13,6 +13,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
+
+    env:
+      # Needed so we don't get errors in CI
+      XDG_SESSION_TYPE: "x11"
+      XDG_CURRENT_DESKTOP: "KDE"
+
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
