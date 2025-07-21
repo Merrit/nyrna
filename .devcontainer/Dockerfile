@@ -11,7 +11,7 @@ RUN apt-get -y install tree
 # Install Flutter dependencies
 RUN apt-get -y install curl file git unzip xz-utils zip clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
 # Install app-specific dependencies
-RUN apt-get -y install keybinder-3.0 appindicator3-0.1 libappindicator3-1 libappindicator3-dev
+RUN apt-get -y install keybinder-3.0 libayatana-appindicator3-dev
 
 # Install Flutter
 RUN git clone https://github.com/flutter/flutter.git -b stable /home/vscode/flutter

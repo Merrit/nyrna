@@ -16,44 +16,40 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoadingCubit(),
-      lazy: false,
-      child: Scaffold(
-        body: Center(
-          child: BlocConsumer<LoadingCubit, LoadingState>(
-            listener: (context, state) {
-              if (state is LoadingSuccess) {
-                Navigator.pushReplacementNamed(context, AppsListPage.id);
-              }
-            },
-            builder: (context, state) {
-              switch (state) {
-                case LoadingError():
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Card(
-                      child: Container(
-                        padding: const EdgeInsets.all(20.0),
-                        child: MarkdownBody(
-                          data: state.errorMsg,
-                          onTapLink: (text, href, title) {
-                            if (href == null) {
-                              log.e('Broken link: $href');
-                              return;
-                            }
+    return Scaffold(
+      body: Center(
+        child: BlocConsumer<LoadingCubit, LoadingState>(
+          listener: (context, state) {
+            if (state is LoadingSuccess) {
+              Navigator.pushReplacementNamed(context, AppsListPage.id);
+            }
+          },
+          builder: (context, state) {
+            switch (state) {
+              case LoadingError():
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Card(
+                    child: Container(
+                      padding: const EdgeInsets.all(20.0),
+                      child: MarkdownBody(
+                        data: state.errorMsg,
+                        onTapLink: (text, href, title) {
+                          if (href == null) {
+                            log.e('Broken link: $href');
+                            return;
+                          }
 
-                            AppCubit.instance.launchURL(href);
-                          },
-                        ),
+                          AppCubit.instance.launchURL(href);
+                        },
                       ),
                     ),
-                  );
-                default:
-                  return const CircularProgressIndicator();
-              }
-            },
-          ),
+                  ),
+                );
+              default:
+                return const CircularProgressIndicator();
+            }
+          },
         ),
       ),
     );
