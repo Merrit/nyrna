@@ -58,7 +58,7 @@ class AppCubit extends Cubit<AppState> {
   /// blocking the UI, since none of the data fetched here is critical.
   Future<void> _init() async {
     await _checkForFirstRun();
-    await _checkLinuxSessionType();
+    _checkLinuxSessionType();
     await _fetchVersionData();
     await _fetchReleaseNotes();
     _listenToSystemTrayEvents();
@@ -74,19 +74,19 @@ class AppCubit extends Cubit<AppState> {
   }
 
   /// For Linux, checks if the session type is Wayland.
-  Future<void> _checkLinuxSessionType() async {
+  void _checkLinuxSessionType() {
     if (defaultTargetPlatform != TargetPlatform.linux) return;
 
-    final sessionType = await (_nativePlatform as Linux).sessionType();
+    final sessionType = (_nativePlatform as Linux).sessionType;
 
     final unknownSessionMsg = '''
 Unable to determine session type. The XDG_SESSION_TYPE environment variable is set to "$sessionType".
 Please note that Wayland is not currently supported.''';
 
     const waylandNotSupportedMsg = '''
-Wayland is not currently supported.
+Wayland is currently supported only on KDE Plasma.
 
-Only xwayland apps will be detected.
+For other desktop environments, only xwayland apps will be detected.
 
 If Wayland support is important to you, consider voting on the issue:
 
@@ -106,12 +106,19 @@ env QT_QPA_PLATFORM=xcb <app>
 
 Otherwise, [consider signing in using X11 instead](https://docs.fedoraproject.org/en-US/quick-docs/configuring-xorg-as-default-gnome-session/).''';
 
-    switch (sessionType) {
-      case 'wayland':
-        log.w(waylandNotSupportedMsg);
-        emit(state.copyWith(linuxSessionMessage: waylandNotSupportedMsg));
-        return;
-      case 'x11':
+    emit(state.copyWith(sessionType: sessionType));
+
+    log.i('Session type: $sessionType');
+
+    switch (sessionType.displayProtocol) {
+      case DisplayProtocol.wayland:
+        if (sessionType.environment == DesktopEnvironment.kde) {
+          log.i('KDE Wayland session detected and is supported, proceeding.');
+        } else {
+          log.w(waylandNotSupportedMsg);
+          emit(state.copyWith(linuxSessionMessage: waylandNotSupportedMsg));
+        }
+      case DisplayProtocol.x11:
         break;
       default:
         log.w(unknownSessionMsg);
@@ -201,5 +208,11 @@ Otherwise, [consider signing in using X11 instead](https://docs.fedoraproject.or
       log.e('Could not launch url: $url', error: e);
       return false;
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await _nativePlatform.dispose();
+    await super.close();
   }
 }

@@ -7,6 +7,11 @@ class AppState with _$AppState {
     /// session type is unknown.
     String? linuxSessionMessage,
 
+    /// The type of desktop session the user is running.
+    ///
+    /// Currently only used on Linux.
+    SessionType? sessionType,
+
     /// True if this is the first run of the app.
     required bool firstRun,
     required String runningVersion,

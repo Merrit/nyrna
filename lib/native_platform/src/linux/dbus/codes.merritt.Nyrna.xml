@@ -1,0 +1,10 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+
+<node>
+    <interface name="codes.merritt.Nyrna">
+        <method name="updateWindows">
+            <arg type="b" direction="out" />
+            <arg name="windows" type="s" direction="in" />
+        </method>
+    </interface>
+</node>

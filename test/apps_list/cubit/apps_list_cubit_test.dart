@@ -35,7 +35,7 @@ const msPaintProcess = Process(
 );
 
 const msPaintWindow = Window(
-  id: 132334,
+  id: '132334',
   process: msPaintProcess,
   title: 'Untitled - Paint',
 );
@@ -45,7 +45,7 @@ Window get msPaintWindowState => state //
     .singleWhere((element) => element.id == msPaintWindow.id);
 
 const mpvWindow1 = Window(
-  id: 180355074,
+  id: '180355074',
   process: Process(
     executable: 'mpv',
     pid: 1355281,
@@ -59,7 +59,7 @@ Window get mpvWindow1State => state //
     .singleWhere((element) => element.id == mpvWindow1.id);
 
 const mpvWindow2 = Window(
-  id: 197132290,
+  id: '197132290',
   process: Process(
     executable: 'mpv',
     pid: 1355477,
@@ -206,7 +206,7 @@ void main() {
       when(nativePlatform.windows(showHidden: anyNamed('showHidden')))
           .thenAnswer((_) async => [
                 const Window(
-                  id: 7363,
+                  id: '7363',
                   process: Process(
                     executable: 'kate',
                     pid: 836482,
@@ -215,7 +215,7 @@ void main() {
                   title: 'Kate',
                 ),
                 const Window(
-                  id: 29347,
+                  id: '29347',
                   process: Process(
                     executable: 'evince',
                     pid: 94847,
@@ -224,7 +224,7 @@ void main() {
                   title: 'Evince',
                 ),
                 const Window(
-                  id: 89374,
+                  id: '89374',
                   process: Process(
                     executable: 'ark',
                     pid: 9374623,

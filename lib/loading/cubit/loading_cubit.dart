@@ -10,9 +10,7 @@ part 'loading_cubit.freezed.dart';
 class LoadingCubit extends Cubit<LoadingState> {
   final NativePlatform nativePlatform;
 
-  LoadingCubit()
-      : nativePlatform = NativePlatform(),
-        super(const LoadingInitial()) {
+  LoadingCubit(this.nativePlatform) : super(const LoadingInitial()) {
     checkDependencies();
   }
 

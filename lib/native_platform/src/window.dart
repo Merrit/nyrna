@@ -9,7 +9,9 @@ part 'window.freezed.dart';
 class Window with _$Window {
   const factory Window({
     /// The unique window ID number associated with this window.
-    required int id,
+    ///
+    /// Can be either a number or a UUID (e.g. on KDE Wayland).
+    required String id,
 
     /// The process associated with this window.
     required Process process,

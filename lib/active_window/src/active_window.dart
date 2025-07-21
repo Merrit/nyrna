@@ -86,12 +86,30 @@ class ActiveWindow {
     log.i('Suspending');
 
     for (int attempt = 0; attempt < _maxRetries; attempt++) {
-      final window = await _nativePlatform.activeWindow();
+      final window = _nativePlatform.activeWindow;
+      if (window == null) {
+        log.w('No active window found, retrying.');
+        await _nativePlatform.checkActiveWindow();
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+
+      if (window == null && attempt < _maxRetries - 1) {
+        continue;
+      } else if (window == null && attempt == _maxRetries - 1) {
+        log.e('Failed to find active window after $_maxRetries attempts.');
+        return false;
+      } else if (window == null) {
+        log.e('Failed to find active window.');
+        return false;
+      }
+
       final String executable = window.process.executable;
 
       if (executable == 'nyrna' || executable == 'nyrna.exe') {
         log.w('Active window is Nyrna, hiding and retrying.');
         await _appWindow.hide();
+        await Future.delayed(const Duration(milliseconds: 500));
+        await _nativePlatform.checkActiveWindow();
         await Future.delayed(const Duration(milliseconds: 500));
         continue;
       }
@@ -141,7 +159,7 @@ class ActiveWindow {
     return false;
   }
 
-  Future<void> _minimize(int windowId) async {
+  Future<void> _minimize(String windowId) async {
     final shouldMinimize = await _getShouldMinimize();
     if (!shouldMinimize) return;
 
@@ -150,7 +168,7 @@ class ActiveWindow {
     if (!minimized) log.e('Failed to minimize window.');
   }
 
-  Future<void> _restore(int windowId) async {
+  Future<void> _restore(String windowId) async {
     final shouldRestore = await _getShouldMinimize();
     if (!shouldRestore) return;
 

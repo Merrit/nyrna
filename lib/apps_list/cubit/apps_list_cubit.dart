@@ -226,6 +226,7 @@ class AppsListCubit extends Cubit<AppsListState> {
       _storage,
     );
 
+    await _nativePlatform.checkActiveWindow();
     return await activeWindow.toggle();
   }
 

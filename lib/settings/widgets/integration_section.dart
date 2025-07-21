@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
+import '../../app/app.dart';
 import '../../apps_list/apps_list.dart';
 import '../../hotkey/global/hotkey_service.dart';
+import '../../native_platform/src/linux/linux.dart';
 import '../../theme/styles.dart';
 import '../settings.dart';
 
@@ -119,22 +121,31 @@ class _HotkeyConfigWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: const Text('Hotkey'),
-      leading: const Icon(Icons.keyboard),
-      trailing: ElevatedButton(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) => _RecordHotKeyDialog(
-            initialHotkey: settingsCubit.state.hotKey,
+    return BlocBuilder<AppCubit, AppState>(
+      builder: (context, state) {
+        if (state.sessionType?.displayProtocol == DisplayProtocol.wayland) {
+          // Wayland does not support global hotkeys.
+          return const SizedBox();
+        }
+
+        return ListTile(
+          title: const Text('Hotkey'),
+          leading: const Icon(Icons.keyboard),
+          trailing: ElevatedButton(
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => _RecordHotKeyDialog(
+                initialHotkey: settingsCubit.state.hotKey,
+              ),
+            ),
+            child: BlocBuilder<SettingsCubit, SettingsState>(
+              builder: (context, state) {
+                return Text(state.hotKey.toStringHelper());
+              },
+            ),
           ),
-        ),
-        child: BlocBuilder<SettingsCubit, SettingsState>(
-          builder: (context, state) {
-            return Text(state.hotKey.toStringHelper());
-          },
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -232,49 +243,58 @@ class _AppSpecificHotkeys extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SettingsCubit, SettingsState>(
+    return BlocBuilder<AppCubit, AppState>(
       builder: (context, state) {
-        return Card(
-          child: Column(
-            children: [
-              const ListTile(
-                title: Text('App specific hotkeys'),
-                leading: Icon(Icons.keyboard),
-                trailing: Tooltip(
-                  message:
-                      'Hotkeys to directly toggle suspend/resume for specific apps, even when they are not focused.',
-                  child: Icon(Icons.help_outline),
-                ),
-              ),
-              for (var hotkey in state.appSpecificHotKeys)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Card(
-                    elevation: 2,
-                    child: ListTile(
-                      leading: Text(hotkey.hotkey.toStringHelper()),
-                      title: Text(hotkey.executable),
-                      trailing: ElevatedButton(
-                        onPressed: () => settingsCubit.removeAppSpecificHotkey(
-                          hotkey.executable,
-                        ),
-                        child: const Icon(Icons.delete),
-                      ),
+        if (state.sessionType?.displayProtocol == DisplayProtocol.wayland) {
+          // Wayland does not support global hotkeys.
+          return const SizedBox();
+        }
+
+        return BlocBuilder<SettingsCubit, SettingsState>(
+          builder: (context, state) {
+            return Card(
+              child: Column(
+                children: [
+                  const ListTile(
+                    title: Text('App specific hotkeys'),
+                    leading: Icon(Icons.keyboard),
+                    trailing: Tooltip(
+                      message:
+                          'Hotkeys to directly toggle suspend/resume for specific apps, even when they are not focused.',
+                      child: Icon(Icons.help_outline),
                     ),
                   ),
-                ),
-              ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => const _AddAppSpecificHotkeyDialog(),
-                  );
-                },
-                child: const Icon(Icons.add),
+                  for (var hotkey in state.appSpecificHotKeys)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Card(
+                        elevation: 2,
+                        child: ListTile(
+                          leading: Text(hotkey.hotkey.toStringHelper()),
+                          title: Text(hotkey.executable),
+                          trailing: ElevatedButton(
+                            onPressed: () => settingsCubit.removeAppSpecificHotkey(
+                              hotkey.executable,
+                            ),
+                            child: const Icon(Icons.delete),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const _AddAppSpecificHotkeyDialog(),
+                      );
+                    },
+                    child: const Icon(Icons.add),
+                  ),
+                  const SizedBox(height: 10),
+                ],
               ),
-              const SizedBox(height: 10),
-            ],
-          ),
+            );
+          },
         );
       },
     );
