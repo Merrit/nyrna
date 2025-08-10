@@ -1,7 +1,7 @@
 part of 'settings_cubit.dart';
 
 @freezed
-class SettingsState with _$SettingsState {
+sealed class SettingsState with _$SettingsState {
   const factory SettingsState({
     /// A list of configured app-specific hotkeys.
     required List<AppSpecificHotkey> appSpecificHotKeys,

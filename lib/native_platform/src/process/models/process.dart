@@ -19,7 +19,7 @@ enum ProcessStatus {
 
 /// Represents a running process on the host system.
 @freezed
-class Process with _$Process {
+sealed class Process with _$Process {
   const factory Process({
     /// Name of the executable, for example 'firefox' or 'firefox-bin'.
     required String executable,

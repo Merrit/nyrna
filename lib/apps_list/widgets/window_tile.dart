@@ -18,7 +18,7 @@ class WindowCubit extends Cubit<WindowState> {
 }
 
 @freezed
-class WindowState with _$WindowState {
+sealed class WindowState with _$WindowState {
   const factory WindowState({
     required Window window,
   }) = _WindowState;

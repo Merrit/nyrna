@@ -4,7 +4,7 @@ publish_to: "none"
 version: 2.24.0
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
   args: ^2.2.0
@@ -12,12 +12,12 @@ dependencies:
   ffi: ^2.0.1
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.0.0
+  flutter_bloc: ^9.1.1
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.6.23
   flutter_typeahead: ^5.2.0
-  freezed_annotation: ^2.2.0
+  freezed_annotation: ^3.1.0
   helpers:
     git:
       url: https://github.com/Merrit/helpers.git
@@ -36,16 +36,16 @@ dependencies:
   http: ^1.1.0
   intl: any
   json_annotation: ^4.8.1
-  launch_at_startup: ^0.2.2
+  launch_at_startup: ^0.5.1
   logger: ^2.0.1
-  package_info_plus: ^5.0.1
+  package_info_plus: ^8.3.0
   path_provider: ^2.0.1
   pub_semver: ^2.0.0
-  tray_manager: ^0.2.2
+  tray_manager: ^0.5.0
   url_launcher: ^6.0.4
   win32: ^5.0.5
   win32_suspend_process: ^1.1.0
-  window_manager: ^0.3.5
+  window_manager: ^0.5.1
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding.git
@@ -59,10 +59,10 @@ dev_dependencies:
     git:
       url: https://github.com/Merrit/flutter_app_builder.git
       ref: a70df0728d9d7d8fd528553ff7d88be01a789a38
-  flutter_lints: ^3.0.1
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  freezed: ^2.3.5
+  freezed: ^3.2.0
   integration_test:
     sdk: flutter
   json_serializable: ^6.7.1

@@ -69,7 +69,7 @@ class LoggingManager {
       return 'There was an issue creating the log file.';
     }
 
-    return await _logFile!.readAsString();
+    return await _logFile.readAsString();
   }
 
   /// Close the logger and release resources.
