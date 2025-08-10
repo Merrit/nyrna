@@ -19,8 +19,10 @@ final _user32 = DynamicLibrary.open('user32.dll');
 /// );
 /// ```
 int GetWindowThreadProcessId(int hWnd, Pointer<Uint32> lpdwProcessId) {
-  final _GetWindowThreadProcessId = _user32.lookupFunction<
-      Uint32 Function(Int32 hWnd, Pointer<Uint32> lpdwProcessId),
-      int Function(int hWnd, Pointer<Uint32> lwpdProcessId)>('GetWindowThreadProcessId');
+  final _GetWindowThreadProcessId = _user32
+      .lookupFunction<
+        Uint32 Function(Int32 hWnd, Pointer<Uint32> lpdwProcessId),
+        int Function(int hWnd, Pointer<Uint32> lwpdProcessId)
+      >('GetWindowThreadProcessId');
   return _GetWindowThreadProcessId(hWnd, lpdwProcessId);
 }

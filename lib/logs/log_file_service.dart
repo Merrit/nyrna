@@ -62,8 +62,9 @@ class LogFileService {
 
     // List all log files that start with the current date.
 
-    final List<File> todayLogFiles =
-        logFiles.where((file) => file.path.contains(_today)).toList();
+    final List<File> todayLogFiles = logFiles
+        .where((file) => file.path.contains(_today))
+        .toList();
 
     logFile = await _getNumberedLogFile(todayLogFiles);
     return logFile;
@@ -84,7 +85,7 @@ class LogFileService {
 
     final List<FileSystemEntity> files = _logDir.listSync();
 
-    final List<File> logFiles = files //
+    final List<File> logFiles = files
         .whereType<File>()
         .where((file) => file.path.endsWith('.txt'))
         .toList();
@@ -102,7 +103,8 @@ class LogFileService {
     // Current local time, in format of: 2023-08-07 13:52:40
     final currentTime = dateTime.toString().split('.').first;
 
-    final String divider = '''
+    final String divider =
+        '''
 
 --------------------------------------------------------------------------------
 
@@ -160,7 +162,8 @@ $currentTime
 
     // Remove any log files that are not numbered.
     todayLogFiles.removeWhere(
-        (file) => file.path.split(Platform.pathSeparator).last.contains('_') == false);
+      (file) => file.path.split(Platform.pathSeparator).last.contains('_') == false,
+    );
 
     final int highestNumber = todayLogFiles
         .map((file) => int.parse(file.path.split('_').last.split('.').first))

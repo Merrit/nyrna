@@ -25,9 +25,7 @@ class SystemTrayManager {
       // When running in Flatpak the icon must be specified by the icon's name, not the path.
       iconPath = kPackageId;
     } else {
-      iconPath = (defaultTargetPlatform.isWindows) //
-          ? AppIcons.windows
-          : AppIcons.linux;
+      iconPath = (defaultTargetPlatform.isWindows) ? AppIcons.windows : AppIcons.linux;
     }
 
     log.t('Setting system tray icon to $iconPath');

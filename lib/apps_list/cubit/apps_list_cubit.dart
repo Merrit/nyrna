@@ -39,15 +39,15 @@ class AppsListCubit extends Cubit<AppsListState> {
     required SystemTrayManager systemTrayManager,
     required AppVersion appVersion,
     bool testing = false,
-  })  : _appWindow = appWindow,
-        _hotkeyService = hotkeyService,
-        _nativePlatform = nativePlatform,
-        _settingsCubit = settingsCubit,
-        _processRepository = processRepository,
-        _storage = storage,
-        _systemTrayManager = systemTrayManager,
-        _appVersion = appVersion,
-        super(AppsListState.initial()) {
+  }) : _appWindow = appWindow,
+       _hotkeyService = hotkeyService,
+       _nativePlatform = nativePlatform,
+       _settingsCubit = settingsCubit,
+       _processRepository = processRepository,
+       _storage = storage,
+       _systemTrayManager = systemTrayManager,
+       _appVersion = appVersion,
+       super(AppsListState.initial()) {
     _initialize();
   }
 
@@ -128,13 +128,16 @@ class AppsListCubit extends Cubit<AppsListState> {
     final latestVersion = await _appVersion.latest();
     final String? ignoredUpdate = await _storage.getValue('ignoredUpdate');
     final updateHasBeenIgnored = (latestVersion == ignoredUpdate);
-    final updateAvailable =
-        (updateHasBeenIgnored) ? false : await _appVersion.updateAvailable();
-    emit(state.copyWith(
-      runningVersion: runningVersion,
-      updateVersion: latestVersion,
-      updateAvailable: updateAvailable,
-    ));
+    final updateAvailable = (updateHasBeenIgnored)
+        ? false
+        : await _appVersion.updateAvailable();
+    emit(
+      state.copyWith(
+        runningVersion: runningVersion,
+        updateVersion: latestVersion,
+        updateAvailable: updateAvailable,
+      ),
+    );
   }
 
   Future<void> manualRefresh() async {
@@ -197,9 +200,7 @@ class AppsListCubit extends Cubit<AppsListState> {
 
     windows.sortWindows(_settingsCubit.state.pinSuspendedWindows);
 
-    emit(state.copyWith(
-      windows: windows,
-    ));
+    emit(state.copyWith(windows: windows));
 
     return successful;
   }
@@ -209,9 +210,9 @@ class AppsListCubit extends Cubit<AppsListState> {
   /// For example, if called on mpv and there are multiple windows / instances
   /// of the app running, they will all be suspended.
   Future<void> toggleExecutable(String executable) async {
-    final matchingWindows = state //
-        .windows
-        .where((e) => e.process.executable == executable);
+    final matchingWindows = state.windows.where(
+      (e) => e.process.executable == executable,
+    );
 
     for (var match in matchingWindows) {
       await toggle(match);
@@ -234,14 +235,14 @@ class AppsListCubit extends Cubit<AppsListState> {
   /// For example, if called on mpv and there are multiple windows / instances
   /// of the app running, they will all be suspended.
   Future<void> toggleAll(Window window) async {
-    final matchingWindows = state //
-        .windows
-        .where((e) =>
-            (e.process.executable == window.process.executable) &&
-            // Ensure we only perform the intended action. Eg, if we are
-            // suspending all but some are already suspended we don't want the
-            // already suspended instances to resume.
-            (e.process.status == window.process.status));
+    final matchingWindows = state.windows.where(
+      (e) =>
+          (e.process.executable == window.process.executable) &&
+          // Ensure we only perform the intended action. Eg, if we are
+          // suspending all but some are already suspended we don't want the
+          // already suspended instances to resume.
+          (e.process.status == window.process.status),
+    );
 
     for (var match in matchingWindows) {
       await toggle(match);
@@ -261,9 +262,11 @@ class AppsListCubit extends Cubit<AppsListState> {
             .firstWhereOrNull((e) => e.hotkey == hotkey);
         if (appSpecificHotkey == null) return;
 
-        log.i('Triggering toggle from app-specific hotkey press.\n'
-            'Hotkey: $hotkey\n'
-            'Executable: ${appSpecificHotkey.executable}');
+        log.i(
+          'Triggering toggle from app-specific hotkey press.\n'
+          'Hotkey: $hotkey\n'
+          'Executable: ${appSpecificHotkey.executable}',
+        );
         await toggleExecutable(appSpecificHotkey.executable);
       }
     });
@@ -340,19 +343,22 @@ class AppsListCubit extends Cubit<AppsListState> {
       windowId: window.id,
     );
 
-    final errors = [...state.interactionErrors] //
-      ..addError(interactionError);
+    final errors = [...state.interactionErrors]..addError(interactionError);
 
-    emit(state.copyWith(
-      interactionErrors: errors,
-    ));
+    emit(
+      state.copyWith(
+        interactionErrors: errors,
+      ),
+    );
   }
 
   /// Clear all interaction errors.
   void clearInteractionErrors() {
-    emit(state.copyWith(
-      interactionErrors: [],
-    ));
+    emit(
+      state.copyWith(
+        interactionErrors: [],
+      ),
+    );
   }
 
   @override
@@ -392,8 +398,8 @@ extension on List<Window> {
       if (!aIsFavorite && bIsFavorite) return 1;
 
       return a.process.executable.toLowerCase().compareTo(
-            b.process.executable.toLowerCase(),
-          );
+        b.process.executable.toLowerCase(),
+      );
     });
   }
 }

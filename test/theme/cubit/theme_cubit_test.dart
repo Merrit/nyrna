@@ -20,11 +20,13 @@ void main() {
       reset(mockStorageRepo);
 
       when(mockStorageRepo.getValue(any)).thenAnswer((_) async {});
-      when(mockStorageRepo.saveValue(
-        key: anyNamed('key'),
-        value: anyNamed('value'),
-        storageArea: anyNamed('storageArea'),
-      )).thenAnswer((_) async {});
+      when(
+        mockStorageRepo.saveValue(
+          key: anyNamed('key'),
+          value: anyNamed('value'),
+          storageArea: anyNamed('storageArea'),
+        ),
+      ).thenAnswer((_) async {});
 
       cubit = await ThemeCubit.init(mockStorageRepo);
     });
@@ -38,8 +40,9 @@ void main() {
     });
 
     test('saved light theme preference loads light theme', () async {
-      when(mockStorageRepo.getValue('appTheme'))
-          .thenAnswer((_) async => 'AppTheme.light');
+      when(
+        mockStorageRepo.getValue('appTheme'),
+      ).thenAnswer((_) async => 'AppTheme.light');
       cubit = await ThemeCubit.init(mockStorageRepo);
       expect(state.appTheme, AppTheme.light);
     });
@@ -51,8 +54,9 @@ void main() {
     });
 
     test('saved pitch black theme preference loads pitch black theme', () async {
-      when(mockStorageRepo.getValue('appTheme'))
-          .thenAnswer((_) async => 'AppTheme.pitchBlack');
+      when(
+        mockStorageRepo.getValue('appTheme'),
+      ).thenAnswer((_) async => 'AppTheme.pitchBlack');
       cubit = await ThemeCubit.init(mockStorageRepo);
       expect(state.appTheme, AppTheme.pitchBlack);
     });
@@ -63,24 +67,30 @@ void main() {
       // Light
       await cubit.changeTheme(AppTheme.light);
       expect(state.appTheme, AppTheme.light);
-      verify(mockStorageRepo.saveValue(
-        key: 'appTheme',
-        value: 'AppTheme.light',
-      )).called(1);
+      verify(
+        mockStorageRepo.saveValue(
+          key: 'appTheme',
+          value: 'AppTheme.light',
+        ),
+      ).called(1);
       // Dark
       await cubit.changeTheme(AppTheme.dark);
       expect(state.appTheme, AppTheme.dark);
-      verify(mockStorageRepo.saveValue(
-        key: 'appTheme',
-        value: 'AppTheme.dark',
-      )).called(1);
+      verify(
+        mockStorageRepo.saveValue(
+          key: 'appTheme',
+          value: 'AppTheme.dark',
+        ),
+      ).called(1);
       // Pitch Black
       await cubit.changeTheme(AppTheme.pitchBlack);
       expect(state.appTheme, AppTheme.pitchBlack);
-      verify(mockStorageRepo.saveValue(
-        key: 'appTheme',
-        value: 'AppTheme.pitchBlack',
-      )).called(1);
+      verify(
+        mockStorageRepo.saveValue(
+          key: 'appTheme',
+          value: 'AppTheme.pitchBlack',
+        ),
+      ).called(1);
     });
   });
 }

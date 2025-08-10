@@ -104,8 +104,8 @@ class _AppsListPageState extends State<AppsListPage> {
     final interactionError = state.interactionErrors.first;
 
     final Window? window = context.read<AppsListCubit>().state.windows.firstWhereOrNull(
-          (window) => window.id == interactionError.windowId,
-        );
+      (window) => window.id == interactionError.windowId,
+    );
 
     String errorMessageText =
         'Encountered a problem attempting to ${interactionError.interactionType.name} ';
@@ -235,7 +235,7 @@ class _FloatingActionButton extends StatelessWidget {
             ? BlocBuilder<ThemeCubit, ThemeState>(
                 builder: (context, state) {
                   return FloatingActionButton(
-                    backgroundColor: (state.appTheme == AppTheme.pitchBlack) //
+                    backgroundColor: (state.appTheme == AppTheme.pitchBlack)
                         ? Colors.black
                         : null,
                     onPressed: () {

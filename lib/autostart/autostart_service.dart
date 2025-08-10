@@ -46,7 +46,8 @@ class AutostartService {
   Future<void> _disableForMSIX() async {
     log.i('Disabling autostart for MSIX app.');
 
-    const String script = '''
+    const String script =
+        '''
     Remove-Item -Path "\$env:USERPROFILE\\Start Menu\\Programs\\Startup\\$kAppName.lnk"
   ''';
 
@@ -72,7 +73,8 @@ class AutostartService {
   Future<void> _enableForMSIX() async {
     log.i('Setting up autostart for MSIX app.');
 
-    const String script = '''
+    const String script =
+        '''
     \$TargetPath = "shell:AppsFolder\\$kWindowsAppPackageName"
     \$ShortcutFile = "\$env:USERPROFILE\\Start Menu\\Programs\\Startup\\$kAppName.lnk"
     \$WScriptShell = New-Object -ComObject WScript.Shell
@@ -111,7 +113,8 @@ class AutostartService {
     // The path to the executable will be something like:
     // C:\Program Files\WindowsApps\33694MerrittCodes.Nyrna_2.14.0.0_x64__9kjrd3yy77d9e\nyrna.exe
     // We want to check if the path contains "WindowsApps" and "33694MerrittCodes.Nyrna".
-    final bool isMsix = resolvedExecutable.contains('WindowsApps') &&
+    final bool isMsix =
+        resolvedExecutable.contains('WindowsApps') &&
         resolvedExecutable.contains(kMicrosoftStorePackageName);
     log.i('Running in MSIX: $isMsix');
     return isMsix;
@@ -121,11 +124,13 @@ class AutostartService {
     log.i('Setting up autostart for Flatpak app.');
     final client = XdgDesktopPortalClient();
 
-    final result = await client.background.requestBackground(
-      reason: 'Autostarting Nyrna',
-      autostart: enable,
-      commandLine: ['nyrna'],
-    ).first;
+    final result = await client.background
+        .requestBackground(
+          reason: 'Autostarting Nyrna',
+          autostart: enable,
+          commandLine: ['nyrna'],
+        )
+        .first;
 
     log.i('Result: $result');
     await client.close();

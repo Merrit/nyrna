@@ -5,17 +5,22 @@ import 'dart:ffi';
 
 final _kernel32 = DynamicLibrary.open('kernel32.dll');
 
-final CreateToolhelp32Snapshot =
-    _kernel32.lookupFunction<IntPtr Function(Uint32, Uint32), int Function(int, int)>(
-        'CreateToolhelp32Snapshot');
+final CreateToolhelp32Snapshot = _kernel32
+    .lookupFunction<IntPtr Function(Uint32, Uint32), int Function(int, int)>(
+      'CreateToolhelp32Snapshot',
+    );
 
-final Process32First = _kernel32.lookupFunction<
-    Int32 Function(IntPtr hSnapshot, Pointer<PROCESSENTRY32> lppe),
-    int Function(int hSnapshot, Pointer<PROCESSENTRY32> lppe)>('Process32First');
+final Process32First = _kernel32
+    .lookupFunction<
+      Int32 Function(IntPtr hSnapshot, Pointer<PROCESSENTRY32> lppe),
+      int Function(int hSnapshot, Pointer<PROCESSENTRY32> lppe)
+    >('Process32First');
 
-final Process32Next = _kernel32.lookupFunction<
-    Int32 Function(IntPtr hSnapshot, Pointer<PROCESSENTRY32> lppe),
-    int Function(int hSnapshot, Pointer<PROCESSENTRY32> lppe)>('Process32Next');
+final Process32Next = _kernel32
+    .lookupFunction<
+      Int32 Function(IntPtr hSnapshot, Pointer<PROCESSENTRY32> lppe),
+      int Function(int hSnapshot, Pointer<PROCESSENTRY32> lppe)
+    >('Process32Next');
 
 final class PROCESSENTRY32 extends Struct {
   @Int32()

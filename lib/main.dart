@@ -29,8 +29,7 @@ Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Parse command-line arguments.
-  final argParser = ArgumentParser() //
-    ..parseArgs(args);
+  final argParser = ArgumentParser()..parseArgs(args);
 
   final storage = await StorageRepository.initialize(Hive);
   final nativePlatform = NativePlatform();

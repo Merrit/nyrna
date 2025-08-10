@@ -87,8 +87,10 @@ class StorageRepository {
     try {
       return await _hive.openBox(storageAreaName ?? _kGeneralBoxName);
     } on Exception catch (e) {
-      debugPrint('Unable to access storage; is another app instance '
-          'already running? Error: $e');
+      debugPrint(
+        'Unable to access storage; is another app instance '
+        'already running? Error: $e',
+      );
       exit(1);
     }
   }

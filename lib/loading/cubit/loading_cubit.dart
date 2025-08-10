@@ -10,9 +10,7 @@ part 'loading_cubit.freezed.dart';
 class LoadingCubit extends Cubit<LoadingState> {
   final NativePlatform nativePlatform;
 
-  LoadingCubit()
-      : nativePlatform = NativePlatform(),
-        super(const LoadingInitial()) {
+  LoadingCubit() : nativePlatform = NativePlatform(), super(const LoadingInitial()) {
     checkDependencies();
   }
 
@@ -22,13 +20,15 @@ class LoadingCubit extends Cubit<LoadingState> {
     final dependenciesSatisfied = await nativePlatform.checkDependencies();
 
     LoadingState newState;
-    newState = (dependenciesSatisfied) //
+    newState = (dependenciesSatisfied)
         ? const LoadingSuccess()
-        : const LoadingError(errorMsg: '''
+        : const LoadingError(
+            errorMsg: '''
 Missing dependencies.
 
 Please see the instructions at https://nyrna.merritt.codes/docs/linux-requirements and 
-relaunch Nyrna after installing the dependencies.''');
+relaunch Nyrna after installing the dependencies.''',
+          );
 
     emit(newState);
   }

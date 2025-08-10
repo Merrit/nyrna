@@ -64,8 +64,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get autoRefresh => 'Auto Refresh';
 
   @override
-  String get autoRefreshDescription =>
-      'Update window & process info automatically';
+  String get autoRefreshDescription => 'Update window & process info automatically';
 
   @override
   String get autoRefreshInterval => 'Auto Refresh Interval';

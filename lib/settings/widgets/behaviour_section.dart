@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 import '../../apps_list/apps_list.dart';
 import '../../core/core.dart';
 import '../../localization/app_localizations.dart';
@@ -68,8 +67,9 @@ class BehaviourSection extends StatelessWidget {
                 AppLocalizations.of(context)!.autoRefreshInterval,
               ),
               trailing: Text(
-                AppLocalizations.of(context)!
-                    .autoRefreshIntervalAmount(state.refreshInterval),
+                AppLocalizations.of(
+                  context,
+                )!.autoRefreshIntervalAmount(state.refreshInterval),
               ),
               enabled: state.autoRefresh,
               onTap: () => _showRefreshIntervalDialog(context),

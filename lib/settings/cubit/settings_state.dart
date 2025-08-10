@@ -38,16 +38,16 @@ sealed class SettingsState with _$SettingsState {
   }) = _SettingsState;
 
   factory SettingsState.initial() => SettingsState(
-        appSpecificHotKeys: [],
-        autoStart: false,
-        autoRefresh: true,
-        closeToTray: false,
-        hotKey: defaultHotkey,
-        minimizeWindows: true,
-        pinSuspendedWindows: false,
-        refreshInterval: 5,
-        showHiddenWindows: false,
-        startHiddenInTray: false,
-        working: false,
-      );
+    appSpecificHotKeys: [],
+    autoStart: false,
+    autoRefresh: true,
+    closeToTray: false,
+    hotKey: defaultHotkey,
+    minimizeWindows: true,
+    pinSuspendedWindows: false,
+    refreshInterval: 5,
+    showHiddenWindows: false,
+    startHiddenInTray: false,
+    working: false,
+  );
 }
