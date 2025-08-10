@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../../apps_list/apps_list.dart';
 import '../../hotkey/global/hotkey_service.dart';
+import '../../localization/app_localizations.dart';
 import '../../theme/styles.dart';
 import '../settings.dart';
 

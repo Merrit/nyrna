@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../../../settings/cubit/settings_cubit.dart';
 import '../../../settings/settings_page.dart';
 import '../../app/app.dart';
+import '../../localization/app_localizations.dart';
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../apps_list.dart';

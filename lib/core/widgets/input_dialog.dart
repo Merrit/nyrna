@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../localization/app_localizations.dart';
 
 /// Allows to easily specify dialog properties such as the text field only
 /// accepting input as a double, which type of soft keyboard to show, etc.
