@@ -51,7 +51,7 @@ class Win32ProcessRepository extends ProcessRepository {
 
   Future<String> _getExecutableName(int pid) async {
     final processHandle = OpenProcess(
-      PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_LIMITED_INFORMATION,
+      PROCESS_QUERY_LIMITED_INFORMATION,
       FALSE,
       pid,
     );
@@ -93,7 +93,7 @@ class Win32ProcessRepository extends ProcessRepository {
   @override
   Future<bool> resume(int pid) async {
     final processHandle = OpenProcess(
-      PROCESS_ACCESS_RIGHTS.PROCESS_SUSPEND_RESUME,
+      PROCESS_SUSPEND_RESUME,
       FALSE,
       pid,
     );
@@ -117,7 +117,7 @@ class Win32ProcessRepository extends ProcessRepository {
   @override
   Future<bool> suspend(int pid) async {
     final processHandle = OpenProcess(
-      PROCESS_ACCESS_RIGHTS.PROCESS_SUSPEND_RESUME,
+      PROCESS_SUSPEND_RESUME,
       FALSE,
       pid,
     );
