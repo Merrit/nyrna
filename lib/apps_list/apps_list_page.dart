@@ -206,7 +206,7 @@ class _ProgressOverlay extends StatelessWidget {
         return (state.loading)
             ? Stack(
                 children: [
-                  ModalBarrier(color: Colors.grey.withOpacity(0.1)),
+                  ModalBarrier(color: Colors.grey.withValues(alpha: 0.1)),
                   Transform.scale(
                     scale: 2,
                     child: const Center(child: CircularProgressIndicator()),

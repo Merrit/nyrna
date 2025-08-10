@@ -6,7 +6,7 @@ part 'apps_specific_hotkeys.g.dart';
 
 /// A hotkey that toggles the suspend state of a specific application.
 @freezed
-class AppSpecificHotkey with _$AppSpecificHotkey {
+sealed class AppSpecificHotkey with _$AppSpecificHotkey {
   const factory AppSpecificHotkey({
     /// The executable name of the application.
     ///

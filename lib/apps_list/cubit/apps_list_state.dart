@@ -1,7 +1,7 @@
 part of 'apps_list_cubit.dart';
 
 @freezed
-class AppsListState with _$AppsListState {
+sealed class AppsListState with _$AppsListState {
   const factory AppsListState({
     /// True when the app should communicate when work is being done,
     /// such as when the user requests a manual refresh.

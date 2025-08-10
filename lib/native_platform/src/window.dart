@@ -6,7 +6,7 @@ part 'window.freezed.dart';
 
 /// Represents a visible window.
 @freezed
-class Window with _$Window {
+sealed class Window with _$Window {
   const factory Window({
     /// The unique window ID number associated with this window.
     required int id,
