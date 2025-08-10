@@ -60,7 +60,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final currentVersion = state.runningVersion;
     final latestVersion = state.updateVersion;
     const url = 'https://nyrna.merritt.codes/download';
-    final message = 'An update for Nyrna is available!\n\n'
+    final message =
+        'An update for Nyrna is available!\n\n'
         'Current version: $currentVersion\n'
         'Latest version: $latestVersion';
 

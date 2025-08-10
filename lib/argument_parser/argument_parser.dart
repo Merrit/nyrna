@@ -52,7 +52,8 @@ Used with the `toggle` flag, `no-minimize` instructs Nyrna not to automatically 
         abbr: 't',
         negatable: false,
         callback: (bool value) => toggleActiveWindow = value,
-        help: 'Toggle the suspend / resume state for the active window. \n'
+        help:
+            'Toggle the suspend / resume state for the active window. \n'
             '❗Please note this will immediately suspend the active window, and '
             'is intended to be used with a hotkey - be sure not to run this '
             'from a terminal and accidentally suspend your terminal! ❗',

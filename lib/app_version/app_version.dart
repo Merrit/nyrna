@@ -59,8 +59,10 @@ class AppVersion {
       final tagName = tag['tag_name'] as String;
       _latest = parseVersionTag(tagName);
     } else {
-      log.w('Issue getting latest version info from GitHub, '
-          'status code: ${response.statusCode}\n');
+      log.w(
+        'Issue getting latest version info from GitHub, '
+        'status code: ${response.statusCode}\n',
+      );
     }
 
     return _latest;

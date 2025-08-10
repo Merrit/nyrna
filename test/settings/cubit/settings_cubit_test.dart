@@ -45,29 +45,39 @@ void main() {
 
     when(storage.getValue('hotkey')).thenAnswer((_) async {});
     when(storage.deleteValue(any)).thenAnswer((_) async {});
-    when(storage.saveValue(
-      key: anyNamed('key'),
-      value: anyNamed('value'),
-    )).thenAnswer((_) async {});
-    when(storage.saveValue(
-      key: anyNamed('key'),
-      value: anyNamed('value'),
-    )).thenAnswer((_) async {});
-    when(storage.saveValue(
-      key: anyNamed('key'),
-      value: anyNamed('value'),
-    )).thenAnswer((_) async {});
+    when(
+      storage.saveValue(
+        key: anyNamed('key'),
+        value: anyNamed('value'),
+      ),
+    ).thenAnswer((_) async {});
+    when(
+      storage.saveValue(
+        key: anyNamed('key'),
+        value: anyNamed('value'),
+      ),
+    ).thenAnswer((_) async {});
+    when(
+      storage.saveValue(
+        key: anyNamed('key'),
+        value: anyNamed('value'),
+      ),
+    ).thenAnswer((_) async {});
 
     // StorageRepository
-    when(storage.getValue(
-      any,
-      storageArea: anyNamed('storageArea'),
-    )).thenAnswer((_) async => null);
-    when(storage.saveValue(
-      key: anyNamed('key'),
-      value: anyNamed('value'),
-      storageArea: anyNamed('storageArea'),
-    )).thenAnswer((_) async {});
+    when(
+      storage.getValue(
+        any,
+        storageArea: anyNamed('storageArea'),
+      ),
+    ).thenAnswer((_) async => null);
+    when(
+      storage.saveValue(
+        key: anyNamed('key'),
+        value: anyNamed('value'),
+        storageArea: anyNamed('storageArea'),
+      ),
+    ).thenAnswer((_) async {});
 
     cubit = await SettingsCubit.init(
       autostartService: autostartService,
@@ -97,10 +107,12 @@ void main() {
 
     test('ignoring update works', () async {
       await cubit.ignoreUpdate('1.0.0');
-      verify(storage.saveValue(
-        key: 'ignoredUpdate',
-        value: '1.0.0',
-      )).called(1);
+      verify(
+        storage.saveValue(
+          key: 'ignoredUpdate',
+          value: '1.0.0',
+        ),
+      ).called(1);
     });
 
     test('setRefreshInterval works', () async {
@@ -109,30 +121,36 @@ void main() {
       expect(state.refreshInterval, defaultInterval);
       await cubit.setRefreshInterval(newInterval);
       expect(state.refreshInterval, newInterval);
-      verify(storage.saveValue(
-        key: 'refreshInterval',
-        value: newInterval,
-      )).called(1);
+      verify(
+        storage.saveValue(
+          key: 'refreshInterval',
+          value: newInterval,
+        ),
+      ).called(1);
     });
 
     test('updating autoRefresh works', () async {
       expect(state.autoRefresh, true);
       await cubit.updateAutoRefresh(false);
       expect(state.autoRefresh, false);
-      verify(storage.saveValue(
-        key: 'autoRefresh',
-        value: false,
-      )).called(1);
+      verify(
+        storage.saveValue(
+          key: 'autoRefresh',
+          value: false,
+        ),
+      ).called(1);
     });
 
     test('updateCloseToTray works', () async {
       expect(state.closeToTray, false);
       await cubit.updateCloseToTray(true);
       expect(state.closeToTray, true);
-      verify(storage.saveValue(
-        key: 'closeToTray',
-        value: true,
-      )).called(1);
+      verify(
+        storage.saveValue(
+          key: 'closeToTray',
+          value: true,
+        ),
+      ).called(1);
     });
 
     test('updateMinimizeWindows works', () async {
@@ -140,36 +158,44 @@ void main() {
       expect(state.minimizeWindows, true);
       await cubit.updateMinimizeWindows(false);
       expect(state.minimizeWindows, false);
-      verify(storage.saveValue(
-        key: 'minimizeWindows',
-        value: false,
-      )).called(1);
+      verify(
+        storage.saveValue(
+          key: 'minimizeWindows',
+          value: false,
+        ),
+      ).called(1);
       await cubit.updateMinimizeWindows(true);
       expect(state.minimizeWindows, true);
-      verify(storage.saveValue(
-        key: 'minimizeWindows',
-        value: true,
-      )).called(1);
+      verify(
+        storage.saveValue(
+          key: 'minimizeWindows',
+          value: true,
+        ),
+      ).called(1);
     });
 
     test('updateShowHiddenWindows works', () async {
       expect(state.showHiddenWindows, false);
       await cubit.updateShowHiddenWindows(true);
       expect(state.showHiddenWindows, true);
-      verify(storage.saveValue(
-        key: 'showHiddenWindows',
-        value: true,
-      )).called(1);
+      verify(
+        storage.saveValue(
+          key: 'showHiddenWindows',
+          value: true,
+        ),
+      ).called(1);
     });
 
     test('updateStartHiddenInTray works', () async {
       expect(state.startHiddenInTray, false);
       await cubit.updateStartHiddenInTray(true);
       expect(state.startHiddenInTray, true);
-      verify(storage.saveValue(
-        key: 'startHiddenInTray',
-        value: true,
-      )).called(1);
+      verify(
+        storage.saveValue(
+          key: 'startHiddenInTray',
+          value: true,
+        ),
+      ).called(1);
     });
 
     group('autostart:', () {

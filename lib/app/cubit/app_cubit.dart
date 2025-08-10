@@ -79,7 +79,8 @@ class AppCubit extends Cubit<AppState> {
 
     final sessionType = await (_nativePlatform as Linux).sessionType();
 
-    final unknownSessionMsg = '''
+    final unknownSessionMsg =
+        '''
 Unable to determine session type. The XDG_SESSION_TYPE environment variable is set to "$sessionType".
 Please note that Wayland is not currently supported.''';
 
@@ -122,20 +123,24 @@ Otherwise, [consider signing in using X11 instead](https://docs.fedoraproject.or
   /// Fetches version data from the update service.
   Future<void> _fetchVersionData() async {
     final versionInfo = await _updateService.getVersionInfo();
-    emit(state.copyWith(
-      runningVersion: versionInfo.currentVersion,
-      updateVersion: versionInfo.latestVersion,
-      updateAvailable: versionInfo.updateAvailable,
-      showUpdateButton: (defaultTargetPlatform.isDesktop && versionInfo.updateAvailable),
-    ));
+    emit(
+      state.copyWith(
+        runningVersion: versionInfo.currentVersion,
+        updateVersion: versionInfo.latestVersion,
+        updateAvailable: versionInfo.updateAvailable,
+        showUpdateButton:
+            (defaultTargetPlatform.isDesktop && versionInfo.updateAvailable),
+      ),
+    );
   }
 
   /// Fetches release notes from the release notes service.
   Future<void> _fetchReleaseNotes() async {
     if (state.firstRun) return;
 
-    final String? lastReleaseNotesVersionShown =
-        await _storageRepository.getValue('lastReleaseNotesVersionShown');
+    final String? lastReleaseNotesVersionShown = await _storageRepository.getValue(
+      'lastReleaseNotesVersionShown',
+    );
 
     if (lastReleaseNotesVersionShown == state.runningVersion) return;
 

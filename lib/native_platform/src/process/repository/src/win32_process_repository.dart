@@ -27,10 +27,10 @@ class Win32ProcessRepository extends ProcessRepository {
 
     final nativeLibrary = DynamicLibrary.open(nativeLibraryPath);
 
-    final isProcessSuspendedNative =
-        nativeLibrary.lookupFunction<Int32 Function(Int32), int Function(int)>(
-      'IsProcessSuspended',
-    );
+    final isProcessSuspendedNative = nativeLibrary
+        .lookupFunction<Int32 Function(Int32), int Function(int)>(
+          'IsProcessSuspended',
+        );
 
     return Win32ProcessRepository._(isProcessSuspendedNative);
   }

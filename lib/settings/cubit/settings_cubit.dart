@@ -42,9 +42,11 @@ class SettingsCubit extends Cubit<SettingsState> {
     required HotkeyService hotkeyService,
     required StorageRepository storage,
   }) async {
-    final List<String>? appSpecificHotkeysJson =
-        await storage.getValue('appSpecificHotKeys');
-    final List<AppSpecificHotkey> appSpecificHotKeys = appSpecificHotkeysJson
+    final List<String>? appSpecificHotkeysJson = await storage.getValue(
+      'appSpecificHotKeys',
+    );
+    final List<AppSpecificHotkey> appSpecificHotKeys =
+        appSpecificHotkeysJson
             ?.map((e) => AppSpecificHotkey.fromJson(jsonDecode(e)))
             .toList() ??
         [];
@@ -159,11 +161,11 @@ class SettingsCubit extends Cubit<SettingsState> {
 
   /// Remove the hotkey for a specific application.
   Future<void> removeAppSpecificHotkey(String executable) async {
-    final AppSpecificHotkey appSpecificHotkey =
-        state.appSpecificHotKeys.firstWhere((e) => e.executable == executable);
+    final AppSpecificHotkey appSpecificHotkey = state.appSpecificHotKeys.firstWhere(
+      (e) => e.executable == executable,
+    );
 
-    final List<AppSpecificHotkey> appSpecificHotkeys = state //
-        .appSpecificHotKeys
+    final List<AppSpecificHotkey> appSpecificHotkeys = state.appSpecificHotKeys
         .where((e) => e.executable != executable)
         .toList();
 

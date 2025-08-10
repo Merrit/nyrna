@@ -26,10 +26,11 @@ args: $args''');
 
 /// When in Flatpak using the built-in Process.killPid will try to act on the
 /// dummy pids it sees inside the container, so we use the host run instead.
-KillFunction flatpakKill = (
-  int pid, [
-  ProcessSignal signal = ProcessSignal.sigcont,
-]) {
-  flatpakRun('kill', ['-${signal.toString()}', '$pid']);
-  return true;
-};
+KillFunction flatpakKill =
+    (
+      int pid, [
+      ProcessSignal signal = ProcessSignal.sigcont,
+    ]) {
+      flatpakRun('kill', ['-${signal.toString()}', '$pid']);
+      return true;
+    };

@@ -14,7 +14,8 @@ typedef KillFunction = bool Function(int pid, [ProcessSignal signal]);
 ///
 /// Expected to be `Process.run()` from `dart:io` in production, and a mock
 /// function in unit tests.
-typedef RunFunction = Future<ProcessResult> Function(
-  String executable,
-  List<String> args,
-);
+typedef RunFunction =
+    Future<ProcessResult> Function(
+      String executable,
+      List<String> args,
+    );

@@ -177,7 +177,7 @@ class _RecordHotKeyDialogState extends State<_RecordHotKeyDialog> {
                     settingsCubit.resetHotkey();
                     Navigator.pop(context);
                   },
-                )
+                ),
               ],
             ),
             Container(
@@ -290,8 +290,7 @@ class _AddAppSpecificHotkeyDialog extends StatelessWidget {
     return AlertDialog(
       content: BlocBuilder<AppsListCubit, AppsListState>(
         builder: (context, state) {
-          final executables = state //
-              .windows
+          final executables = state.windows
               .map((window) => window.process.executable)
               .toSet()
               .toList();

@@ -40,9 +40,10 @@ const msPaintWindow = Window(
   title: 'Untitled - Paint',
 );
 
-Window get msPaintWindowState => state //
-    .windows
-    .singleWhere((element) => element.id == msPaintWindow.id);
+Window get msPaintWindowState =>
+    state //
+        .windows
+        .singleWhere((element) => element.id == msPaintWindow.id);
 
 const mpvWindow1 = Window(
   id: 180355074,
@@ -54,9 +55,10 @@ const mpvWindow1 = Window(
   title: 'No file - mpv',
 );
 
-Window get mpvWindow1State => state //
-    .windows
-    .singleWhere((element) => element.id == mpvWindow1.id);
+Window get mpvWindow1State =>
+    state //
+        .windows
+        .singleWhere((element) => element.id == mpvWindow1.id);
 
 const mpvWindow2 = Window(
   id: 197132290,
@@ -68,9 +70,10 @@ const mpvWindow2 = Window(
   title: 'No file - mpv',
 );
 
-Window get mpvWindow2State => state //
-    .windows
-    .singleWhere((element) => element.id == mpvWindow2.id);
+Window get mpvWindow2State =>
+    state //
+        .windows
+        .singleWhere((element) => element.id == mpvWindow2.id);
 
 final appWindow = MockAppWindow();
 final hotkeyService = MockHotkeyService();
@@ -101,8 +104,9 @@ void main() {
 
     when(nativePlatform.minimizeWindow(any)).thenAnswer((_) async => true);
     when(nativePlatform.restoreWindow(any)).thenAnswer((_) async => true);
-    when(nativePlatform.windows(showHidden: anyNamed('showHidden')))
-        .thenAnswer((_) async => []);
+    when(
+      nativePlatform.windows(showHidden: anyNamed('showHidden')),
+    ).thenAnswer((_) async => []);
 
     when(storage.getValue('ignoredUpdate')).thenAnswer((_) async {});
 
@@ -122,8 +126,9 @@ void main() {
       ),
     );
 
-    when(processRepository.getProcessStatus(any))
-        .thenAnswer((_) async => ProcessStatus.normal);
+    when(
+      processRepository.getProcessStatus(any),
+    ).thenAnswer((_) async => ProcessStatus.normal);
     when(processRepository.resume(any)).thenAnswer((_) async => true);
     when(processRepository.suspend(any)).thenAnswer((_) async => true);
 
@@ -151,16 +156,18 @@ void main() {
     test('new window is added to state', () async {
       expect(state.windows.length, 0);
 
-      when(nativePlatform.windows(showHidden: anyNamed('showHidden')))
-          .thenAnswer((_) async => [msPaintWindow]);
+      when(
+        nativePlatform.windows(showHidden: anyNamed('showHidden')),
+      ).thenAnswer((_) async => [msPaintWindow]);
 
       await cubit.manualRefresh();
       expect(state.windows.length, 1);
     });
 
     test('process changed externally updates state', () async {
-      when(nativePlatform.windows(showHidden: anyNamed('showHidden')))
-          .thenAnswer((_) async => [msPaintWindow]);
+      when(
+        nativePlatform.windows(showHidden: anyNamed('showHidden')),
+      ).thenAnswer((_) async => [msPaintWindow]);
 
       await cubit.manualRefresh();
 
@@ -171,8 +178,9 @@ void main() {
 
       // Simulate the process being suspended outside Nyrna.
       reset(processRepository);
-      when(processRepository.getProcessStatus(any))
-          .thenAnswer((_) async => ProcessStatus.suspended);
+      when(
+        processRepository.getProcessStatus(any),
+      ).thenAnswer((_) async => ProcessStatus.suspended);
 
       // Verify we pick up this status change.
       await cubit.manualRefresh();
@@ -203,36 +211,37 @@ void main() {
     });
 
     test('windows are sorted', () async {
-      when(nativePlatform.windows(showHidden: anyNamed('showHidden')))
-          .thenAnswer((_) async => [
-                const Window(
-                  id: 7363,
-                  process: Process(
-                    executable: 'kate',
-                    pid: 836482,
-                    status: ProcessStatus.normal,
-                  ),
-                  title: 'Kate',
-                ),
-                const Window(
-                  id: 29347,
-                  process: Process(
-                    executable: 'evince',
-                    pid: 94847,
-                    status: ProcessStatus.normal,
-                  ),
-                  title: 'Evince',
-                ),
-                const Window(
-                  id: 89374,
-                  process: Process(
-                    executable: 'ark',
-                    pid: 9374623,
-                    status: ProcessStatus.normal,
-                  ),
-                  title: 'Ark',
-                ),
-              ]);
+      when(nativePlatform.windows(showHidden: anyNamed('showHidden'))).thenAnswer(
+        (_) async => [
+          const Window(
+            id: 7363,
+            process: Process(
+              executable: 'kate',
+              pid: 836482,
+              status: ProcessStatus.normal,
+            ),
+            title: 'Kate',
+          ),
+          const Window(
+            id: 29347,
+            process: Process(
+              executable: 'evince',
+              pid: 94847,
+              status: ProcessStatus.normal,
+            ),
+            title: 'Evince',
+          ),
+          const Window(
+            id: 89374,
+            process: Process(
+              executable: 'ark',
+              pid: 9374623,
+              status: ProcessStatus.normal,
+            ),
+            title: 'Ark',
+          ),
+        ],
+      );
 
       await cubit.manualRefresh();
       final windows = state.windows;
@@ -244,15 +253,18 @@ void main() {
     group('toggle:', () {
       test('suspends correctly', () async {
         expect(state.windows.isEmpty, true);
-        when(nativePlatform.windows(
-          showHidden: anyNamed('showHidden'),
-        )).thenAnswer((_) async => [msPaintWindow]);
+        when(
+          nativePlatform.windows(
+            showHidden: anyNamed('showHidden'),
+          ),
+        ).thenAnswer((_) async => [msPaintWindow]);
         await cubit.manualRefresh();
         expect(state.windows.length, 1);
         expect(state.windows.first.process.status, ProcessStatus.normal);
 
-        when(processRepository.getProcessStatus(msPaintProcess.pid))
-            .thenAnswer((_) async => ProcessStatus.suspended);
+        when(
+          processRepository.getProcessStatus(msPaintProcess.pid),
+        ).thenAnswer((_) async => ProcessStatus.suspended);
         await cubit.toggle(msPaintWindow);
         expect(state.windows.length, 1);
         expect(state.windows.first.process.status, ProcessStatus.suspended);
@@ -260,17 +272,21 @@ void main() {
 
       test('resumes correctly', () async {
         expect(state.windows.isEmpty, true);
-        when(nativePlatform.windows(
-          showHidden: anyNamed('showHidden'),
-        )).thenAnswer((_) async => [msPaintWindow]);
-        when(processRepository.getProcessStatus(msPaintProcess.pid))
-            .thenAnswer((_) async => ProcessStatus.suspended);
+        when(
+          nativePlatform.windows(
+            showHidden: anyNamed('showHidden'),
+          ),
+        ).thenAnswer((_) async => [msPaintWindow]);
+        when(
+          processRepository.getProcessStatus(msPaintProcess.pid),
+        ).thenAnswer((_) async => ProcessStatus.suspended);
         await cubit.manualRefresh();
         expect(state.windows.length, 1);
         expect(state.windows.first.process.status, ProcessStatus.suspended);
 
-        when(processRepository.getProcessStatus(msPaintProcess.pid))
-            .thenAnswer((_) async => ProcessStatus.normal);
+        when(
+          processRepository.getProcessStatus(msPaintProcess.pid),
+        ).thenAnswer((_) async => ProcessStatus.normal);
         await cubit.toggle(msPaintWindow);
         expect(state.windows.length, 1);
         expect(state.windows.first.process.status, ProcessStatus.normal);
@@ -278,24 +294,29 @@ void main() {
 
       test('adds InteractionError to window on failure', () async {
         expect(state.windows.isEmpty, true);
-        when(nativePlatform.windows(
-          showHidden: anyNamed('showHidden'),
-        )).thenAnswer((_) async => [msPaintWindow]);
-        when(processRepository.getProcessStatus(msPaintProcess.pid))
-            .thenAnswer((_) async => ProcessStatus.normal);
+        when(
+          nativePlatform.windows(
+            showHidden: anyNamed('showHidden'),
+          ),
+        ).thenAnswer((_) async => [msPaintWindow]);
+        when(
+          processRepository.getProcessStatus(msPaintProcess.pid),
+        ).thenAnswer((_) async => ProcessStatus.normal);
         await cubit.manualRefresh();
         expect(state.windows.length, 1);
         expect(state.windows.first.process.status, ProcessStatus.normal);
 
         when(processRepository.suspend(any)).thenAnswer((_) async => false);
-        when(processRepository.getProcessStatus(msPaintProcess.pid))
-            .thenAnswer((_) async => ProcessStatus.normal);
+        when(
+          processRepository.getProcessStatus(msPaintProcess.pid),
+        ).thenAnswer((_) async => ProcessStatus.normal);
         await cubit.toggle(msPaintWindow);
         expect(state.windows.length, 1);
         expect(state.windows.first.process.status, ProcessStatus.normal);
-        final interactionError = state //
-            .interactionErrors
-            .singleWhereOrNull((e) => e.windowId == msPaintWindow.id);
+        final interactionError =
+            state //
+                .interactionErrors
+                .singleWhereOrNull((e) => e.windowId == msPaintWindow.id);
         expect(interactionError, isNotNull);
         expect(interactionError!.interactionType, InteractionType.suspend);
         expect(interactionError.statusAfterInteraction, ProcessStatus.normal);
@@ -306,13 +327,17 @@ void main() {
       test('suspends multiple instances correctly', () async {
         // Initial setup.
         expect(state.windows.isEmpty, true);
-        when(nativePlatform.windows(
-          showHidden: anyNamed('showHidden'),
-        )).thenAnswer((_) async => [
-              msPaintWindow,
-              mpvWindow1,
-              mpvWindow2,
-            ]);
+        when(
+          nativePlatform.windows(
+            showHidden: anyNamed('showHidden'),
+          ),
+        ).thenAnswer(
+          (_) async => [
+            msPaintWindow,
+            mpvWindow1,
+            mpvWindow2,
+          ],
+        );
         await cubit.manualRefresh();
         expect(state.windows.length, 3);
         expect(msPaintWindowState.process.status, ProcessStatus.normal);
@@ -321,10 +346,12 @@ void main() {
 
         // Trigger toggleAll() to suspend mpv instances and verify.
         await cubit.toggleAll(mpvWindow1);
-        when(processRepository.getProcessStatus(mpvWindow1.process.pid))
-            .thenAnswer((_) async => ProcessStatus.suspended);
-        when(processRepository.getProcessStatus(mpvWindow2.process.pid))
-            .thenAnswer((_) async => ProcessStatus.suspended);
+        when(
+          processRepository.getProcessStatus(mpvWindow1.process.pid),
+        ).thenAnswer((_) async => ProcessStatus.suspended);
+        when(
+          processRepository.getProcessStatus(mpvWindow2.process.pid),
+        ).thenAnswer((_) async => ProcessStatus.suspended);
         await cubit.manualRefresh();
         expect(state.windows.length, 3);
         expect(msPaintWindowState.process.status, ProcessStatus.normal);
@@ -335,25 +362,31 @@ void main() {
       test('resumes multiple instances correctly', () async {
         // Initial setup.
         expect(state.windows.isEmpty, true);
-        when(processRepository.getProcessStatus(mpvWindow1.process.pid))
-            .thenAnswer((_) async => ProcessStatus.suspended);
-        when(processRepository.getProcessStatus(mpvWindow2.process.pid))
-            .thenAnswer((_) async => ProcessStatus.suspended);
-        when(nativePlatform.windows(
-          showHidden: anyNamed('showHidden'),
-        )).thenAnswer((_) async => [
-              msPaintWindow,
-              mpvWindow1.copyWith(
-                process: mpvWindow1.process.copyWith(
-                  status: ProcessStatus.suspended,
-                ),
+        when(
+          processRepository.getProcessStatus(mpvWindow1.process.pid),
+        ).thenAnswer((_) async => ProcessStatus.suspended);
+        when(
+          processRepository.getProcessStatus(mpvWindow2.process.pid),
+        ).thenAnswer((_) async => ProcessStatus.suspended);
+        when(
+          nativePlatform.windows(
+            showHidden: anyNamed('showHidden'),
+          ),
+        ).thenAnswer(
+          (_) async => [
+            msPaintWindow,
+            mpvWindow1.copyWith(
+              process: mpvWindow1.process.copyWith(
+                status: ProcessStatus.suspended,
               ),
-              mpvWindow2.copyWith(
-                process: mpvWindow2.process.copyWith(
-                  status: ProcessStatus.suspended,
-                ),
+            ),
+            mpvWindow2.copyWith(
+              process: mpvWindow2.process.copyWith(
+                status: ProcessStatus.suspended,
               ),
-            ]);
+            ),
+          ],
+        );
         await cubit.manualRefresh();
         expect(state.windows.length, 3);
         expect(msPaintWindowState.process.status, ProcessStatus.normal);
@@ -362,10 +395,12 @@ void main() {
 
         // Trigger toggleAll() to resume mpv instances and verify.
         await cubit.toggleAll(mpvWindow1);
-        when(processRepository.getProcessStatus(mpvWindow1.process.pid))
-            .thenAnswer((_) async => ProcessStatus.normal);
-        when(processRepository.getProcessStatus(mpvWindow2.process.pid))
-            .thenAnswer((_) async => ProcessStatus.normal);
+        when(
+          processRepository.getProcessStatus(mpvWindow1.process.pid),
+        ).thenAnswer((_) async => ProcessStatus.normal);
+        when(
+          processRepository.getProcessStatus(mpvWindow2.process.pid),
+        ).thenAnswer((_) async => ProcessStatus.normal);
         await cubit.manualRefresh();
         expect(state.windows.length, 3);
         expect(msPaintWindowState.process.status, ProcessStatus.normal);
@@ -376,19 +411,24 @@ void main() {
       test('only suspends if some are already suspended', () async {
         // Initial setup.
         expect(state.windows.isEmpty, true);
-        when(processRepository.getProcessStatus(mpvWindow2.process.pid))
-            .thenAnswer((_) async => ProcessStatus.suspended);
-        when(nativePlatform.windows(
-          showHidden: anyNamed('showHidden'),
-        )).thenAnswer((_) async => [
-              msPaintWindow,
-              mpvWindow1,
-              mpvWindow2.copyWith(
-                process: mpvWindow2.process.copyWith(
-                  status: ProcessStatus.suspended,
-                ),
+        when(
+          processRepository.getProcessStatus(mpvWindow2.process.pid),
+        ).thenAnswer((_) async => ProcessStatus.suspended);
+        when(
+          nativePlatform.windows(
+            showHidden: anyNamed('showHidden'),
+          ),
+        ).thenAnswer(
+          (_) async => [
+            msPaintWindow,
+            mpvWindow1,
+            mpvWindow2.copyWith(
+              process: mpvWindow2.process.copyWith(
+                status: ProcessStatus.suspended,
               ),
-            ]);
+            ),
+          ],
+        );
         await cubit.manualRefresh();
         expect(state.windows.length, 3);
         expect(msPaintWindowState.process.status, ProcessStatus.normal);
@@ -398,10 +438,12 @@ void main() {
         // Trigger toggleAll() to suspend mpv instances and verify,
         // the already suspended instance should not have resumed.
         await cubit.toggleAll(mpvWindow1);
-        when(processRepository.getProcessStatus(mpvWindow1.process.pid))
-            .thenAnswer((_) async => ProcessStatus.suspended);
-        when(processRepository.getProcessStatus(mpvWindow2.process.pid))
-            .thenAnswer((_) async => ProcessStatus.suspended);
+        when(
+          processRepository.getProcessStatus(mpvWindow1.process.pid),
+        ).thenAnswer((_) async => ProcessStatus.suspended);
+        when(
+          processRepository.getProcessStatus(mpvWindow2.process.pid),
+        ).thenAnswer((_) async => ProcessStatus.suspended);
         await cubit.manualRefresh();
         expect(state.windows.length, 3);
         expect(msPaintWindowState.process.status, ProcessStatus.normal);

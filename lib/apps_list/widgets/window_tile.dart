@@ -12,9 +12,11 @@ part 'window_tile.freezed.dart';
 /// Passes the instance of [Window] to child widgets.
 class WindowCubit extends Cubit<WindowState> {
   WindowCubit(Window window)
-      : super(WindowState(
+    : super(
+        WindowState(
           window: window,
-        ));
+        ),
+      );
 }
 
 @freezed
@@ -57,53 +59,55 @@ class _WindowTileState extends State<WindowTile> {
 
     return BlocProvider(
       create: (context) => WindowCubit(widget.window),
-      child: Builder(builder: (context) {
-        return Card(
-          child: ListTile(
-            leading: BlocBuilder<WindowCubit, WindowState>(
-              builder: (context, state) {
-                return Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: (loading) ? null : statusColor,
-                  ),
-                  child: (loading) ? const CircularProgressIndicator() : null,
-                );
+      child: Builder(
+        builder: (context) {
+          return Card(
+            child: ListTile(
+              leading: BlocBuilder<WindowCubit, WindowState>(
+                builder: (context, state) {
+                  return Container(
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: (loading) ? null : statusColor,
+                    ),
+                    child: (loading) ? const CircularProgressIndicator() : null,
+                  );
+                },
+              ),
+              title: Text(widget.window.title),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('PID: ${widget.window.process.pid}'),
+                  Text(widget.window.process.executable),
+                ],
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 2,
+                horizontal: 20,
+              ),
+              trailing: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _FavoriteButton(),
+                  _DetailsButton(),
+                ],
+              ),
+              onTap: () async {
+                log.i('WindowTile clicked: ${widget.window}');
+
+                setState(() => loading = true);
+                await context.read<AppsListCubit>().toggle(widget.window);
+
+                if (!mounted) return;
+                setState(() => loading = false);
               },
             ),
-            title: Text(widget.window.title),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('PID: ${widget.window.process.pid}'),
-                Text(widget.window.process.executable),
-              ],
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 2,
-              horizontal: 20,
-            ),
-            trailing: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _FavoriteButton(),
-                _DetailsButton(),
-              ],
-            ),
-            onTap: () async {
-              log.i('WindowTile clicked: ${widget.window}');
-
-              setState(() => loading = true);
-              await context.read<AppsListCubit>().toggle(widget.window);
-
-              if (!mounted) return;
-              setState(() => loading = false);
-            },
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 }
@@ -139,8 +143,9 @@ class _DetailsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final window = context.select((WindowCubit cubit) => cubit.state.window);
 
-    final availableAction =
-        (window.process.status == ProcessStatus.normal) ? 'Suspend' : 'Resume';
+    final availableAction = (window.process.status == ProcessStatus.normal)
+        ? 'Suspend'
+        : 'Resume';
 
     return BlocBuilder<AppsListCubit, AppsListState>(
       builder: (context, state) {

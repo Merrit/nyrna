@@ -17,9 +17,7 @@ abstract class ProcessRepository {
   static ProcessRepository init() {
     if (io.Platform.isLinux) {
       final runFunction = (runningInFlatpak()) ? flatpakRun : io.Process.run;
-      final killFunction = (runningInFlatpak()) //
-          ? flatpakKill
-          : io.Process.killPid;
+      final killFunction = (runningInFlatpak()) ? flatpakKill : io.Process.killPid;
       return LinuxProcessRepository(killFunction, runFunction);
     } else {
       return Win32ProcessRepository();

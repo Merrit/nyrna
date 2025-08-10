@@ -37,3 +37,7 @@ analyzer:
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
+
+formatter:
+  trailing_commas: preserve
+  page_width: 90

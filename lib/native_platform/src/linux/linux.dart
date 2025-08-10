@@ -150,12 +150,12 @@ class Linux implements NativePlatform {
   Future<bool> checkDependencies() async {
     final xdotoolResult = await _run('bash', [
       '-c',
-      'command -v xdotool >/dev/null 2>&1 || { echo >&2 "xdotool is required but it\'s not installed."; exit 1; }'
+      'command -v xdotool >/dev/null 2>&1 || { echo >&2 "xdotool is required but it\'s not installed."; exit 1; }',
     ]);
 
     final wmctrlResult = await _run('bash', [
       '-c',
-      'command -v wmctrl >/dev/null 2>&1 || { echo >&2 "wmctrl is required but it\'s not installed."; exit 1; }'
+      'command -v wmctrl >/dev/null 2>&1 || { echo >&2 "wmctrl is required but it\'s not installed."; exit 1; }',
     ]);
 
     final xdotoolAvailable = xdotoolResult.stderr.toString().trim() == '';

@@ -18,8 +18,8 @@ class VersionInfo {
 
   // Empty version info.
   factory VersionInfo.empty() => const VersionInfo(
-        currentVersion: '',
-        latestVersion: null,
-        updateAvailable: false,
-      );
+    currentVersion: '',
+    latestVersion: null,
+    updateAvailable: false,
+  );
 }

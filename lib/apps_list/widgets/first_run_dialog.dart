@@ -27,7 +27,7 @@ Please make sure to **save** your data or game before attempting to use Nyrna.''
             Navigator.pop(context);
           },
           child: const Text('I understand'),
-        )
+        ),
       ],
     );
   }

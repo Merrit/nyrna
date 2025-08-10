@@ -67,8 +67,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get autoRefreshDescription => 'Automatische Aktualisierung der Daten';
 
   @override
-  String get autoRefreshInterval =>
-      'Intervall der automatischen Aktualisierung';
+  String get autoRefreshInterval => 'Intervall der automatischen Aktualisierung';
 
   @override
   String autoRefreshIntervalAmount(int interval) {
@@ -79,8 +78,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get closeToTray => 'Schließen Sie das Fenster in den Systembereich';
 
   @override
-  String get minimizeAndRestoreWindows =>
-      'Minimieren und Wiederherstellen von Fenstern';
+  String get minimizeAndRestoreWindows => 'Minimieren und Wiederherstellen von Fenstern';
 
   @override
   String get pinSuspendedWindows => 'Pin suspended windows';
@@ -112,8 +110,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get systemIntegrationTitle => 'Systemintegration';
 
   @override
-  String get startAutomatically =>
-      'Starten Sie die App automatisch mit dem System';
+  String get startAutomatically => 'Starten Sie die App automatisch mit dem System';
 
   @override
   String get startInTray => 'Starten Sie die App im Systembereich';

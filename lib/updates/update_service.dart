@@ -67,8 +67,10 @@ class UpdateService {
       final version = _parseVersionTag(tagName);
       return Version.parse(version);
     } else {
-      log.w('Issue getting latest version info from GitHub, '
-          'status code: ${response.statusCode}\n');
+      log.w(
+        'Issue getting latest version info from GitHub, '
+        'status code: ${response.statusCode}\n',
+      );
     }
 
     return null;

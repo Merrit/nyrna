@@ -111,8 +111,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get systemIntegrationTitle => 'Integrazione del sistema';
 
   @override
-  String get startAutomatically =>
-      'Avvia automaticamente all\'avvio del sistema';
+  String get startAutomatically => 'Avvia automaticamente all\'avvio del sistema';
 
   @override
   String get startInTray => 'Avvia nascosto nella barra delle applicazioni';

@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-
 import '../../app/app.dart';
 import '../../localization/app_localizations.dart';
 import '../../theme/styles.dart';
