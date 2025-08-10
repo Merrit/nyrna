@@ -1,7 +1,7 @@
 part of 'app_cubit.dart';
 
 @freezed
-sealed class AppState with _$AppState {
+abstract class AppState with _$AppState {
   const factory AppState({
     /// Message for the user if they are running Nyrna on Wayland, or if their
     /// session type is unknown.
