@@ -102,20 +102,20 @@ class Win32 implements NativePlatform {
   @override
   Future<bool> minimizeWindow(int windowId) async {
     log.i('Minimizing window with id $windowId');
-    ShowWindow(windowId, SHOW_WINDOW_CMD.SW_FORCEMINIMIZE);
+    ShowWindow(windowId, SW_FORCEMINIMIZE);
     return true; // [ShowWindow] return value doesn't confirm success.
   }
 
   @override
   Future<bool> restoreWindow(int windowId) async {
     log.i('Restoring window with id $windowId');
-    ShowWindow(windowId, SHOW_WINDOW_CMD.SW_RESTORE);
+    ShowWindow(windowId, SW_RESTORE);
     return true; // [ShowWindow] return value doesn't confirm success.
   }
 
   Future<String> getExecutableName(int pid) async {
     final processHandle = OpenProcess(
-      PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_LIMITED_INFORMATION,
+      PROCESS_QUERY_LIMITED_INFORMATION,
       FALSE,
       pid,
     );
