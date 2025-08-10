@@ -28,6 +28,11 @@ jobs:
         run: |
           flutter pub get
 
+      # https://github.com/flutter/flutter/issues/167982
+      # https://github.com/flutter/flutter/pull/167029
+      - name: Fix localizations formatting
+        run: dart format lib/localization/ -l 90
+
       - name: Verify formatting
         run: dart format -o none --set-exit-if-changed --line-length=90 .
 
