@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -11,6 +10,7 @@ import '../logs/log_page.dart';
 import '../theme/theme.dart';
 import 'hotkey/hotkey.dart';
 import 'loading/loading_page.dart';
+import 'localization/app_localizations.dart';
 import 'settings/settings.dart';
 import 'window/app_window.dart';
 
