@@ -10,7 +10,6 @@
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
-            "preLaunchTask": "${defaultBuildTask}",
             "flutterMode": "debug",
         },
         // Debug with verbose logging
@@ -20,7 +19,6 @@
             "type": "dart",
             "flutterMode": "debug",
             "program": "lib/main.dart",
-            "preLaunchTask": "${defaultBuildTask}",
             "args": [
                 "--dart-entrypoint-args",
                 "--verbose",
@@ -33,7 +31,6 @@
             "type": "dart",
             "flutterMode": "debug",
             "program": "lib/main.dart",
-            "preLaunchTask": "${defaultBuildTask}",
             // "args": [
             //     "--dart-entrypoint-args",
             //     "--toggle,--verbose",
@@ -45,7 +42,6 @@
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
-            "preLaunchTask": "${defaultBuildTask}",
             "flutterMode": "profile",
         },
         // Release
@@ -54,7 +50,6 @@
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
-            "preLaunchTask": "${defaultBuildTask}",
             "flutterMode": "release",
         },
         // Test current file

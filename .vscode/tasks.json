@@ -24,6 +24,9 @@
 			"presentation": {
 				"panel": "dedicated",
 			},
+			"runOptions": {
+				"runOn": "folderOpen"
+			},
 			// "dependsOn": [
 			// 	"easy_localization:generate"
 			// ],
