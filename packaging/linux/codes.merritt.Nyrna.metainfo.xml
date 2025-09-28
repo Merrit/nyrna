@@ -58,6 +58,36 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   </branding>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.25.0" date="2025-09-28">
+      <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.25.0</url>
+      <description>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>typo in Italian translation</li>
+        </ul>
+        <p>Continuous Integration</p>
+        <ul>
+          <li>upgrade linux runner</li>
+          <li>upgrade flutterappbuilder</li>
+          <li>upgrade windows runner</li>
+          <li>disable lint temporarily</li>
+          <li>downgrade windows running since new one has no installer tool</li>
+        </ul>
+        <p>Chores</p>
+        <ul>
+          <li>update linux metadata for new release</li>
+          <li>upgrade localizations for breaking changes</li>
+          <li>Upgrade dependencies and fix issues</li>
+          <li>apply new dart formatting rules and fix issues</li>
+          <li>add .git-blame-ignore-revs file</li>
+          <li>Fix localizations formatting</li>
+          <li>win32: apply API deprecation migrations</li>
+          <li>fix freezed migration issues</li>
+          <li>upgrade dependencies</li>
+          <li>bump version</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.24.0" date="2024-10-16">
       <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.24.0</url>
       <description>
