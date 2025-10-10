@@ -113,7 +113,9 @@ class _VerboseLoggingTileState extends State<_VerboseLoggingTile> {
   Widget build(BuildContext context) {
     return SwitchListTile(
       secondary: const Icon(Icons.bug_report_outlined),
-      title: const Text('Verbose logging'),
+      title: Text(
+        AppLocalizations.of(context)!.verboseLogging,
+      ),
       value: isVerbose,
       onChanged: (value) async {
         setState(() => isVerbose = value);

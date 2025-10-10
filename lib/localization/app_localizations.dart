@@ -8,6 +8,7 @@ import 'package:intl/intl.dart' as intl;
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_it.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -98,6 +99,7 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('de'),
     Locale('it'),
+    Locale('zh'),
   ];
 
   /// Label for a cancel button
@@ -130,6 +132,24 @@ abstract class AppLocalizations {
   /// **'Remove from favorites'**
   String get favoriteButtonTooltipRemove;
 
+  /// Menu item to suspend all instances of an application
+  ///
+  /// In en, this message translates to:
+  /// **'Suspend all instances'**
+  String get suspendAllInstances;
+
+  /// Menu item to resume all instances of an application
+  ///
+  /// In en, this message translates to:
+  /// **'Resume all instances'**
+  String get resumeAllInstances;
+
+  /// Label for a close button
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
   /// The title of the details dialog
   ///
   /// In en, this message translates to:
@@ -159,6 +179,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Current Status'**
   String get detailsDialogCurrentStatus;
+
+  /// Label for normal process status
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get statusNormal;
+
+  /// Label for suspended process status
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended'**
+  String get statusSuspended;
+
+  /// Label for unknown process status
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get statusUnknown;
 
   /// Label for the copy logs button
   ///
@@ -316,6 +354,12 @@ abstract class AppLocalizations {
   /// **'Logs'**
   String get logs;
 
+  /// Label for the verbose logging setting
+  ///
+  /// In en, this message translates to:
+  /// **'Verbose logging'**
+  String get verboseLogging;
+
   /// The title of the about section of the settings page.
   ///
   /// In en, this message translates to:
@@ -339,6 +383,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'GitHub repository'**
   String get repository;
+
+  /// Label for hotkey configuration
+  ///
+  /// In en, this message translates to:
+  /// **'Hotkey'**
+  String get hotkey;
+
+  /// Instruction to record a new hotkey
+  ///
+  /// In en, this message translates to:
+  /// **'Record a new hotkey'**
+  String get recordNewHotkey;
+
+  /// Title for app specific hotkeys section
+  ///
+  /// In en, this message translates to:
+  /// **'App specific hotkeys'**
+  String get appSpecificHotkeys;
+
+  /// Tooltip explaining app specific hotkeys
+  ///
+  /// In en, this message translates to:
+  /// **'Hotkeys to directly toggle suspend/resume for specific apps, even when they are not focused.'**
+  String get appSpecificHotkeysTooltip;
+
+  /// Dialog title for adding app specific hotkey
+  ///
+  /// In en, this message translates to:
+  /// **'Add app specific hotkey'**
+  String get addAppSpecificHotkey;
+
+  /// Hint text for app selection dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Select app'**
+  String get selectApp;
+
+  /// Label for the show window menu item in system tray
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get show;
+
+  /// Label for the hide window menu item in system tray
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hide;
+
+  /// Label for the reset window menu item in system tray
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Window'**
+  String get resetWindow;
+
+  /// Label for the exit menu item in system tray
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get exit;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -351,7 +455,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'it'].contains(locale.languageCode);
+      <String>['de', 'en', 'it', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -366,6 +470,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEn();
     case 'it':
       return AppLocalizationsIt();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

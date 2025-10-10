@@ -143,14 +143,14 @@ class _DetailsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final window = context.select((WindowCubit cubit) => cubit.state.window);
 
-    final availableAction = (window.process.status == ProcessStatus.normal)
-        ? 'Suspend'
-        : 'Resume';
-
     return BlocBuilder<AppsListCubit, AppsListState>(
       builder: (context, state) {
+        final toggleAllLabel = (window.process.status == ProcessStatus.normal)
+            ? AppLocalizations.of(context)!.suspendAllInstances
+            : AppLocalizations.of(context)!.resumeAllInstances;
+
         final toggleAllButton = MenuItemButton(
-          child: Text('$availableAction all instances'),
+          child: Text(toggleAllLabel),
           onPressed: () => context.read<AppsListCubit>().toggleAll(window),
         );
 
@@ -199,6 +199,17 @@ class _DetailsDialog extends StatelessWidget {
 
   const _DetailsDialog(this.window);
 
+  String _getLocalizedStatus(BuildContext context, ProcessStatus status) {
+    switch (status) {
+      case ProcessStatus.normal:
+        return AppLocalizations.of(context)!.statusNormal;
+      case ProcessStatus.suspended:
+        return AppLocalizations.of(context)!.statusSuspended;
+      case ProcessStatus.unknown:
+        return AppLocalizations.of(context)!.statusUnknown;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -233,7 +244,9 @@ class _DetailsDialog extends StatelessWidget {
               title: Text(
                 AppLocalizations.of(context)!.detailsDialogCurrentStatus,
               ),
-              subtitle: SelectableText(window.process.status.name),
+              subtitle: SelectableText(
+                _getLocalizedStatus(context, window.process.status),
+              ),
             ),
           ],
         ),
@@ -241,7 +254,9 @@ class _DetailsDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Close'),
+          child: Text(
+            AppLocalizations.of(context)!.close,
+          ),
         ),
       ],
     );

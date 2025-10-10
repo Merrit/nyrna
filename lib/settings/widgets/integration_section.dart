@@ -121,7 +121,9 @@ class _HotkeyConfigWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text('Hotkey'),
+      title: Text(
+        AppLocalizations.of(context)!.hotkey,
+      ),
       leading: const Icon(Icons.keyboard),
       trailing: ElevatedButton(
         onPressed: () => showDialog(
@@ -169,7 +171,9 @@ class _RecordHotKeyDialogState extends State<_RecordHotKeyDialog> {
           children: <Widget>[
             Row(
               children: [
-                const Text('Record a new hotkey'),
+                Text(
+                  AppLocalizations.of(context)!.recordNewHotkey,
+                ),
                 const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.restore),
@@ -207,7 +211,9 @@ class _RecordHotKeyDialogState extends State<_RecordHotKeyDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Cancel'),
+          child: Text(
+            AppLocalizations.of(context)!.cancel,
+          ),
           onPressed: () {
             settingsCubit.updateHotkey(widget.initialHotkey);
             Navigator.of(context).pop();
@@ -220,7 +226,9 @@ class _RecordHotKeyDialogState extends State<_RecordHotKeyDialog> {
                   settingsCubit.updateHotkey(_hotKey!);
                   Navigator.of(context).pop();
                 },
-          child: const Text('OK'),
+          child: Text(
+            AppLocalizations.of(context)!.confirm,
+          ),
         ),
       ],
     );
@@ -238,13 +246,14 @@ class _AppSpecificHotkeys extends StatelessWidget {
         return Card(
           child: Column(
             children: [
-              const ListTile(
-                title: Text('App specific hotkeys'),
-                leading: Icon(Icons.keyboard),
+              ListTile(
+                title: Text(
+                  AppLocalizations.of(context)!.appSpecificHotkeys,
+                ),
+                leading: const Icon(Icons.keyboard),
                 trailing: Tooltip(
-                  message:
-                      'Hotkeys to directly toggle suspend/resume for specific apps, even when they are not focused.',
-                  child: Icon(Icons.help_outline),
+                  message: AppLocalizations.of(context)!.appSpecificHotkeysTooltip,
+                  child: const Icon(Icons.help_outline),
                 ),
               ),
               for (var hotkey in state.appSpecificHotKeys)
@@ -298,11 +307,15 @@ class _AddAppSpecificHotkeyDialog extends StatelessWidget {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Add app specific hotkey'),
+              Text(
+                AppLocalizations.of(context)!.addAppSpecificHotkey,
+              ),
               const SizedBox(height: 20),
               DropdownButton<String>(
                 value: null,
-                hint: const Text('Select app'),
+                hint: Text(
+                  AppLocalizations.of(context)!.selectApp,
+                ),
                 items: executables.map((executable) {
                   return DropdownMenuItem<String>(
                     value: executable,
@@ -354,7 +367,9 @@ class _RecordAppSpecificHotkeyDialogState extends State<_RecordAppSpecificHotkey
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            const Text('Record a new hotkey'),
+            Text(
+              AppLocalizations.of(context)!.recordNewHotkey,
+            ),
             Container(
               width: 100,
               height: 60,
@@ -381,7 +396,9 @@ class _RecordAppSpecificHotkeyDialogState extends State<_RecordAppSpecificHotkey
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Cancel'),
+          child: Text(
+            AppLocalizations.of(context)!.cancel,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
         TextButton(
@@ -394,7 +411,9 @@ class _RecordAppSpecificHotkeyDialogState extends State<_RecordAppSpecificHotkey
                   );
                   Navigator.of(context).pop();
                 },
-          child: const Text('OK'),
+          child: Text(
+            AppLocalizations.of(context)!.confirm,
+          ),
         ),
       ],
     );

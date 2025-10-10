@@ -1,48 +1,48 @@
 {
-  "@@locale": "en",
-  "cancel": "Cancel",
+  "@@locale": "zh",
+  "cancel": "取消",
   "@cancel": {
     "description": "Label for a cancel button"
   },
-  "confirm": "Confirm",
+  "confirm": "确认",
   "@confirm": {
     "description": "Label for a confirm button"
   },
-  "filterWindows": "Filter windows",
+  "filterWindows": "过滤窗口",
   "@filterWindows": {
     "description": "Hint text for searchbox that allows the user to filter windows"
   },
   "@_APPS_LIST_PAGE": {},
-  "favoriteButtonTooltipAdd": "Add to favorites",
+  "favoriteButtonTooltipAdd": "添加至收藏",
   "@favoriteButtonTooltipAdd": {
     "description": "Tooltip for the add to favorites button"
   },
-  "favoriteButtonTooltipRemove": "Remove from favorites",
+  "favoriteButtonTooltipRemove": "从收藏中移除",
   "@favoriteButtonTooltipRemove": {
     "description": "Tooltip for the remove from favorites button"
   },
-  "suspendAllInstances": "Suspend all instances",
+  "suspendAllInstances": "挂起所有实例",
   "@suspendAllInstances": {
     "description": "Menu item to suspend all instances of an application"
   },
-  "resumeAllInstances": "Resume all instances",
+  "resumeAllInstances": "恢复所有实例",
   "@resumeAllInstances": {
     "description": "Menu item to resume all instances of an application"
   },
-  "close": "Close",
+  "close": "关闭",
   "@close": {
     "description": "Label for a close button"
   },
   "@_DETAILS_DIALOG": {},
-  "detailsDialogTitle": "Details",
+  "detailsDialogTitle": "详情",
   "@detailsDialogTitle": {
     "description": "The title of the details dialog"
   },
-  "detailsDialogWindowTitle": "Window Title",
+  "detailsDialogWindowTitle": "窗口名称",
   "@detailsDialogWindowTitle": {
     "description": "Label for the window title field in the details dialog"
   },
-  "detailsDialogExecutableName": "Executable Name",
+  "detailsDialogExecutableName": "进程名",
   "@detailsDialogExecutableName": {
     "description": "Label for the executable name field in the details dialog"
   },
@@ -50,66 +50,66 @@
   "@detailsDialogPID": {
     "description": "Label for the PID field in the details dialog"
   },
-  "detailsDialogCurrentStatus": "Current Status",
+  "detailsDialogCurrentStatus": "当前状态",
   "@detailsDialogCurrentStatus": {
     "description": "Label for the current status field in the details dialog"
   },
-  "statusNormal": "Normal",
+  "statusNormal": "正常",
   "@statusNormal": {
     "description": "Label for normal process status"
   },
-  "statusSuspended": "Suspended",
+  "statusSuspended": "已挂起",
   "@statusSuspended": {
     "description": "Label for suspended process status"
   },
-  "statusUnknown": "Unknown",
+  "statusUnknown": "未知",
   "@statusUnknown": {
     "description": "Label for unknown process status"
   },
   "@_LOGS_PAGE": {},
-  "copyLogs": "Copy logs",
+  "copyLogs": "复制日志",
   "@copyLogs": {
     "description": "Label for the copy logs button"
   },
-  "logsCopiedNotification": "Logs copied to clipboard",
+  "logsCopiedNotification": "日志已复制到剪切板",
   "@logsCopiedNotification": {
     "description": "Notification displayed when logs are copied to clipboard"
   },
   "@_SETTINGS": {},
-  "donate": "Donate",
+  "donate": "捐赠",
   "@donate": {
     "description": "Label for the donate button"
   },
-  "donateMessage": "If you like this application, please consider donating to support its development.",
+  "donateMessage": "如果您喜欢这个应用程序，请考虑捐赠以支持其开发。",
   "@donateMessage": {
     "description": "Message displayed on the donate page"
   },
-  "madeBy": "Made with 💙 by ",
+  "madeBy": "用 💙 制作，来自： ",
   "@madeBy": {
     "description": "Introduction to application author"
   },
-  "settingsTitle": "Settings",
+  "settingsTitle": "设置",
   "@settingsTitle": {
     "description": "The title of the settings page"
   },
   "@_SETTINGS_BEHAVIOUR_SECTION": {},
-  "behaviourTitle": "Behaviour",
+  "behaviourTitle": "行为",
   "@behaviourTitle": {
     "description": "The title of the behaviour section of the settings page."
   },
-  "autoRefresh": "Auto Refresh",
+  "autoRefresh": "自动刷新",
   "@autoRefresh": {
     "description": "Label for the auto refresh setting"
   },
-  "autoRefreshDescription": "Update window & process info automatically",
+  "autoRefreshDescription": "自动更新窗口和进程信息",
   "@autoRefreshDescription": {
     "description": "Description for the auto refresh setting"
   },
-  "autoRefreshInterval": "Auto Refresh Interval",
+  "autoRefreshInterval": "自动刷新间隔",
   "@autoRefreshInterval": {
     "description": "Label for the auto refresh interval setting"
   },
-  "autoRefreshIntervalAmount": "{interval} seconds",
+  "autoRefreshIntervalAmount": "{interval} 秒",
   "@autoRefreshIntervalAmount": {
     "description": "The amount of time between auto refreshes",
     "placeholders": {
@@ -119,109 +119,109 @@
       }
     }
   },
-  "closeToTray": "Close to tray",
+  "closeToTray": "最小化到托盘",
   "@closeToTray": {
     "description": "Label for the close to tray setting"
   },
-  "minimizeAndRestoreWindows": "Minimize / restore windows",
+  "minimizeAndRestoreWindows": "最小化 / 还原窗口",
   "@minimizeAndRestoreWindows": {
     "description": "Label for the minimize / restore windows setting"
   },
-  "pinSuspendedWindows": "Pin suspended windows",
+  "pinSuspendedWindows": "固定已挂起的窗口",
   "@pinSuspendedWindows": {
     "description": "Whether to pin suspended windows to the top of the window list"
   },
-  "pinSuspendedWindowsTooltip": "If enabled, suspended windows will always be shown at the top of the window list.",
+  "pinSuspendedWindowsTooltip": "如果启用，已挂起的窗口将始终显示在窗口列表的顶部。",
   "@pinSuspendedWindowsTooltip": {
     "description": "Tooltip for the pin suspended windows setting"
   },
-  "showHiddenWindows": "Show hidden windows",
+  "showHiddenWindows": "显示隐藏窗口",
   "@showHiddenWindows": {
     "description": "Label for the show hidden windows setting"
   },
-  "showHiddenWindowsTooltip": "Includes windows from other virtual desktops and special windows that are not normally detected.",
+  "showHiddenWindowsTooltip": "包括来自其他虚拟桌面的窗口以及通常无法检测到的特殊窗口。",
   "@showHiddenWindowsTooltip": {
     "description": "Tooltip for the show hidden windows setting"
   },
   "@_SETTINGS_THEME_SECTION": {},
-  "themeTitle": "Theme",
-  "dark": "Dark",
+  "themeTitle": "主题",
+  "dark": "暗色",
   "@dark": {
     "description": "Label for the dark theme setting"
   },
-  "light": "Light",
+  "light": "亮色",
   "@light": {
     "description": "Label for the light theme setting"
   },
-  "pitchBlack": "Pitch Black",
+  "pitchBlack": "纯黑",
   "@pitchBlack": {
     "description": "Label for the pitch black theme setting"
   },
   "@_SETTINGS_INTEGRATION_SECTION": {},
-  "systemIntegrationTitle": "System Integration",
+  "systemIntegrationTitle": "系统集成",
   "@systemIntegrationTitle": {
     "description": "The title of the system integration section of the settings page."
   },
-  "startAutomatically": "Start automatically at system boot",
+  "startAutomatically": "开机自启",
   "@startAutomatically": {
     "description": "Label for the start automatically at system boot setting"
   },
-  "startInTray": "Start hidden in system tray",
+  "startInTray": "开机后隐藏到系统托盘",
   "@startInTray": {
     "description": "Label for the start hidden in system tray setting"
   },
   "@_SETTINGS_TROUBLESHOOTING_SECTION": {},
-  "troubleshootingTitle": "Troubleshooting",
+  "troubleshootingTitle": "故障排除",
   "@troubleshootingTitle": {
     "description": "The title of the troubleshooting section of the settings page."
   },
-  "logs": "Logs",
+  "logs": "日志",
   "@logs": {
     "description": "Label for the logs button"
   },
-  "verboseLogging": "Verbose logging",
+  "verboseLogging": "详细日志",
   "@verboseLogging": {
     "description": "Label for the verbose logging setting"
   },
   "@_SETTINGS_ABOUT_SECTION": {},
-  "aboutTitle": "About",
+  "aboutTitle": "关于",
   "@aboutTitle": {
     "description": "The title of the about section of the settings page."
   },
-  "version": "Nyrna version",
+  "version": "Nyrna 版本",
   "@version": {
     "description": "Label for the version number"
   },
-  "homepage": "Nyrna homepage",
+  "homepage": "Nyrna 主页",
   "@homepage": {
     "description": "Label for the homepage link"
   },
-  "repository": "GitHub repository",
+  "repository": "GitHub 仓库",
   "@repository": {
     "description": "Label for the repository link"
   },
   "@_HOTKEYS": {},
-  "hotkey": "Hotkey",
+  "hotkey": "快捷键",
   "@hotkey": {
     "description": "Label for hotkey configuration"
   },
-  "recordNewHotkey": "Record a new hotkey",
+  "recordNewHotkey": "录制新快捷键",
   "@recordNewHotkey": {
     "description": "Instruction to record a new hotkey"
   },
-  "appSpecificHotkeys": "App specific hotkeys",
+  "appSpecificHotkeys": "应用专属快捷键",
   "@appSpecificHotkeys": {
     "description": "Title for app specific hotkeys section"
   },
-  "appSpecificHotkeysTooltip": "Hotkeys to directly toggle suspend/resume for specific apps, even when they are not focused.",
+  "appSpecificHotkeysTooltip": "为选择的应用设置挂起/恢复状态的快捷键，即使应用未处于焦点状态也可使用。",
   "@appSpecificHotkeysTooltip": {
     "description": "Tooltip explaining app specific hotkeys"
   },
-  "addAppSpecificHotkey": "Add app specific hotkey",
+  "addAppSpecificHotkey": "添加应用专属快捷键",
   "@addAppSpecificHotkey": {
     "description": "Dialog title for adding app specific hotkey"
   },
-  "selectApp": "Select app",
+  "selectApp": "选择应用",
   "@selectApp": {
     "description": "Hint text for app selection dropdown"
   }
