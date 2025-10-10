@@ -24,6 +24,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get favoriteButtonTooltipRemove => 'Remove from favorites';
 
   @override
+  String get suspendAllInstances => 'Suspend all instances';
+
+  @override
+  String get resumeAllInstances => 'Resume all instances';
+
+  @override
+  String get close => 'Close';
+
+  @override
   String get detailsDialogTitle => 'Details';
 
   @override
@@ -37,6 +46,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get detailsDialogCurrentStatus => 'Current Status';
+
+  @override
+  String get statusNormal => 'Normal';
+
+  @override
+  String get statusSuspended => 'Suspended';
+
+  @override
+  String get statusUnknown => 'Unknown';
 
   @override
   String get copyLogs => 'Copy logs';
@@ -122,6 +140,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logs => 'Logs';
 
   @override
+  String get verboseLogging => 'Verbose logging';
+
+  @override
   String get aboutTitle => 'About';
 
   @override
@@ -132,4 +153,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get repository => 'GitHub repository';
+
+  @override
+  String get hotkey => 'Hotkey';
+
+  @override
+  String get recordNewHotkey => 'Record a new hotkey';
+
+  @override
+  String get appSpecificHotkeys => 'App specific hotkeys';
+
+  @override
+  String get appSpecificHotkeysTooltip =>
+      'Hotkeys to directly toggle suspend/resume for specific apps, even when they are not focused.';
+
+  @override
+  String get addAppSpecificHotkey => 'Add app specific hotkey';
+
+  @override
+  String get selectApp => 'Select app';
+
+  @override
+  String get show => 'Show';
+
+  @override
+  String get hide => 'Hide';
+
+  @override
+  String get resetWindow => 'Reset Window';
+
+  @override
+  String get exit => 'Exit';
 }
