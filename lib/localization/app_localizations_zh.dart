@@ -168,16 +168,4 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get selectApp => '选择应用';
-
-  @override
-  String get show => '显示';
-
-  @override
-  String get hide => '隐藏';
-
-  @override
-  String get resetWindow => '重置窗口';
-
-  @override
-  String get exit => '退出';
 }

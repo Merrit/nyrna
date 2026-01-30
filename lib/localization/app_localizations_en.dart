@@ -172,16 +172,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectApp => 'Select app';
-
-  @override
-  String get show => 'Show';
-
-  @override
-  String get hide => 'Hide';
-
-  @override
-  String get resetWindow => 'Reset Window';
-
-  @override
-  String get exit => 'Exit';
 }

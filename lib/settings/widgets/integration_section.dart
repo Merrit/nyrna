@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../../apps_list/apps_list.dart';
-import '../../hotkey/global/hotkey_service.dart';
 import '../../localization/app_localizations.dart';
 import '../../theme/styles.dart';
 import '../settings.dart';
@@ -134,7 +133,7 @@ class _HotkeyConfigWidget extends StatelessWidget {
         ),
         child: BlocBuilder<SettingsCubit, SettingsState>(
           builder: (context, state) {
-            return Text(state.hotKey.toStringHelper());
+            return Text(state.hotKey.debugName);
           },
         ),
       ),
@@ -262,7 +261,7 @@ class _AppSpecificHotkeys extends StatelessWidget {
                   child: Card(
                     elevation: 2,
                     child: ListTile(
-                      leading: Text(hotkey.hotkey.toStringHelper()),
+                      leading: Text(hotkey.hotkey.debugName),
                       title: Text(hotkey.executable),
                       trailing: ElevatedButton(
                         onPressed: () => settingsCubit.removeAppSpecificHotkey(

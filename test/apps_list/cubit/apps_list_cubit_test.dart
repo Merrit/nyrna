@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/services.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -116,7 +117,7 @@ void main() {
         autoStart: false,
         autoRefresh: false,
         closeToTray: false,
-        hotKey: HotKey(KeyCode.again),
+        hotKey: HotKey(key: PhysicalKeyboardKey.again),
         minimizeWindows: true,
         pinSuspendedWindows: false,
         refreshInterval: 5,

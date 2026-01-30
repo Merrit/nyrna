@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:mockito/annotations.dart';
@@ -99,7 +100,7 @@ void main() {
       expect(state.autoStart, false);
       expect(state.autoRefresh, true);
       expect(state.closeToTray, false);
-      expect(state.hotKey.keyCode, KeyCode.pause);
+      expect(state.hotKey.physicalKey, PhysicalKeyboardKey.pause);
       expect(state.refreshInterval, 5);
       expect(state.showHiddenWindows, false);
       expect(state.startHiddenInTray, false);
@@ -218,7 +219,7 @@ void main() {
 
     group('hotkey:', () {
       test('default hotkey is Pause', () {
-        expect(state.hotKey.keyCode, KeyCode.pause);
+        expect(state.hotKey.physicalKey, PhysicalKeyboardKey.pause);
         expect(state.hotKey.modifiers, null);
       });
 
@@ -228,10 +229,10 @@ void main() {
       });
 
       test('resetting hotkey restores Pause default', () async {
-        await cubit.updateHotkey(HotKey(KeyCode.insert));
-        expect(state.hotKey.keyCode, KeyCode.insert);
+        await cubit.updateHotkey(HotKey(key: PhysicalKeyboardKey.insert));
+        expect(state.hotKey.physicalKey, PhysicalKeyboardKey.insert);
         await cubit.resetHotkey();
-        expect(state.hotKey.keyCode, KeyCode.pause);
+        expect(state.hotKey.physicalKey, PhysicalKeyboardKey.pause);
         verify(storage.deleteValue('hotkey')).called(1);
       });
 
@@ -245,18 +246,18 @@ void main() {
           hotkeyService: hotkeyService,
           storage: storage,
         );
-        expect(state.hotKey.keyCode, KeyCode.insert);
+        expect(state.hotKey.physicalKey, PhysicalKeyboardKey.insert);
         expect(state.hotKey.modifiers?.isEmpty, true);
       });
 
       test('updateHotkey & resetHotkey work', () async {
-        final newHotkey = HotKey(KeyCode.f12);
-        expect(state.hotKey.keyCode, KeyCode.pause);
+        final newHotkey = HotKey(key: PhysicalKeyboardKey.f12);
+        expect(state.hotKey.physicalKey, PhysicalKeyboardKey.pause);
         await cubit.updateHotkey(newHotkey);
-        expect(state.hotKey.keyCode, KeyCode.f12);
+        expect(state.hotKey.physicalKey, PhysicalKeyboardKey.f12);
         verify(hotkeyService.addHotkey(newHotkey)).called(1);
         await cubit.resetHotkey();
-        expect(state.hotKey.keyCode, KeyCode.pause);
+        expect(state.hotKey.physicalKey, PhysicalKeyboardKey.pause);
         verify(storage.deleteValue('hotkey')).called(1);
       });
     });

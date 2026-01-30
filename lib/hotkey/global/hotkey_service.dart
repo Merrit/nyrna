@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 
 import '../../logs/logs.dart';
 
 /// The default hotkey to use if none is set.
-final HotKey defaultHotkey = HotKey(KeyCode.pause);
+final HotKey defaultHotkey = HotKey(key: PhysicalKeyboardKey.pause);
 
 /// Handles global (system-wide) hotkeys.
 class HotkeyService {
@@ -19,34 +20,22 @@ class HotkeyService {
 
   Future<void> addHotkey(HotKey hotKey) async {
     if (hotKeyManager.registeredHotKeyList.contains(hotKey)) {
-      log.w('Hotkey already registered: ${hotKey.toStringHelper()}');
+      log.w('Hotkey already registered: ${hotKey.debugName}');
       return;
     }
 
     await hotKeyManager.register(
       hotKey,
       keyDownHandler: (hotKey) {
-        log.i('Hotkey triggered: ${hotKey.toStringHelper()}');
+        log.i('Hotkey triggered: ${hotKey.debugName}');
         _hotkeyTriggeredStreamController.add(hotKey);
       },
     );
 
-    log.i('Registered hotkey: ${hotKey.toStringHelper()}');
+    log.i('Registered hotkey: ${hotKey.debugName}');
   }
 
   Future<void> removeHotkey(HotKey hotkey) async {
     await hotKeyManager.unregister(hotkey);
-  }
-}
-
-extension HotKeyHelper on HotKey {
-  String toStringHelper() {
-    String hotkeyString = '';
-    for (var modifier in modifiers ?? <KeyModifier>[]) {
-      hotkeyString += '${modifier.keyLabel} + ';
-    }
-
-    hotkeyString += keyCode.keyLabel;
-    return hotkeyString;
   }
 }

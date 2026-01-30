@@ -15,7 +15,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.6.23
+  flutter_markdown_plus: ^1.0.7
   flutter_typeahead: ^5.2.0
   freezed_annotation: ^3.1.0
   helpers:
@@ -27,18 +27,14 @@ dependencies:
   # Using a fork of hotkey_manager to fix a bug.
   # Revert to the original package once the bug is fixed.
   # See: https://github.com/leanflutter/hotkey_manager/pull/32
-  # hotkey_manager: ^0.1.8
-  hotkey_manager:
-    git:
-      url: https://github.com/Merrit/hotkey_manager.git
-      ref: 893e0c7fb880347fa0978787a312629dc874bd2c
+  hotkey_manager: ^0.2.3
 
   http: ^1.1.0
   intl: any
   json_annotation: ^4.8.1
   launch_at_startup: ^0.5.1
   logger: ^2.0.1
-  package_info_plus: ^8.3.0
+  package_info_plus: ^9.0.0
   path_provider: ^2.0.1
   pub_semver: ^2.0.0
   tray_manager: ^0.5.0
@@ -52,6 +48,14 @@ dependencies:
       path: plugins/window_size
       ref: 6c66ad23ee79749f30a8eece542cf54eaf157ed8
   xdg_desktop_portal: ^0.1.12
+
+dependency_overrides:
+  # Fix compile failure: https://github.com/leanflutter/hotkey_manager/pull/66
+  hotkey_manager_linux:
+    git:
+      url: https://github.com/gepbird/hotkey_manager.git
+      path: packages/hotkey_manager_linux
+      ref: 1b31e3ca4ab017ee72f54a7065b2073a88403d61
 
 dev_dependencies:
   build_runner: ^2.4.6
