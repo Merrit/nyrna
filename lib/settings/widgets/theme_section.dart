@@ -24,37 +24,39 @@ class _ThemeChooser extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppLocalizations.of(context)!.themeTitle,
-            ),
-            RadioListTile<AppTheme>(
-              title: Text(
-                AppLocalizations.of(context)!.dark,
+        return RadioGroup<AppTheme>(
+          groupValue: state.appTheme,
+          onChanged: (value) {
+            if (value != null) {
+              themeCubit.changeTheme(value);
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.themeTitle,
               ),
-              groupValue: state.appTheme,
-              value: AppTheme.dark,
-              onChanged: (value) => themeCubit.changeTheme(value!),
-            ),
-            RadioListTile<AppTheme>(
-              title: Text(
-                AppLocalizations.of(context)!.pitchBlack,
+              RadioListTile<AppTheme>(
+                title: Text(
+                  AppLocalizations.of(context)!.dark,
+                ),
+                value: AppTheme.dark,
               ),
-              groupValue: state.appTheme,
-              value: AppTheme.pitchBlack,
-              onChanged: (value) => themeCubit.changeTheme(value!),
-            ),
-            RadioListTile<AppTheme>(
-              title: Text(
-                AppLocalizations.of(context)!.light,
+              RadioListTile<AppTheme>(
+                title: Text(
+                  AppLocalizations.of(context)!.pitchBlack,
+                ),
+                value: AppTheme.pitchBlack,
               ),
-              groupValue: state.appTheme,
-              value: AppTheme.light,
-              onChanged: (value) => themeCubit.changeTheme(value!),
-            ),
-          ],
+              RadioListTile<AppTheme>(
+                title: Text(
+                  AppLocalizations.of(context)!.light,
+                ),
+                value: AppTheme.light,
+              ),
+            ],
+          ),
         );
       },
     );

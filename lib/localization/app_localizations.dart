@@ -419,30 +419,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select app'**
   String get selectApp;
-
-  /// Label for the show window menu item in system tray
-  ///
-  /// In en, this message translates to:
-  /// **'Show'**
-  String get show;
-
-  /// Label for the hide window menu item in system tray
-  ///
-  /// In en, this message translates to:
-  /// **'Hide'**
-  String get hide;
-
-  /// Label for the reset window menu item in system tray
-  ///
-  /// In en, this message translates to:
-  /// **'Reset Window'**
-  String get resetWindow;
-
-  /// Label for the exit menu item in system tray
-  ///
-  /// In en, this message translates to:
-  /// **'Exit'**
-  String get exit;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
