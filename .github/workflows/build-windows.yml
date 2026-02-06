@@ -42,7 +42,37 @@ jobs:
 
       # ----------------------------------- Build ---------------------------- #
 
+      - name: Clean output directory
+        shell: pwsh
+        run: |
+          $outputDir = "output"
+          if (Test-Path $outputDir) {
+            Write-Host "Removing existing output directory..."
+            Remove-Item -LiteralPath $outputDir -Recurse -Force -ErrorAction SilentlyContinue
+            if (Test-Path $outputDir) {
+              Write-Warning "Failed to remove output directory, attempting rename..."
+              $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
+              $archivedDir = "output_locked_$timestamp"
+              Rename-Item -LiteralPath $outputDir -NewName $archivedDir -ErrorAction SilentlyContinue
+            }
+          }
+
+      - name: Ensure vswhere.exe is available
+        shell: pwsh
+        run: |
+          $vswherePath = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+          if (Test-Path $vswherePath) {
+            $vswhereDir = Split-Path -Parent $vswherePath
+            $currentPath = $env:PATH
+            $newPath = "$vswhereDir;$currentPath"
+            Write-Host "Adding vswhere.exe to PATH: $vswhereDir"
+            Write-Host "PATH=$newPath" >> $env:GITHUB_ENV
+          } else {
+            Write-Warning "vswhere.exe not found at expected location: $vswherePath"
+          }
+
       - name: Run build script
+        shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
         run: flutter pub run flutter_app_builder -v --platforms=windows
@@ -57,7 +87,8 @@ jobs:
 
       # MSIX is only for publishing to the Windows Store.
       - name: Remove Windows Store artifact from release files
-        run: rm output/*.msix
+        shell: pwsh
+        run: Remove-Item -Path "output\*.msix" -Force -ErrorAction SilentlyContinue
 
       - name: Upload artifacts to workflow
         uses: actions/upload-artifact@v4
