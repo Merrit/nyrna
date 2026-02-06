@@ -59,31 +59,7 @@ void main() {
   });
 
   testWidgets('Clicking more actions button shows context menu', (tester) async {
-    final appsListCubit = AppsListCubit(
-      appVersion: mockAppVersion,
-      appWindow: mockAppWindow,
-      hotkeyService: mockHotkeyService,
-      nativePlatform: mockNativePlatform,
-      processRepository: mockProcessRepository,
-      settingsCubit: mockSettingsCubit,
-      storage: mockStorageRepository,
-      systemTrayManager: mockSystemTrayManager,
-    );
-
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(
-          body: BlocProvider.value(
-            value: appsListCubit,
-            child: const WindowTile(
-              window: defaultTestWindow,
-            ),
-          ),
-        ),
-      ),
-    );
+    final appsListCubit = await _pumpWindowTile(tester);
 
     await tester.tap(find.byType(MenuAnchor));
     await tester.pumpAndSettle();
@@ -92,4 +68,67 @@ void main() {
 
     await appsListCubit.close();
   });
+
+  testWidgets('PID line respects hideProcessPid flag', (tester) async {
+    when(mockSettingsCubit.state).thenReturn(
+      SettingsState.initial().copyWith(hideProcessPid: true),
+    );
+
+    final appsListCubit = await _pumpWindowTile(tester);
+    expect(find.byKey(const Key('window-tile-pid')), findsNothing);
+    await appsListCubit.close();
+  });
+
+  testWidgets('Executable moves to title when showExecutableFirst is enabled',
+      (tester) async {
+    when(mockSettingsCubit.state).thenReturn(
+      SettingsState.initial().copyWith(showExecutableFirst: true),
+    );
+
+    final appsListCubit = await _pumpWindowTile(tester);
+    expect(
+      find.byKey(const Key('window-tile-executable-first')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('window-tile-executable-subtitle')),
+      findsNothing,
+    );
+    await appsListCubit.close();
+  });
+
+/// Pumps [WindowTile] with the required bloc providers.
+Future<AppsListCubit> _pumpWindowTile(WidgetTester tester) async {
+  final appsListCubit = AppsListCubit(
+    appVersion: mockAppVersion,
+    appWindow: mockAppWindow,
+    hotkeyService: mockHotkeyService,
+    nativePlatform: mockNativePlatform,
+    processRepository: mockProcessRepository,
+    settingsCubit: mockSettingsCubit,
+    storage: mockStorageRepository,
+    systemTrayManager: mockSystemTrayManager,
+  );
+
+  await tester.pumpWidget(
+    MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: mockSettingsCubit),
+            BlocProvider.value(value: appsListCubit),
+          ],
+          child: const WindowTile(
+            window: defaultTestWindow,
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+
+  return appsListCubit;
+}
 }

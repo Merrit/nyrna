@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../localization/app_localizations.dart';
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
+import '../../settings/settings.dart';
 import '../apps_list.dart';
 
 part 'window_tile.freezed.dart';
@@ -46,6 +47,16 @@ class _WindowTileState extends State<WindowTile> {
   Widget build(BuildContext context) {
     Color statusColor;
 
+    final hidePid = context.select(
+      (SettingsCubit cubit) => cubit.state.hideProcessPid,
+    );
+    final showExecutableFirst = context.select(
+      (SettingsCubit cubit) => cubit.state.showExecutableFirst,
+    );
+    final limitWindowTitle = context.select(
+      (SettingsCubit cubit) => cubit.state.limitWindowTitleToOneLine,
+    );
+
     switch (widget.window.process.status) {
       case ProcessStatus.normal:
         statusColor = Colors.green;
@@ -76,14 +87,23 @@ class _WindowTileState extends State<WindowTile> {
                   );
                 },
               ),
-              title: Text(widget.window.title),
-              subtitle: Column(
+              title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('PID: ${widget.window.process.pid}'),
-                  Text(widget.window.process.executable),
+                if (showExecutableFirst)
+                  Text(
+                    widget.window.process.executable,
+                    key: const Key('window-tile-executable-first'),
+                  ),
+                  Text(
+                    widget.window.title,
+                    maxLines: (limitWindowTitle) ? 1 : null,
+                    overflow:
+                        (limitWindowTitle) ? TextOverflow.ellipsis : null,
+                  ),
                 ],
               ),
+              subtitle: _buildSubtitle(hidePid, showExecutableFirst),
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 2,
                 horizontal: 20,
@@ -108,6 +128,33 @@ class _WindowTileState extends State<WindowTile> {
           );
         },
       ),
+    );
+  }
+
+  Widget? _buildSubtitle(bool hidePid, bool showExecutableFirst) {
+    final List<Widget> children = [];
+    if (!hidePid) {
+      children.add(
+        Text(
+          'PID: ${widget.window.process.pid}',
+          key: const Key('window-tile-pid'),
+        ),
+      );
+    }
+    if (!showExecutableFirst) {
+      children.add(
+        Text(
+          widget.window.process.executable,
+          key: const Key('window-tile-executable-subtitle'),
+        ),
+      );
+    }
+
+    if (children.isEmpty) return null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
     );
   }
 }
