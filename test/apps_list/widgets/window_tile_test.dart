@@ -97,6 +97,24 @@ void main() {
     await appsListCubit.close();
   });
 
+  testWidgets('ListTile shrinks inner padding when compactCards is enabled',
+      (tester) async {
+    when(mockSettingsCubit.state).thenReturn(
+      SettingsState.initial().copyWith(compactCards: true),
+    );
+
+    final appsListCubit = await _pumpWindowTile(tester);
+
+    final ListTile listTile = tester.widget(find.byType(ListTile));
+    expect(listTile.dense, true);
+    expect(
+      listTile.contentPadding,
+      const EdgeInsets.symmetric(vertical: 2, horizontal: 18),
+    );
+
+    await appsListCubit.close();
+  });
+
 /// Pumps [WindowTile] with the required bloc providers.
 Future<AppsListCubit> _pumpWindowTile(WidgetTester tester) async {
   final appsListCubit = AppsListCubit(

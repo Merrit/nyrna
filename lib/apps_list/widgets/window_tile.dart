@@ -57,6 +57,9 @@ class _WindowTileState extends State<WindowTile> {
       (SettingsCubit cubit) => cubit.state.limitWindowTitleToOneLine,
     );
 
+    final compactCards = context.select(
+      (SettingsCubit cubit) => cubit.state.compactCards,
+    );
     switch (widget.window.process.status) {
       case ProcessStatus.normal:
         statusColor = Colors.green;
@@ -72,13 +75,16 @@ class _WindowTileState extends State<WindowTile> {
       create: (context) => WindowCubit(widget.window),
       child: Builder(
         builder: (context) {
+          final EdgeInsetsGeometry contentPadding = (compactCards)
+              ? const EdgeInsets.symmetric(vertical: 2, horizontal: 18)
+              : const EdgeInsets.symmetric(vertical: 4, horizontal: 20);
           return Card(
             child: ListTile(
               leading: BlocBuilder<WindowCubit, WindowState>(
                 builder: (context, state) {
                   return Container(
-                    height: 25,
-                    width: 25,
+                    height: (compactCards) ? 22 : 25,
+                    width: (compactCards) ? 22 : 25,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: (loading) ? null : statusColor,
@@ -87,11 +93,12 @@ class _WindowTileState extends State<WindowTile> {
                   );
                 },
               ),
+              dense: compactCards,
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                if (showExecutableFirst)
-                  Text(
+                  if (showExecutableFirst)
+                    Text(
                     widget.window.process.executable,
                     key: const Key('window-tile-executable-first'),
                   ),
@@ -104,10 +111,7 @@ class _WindowTileState extends State<WindowTile> {
                 ],
               ),
               subtitle: _buildSubtitle(hidePid, showExecutableFirst),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 2,
-                horizontal: 20,
-              ),
+              contentPadding: contentPadding,
               trailing: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
