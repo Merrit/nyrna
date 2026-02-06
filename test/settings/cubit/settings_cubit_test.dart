@@ -107,12 +107,14 @@ void main() {
       expect(state.hideProcessPid, false);
       expect(state.showExecutableFirst, false);
       expect(state.limitWindowTitleToOneLine, false);
+      expect(state.compactCards, false);
     });
 
     test('loads stored personalization preferences', () async {
       when(storage.getValue('hideProcessPid')).thenAnswer((_) async => true);
       when(storage.getValue('showExecutableFirst')).thenAnswer((_) async => true);
       when(storage.getValue('limitWindowTitleToOneLine')).thenAnswer((_) async => true);
+      when(storage.getValue('compactCards')).thenAnswer((_) async => true);
 
       cubit = await SettingsCubit.init(
         autostartService: autostartService,
@@ -123,6 +125,7 @@ void main() {
       expect(state.hideProcessPid, true);
       expect(state.showExecutableFirst, true);
       expect(state.limitWindowTitleToOneLine, true);
+      expect(state.compactCards, true);
     });
 
     test('ignoring update works', () async {
@@ -238,6 +241,18 @@ void main() {
         verify(
           storage.saveValue(
             key: 'limitWindowTitleToOneLine',
+            value: true,
+          ),
+        ).called(1);
+      });
+
+      test('compact cards toggle persists', () async {
+        expect(state.compactCards, false);
+        await cubit.updateCompactCards(true);
+        expect(state.compactCards, true);
+        verify(
+          storage.saveValue(
+            key: 'compactCards',
             value: true,
           ),
         ).called(1);

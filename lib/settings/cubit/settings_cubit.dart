@@ -74,6 +74,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         await storage.getValue('showExecutableFirst') ?? false;
     final bool limitWindowTitleToOneLine =
         await storage.getValue('limitWindowTitleToOneLine') ?? false;
+    final bool compactCards = await storage.getValue('compactCards') ?? false;
 
     return SettingsCubit._(
       autostartService,
@@ -93,6 +94,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         hideProcessPid: hideProcessPid,
         showExecutableFirst: showExecutableFirst,
         limitWindowTitleToOneLine: limitWindowTitleToOneLine,
+        compactCards: compactCards,
         working: false,
       ),
     );
@@ -175,6 +177,11 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateLimitWindowTitleToOneLine(bool value) async {
     await _storage.saveValue(key: 'limitWindowTitleToOneLine', value: value);
     emit(state.copyWith(limitWindowTitleToOneLine: value));
+  }
+
+  Future<void> updateCompactCards(bool value) async {
+    await _storage.saveValue(key: 'compactCards', value: value);
+    emit(state.copyWith(compactCards: value));
   }
 
   Future<void> updateStartHiddenInTray(bool value) async {
