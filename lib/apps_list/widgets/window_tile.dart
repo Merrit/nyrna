@@ -62,10 +62,6 @@ class _WindowTileState extends State<WindowTile> {
     final compactCards = context.select(
       (SettingsCubit cubit) => cubit.state.compactCards,
     );
-
-    final compactCards = context.select(
-      (SettingsCubit cubit) => cubit.state.compactCards,
-    );
     switch (widget.window.process.status) {
       case ProcessStatus.normal:
         statusColor = Colors.green;

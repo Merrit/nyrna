@@ -17,18 +17,18 @@ final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.light,
   colorSchemeSeed: nyrnaColor,
-  cardTheme: CardTheme(
+  cardTheme: const CardThemeData(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadii.gentlyRounded,
       side: BorderSide(
-        color: Colors.grey.shade300,
+        color: Color(0xFFD0D6E0),
         width: 1,
       ),
     ),
-    color: const Color(0xFFF4F7FB),
-    elevation: 2,
+    color: Color(0xFFF5F7FB),
+    elevation: 1.5,
   ),
-  scaffoldBackgroundColor: const Color(0xFFF2F4F9),
+  scaffoldBackgroundColor: const Color(0xFFF3F5FA),
 );
 
 /// Perfectly black theme for use on AMOLED screens.
