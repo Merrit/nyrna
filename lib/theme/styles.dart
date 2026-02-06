@@ -5,7 +5,8 @@ abstract class AppColors {
 }
 
 abstract class BorderRadii {
-  static BorderRadius gentlyRounded = BorderRadius.circular(10);
+  // Use a const BorderRadius so it can be used in const theme definitions.
+  static const BorderRadius gentlyRounded = BorderRadius.all(Radius.circular(10));
 }
 
 /// It is required to use the emoji font, otherwise emojis

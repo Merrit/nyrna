@@ -5,6 +5,7 @@
 # Freezed
 *.freezed.dart
 *.g.dart
+output2/
 
 # Generated code
 generated*

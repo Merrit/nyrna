@@ -41,6 +41,11 @@ class _AppState extends State<App> with TrayListener, WindowListener {
   void onWindowClose() {
     final appWindow = context.read<AppWindow>();
 
+    // Persist the latest window size/position so it can be restored
+    // on the next launch, even if the user closes the app shortly
+    // after resizing/moving the window.
+    appWindow.saveWindowSizeAndPosition();
+
     if (settingsCubit.state.closeToTray) {
       appWindow.hide();
     } else {
@@ -60,7 +65,7 @@ class _AppState extends State<App> with TrayListener, WindowListener {
       timer?.cancel();
       timer = null;
       timer = Timer(
-        const Duration(seconds: 5),
+        const Duration(seconds: 2),
         () {
           context.read<AppWindow>().saveWindowSizeAndPosition();
         },
