@@ -114,6 +114,29 @@ class AppLocalizationsIt extends AppLocalizations {
       'Include finestre di altri desktop virtuali e finestre speciali che normalmente non vengono rilevate.';
 
   @override
+  String get personalizationTitle => 'Personalizzazione';
+
+  @override
+  String get hidePidSetting => 'Nascondi PID';
+
+  @override
+  String get hidePidSettingDescription => 'Non mostrare il PID nelle schede dei processi.';
+
+  @override
+  String get exeFirstSetting => 'Nome eseguibile in cima';
+
+  @override
+  String get exeFirstSettingDescription =>
+      'Mostra sempre il nome dell\'eseguibile in alto sulla scheda.';
+
+  @override
+  String get limitWindowTitleToOneLine => 'Limita il titolo a una riga';
+
+  @override
+  String get limitWindowTitleToOneLineDescription =>
+      'Tronca titoli lunghi con ellissi per mantenere un\'altezza uniforme.';
+
+  @override
   String get themeTitle => 'Tema';
 
   @override

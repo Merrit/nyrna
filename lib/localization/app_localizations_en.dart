@@ -113,6 +113,29 @@ class AppLocalizationsEn extends AppLocalizations {
       'Includes windows from other virtual desktops and special windows that are not normally detected.';
 
   @override
+  String get personalizationTitle => 'Personalization';
+
+  @override
+  String get hidePidSetting => 'Hide PID';
+
+  @override
+  String get hidePidSettingDescription => 'Hide the process ID from each process card.';
+
+  @override
+  String get exeFirstSetting => 'Executable at top';
+
+  @override
+  String get exeFirstSettingDescription =>
+      'Display the executable name in place of the title line.';
+
+  @override
+  String get limitWindowTitleToOneLine => 'Limit title to one line';
+
+  @override
+  String get limitWindowTitleToOneLineDescription =>
+      'Truncate long window titles with ellipsis to keep cards uniform.';
+
+  @override
   String get themeTitle => 'Theme';
 
   @override

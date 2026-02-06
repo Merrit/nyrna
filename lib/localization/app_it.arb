@@ -26,6 +26,35 @@
   "minimizeAndRestoreWindows": "Minimizza / ripristina finestre",
   "showHiddenWindows": "Mostra finestre nascoste",
   "showHiddenWindowsTooltip": "Include finestre di altri desktop virtuali e finestre speciali che normalmente non vengono rilevate.",
+  "@_SETTINGS_PERSONALIZATION_SECTION": {},
+  "personalizationTitle": "Personalizzazione",
+  "@personalizationTitle": {
+    "description": "Il titolo della sezione personalizzazione nella pagina delle impostazioni."
+  },
+  "hidePidSetting": "Nascondi PID",
+  "@hidePidSetting": {
+    "description": "Etichetta per l'opzione che nasconde il PID sulle schede dei processi."
+  },
+  "hidePidSettingDescription": "Non mostrare il PID nelle schede dei processi.",
+  "@hidePidSettingDescription": {
+    "description": "Descrizione per l'impostazione per nascondere il PID."
+  },
+  "exeFirstSetting": "Nome eseguibile in cima",
+  "@exeFirstSetting": {
+    "description": "Etichetta per l'opzione che mostra il nome eseguibile in cima."
+  },
+  "exeFirstSettingDescription": "Mostra sempre il nome dell'eseguibile in alto sulla scheda.",
+  "@exeFirstSettingDescription": {
+    "description": "Descrizione per l'impostazione eseguibile in cima."
+  },
+  "limitWindowTitleToOneLine": "Limita il titolo a una riga",
+  "@limitWindowTitleToOneLine": {
+    "description": "Etichetta per l'opzione che tronca titoli lunghi."
+  },
+  "limitWindowTitleToOneLineDescription": "Tronca titoli lunghi con ellissi per mantenere un'altezza uniforme.",
+  "@limitWindowTitleToOneLineDescription": {
+    "description": "Descrizione per l'impostazione di limitazione del titolo."
+  },
   "@_SETTINGS_THEME_SECTION": {},
   "themeTitle": "Tema",
   "dark": "Scuro",

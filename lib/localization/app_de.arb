@@ -26,6 +26,36 @@
   "minimizeAndRestoreWindows": "Minimieren und Wiederherstellen von Fenstern",
   "showHiddenWindows": "Versteckte Fenster anzeigen",
   "showHiddenWindowsTooltip": "Schließen Sie Fenster ein, die normalerweise ausgeblendet sind.",
+
+  "@_SETTINGS_PERSONALIZATION_SECTION": {},
+  "personalizationTitle": "Personalisierung",
+  "@personalizationTitle": {
+    "description": "Die Überschrift der Personalisierungssektion auf der Einstellungsseite."
+  },
+  "hidePidSetting": "PID ausblenden",
+  "@hidePidSetting": {
+    "description": "Beschriftung für die Option zum Ausblenden von PIDs."
+  },
+  "hidePidSettingDescription": "Die Prozess-ID auf der Karte ausblenden.",
+  "@hidePidSettingDescription": {
+    "description": "Beschreibung für die PID-Ausblendungseinstellung."
+  },
+  "exeFirstSetting": "Executable zuerst anzeigen",
+  "@exeFirstSetting": {
+    "description": "Beschriftung für die Option, den Executable-Namen oben zu zeigen."
+  },
+  "exeFirstSettingDescription": "Den exe-Namen immer oben auf der Kachel anzeigen.",
+  "@exeFirstSettingDescription": {
+    "description": "Beschreibung für die Executable-Oben-Einstellung."
+  },
+  "limitWindowTitleToOneLine": "Titel auf eine Zeile begrenzen",
+  "@limitWindowTitleToOneLine": {
+    "description": "Beschriftung für die Option zum Abschneiden langer Titel."
+  },
+  "limitWindowTitleToOneLineDescription": "Lange Titel mit Auslassungspunkten beschneiden, damit Karten gleich bleiben.",
+  "@limitWindowTitleToOneLineDescription": {
+    "description": "Beschreibung für die Einstellung zur Titelbegrenzung."
+  },
   "@_SETTINGS_THEME_SECTION": {},
   "themeTitle": "Thema",
   "dark": "Dunkel",

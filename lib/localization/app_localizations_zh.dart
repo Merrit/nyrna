@@ -110,6 +110,29 @@ class AppLocalizationsZh extends AppLocalizations {
   String get showHiddenWindowsTooltip => '包括来自其他虚拟桌面的窗口以及通常无法检测到的特殊窗口。';
 
   @override
+  String get personalizationTitle => '个性化';
+
+  @override
+  String get hidePidSetting => '隐藏 PID';
+
+  @override
+  String get hidePidSettingDescription => '在卡片上不显示进程 ID。';
+
+  @override
+  String get exeFirstSetting => 'exe 名称置顶';
+
+  @override
+  String get exeFirstSettingDescription =>
+      '始终将可执行文件名显示在卡片最上方。';
+
+  @override
+  String get limitWindowTitleToOneLine => '标题限定一行';
+
+  @override
+  String get limitWindowTitleToOneLineDescription =>
+      '长标题自动截断并加省略号，保持卡片统一高度。';
+
+  @override
   String get themeTitle => '主题';
 
   @override

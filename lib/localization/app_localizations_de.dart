@@ -113,6 +113,29 @@ class AppLocalizationsDe extends AppLocalizations {
       'Schließen Sie Fenster ein, die normalerweise ausgeblendet sind.';
 
   @override
+  String get personalizationTitle => 'Personalisierung';
+
+  @override
+  String get hidePidSetting => 'PID ausblenden';
+
+  @override
+  String get hidePidSettingDescription => 'Die Prozess-ID auf der Karte ausblenden.';
+
+  @override
+  String get exeFirstSetting => 'Executable zuerst anzeigen';
+
+  @override
+  String get exeFirstSettingDescription =>
+      'Den exe-Namen immer oben auf der Kachel anzeigen.';
+
+  @override
+  String get limitWindowTitleToOneLine => 'Titel auf eine Zeile begrenzen';
+
+  @override
+  String get limitWindowTitleToOneLineDescription =>
+      'Lange Titel mit Auslassungspunkten beschneiden, damit Karten gleich bleiben.';
+
+  @override
   String get themeTitle => 'Thema';
 
   @override

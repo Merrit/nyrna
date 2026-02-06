@@ -143,6 +143,35 @@
   "@showHiddenWindowsTooltip": {
     "description": "Tooltip for the show hidden windows setting"
   },
+  "@_SETTINGS_PERSONALIZATION_SECTION": {},
+  "personalizationTitle": "个性化",
+  "@personalizationTitle": {
+    "description": "设置页中“个性化”区域的标题。"
+  },
+  "hidePidSetting": "隐藏 PID",
+  "@hidePidSetting": {
+    "description": "隐藏进程卡片 PID 的开关文案。"
+  },
+  "hidePidSettingDescription": "在卡片上不显示进程 ID。",
+  "@hidePidSettingDescription": {
+    "description": "PID 隐藏设置的说明文案。"
+  },
+  "exeFirstSetting": "exe 名称置顶",
+  "@exeFirstSetting": {
+    "description": "将 exe 名称移动到卡片最上方的开关文案。"
+  },
+  "exeFirstSettingDescription": "始终将可执行文件名显示在卡片最上方。",
+  "@exeFirstSettingDescription": {
+    "description": "exe 名称置顶设置的说明文案。"
+  },
+  "limitWindowTitleToOneLine": "标题限定一行",
+  "@limitWindowTitleToOneLine": {
+    "description": "将窗口标题限制为单行的开关文案。"
+  },
+  "limitWindowTitleToOneLineDescription": "长标题自动截断并加省略号，保持卡片统一高度。",
+  "@limitWindowTitleToOneLineDescription": {
+    "description": "标题限定一行设置的说明文案。"
+  },
   "@_SETTINGS_THEME_SECTION": {},
   "themeTitle": "主题",
   "dark": "暗色",

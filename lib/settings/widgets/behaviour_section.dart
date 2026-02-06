@@ -77,7 +77,6 @@ class BehaviourSection extends StatelessWidget {
           },
         ),
         minimizeAndRestoreTile,
-        const _PinSuspendedWindowsTile(),
         const ShowHiddenTile(),
       ],
     );
@@ -95,44 +94,6 @@ class BehaviourSection extends StatelessWidget {
     final newInterval = int.tryParse(result);
     if (newInterval == null) return;
     await settingsCubit.setRefreshInterval(newInterval);
-  }
-}
-
-/// Toggle pinning suspended windows to the top of the window list.
-class _PinSuspendedWindowsTile extends StatelessWidget {
-  const _PinSuspendedWindowsTile();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SettingsCubit, SettingsState>(
-      builder: (context, state) {
-        return SwitchListTile(
-          title: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: '${AppLocalizations.of(context)!.pinSuspendedWindows}   ',
-                ),
-                WidgetSpan(
-                  child: Tooltip(
-                    message: AppLocalizations.of(context)!.pinSuspendedWindowsTooltip,
-                    child: const Icon(
-                      Icons.help_outline,
-                      size: 18,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          secondary: const Icon(Icons.push_pin_outlined),
-          value: state.pinSuspendedWindows,
-          onChanged: (value) async {
-            await settingsCubit.updatePinSuspendedWindows(value);
-          },
-        );
-      },
-    );
   }
 }
 

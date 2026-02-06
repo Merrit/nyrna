@@ -143,6 +143,35 @@
   "@showHiddenWindowsTooltip": {
     "description": "Tooltip for the show hidden windows setting"
   },
+  "@_SETTINGS_PERSONALIZATION_SECTION": {},
+  "personalizationTitle": "Personalization",
+  "@personalizationTitle": {
+    "description": "The title of the personalization section of the settings page."
+  },
+  "hidePidSetting": "Hide PID",
+  "@hidePidSetting": {
+    "description": "Label for the option that hides PIDs on process cards."
+  },
+  "hidePidSettingDescription": "Hide the process ID from each process card.",
+  "@hidePidSettingDescription": {
+    "description": "Description for the hide PID setting."
+  },
+  "exeFirstSetting": "Executable at top",
+  "@exeFirstSetting": {
+    "description": "Label for the option that shows the executable name above the title."
+  },
+  "exeFirstSettingDescription": "Display the executable name in place of the title line.",
+  "@exeFirstSettingDescription": {
+    "description": "Description for the executable first setting."
+  },
+  "limitWindowTitleToOneLine": "Limit title to one line",
+  "@limitWindowTitleToOneLine": {
+    "description": "Label for the option that truncates long window titles."
+  },
+  "limitWindowTitleToOneLineDescription": "Truncate long window titles with ellipsis to keep cards uniform.",
+  "@limitWindowTitleToOneLineDescription": {
+    "description": "Description for the limit window title setting."
+  },
   "@_SETTINGS_THEME_SECTION": {},
   "themeTitle": "Theme",
   "dark": "Dark",
