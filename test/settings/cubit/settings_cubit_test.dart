@@ -104,6 +104,25 @@ void main() {
       expect(state.refreshInterval, 5);
       expect(state.showHiddenWindows, false);
       expect(state.startHiddenInTray, false);
+      expect(state.hideProcessPid, false);
+      expect(state.showExecutableFirst, false);
+      expect(state.limitWindowTitleToOneLine, false);
+    });
+
+    test('loads stored personalization preferences', () async {
+      when(storage.getValue('hideProcessPid')).thenAnswer((_) async => true);
+      when(storage.getValue('showExecutableFirst')).thenAnswer((_) async => true);
+      when(storage.getValue('limitWindowTitleToOneLine')).thenAnswer((_) async => true);
+
+      cubit = await SettingsCubit.init(
+        autostartService: autostartService,
+        hotkeyService: hotkeyService,
+        storage: storage,
+      );
+
+      expect(state.hideProcessPid, true);
+      expect(state.showExecutableFirst, true);
+      expect(state.limitWindowTitleToOneLine, true);
     });
 
     test('ignoring update works', () async {
@@ -187,6 +206,44 @@ void main() {
       ).called(1);
     });
 
+    group('personalization flags:', () {
+      test('hide PID toggle persists', () async {
+        expect(state.hideProcessPid, false);
+        await cubit.updateHideProcessPid(true);
+        expect(state.hideProcessPid, true);
+        verify(
+          storage.saveValue(
+            key: 'hideProcessPid',
+            value: true,
+          ),
+        ).called(1);
+      });
+
+      test('show executable first toggle persists', () async {
+        expect(state.showExecutableFirst, false);
+        await cubit.updateShowExecutableFirst(true);
+        expect(state.showExecutableFirst, true);
+        verify(
+          storage.saveValue(
+            key: 'showExecutableFirst',
+            value: true,
+          ),
+        ).called(1);
+      });
+
+      test('limit window title toggle persists', () async {
+        expect(state.limitWindowTitleToOneLine, false);
+        await cubit.updateLimitWindowTitleToOneLine(true);
+        expect(state.limitWindowTitleToOneLine, true);
+        verify(
+          storage.saveValue(
+            key: 'limitWindowTitleToOneLine',
+            value: true,
+          ),
+        ).called(1);
+      });
+    });
+
     test('updateStartHiddenInTray works', () async {
       expect(state.startHiddenInTray, false);
       await cubit.updateStartHiddenInTray(true);
@@ -217,7 +274,7 @@ void main() {
       });
     });
 
-    group('hotkey:', () {
+  group('hotkey:', () {
       test('default hotkey is Pause', () {
         expect(state.hotKey.physicalKey, PhysicalKeyboardKey.pause);
         expect(state.hotKey.modifiers, null);
