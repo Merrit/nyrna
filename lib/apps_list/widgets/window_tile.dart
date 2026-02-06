@@ -78,7 +78,11 @@ class _WindowTileState extends State<WindowTile> {
           final EdgeInsetsGeometry contentPadding = (compactCards)
               ? const EdgeInsets.symmetric(vertical: 2, horizontal: 18)
               : const EdgeInsets.symmetric(vertical: 4, horizontal: 20);
+          final EdgeInsetsGeometry cardMargin = (compactCards)
+              ? const EdgeInsets.symmetric(horizontal: 10, vertical: 2)
+              : const EdgeInsets.symmetric(horizontal: 8, vertical: 4);
           return Card(
+            margin: cardMargin,
             child: ListTile(
               leading: BlocBuilder<WindowCubit, WindowState>(
                 builder: (context, state) {
@@ -99,14 +103,13 @@ class _WindowTileState extends State<WindowTile> {
                 children: [
                   if (showExecutableFirst)
                     Text(
-                    widget.window.process.executable,
-                    key: const Key('window-tile-executable-first'),
-                  ),
+                      widget.window.process.executable,
+                      key: const Key('window-tile-executable-first'),
+                    ),
                   Text(
                     widget.window.title,
                     maxLines: (limitWindowTitle) ? 1 : null,
-                    overflow:
-                        (limitWindowTitle) ? TextOverflow.ellipsis : null,
+                    overflow: (limitWindowTitle) ? TextOverflow.ellipsis : null,
                   ),
                 ],
               ),
