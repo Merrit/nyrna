@@ -75,6 +75,9 @@ class SettingsCubit extends Cubit<SettingsState> {
     final bool limitWindowTitleToOneLine =
         await storage.getValue('limitWindowTitleToOneLine') ?? false;
     final bool compactCards = await storage.getValue('compactCards') ?? false;
+    final List<String> hiddenExecutables =
+        (await storage.getValue('hiddenExecutables') as List?)?.cast<String>().toList() ??
+        [];
 
     return SettingsCubit._(
       autostartService,
@@ -95,6 +98,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         showExecutableFirst: showExecutableFirst,
         limitWindowTitleToOneLine: limitWindowTitleToOneLine,
         compactCards: compactCards,
+        hiddenExecutables: hiddenExecutables,
         working: false,
       ),
     );
@@ -182,6 +186,22 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateCompactCards(bool value) async {
     await _storage.saveValue(key: 'compactCards', value: value);
     emit(state.copyWith(compactCards: value));
+  }
+
+  Future<void> hideExecutable(String executable) async {
+    if (state.hiddenExecutables.contains(executable)) return;
+
+    final hiddenExecutables = [...state.hiddenExecutables, executable]..sort();
+    await _storage.saveValue(key: 'hiddenExecutables', value: hiddenExecutables);
+    emit(state.copyWith(hiddenExecutables: hiddenExecutables));
+  }
+
+  Future<void> restoreExecutable(String executable) async {
+    if (!state.hiddenExecutables.contains(executable)) return;
+
+    final hiddenExecutables = [...state.hiddenExecutables]..remove(executable);
+    await _storage.saveValue(key: 'hiddenExecutables', value: hiddenExecutables);
+    emit(state.copyWith(hiddenExecutables: hiddenExecutables));
   }
 
   Future<void> updateStartHiddenInTray(bool value) async {

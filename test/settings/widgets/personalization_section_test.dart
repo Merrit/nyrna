@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:nyrna/localization/app_localizations.dart';
 import 'package:nyrna/settings/settings.dart';
-import 'package:nyrna/settings/widgets/personalization_section.dart';
 
 class MockSettingsCubit extends Mock implements SettingsCubit {}
 
@@ -14,18 +13,29 @@ void main() {
   setUp(() {
     reset(mockSettingsCubit);
     when(mockSettingsCubit.state).thenReturn(SettingsState.initial());
-    when(mockSettingsCubit.updateHideProcessPid(any)).thenAnswer((_) async {});
-    when(mockSettingsCubit.updateShowExecutableFirst(any))
-        .thenAnswer((_) async {});
-    when(mockSettingsCubit.updateLimitWindowTitleToOneLine(any))
-        .thenAnswer((_) async {});
-    when(mockSettingsCubit.updatePinSuspendedWindows(any))
-        .thenAnswer((_) async {});
-    when(mockSettingsCubit.updateCompactCards(any)).thenAnswer((_) async {});
+    when(mockSettingsCubit.updateHideProcessPid(true)).thenAnswer((_) async {});
+    when(mockSettingsCubit.updateHideProcessPid(false)).thenAnswer((_) async {});
+    when(mockSettingsCubit.updateShowExecutableFirst(true)).thenAnswer((_) async {});
+    when(mockSettingsCubit.updateShowExecutableFirst(false)).thenAnswer((_) async {});
+    when(mockSettingsCubit.updateLimitWindowTitleToOneLine(true)).thenAnswer(
+      (_) async {},
+    );
+    when(mockSettingsCubit.updateLimitWindowTitleToOneLine(false)).thenAnswer(
+      (_) async {},
+    );
+    when(mockSettingsCubit.updatePinSuspendedWindows(true)).thenAnswer(
+      (_) async {},
+    );
+    when(mockSettingsCubit.updatePinSuspendedWindows(false)).thenAnswer(
+      (_) async {},
+    );
+    when(mockSettingsCubit.updateCompactCards(true)).thenAnswer((_) async {});
+    when(mockSettingsCubit.updateCompactCards(false)).thenAnswer((_) async {});
   });
 
-  testWidgets('renders personalization tiles and toggles for each setting',
-      (tester) async {
+  testWidgets('renders personalization tiles and toggles for each setting', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,

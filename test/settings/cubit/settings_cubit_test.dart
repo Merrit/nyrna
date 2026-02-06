@@ -108,6 +108,7 @@ void main() {
       expect(state.showExecutableFirst, false);
       expect(state.limitWindowTitleToOneLine, false);
       expect(state.compactCards, false);
+      expect(state.hiddenExecutables, isEmpty);
     });
 
     test('loads stored personalization preferences', () async {
@@ -115,6 +116,9 @@ void main() {
       when(storage.getValue('showExecutableFirst')).thenAnswer((_) async => true);
       when(storage.getValue('limitWindowTitleToOneLine')).thenAnswer((_) async => true);
       when(storage.getValue('compactCards')).thenAnswer((_) async => true);
+      when(storage.getValue('hiddenExecutables')).thenAnswer(
+        (_) async => ['foo.exe'],
+      );
 
       cubit = await SettingsCubit.init(
         autostartService: autostartService,
@@ -126,6 +130,7 @@ void main() {
       expect(state.showExecutableFirst, true);
       expect(state.limitWindowTitleToOneLine, true);
       expect(state.compactCards, true);
+      expect(state.hiddenExecutables, ['foo.exe']);
     });
 
     test('ignoring update works', () async {
@@ -257,6 +262,31 @@ void main() {
           ),
         ).called(1);
       });
+
+      test('hide executable persists', () async {
+        expect(state.hiddenExecutables, isEmpty);
+        await cubit.hideExecutable('foo.exe');
+        expect(state.hiddenExecutables, ['foo.exe']);
+        verify(
+          storage.saveValue(
+            key: 'hiddenExecutables',
+            value: ['foo.exe'],
+          ),
+        ).called(1);
+      });
+
+      test('restore executable persists', () async {
+        await cubit.hideExecutable('foo.exe');
+        expect(state.hiddenExecutables, ['foo.exe']);
+        await cubit.restoreExecutable('foo.exe');
+        expect(state.hiddenExecutables, isEmpty);
+        verify(
+          storage.saveValue(
+            key: 'hiddenExecutables',
+            value: [],
+          ),
+        ).called(1);
+      });
     });
 
     test('updateStartHiddenInTray works', () async {
@@ -289,7 +319,7 @@ void main() {
       });
     });
 
-  group('hotkey:', () {
+    group('hotkey:', () {
       test('default hotkey is Pause', () {
         expect(state.hotKey.physicalKey, PhysicalKeyboardKey.pause);
         expect(state.hotKey.modifiers, null);

@@ -35,6 +35,7 @@ abstract class SettingsState with _$SettingsState {
     required bool showExecutableFirst,
     required bool limitWindowTitleToOneLine,
     required bool compactCards,
+    required List<String> hiddenExecutables,
 
     /// True if the app is currently working on something and a loading
     /// indicator should be shown.
@@ -56,6 +57,7 @@ abstract class SettingsState with _$SettingsState {
     showExecutableFirst: false,
     limitWindowTitleToOneLine: false,
     compactCards: false,
+    hiddenExecutables: const [],
     working: false,
   );
 }

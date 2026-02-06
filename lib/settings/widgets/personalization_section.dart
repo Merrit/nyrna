@@ -23,6 +23,7 @@ class PersonalizationSection extends StatelessWidget {
         const _LimitWindowTitleTile(),
         const _CompactModeTile(),
         const _PinSuspendedWindowsTile(),
+        const _HiddenProcessesSection(),
       ],
     );
   }
@@ -70,9 +71,7 @@ class _ExecutableFirstTile extends StatelessWidget {
           secondary: const Icon(Icons.vertical_align_top),
           value: state.showExecutableFirst,
           onChanged: (value) async {
-            await context
-                .read<SettingsCubit>()
-                .updateShowExecutableFirst(value);
+            await context.read<SettingsCubit>().updateShowExecutableFirst(value);
           },
         );
       },
@@ -97,9 +96,7 @@ class _LimitWindowTitleTile extends StatelessWidget {
           secondary: const Icon(Icons.wrap_text),
           value: state.limitWindowTitleToOneLine,
           onChanged: (value) async {
-            await context
-                .read<SettingsCubit>()
-                .updateLimitWindowTitleToOneLine(value);
+            await context.read<SettingsCubit>().updateLimitWindowTitleToOneLine(value);
           },
         );
       },
@@ -148,8 +145,7 @@ class _PinSuspendedWindowsTile extends StatelessWidget {
                 ),
                 WidgetSpan(
                   child: Tooltip(
-                    message:
-                        AppLocalizations.of(context)!.pinSuspendedWindowsTooltip,
+                    message: AppLocalizations.of(context)!.pinSuspendedWindowsTooltip,
                     child: const Icon(
                       Icons.help_outline,
                       size: 18,
@@ -164,6 +160,45 @@ class _PinSuspendedWindowsTile extends StatelessWidget {
           onChanged: (value) async {
             await context.read<SettingsCubit>().updatePinSuspendedWindows(value);
           },
+        );
+      },
+    );
+  }
+}
+
+class _HiddenProcessesSection extends StatelessWidget {
+  const _HiddenProcessesSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        if (state.hiddenExecutables.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 16, top: 8),
+              child: Text(
+                'Hidden processes',
+              ),
+            ),
+            ...state.hiddenExecutables.map(
+              (executable) => ListTile(
+                dense: true,
+                title: Text(executable),
+                trailing: TextButton(
+                  onPressed: () async {
+                    await context.read<SettingsCubit>().restoreExecutable(
+                      executable,
+                    );
+                  },
+                  child: const Text('Restore'),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );
