@@ -132,6 +132,17 @@ void main() {
     await appsListCubit.close();
   });
 
+  testWidgets('compact mode title uses tighter font size', (tester) async {
+    when(mockSettingsCubit.state).thenReturn(
+      SettingsState.initial().copyWith(compactCards: true),
+    );
+
+    final appsListCubit = await _pumpWindowTile(tester);
+    final Text titleText = tester.widget(find.byKey(const Key('window-tile-title')));
+    expect(titleText.style?.fontSize, 14.2);
+    await appsListCubit.close();
+  });
+
   /// Pumps [WindowTile] with the required bloc providers.
   Future<AppsListCubit> _pumpWindowTile(WidgetTester tester) async {
     final appsListCubit = AppsListCubit(

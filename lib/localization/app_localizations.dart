@@ -300,55 +300,55 @@ abstract class AppLocalizations {
   /// **'Includes windows from other virtual desktops and special windows that are not normally detected.'**
   String get showHiddenWindowsTooltip;
 
-  /// The title of the personalization section in settings
+  /// The title of the personalization section of the settings page.
   ///
   /// In en, this message translates to:
   /// **'Personalization'**
   String get personalizationTitle;
 
-  /// Label for hiding PIDs on process cards
+  /// Label for the option that hides PIDs on process cards.
   ///
   /// In en, this message translates to:
   /// **'Hide PID'**
   String get hidePidSetting;
 
-  /// Description for hiding PIDs on process cards
+  /// Description for the hide PID setting.
   ///
   /// In en, this message translates to:
   /// **'Hide the process ID from each process card.'**
   String get hidePidSettingDescription;
 
-  /// Label for showing executable name above the title
+  /// Label for the option that shows the executable name above the title.
   ///
   /// In en, this message translates to:
   /// **'Executable at top'**
   String get exeFirstSetting;
 
-  /// Description for showing executable name above the title
+  /// Description for the executable first setting.
   ///
   /// In en, this message translates to:
   /// **'Display the executable name in place of the title line.'**
   String get exeFirstSettingDescription;
 
-  /// Label for limiting window titles to one line
+  /// Label for the option that truncates long window titles.
   ///
   /// In en, this message translates to:
   /// **'Limit title to one line'**
   String get limitWindowTitleToOneLine;
 
-  /// Description for limiting window titles to one line
+  /// Description for the limit window title setting.
   ///
   /// In en, this message translates to:
   /// **'Truncate long window titles with ellipsis to keep cards uniform.'**
   String get limitWindowTitleToOneLineDescription;
 
-  /// Label for the compact card padding option
+  /// Label for the option that tightens card padding.
   ///
   /// In en, this message translates to:
   /// **'Compact mode'**
   String get compactModeTitle;
 
-  /// Description for the compact card padding option
+  /// Description for the compact mode setting.
   ///
   /// In en, this message translates to:
   /// **'Reduce padding inside each process card for a denser list.'**

@@ -122,22 +122,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exeFirstSetting => 'exe 名称置顶';
 
   @override
-  String get exeFirstSettingDescription =>
-      '始终将可执行文件名显示在卡片最上方。';
+  String get exeFirstSettingDescription => '始终将可执行文件名显示在卡片最上方。';
 
   @override
   String get limitWindowTitleToOneLine => '标题限定一行';
 
   @override
-  String get limitWindowTitleToOneLineDescription =>
-      '长标题自动截断并加省略号，保持卡片统一高度。';
+  String get limitWindowTitleToOneLineDescription => '长标题自动截断并加省略号，保持卡片统一高度。';
 
   @override
   String get compactModeTitle => '紧凑模式';
 
   @override
-  String get compactModeDescription =>
-      '减小每张进程卡片内部 padding，以便列表更密集。';
+  String get compactModeDescription => '减小每张进程卡片内部 padding，以便列表更密集。';
 
   @override
   String get themeTitle => '主题';

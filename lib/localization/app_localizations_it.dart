@@ -120,7 +120,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get hidePidSetting => 'Nascondi PID';
 
   @override
-  String get hidePidSettingDescription => 'Non mostrare il PID nelle schede dei processi.';
+  String get hidePidSettingDescription =>
+      'Non mostrare il PID nelle schede dei processi.';
 
   @override
   String get exeFirstSetting => 'Nome eseguibile in cima';

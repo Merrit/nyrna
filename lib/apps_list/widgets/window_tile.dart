@@ -6,6 +6,7 @@ import '../../localization/app_localizations.dart';
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
 import '../../settings/settings.dart';
+import '../../theme/styles.dart';
 import '../apps_list.dart';
 
 part 'window_tile.freezed.dart';
@@ -26,6 +27,8 @@ abstract class WindowState with _$WindowState {
     required Window window,
   }) = _WindowState;
 }
+
+const Key _windowTitleKey = Key('window-tile-title');
 
 /// Represents a visible window on the desktop, running state and actions.
 class WindowTile extends StatefulWidget {
@@ -56,6 +59,9 @@ class _WindowTileState extends State<WindowTile> {
     final limitWindowTitle = context.select(
       (SettingsCubit cubit) => cubit.state.limitWindowTitleToOneLine,
     );
+    final compactCards = context.select(
+      (SettingsCubit cubit) => cubit.state.compactCards,
+    );
 
     final compactCards = context.select(
       (SettingsCubit cubit) => cubit.state.compactCards,
@@ -81,9 +87,30 @@ class _WindowTileState extends State<WindowTile> {
           final EdgeInsetsGeometry cardMargin = (compactCards)
               ? const EdgeInsets.symmetric(horizontal: 10, vertical: 2)
               : const EdgeInsets.symmetric(horizontal: 8, vertical: 4);
+          final double titleFontSize = compactCards ? 14.2 : 15;
+          final double subtitleFontSize = compactCards ? 12.8 : 13.5;
+          final double rowSpacing = compactCards ? 2 : 4;
+          final TextTheme textTheme = Theme.of(context).textTheme;
+          final TextStyle titleStyle = (textTheme.titleMedium ?? const TextStyle())
+              .copyWith(fontSize: titleFontSize);
+          final TextStyle subtitleStyle = (textTheme.bodyMedium ?? const TextStyle())
+              .copyWith(fontSize: subtitleFontSize);
+          final Color borderColor = compactCards
+              ? Theme.of(context).colorScheme.outlineVariant
+              : Theme.of(context).colorScheme.outline;
           return Card(
             margin: cardMargin,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadii.gentlyRounded,
+              side: BorderSide(
+                color: borderColor,
+                width: compactCards ? 0.9 : 1,
+              ),
+            ),
             child: ListTile(
+              visualDensity: compactCards
+                  ? const VisualDensity(vertical: -2, horizontal: -1)
+                  : VisualDensity.standard,
               leading: BlocBuilder<WindowCubit, WindowState>(
                 builder: (context, state) {
                   return Container(
@@ -105,15 +132,27 @@ class _WindowTileState extends State<WindowTile> {
                     Text(
                       widget.window.process.executable,
                       key: const Key('window-tile-executable-first'),
+                      style: subtitleStyle,
+                    ),
+                  if (showExecutableFirst)
+                    SizedBox(
+                      height: rowSpacing,
                     ),
                   Text(
                     widget.window.title,
+                    key: _windowTitleKey,
+                    style: titleStyle,
                     maxLines: (limitWindowTitle) ? 1 : null,
                     overflow: (limitWindowTitle) ? TextOverflow.ellipsis : null,
                   ),
                 ],
               ),
-              subtitle: _buildSubtitle(hidePid, showExecutableFirst),
+              subtitle: _buildSubtitle(
+                hidePid,
+                showExecutableFirst,
+                subtitleStyle,
+                rowSpacing,
+              ),
               contentPadding: contentPadding,
               trailing: const Row(
                 mainAxisSize: MainAxisSize.min,
@@ -138,21 +177,31 @@ class _WindowTileState extends State<WindowTile> {
     );
   }
 
-  Widget? _buildSubtitle(bool hidePid, bool showExecutableFirst) {
+  Widget? _buildSubtitle(
+    bool hidePid,
+    bool showExecutableFirst,
+    TextStyle textStyle,
+    double spacing,
+  ) {
     final List<Widget> children = [];
     if (!hidePid) {
       children.add(
         Text(
           'PID: ${widget.window.process.pid}',
           key: const Key('window-tile-pid'),
+          style: textStyle,
         ),
       );
+    }
+    if (!hidePid && !showExecutableFirst) {
+      children.add(SizedBox(height: spacing));
     }
     if (!showExecutableFirst) {
       children.add(
         Text(
           widget.window.process.executable,
           key: const Key('window-tile-executable-subtitle'),
+          style: textStyle,
         ),
       );
     }
