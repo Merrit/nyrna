@@ -45,16 +45,6 @@ const defaultTestWindow = Window(
   title: 'Home - KDE Community',
 );
 
-const secondFirefoxWindow = Window(
-  id: 548332,
-  process: Process(
-    executable: 'firefox-bin',
-    pid: 8749656,
-    status: ProcessStatus.normal,
-  ),
-  title: 'KDE Discuss - Firefox',
-);
-
 void main() {
   setUp(() {
     reset(mockAppVersion);
@@ -153,101 +143,38 @@ void main() {
     await appsListCubit.close();
   });
 
-  testWidgets('only first same-executable card keeps primary toggle', (
-    tester,
-  ) async {
-    when(
-      mockNativePlatform.windows(showHidden: anyNamed('showHidden')),
-    ).thenAnswer((_) async => [defaultTestWindow, secondFirefoxWindow]);
-
-    final appsListCubit = await _pumpWindowTiles(
-      tester,
-      const [defaultTestWindow, secondFirefoxWindow],
+  /// Pumps [WindowTile] with the required bloc providers.
+  Future<AppsListCubit> _pumpWindowTile(WidgetTester tester) async {
+    final appsListCubit = AppsListCubit(
+      appVersion: mockAppVersion,
+      appWindow: mockAppWindow,
+      hotkeyService: mockHotkeyService,
+      nativePlatform: mockNativePlatform,
+      processRepository: mockProcessRepository,
+      settingsCubit: mockSettingsCubit,
+      storage: mockStorageRepository,
+      systemTrayManager: mockSystemTrayManager,
     );
 
-    final tiles = tester.widgetList<ListTile>(find.byType(ListTile)).toList();
-    expect(tiles.length, 2);
-    expect(tiles.first.onTap, isNotNull);
-    expect(tiles.last.onTap, isNull);
-
-    await appsListCubit.close();
-  });
-}
-
-/// Pumps [WindowTile] with the required bloc providers.
-Future<AppsListCubit> _pumpWindowTile(WidgetTester tester) async {
-  final appsListCubit = AppsListCubit(
-    appVersion: mockAppVersion,
-    appWindow: mockAppWindow,
-    hotkeyService: mockHotkeyService,
-    nativePlatform: mockNativePlatform,
-    processRepository: mockProcessRepository,
-    settingsCubit: mockSettingsCubit,
-    storage: mockStorageRepository,
-    systemTrayManager: mockSystemTrayManager,
-  );
-
-  await tester.pumpWidget(
-    MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Scaffold(
-        body: MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: mockSettingsCubit),
-            BlocProvider.value(value: appsListCubit),
-          ],
-          child: const WindowTile(
-            window: defaultTestWindow,
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: mockSettingsCubit),
+              BlocProvider.value(value: appsListCubit),
+            ],
+            child: const WindowTile(
+              window: defaultTestWindow,
+            ),
           ),
         ),
       ),
-    ),
-  );
-  await tester.pumpAndSettle();
+    );
+    await tester.pumpAndSettle();
 
-  return appsListCubit;
-}
-
-Future<AppsListCubit> _pumpWindowTiles(
-  WidgetTester tester,
-  List<Window> windows,
-) async {
-  final appsListCubit = AppsListCubit(
-    appVersion: mockAppVersion,
-    appWindow: mockAppWindow,
-    hotkeyService: mockHotkeyService,
-    nativePlatform: mockNativePlatform,
-    processRepository: mockProcessRepository,
-    settingsCubit: mockSettingsCubit,
-    storage: mockStorageRepository,
-    systemTrayManager: mockSystemTrayManager,
-  );
-
-  await tester.pumpWidget(
-    MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Scaffold(
-        body: MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: mockSettingsCubit),
-            BlocProvider.value(value: appsListCubit),
-          ],
-          child: Column(
-            children: windows
-                .map(
-                  (window) => WindowTile(
-                    window: window,
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-      ),
-    ),
-  );
-  await tester.pumpAndSettle();
-
-  return appsListCubit;
+    return appsListCubit;
+  }
 }

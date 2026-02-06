@@ -123,11 +123,6 @@ void main() {
         refreshInterval: 5,
         showHiddenWindows: false,
         startHiddenInTray: false,
-        hideProcessPid: false,
-        showExecutableFirst: false,
-        limitWindowTitleToOneLine: false,
-        compactCards: false,
-        hiddenExecutables: const [],
         working: false,
       ),
     );
@@ -254,36 +249,6 @@ void main() {
       expect(windows[0].process.executable, 'ark');
       expect(windows[1].process.executable, 'evince');
       expect(windows[2].process.executable, 'kate');
-    });
-
-    test('hidden executables are filtered from list', () async {
-      when(settingsCubit.state).thenReturn(
-        SettingsState(
-          appSpecificHotKeys: [],
-          autoStart: false,
-          autoRefresh: false,
-          closeToTray: false,
-          hotKey: HotKey(key: PhysicalKeyboardKey.again),
-          minimizeWindows: true,
-          pinSuspendedWindows: false,
-          refreshInterval: 5,
-          showHiddenWindows: false,
-          startHiddenInTray: false,
-          hideProcessPid: false,
-          showExecutableFirst: false,
-          limitWindowTitleToOneLine: false,
-          compactCards: false,
-          hiddenExecutables: const ['mspaint.exe'],
-          working: false,
-        ),
-      );
-      when(
-        nativePlatform.windows(showHidden: anyNamed('showHidden')),
-      ).thenAnswer((_) async => [msPaintWindow, mpvWindow1]);
-
-      await cubit.manualRefresh();
-      expect(state.windows.length, 1);
-      expect(state.windows.first.process.executable, 'mpv');
     });
 
     group('toggle:', () {
