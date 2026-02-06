@@ -72,6 +72,11 @@ class AppsListCubit extends Cubit<AppsListState> {
     // Filter out windows that are likely not desired or workable,
     // for example the root window, unknown (0) pid, etc.
     windows.removeWhere((element) => element.process.pid < 10);
+    windows.removeWhere(
+      (element) => _settingsCubit.state.hiddenExecutables.contains(
+        element.process.executable,
+      ),
+    );
 
     // Update windows with favorite data.
     windows = await _windowsWithFavoriteData(windows);

@@ -252,6 +252,23 @@ class _DetailsButton extends StatelessWidget {
           child: Text(toggleAllLabel),
           onPressed: () => context.read<AppsListCubit>().toggleAll(window),
         );
+        final hideProcessButton = MenuItemButton(
+          child: const Text('Hide process'),
+          onPressed: () async {
+            final settingsCubit = context.read<SettingsCubit>();
+            final appsListCubit = context.read<AppsListCubit>();
+            final messenger = ScaffoldMessenger.of(context);
+            await settingsCubit.hideExecutable(
+              window.process.executable,
+            );
+            await appsListCubit.manualRefresh();
+            messenger.showSnackBar(
+              SnackBar(
+                content: Text('Hidden: ${window.process.executable}'),
+              ),
+            );
+          },
+        );
 
         final Widget moreActionsButton = MenuAnchor(
           builder: (context, controller, child) {
@@ -279,6 +296,7 @@ class _DetailsButton extends StatelessWidget {
               },
             ),
             toggleAllButton,
+            hideProcessButton,
           ],
         );
 
