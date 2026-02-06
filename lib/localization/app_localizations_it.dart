@@ -137,6 +137,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Tronca titoli lunghi con ellissi per mantenere un\'altezza uniforme.';
 
   @override
+  String get compactModeTitle => 'Modalità compatta';
+
+  @override
+  String get compactModeDescription =>
+      'Riduce gli spazi interni ad ogni scheda processo per una lista più densa.';
+
+  @override
   String get themeTitle => 'Tema';
 
   @override

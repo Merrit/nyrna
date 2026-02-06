@@ -133,6 +133,13 @@ class AppLocalizationsZh extends AppLocalizations {
       '长标题自动截断并加省略号，保持卡片统一高度。';
 
   @override
+  String get compactModeTitle => '紧凑模式';
+
+  @override
+  String get compactModeDescription =>
+      '减小每张进程卡片内部 padding，以便列表更密集。';
+
+  @override
   String get themeTitle => '主题';
 
   @override

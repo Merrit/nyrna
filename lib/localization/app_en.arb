@@ -172,6 +172,14 @@
   "@limitWindowTitleToOneLineDescription": {
     "description": "Description for the limit window title setting."
   },
+  "compactModeTitle": "Compact mode",
+  "@compactModeTitle": {
+    "description": "Label for the option that tightens card padding."
+  },
+  "compactModeDescription": "Reduce padding inside each process card for a denser list.",
+  "@compactModeDescription": {
+    "description": "Description for the compact mode setting."
+  },
   "@_SETTINGS_THEME_SECTION": {},
   "themeTitle": "Theme",
   "dark": "Dark",

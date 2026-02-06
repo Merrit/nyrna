@@ -21,6 +21,7 @@ class PersonalizationSection extends StatelessWidget {
         const _HidePidTile(),
         const _ExecutableFirstTile(),
         const _LimitWindowTitleTile(),
+        const _CompactModeTile(),
         const _PinSuspendedWindowsTile(),
       ],
     );
@@ -99,6 +100,31 @@ class _LimitWindowTitleTile extends StatelessWidget {
             await context
                 .read<SettingsCubit>()
                 .updateLimitWindowTitleToOneLine(value);
+          },
+        );
+      },
+    );
+  }
+}
+
+class _CompactModeTile extends StatelessWidget {
+  const _CompactModeTile();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        return SwitchListTile(
+          title: Text(
+            AppLocalizations.of(context)!.compactModeTitle,
+          ),
+          subtitle: Text(
+            AppLocalizations.of(context)!.compactModeDescription,
+          ),
+          secondary: const Icon(Icons.compress),
+          value: state.compactCards,
+          onChanged: (value) async {
+            await context.read<SettingsCubit>().updateCompactCards(value);
           },
         );
       },

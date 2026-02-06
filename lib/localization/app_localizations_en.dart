@@ -136,6 +136,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Truncate long window titles with ellipsis to keep cards uniform.';
 
   @override
+  String get compactModeTitle => 'Compact mode';
+
+  @override
+  String get compactModeDescription =>
+      'Reduce padding inside each process card for a denser list.';
+
+  @override
   String get themeTitle => 'Theme';
 
   @override

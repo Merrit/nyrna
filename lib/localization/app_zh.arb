@@ -172,6 +172,14 @@
   "@limitWindowTitleToOneLineDescription": {
     "description": "标题限定一行设置的说明文案。"
   },
+  "compactModeTitle": "紧凑模式",
+  "@compactModeTitle": {
+    "description": "用于减少卡片内部间距的开关文案。"
+  },
+  "compactModeDescription": "减小每张进程卡片内部 padding，以便列表更密集。",
+  "@compactModeDescription": {
+    "description": "紧凑模式设置的说明文案。"
+  },
   "@_SETTINGS_THEME_SECTION": {},
   "themeTitle": "主题",
   "dark": "暗色",

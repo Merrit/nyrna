@@ -342,6 +342,18 @@ abstract class AppLocalizations {
   /// **'Truncate long window titles with ellipsis to keep cards uniform.'**
   String get limitWindowTitleToOneLineDescription;
 
+  /// Label for the compact card padding option
+  ///
+  /// In en, this message translates to:
+  /// **'Compact mode'**
+  String get compactModeTitle;
+
+  /// Description for the compact card padding option
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce padding inside each process card for a denser list.'**
+  String get compactModeDescription;
+
   /// No description provided for @themeTitle.
   ///
   /// In en, this message translates to:

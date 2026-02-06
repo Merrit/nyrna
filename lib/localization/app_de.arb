@@ -56,6 +56,14 @@
   "@limitWindowTitleToOneLineDescription": {
     "description": "Beschreibung für die Einstellung zur Titelbegrenzung."
   },
+  "compactModeTitle": "Kompakter Modus",
+  "@compactModeTitle": {
+    "description": "Beschriftung für die Einstellung, die Kartenfüllung reduziert."
+  },
+  "compactModeDescription": "Reduziert den Innenabstand jedes Prozesskarten-Eintrags für dichtere Listen.",
+  "@compactModeDescription": {
+    "description": "Beschreibung der kompakten Karten-Einstellung."
+  },
   "@_SETTINGS_THEME_SECTION": {},
   "themeTitle": "Thema",
   "dark": "Dunkel",

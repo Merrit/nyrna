@@ -21,6 +21,7 @@ void main() {
         .thenAnswer((_) async {});
     when(mockSettingsCubit.updatePinSuspendedWindows(any))
         .thenAnswer((_) async {});
+    when(mockSettingsCubit.updateCompactCards(any)).thenAnswer((_) async {});
   });
 
   testWidgets('renders personalization tiles and toggles for each setting',
@@ -41,6 +42,7 @@ void main() {
     expect(find.text('Hide PID'), findsOneWidget);
     expect(find.text('Executable at top'), findsOneWidget);
     expect(find.text('Limit title to one line'), findsOneWidget);
+    expect(find.text('Compact mode'), findsOneWidget);
     expect(find.text('Pin suspended windows'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(SwitchListTile, 'Hide PID'));
@@ -58,5 +60,9 @@ void main() {
     await tester.tap(find.widgetWithText(SwitchListTile, 'Pin suspended windows'));
     await tester.pumpAndSettle();
     verify(mockSettingsCubit.updatePinSuspendedWindows(true)).called(1);
+
+    await tester.tap(find.widgetWithText(SwitchListTile, 'Compact mode'));
+    await tester.pumpAndSettle();
+    verify(mockSettingsCubit.updateCompactCards(true)).called(1);
   });
 }

@@ -136,6 +136,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Lange Titel mit Auslassungspunkten beschneiden, damit Karten gleich bleiben.';
 
   @override
+  String get compactModeTitle => 'Kompakter Modus';
+
+  @override
+  String get compactModeDescription =>
+      'Reduziert den Innenabstand jedes Prozesskarten-Eintrags für dichtere Listen.';
+
+  @override
   String get themeTitle => 'Thema';
 
   @override

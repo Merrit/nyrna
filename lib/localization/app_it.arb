@@ -55,6 +55,14 @@
   "@limitWindowTitleToOneLineDescription": {
     "description": "Descrizione per l'impostazione di limitazione del titolo."
   },
+  "compactModeTitle": "Modalità compatta",
+  "@compactModeTitle": {
+    "description": "Etichetta per la modalità che riduce il padding delle schede."
+  },
+  "compactModeDescription": "Riduce gli spazi interni ad ogni scheda processo per una lista più densa.",
+  "@compactModeDescription": {
+    "description": "Descrizione della modalità compatta."
+  },
   "@_SETTINGS_THEME_SECTION": {},
   "themeTitle": "Tema",
   "dark": "Scuro",
