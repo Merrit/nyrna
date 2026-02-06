@@ -164,7 +164,7 @@ class _WindowTileState extends State<WindowTile> {
                       log.i('WindowTile clicked: ${widget.window}');
 
                       setState(() => loading = true);
-                      await context.read<AppsListCubit>().toggle(widget.window);
+                      await context.read<AppsListCubit>().toggleAll(widget.window);
 
                       if (!mounted) return;
                       setState(() => loading = false);
