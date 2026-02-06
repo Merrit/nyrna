@@ -49,6 +49,7 @@ class _WindowTileState extends State<WindowTile> {
   @override
   Widget build(BuildContext context) {
     Color statusColor;
+    final allWindows = context.select((AppsListCubit cubit) => cubit.state.windows);
 
     final hidePid = context.select(
       (SettingsCubit cubit) => cubit.state.hideProcessPid,
@@ -72,6 +73,7 @@ class _WindowTileState extends State<WindowTile> {
       case ProcessStatus.unknown:
         statusColor = Colors.grey;
     }
+    final isPrimaryToggle = _isPrimaryToggleCard(allWindows, widget.window);
 
     return BlocProvider(
       create: (context) => WindowCubit(widget.window),
@@ -157,20 +159,31 @@ class _WindowTileState extends State<WindowTile> {
                   _DetailsButton(),
                 ],
               ),
-              onTap: () async {
-                log.i('WindowTile clicked: ${widget.window}');
+              onTap: isPrimaryToggle
+                  ? () async {
+                      log.i('WindowTile clicked: ${widget.window}');
 
-                setState(() => loading = true);
-                await context.read<AppsListCubit>().toggle(widget.window);
+                      setState(() => loading = true);
+                      await context.read<AppsListCubit>().toggleAll(widget.window);
 
-                if (!mounted) return;
-                setState(() => loading = false);
-              },
+                      if (!mounted) return;
+                      setState(() => loading = false);
+                    }
+                  : null,
             ),
           );
         },
       ),
     );
+  }
+
+  bool _isPrimaryToggleCard(List<Window> windows, Window currentWindow) {
+    for (final window in windows) {
+      if (window.process.executable == currentWindow.process.executable) {
+        return window.id == currentWindow.id;
+      }
+    }
+    return true;
   }
 
   Widget? _buildSubtitle(
@@ -252,6 +265,23 @@ class _DetailsButton extends StatelessWidget {
           child: Text(toggleAllLabel),
           onPressed: () => context.read<AppsListCubit>().toggleAll(window),
         );
+        final hideProcessButton = MenuItemButton(
+          child: const Text('Hide process'),
+          onPressed: () async {
+            final settingsCubit = context.read<SettingsCubit>();
+            final appsListCubit = context.read<AppsListCubit>();
+            final messenger = ScaffoldMessenger.of(context);
+            await settingsCubit.hideExecutable(
+              window.process.executable,
+            );
+            await appsListCubit.manualRefresh();
+            messenger.showSnackBar(
+              SnackBar(
+                content: Text('Hidden: ${window.process.executable}'),
+              ),
+            );
+          },
+        );
 
         final Widget moreActionsButton = MenuAnchor(
           builder: (context, controller, child) {
@@ -279,6 +309,7 @@ class _DetailsButton extends StatelessWidget {
               },
             ),
             toggleAllButton,
+            hideProcessButton,
           ],
         );
 
