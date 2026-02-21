@@ -36,7 +36,7 @@ final mockStorageRepository = MockStorageRepository();
 final mockSystemTrayManager = MockSystemTrayManager();
 
 const defaultTestWindow = Window(
-  id: 548331,
+  id: '548331',
   process: Process(
     executable: 'firefox-bin',
     pid: 8749655,

@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:hotkey_manager/hotkey_manager.dart';
 
+import '../../app/app.dart';
 import '../../apps_list/apps_list.dart';
 import '../../localization/app_localizations.dart';
+import '../../native_platform/src/linux/linux.dart';
 import '../../theme/styles.dart';
 import '../settings.dart';
 

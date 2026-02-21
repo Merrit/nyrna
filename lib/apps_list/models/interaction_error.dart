@@ -5,7 +5,7 @@ import '../enums.dart';
 class InteractionError {
   final InteractionType interactionType;
   final ProcessStatus statusAfterInteraction;
-  final int windowId;
+  final String windowId;
 
   const InteractionError({
     required this.interactionType,

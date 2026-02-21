@@ -2,7 +2,7 @@ import 'dart:io' as io;
 
 import 'package:helpers/helpers.dart';
 
-import '../../linux/flatpak.dart';
+import '../../linux/linux.dart';
 import '../models/process.dart';
 import 'src/linux_process_repository.dart';
 import 'src/win32_process_repository.dart';

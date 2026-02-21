@@ -28,7 +28,7 @@ const testProcess = Process(
 );
 
 const testWindow = Window(
-  id: 130023427,
+  id: '130023427',
   process: testProcess,
   title: 'Untitled-2 - Visual Studio Code - Insiders',
 );
@@ -59,7 +59,7 @@ void main() {
     when(appWindow.hide()).thenAnswer((_) async => true);
 
     // NativePlatform
-    when(nativePlatform.activeWindow()).thenAnswer((_) async => testWindow);
+    when(nativePlatform.activeWindow).thenReturn(testWindow);
     when(nativePlatform.minimizeWindow(any)).thenAnswer((_) async => true);
     when(nativePlatform.restoreWindow(any)).thenAnswer((_) async => true);
 
