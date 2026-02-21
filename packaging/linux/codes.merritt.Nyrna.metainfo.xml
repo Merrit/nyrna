@@ -58,6 +58,23 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   </branding>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.26.0" date="2026-02-21">
+      <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.26.0</url>
+      <description>
+        <p>Maintenance release to keep things running smoothly.</p>
+        <p>Features</p>
+        <ul>
+          <li>i10n: add Simplified Chinese translation</li>
+        </ul>
+        <p>Chores</p>
+        <ul>
+          <li>update linux metadata for new release</li>
+          <li>vscode: run buildrunner watch automatically on folder open</li>
+          <li>upgrade dependencies and fix deprecations</li>
+          <li>bump version</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.25.0" date="2025-09-28">
       <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.25.0</url>
       <description>
