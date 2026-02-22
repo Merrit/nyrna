@@ -30,10 +30,6 @@ try {
         & $dart format lib/localization/ -l 90
         if ($LASTEXITCODE -ne 0) { Fail "dart format lib/localization failed" }; Ok
 
-        Step "Format all (so Verify will pass)"
-        & $dart format -l 90 . | Out-Null
-        Ok
-
         Step "Verify formatting"
         & $dart format -o none --set-exit-if-changed --line-length=90 .
         if ($LASTEXITCODE -ne 0) { Fail "Verify formatting failed - run 'dart format -l 90 .'" }; Ok
