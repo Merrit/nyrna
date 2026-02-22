@@ -75,6 +75,8 @@ class SettingsPage extends StatelessWidget {
               Spacers.verticalLarge,
               const BehaviourSection(),
               Spacers.verticalMedium,
+              const PersonalizationSection(),
+              Spacers.verticalMedium,
               const ThemeSection(),
               const IntegrationSection(),
               Spacers.verticalMedium,
