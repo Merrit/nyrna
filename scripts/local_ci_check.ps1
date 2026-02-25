@@ -1,6 +1,6 @@
 # Mimic Merrit's CI (tests.yml + build-windows) for local verification.
 # Run before pushing to avoid embarrassing CI failures.
-# Usage: .\scripts\ci_local.ps1  [-TestsOnly] [-BuildOnly]
+# Usage: .\scripts/local_ci_check.ps1  [-TestsOnly] [-BuildOnly]
 #
 # Ensure FLUTTER_ROOT is set (e.g. X:\apps\flutter_sdk\flutter) or flutter in PATH.
 
