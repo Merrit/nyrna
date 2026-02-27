@@ -58,6 +58,15 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   </branding>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.26.1" date="2026-02-27">
+      <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.26.1</url>
+      <description>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>pin Windows version to working version</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.26.0" date="2026-02-21">
       <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.26.0</url>
       <description>
