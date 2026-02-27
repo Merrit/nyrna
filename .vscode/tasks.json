@@ -5,10 +5,9 @@
 		{
 			"label": "build_runner watch",
 			"detail": "Code generation (continuous)",
-			"type": "flutter",
-			"command": "flutter",
+			"type": "shell",
+			"command": "dart",
 			"args": [
-				"pub",
 				"run",
 				"build_runner",
 				"watch",
