@@ -22,16 +22,17 @@ jobs:
     with:
       pre-release: false
     secrets: inherit
-  call-build-windows:
-    needs: call-tests
-    uses: ./.github/workflows/build-windows.yml
-    with:
-      pre-release: false
-    secrets: inherit
+  # call-build-windows:
+  #   needs: call-tests
+  #   uses: ./.github/workflows/build-windows.yml
+  #   with:
+  #     pre-release: false
+  #   secrets: inherit
 
   release:
     name: "Release"
-    needs: [call-build-linux, call-build-windows]
+    # needs: [call-build-linux, call-build-windows]
+    needs: [call-build-linux]
     runs-on: "ubuntu-latest"
 
     steps:
@@ -50,4 +51,4 @@ jobs:
           prerelease: false
           files: |
             ${{ github.workspace }}/artifacts/linux-artifacts/*
-            ${{ github.workspace }}/artifacts/windows-artifacts/*
+# ${{ github.workspace }}/artifacts/windows-artifacts/*

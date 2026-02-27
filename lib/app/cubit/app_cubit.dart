@@ -122,6 +122,10 @@ Otherwise, [consider signing in using X11 instead](https://docs.fedoraproject.or
 
   /// Fetches version data from the update service.
   Future<void> _fetchVersionData() async {
+    // Windows version is not being supported for future updates, so we skip fetching
+    // version data for Windows so they don't get an "update available" message.
+    if (Platform.isWindows) return;
+
     final versionInfo = await _updateService.getVersionInfo();
     emit(
       state.copyWith(
