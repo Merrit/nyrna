@@ -21,16 +21,17 @@ jobs:
     with:
       pre-release: true
     secrets: inherit
-  call-build-windows:
-    needs: call-tests
-    uses: ./.github/workflows/build-windows.yml
-    with:
-      pre-release: true
-    secrets: inherit
+  # call-build-windows:
+  #   needs: call-tests
+  #   uses: ./.github/workflows/build-windows.yml
+  #   with:
+  #     pre-release: true
+  #   secrets: inherit
 
   verify-pull-request:
     name: Verify Pull Request
-    needs: [call-tests, call-build-linux, call-build-windows]
+    # needs: [call-tests, call-build-linux, call-build-windows]
+    needs: [call-tests, call-build-linux]
     runs-on: ubuntu-latest
     steps:
       - run: echo "Requirements passed, PR looks good!"

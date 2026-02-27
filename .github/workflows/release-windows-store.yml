@@ -4,9 +4,9 @@ on:
   # Enable manual run
   workflow_dispatch:
   # Build & deploy for published releases
-  release:
-    types:
-      - published
+  # release:
+  #   types:
+  #     - published
 
 concurrency:
     group: ci-release-${{ github.ref }}-1

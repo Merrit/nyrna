@@ -67,7 +67,11 @@ Unfortunately no. [CRIU](https://criu.org/) looks very promising to allow us to 
 
 ## Troubleshooting
 
-If you use Microsoft Windows, issues are often resolved by running Nyrna as an administrator.
+The Windows version is unlikely to receive further updates, and is not as stable
+as the Linux version.
+
+If you use Microsoft Windows, issues are often resolved by running Nyrna as an
+administrator.
 
 
 ## Building
