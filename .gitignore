@@ -24,6 +24,8 @@ packaging/output/
 .flatpak-builder
 build-dir
 output
+packaging/linux/flatpak/shared-modules/
+packaging/linux/flatpak/build-dir/
 
 # Test coverage
 lcov.info
