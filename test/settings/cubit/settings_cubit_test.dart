@@ -104,6 +104,9 @@ void main() {
       expect(state.refreshInterval, 5);
       expect(state.showHiddenWindows, false);
       expect(state.startHiddenInTray, false);
+      expect(state.hideProcessPid, false);
+      expect(state.showExecutableFirst, false);
+      expect(state.limitWindowTitleToOneLine, false);
     });
 
     test('ignoring update works', () async {

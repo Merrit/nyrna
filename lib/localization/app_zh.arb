@@ -135,6 +135,35 @@
   "@pinSuspendedWindowsTooltip": {
     "description": "Tooltip for the pin suspended windows setting"
   },
+  "@_SETTINGS_PERSONALIZATION_SECTION": {},
+  "personalizationTitle": "个性化",
+  "@personalizationTitle": {
+    "description": "The title of the personalization section of the settings page."
+  },
+  "hidePidSetting": "隐藏 PID",
+  "@hidePidSetting": {
+    "description": "Label for the option that hides PIDs on process cards."
+  },
+  "hidePidSettingDescription": "在卡片上不显示进程 ID。",
+  "@hidePidSettingDescription": {
+    "description": "Description for the hide PID setting."
+  },
+  "exeFirstSetting": "exe 名称置顶",
+  "@exeFirstSetting": {
+    "description": "Label for the option that shows the executable name above the title."
+  },
+  "exeFirstSettingDescription": "始终将可执行文件名显示在卡片最上方。",
+  "@exeFirstSettingDescription": {
+    "description": "Description for the executable first setting."
+  },
+  "limitWindowTitleToOneLine": "标题限定一行",
+  "@limitWindowTitleToOneLine": {
+    "description": "Label for the option that truncates long window titles."
+  },
+  "limitWindowTitleToOneLineDescription": "长标题自动截断并加省略号，保持卡片统一高度。",
+  "@limitWindowTitleToOneLineDescription": {
+    "description": "Description for the limit window title setting."
+  },
   "showHiddenWindows": "显示隐藏窗口",
   "@showHiddenWindows": {
     "description": "Label for the show hidden windows setting"

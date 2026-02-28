@@ -112,18 +112,9 @@ void main() {
     when(storage.getValue('ignoredUpdate')).thenAnswer((_) async {});
 
     when(settingsCubit.state).thenReturn(
-      SettingsState(
-        appSpecificHotKeys: [],
-        autoStart: false,
+      SettingsState.initial().copyWith(
         autoRefresh: false,
-        closeToTray: false,
         hotKey: HotKey(key: PhysicalKeyboardKey.again),
-        minimizeWindows: true,
-        pinSuspendedWindows: false,
-        refreshInterval: 5,
-        showHiddenWindows: false,
-        startHiddenInTray: false,
-        working: false,
       ),
     );
 

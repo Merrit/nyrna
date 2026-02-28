@@ -1,5 +1,6 @@
 import 'dart:io' show ProcessResult, ProcessSignal;
 
+import 'package:nyrna/logs/logs.dart';
 import 'package:nyrna/native_platform/native_platform.dart';
 import 'package:nyrna/native_platform/src/typedefs.dart';
 import 'package:test/test.dart';
@@ -8,6 +9,10 @@ late KillFunction mockKill;
 late RunFunction mockRun;
 
 void main() {
+  setUpAll(() async {
+    await LoggingManager.initialize(verbose: false);
+  });
+
   setUp(() {
     mockKill = ((int pid, [ProcessSignal signal = ProcessSignal.sigterm]) {
       return false;

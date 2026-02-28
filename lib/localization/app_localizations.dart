@@ -288,6 +288,48 @@ abstract class AppLocalizations {
   /// **'If enabled, suspended windows will always be shown at the top of the window list.'**
   String get pinSuspendedWindowsTooltip;
 
+  /// The title of the personalization section of the settings page.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalization'**
+  String get personalizationTitle;
+
+  /// Label for the option that hides PIDs on process cards.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide PID'**
+  String get hidePidSetting;
+
+  /// Description for the hide PID setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the process ID from each process card.'**
+  String get hidePidSettingDescription;
+
+  /// Label for the option that shows the executable name above the title.
+  ///
+  /// In en, this message translates to:
+  /// **'Executable at top'**
+  String get exeFirstSetting;
+
+  /// Description for the executable first setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Display the executable name in place of the title line.'**
+  String get exeFirstSettingDescription;
+
+  /// Label for the option that truncates long window titles.
+  ///
+  /// In en, this message translates to:
+  /// **'Limit title to one line'**
+  String get limitWindowTitleToOneLine;
+
+  /// Description for the limit window title setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Truncate long window titles with ellipsis to keep cards uniform.'**
+  String get limitWindowTitleToOneLineDescription;
+
   /// Label for the show hidden windows setting
   ///
   /// In en, this message translates to:
