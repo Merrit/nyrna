@@ -19,5 +19,6 @@
         "editor.rulers": [
             90
         ]
-    }
+    },
+    "cmake.ignoreCMakeListsMissing": true
 }

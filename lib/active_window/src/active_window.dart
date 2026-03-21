@@ -86,13 +86,28 @@ class ActiveWindow {
     log.i('Suspending');
 
     for (int attempt = 0; attempt < _maxRetries; attempt++) {
-      final window = await _nativePlatform.activeWindow();
+      await _nativePlatform.checkActiveWindow();
+      final window = _nativePlatform.activeWindow;
+
+      if (window == null) {
+        log.w('No active window found, retrying.');
+        if (attempt < _maxRetries - 1) {
+          // checkActiveWindow() already waits internally (KDE Wayland uses a
+          // polling loop with a 2-second timeout; X11 is synchronous), so no
+          // additional delay is needed here.
+          continue;
+        }
+        log.e('Failed to find active window after $_maxRetries attempts.');
+        return false;
+      }
+
       final String executable = window.process.executable;
 
       if (executable == 'nyrna' || executable == 'nyrna.exe') {
         log.w('Active window is Nyrna, hiding and retrying.');
         await _appWindow.hide();
         await Future.delayed(const Duration(milliseconds: 500));
+        // checkActiveWindow() will be called at the top of the next iteration.
         continue;
       }
 
@@ -141,7 +156,7 @@ class ActiveWindow {
     return false;
   }
 
-  Future<void> _minimize(int windowId) async {
+  Future<void> _minimize(String windowId) async {
     final shouldMinimize = await _getShouldMinimize();
     if (!shouldMinimize) return;
 
@@ -150,7 +165,7 @@ class ActiveWindow {
     if (!minimized) log.e('Failed to minimize window.');
   }
 
-  Future<void> _restore(int windowId) async {
+  Future<void> _restore(String windowId) async {
     final shouldRestore = await _getShouldMinimize();
     if (!shouldRestore) return;
 

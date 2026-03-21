@@ -17,13 +17,16 @@ command: nyrna
 separate-locales: false
 finish-args:
   - --share=ipc
-  - --socket=x11
+  - --socket=wayland
+  - --socket=fallback-x11
   - --device=dri
   - --socket=pulseaudio
   - --share=network
   - --talk-name=org.freedesktop.Flatpak # Access host processes
   # Tray icon support
   - --talk-name=org.kde.StatusNotifierWatcher
+  - --talk-name=org.kde.KWin # Get window info from KWin for Wayland support
+  - --own-name=codes.merritt.Nyrna # Required for NyrnaDbus.initialize() D-Bus RequestName
 modules:
   - name: keybinder3
     buildsystem: autotools

@@ -37,6 +37,7 @@ analyzer:
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
+    - "packaging/**" # flatpak-builder dir will kill the analyzer
 
 formatter:
   trailing_commas: preserve

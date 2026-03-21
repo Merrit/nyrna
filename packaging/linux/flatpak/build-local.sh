@@ -73,6 +73,15 @@ tar -czf "$REPO_ROOT/Nyrna-Linux-Portable.tar.gz" -C "$BUNDLE_DIR" .
 echo "==> Building Flatpak..."
 cd "$SCRIPT_DIR"
 
+# Clean up any stale rofiles-fuse mounts from a previous interrupted build.
+echo "==> Cleaning up any stale FUSE mounts..."
+for mount in "$SCRIPT_DIR/.flatpak-builder/rofiles"/rofiles-*; do
+    if [ -d "$mount" ]; then
+        fusermount3 -uz "$mount" 2>/dev/null || fusermount -uz "$mount" 2>/dev/null || true
+        rmdir "$mount" 2>/dev/null || true
+    fi
+done
+
 flatpak-builder \
     --force-clean \
     --user \
