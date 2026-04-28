@@ -350,6 +350,31 @@ void main() {
         environment: DesktopEnvironment.kde,
       );
 
+      test('always returns true on KDE Wayland (no binary deps needed)', () async {
+        const kdeWaylandSession = SessionType(
+          displayProtocol: DisplayProtocol.wayland,
+          environment: DesktopEnvironment.kde,
+        );
+
+        when(mockNyrnaDbus.windowsJson).thenReturn('[]');
+        when(
+          mockNyrnaDbus.activeWindowUpdates,
+        ).thenAnswer((_) => const Stream.empty());
+
+        // Even with a run function that always fails, KDE Wayland should
+        // return true because it uses D-Bus scripting, not binary tools.
+        mockRun = ((executable, args) async => stubFailureProcessResult);
+
+        final linux = await Linux.initialize(
+          mockRun,
+          kwin: mockKWin,
+          nyrnaDbus: mockNyrnaDbus,
+          sessionOverride: kdeWaylandSession,
+        );
+        final result = await linux.checkDependencies();
+        expect(result, isTrue);
+      });
+
       test('finds dependencies when present', () async {
         mockRun = ((executable, args) async {
           return (args[1].contains('wmctrl') || args[1].contains('xdotool'))

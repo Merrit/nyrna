@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -64,7 +65,7 @@ class UpdateService {
       final data = List<Map>.from(json);
       final tag = data.firstWhere((element) => element['prerelease'] == false);
       final tagName = tag['tag_name'] as String;
-      final version = _parseVersionTag(tagName);
+      final version = parseVersionTag(tagName);
       return Version.parse(version);
     } else {
       log.w(
@@ -81,7 +82,8 @@ class UpdateService {
   /// Examples:
   /// `v1.2.3` becomes `1.2.3`.
   /// `v1.2.3-beta` becomes `1.2.3`.
-  String _parseVersionTag(String tag) {
+  @visibleForTesting
+  String parseVersionTag(String tag) {
     final version = tag.split('v').last.split('-').first;
     return version;
   }

@@ -133,7 +133,14 @@ Otherwise, [consider signing in using X11 instead](https://docs.fedoraproject.or
     // version data for Windows so they don't get an "update available" message.
     if (Platform.isWindows) return;
 
-    final versionInfo = await _updateService.getVersionInfo();
+    final VersionInfo versionInfo;
+    try {
+      versionInfo = await _updateService.getVersionInfo();
+    } on Exception catch (e) {
+      log.e('Error fetching version info: $e');
+      return;
+    }
+
     emit(
       state.copyWith(
         runningVersion: versionInfo.currentVersion,

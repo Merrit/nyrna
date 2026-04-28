@@ -452,5 +452,99 @@ void main() {
         expect(mpvWindow2State.process.status, ProcessStatus.suspended);
       });
     });
+
+    group('showHiddenWindows:', () {
+      test('fetchWindows passes showHidden: false by default', () async {
+        await cubit.manualRefresh();
+        verify(
+          nativePlatform.windows(showHidden: false),
+        ).called(greaterThanOrEqualTo(1));
+      });
+
+      test('fetchWindows passes showHidden: true when setting is enabled', () async {
+        when(settingsCubit.state).thenReturn(
+          SettingsState(
+            appSpecificHotKeys: [],
+            autoStart: false,
+            autoRefresh: false,
+            closeToTray: false,
+            hotKey: HotKey(key: PhysicalKeyboardKey.again),
+            minimizeWindows: true,
+            pinSuspendedWindows: false,
+            refreshInterval: 5,
+            showHiddenWindows: true,
+            startHiddenInTray: false,
+            working: false,
+          ),
+        );
+        await cubit.manualRefresh();
+        verify(
+          nativePlatform.windows(showHidden: true),
+        ).called(greaterThanOrEqualTo(1));
+      });
+    });
+
+    group('favorites:', () {
+      test('setFavorite(true) persists executable to storage', () async {
+        when(
+          nativePlatform.windows(showHidden: anyNamed('showHidden')),
+        ).thenAnswer((_) async => [msPaintWindow]);
+        when(storage.getValue('favorites')).thenAnswer((_) async => <String>[]);
+        await cubit.manualRefresh();
+        await cubit.setFavorite(msPaintWindow, true);
+        final captured = verify(
+          storage.saveValue(
+            key: 'favorites',
+            value: captureAnyNamed('value'),
+          ),
+        ).captured;
+        expect(captured.single, contains(msPaintProcess.executable));
+      });
+
+      test('setFavorite(false) removes executable from storage', () async {
+        when(
+          nativePlatform.windows(showHidden: anyNamed('showHidden')),
+        ).thenAnswer((_) async => [msPaintWindow]);
+        when(storage.getValue('favorites')).thenAnswer(
+          (_) async => <String>[msPaintProcess.executable],
+        );
+        await cubit.manualRefresh();
+        await cubit.setFavorite(msPaintWindow, false);
+        final captured = verify(
+          storage.saveValue(
+            key: 'favorites',
+            value: captureAnyNamed('value'),
+          ),
+        ).captured;
+        expect(captured.single, isNot(contains(msPaintProcess.executable)));
+      });
+
+      test('windows marked as favorite after refresh when stored', () async {
+        when(
+          nativePlatform.windows(showHidden: anyNamed('showHidden')),
+        ).thenAnswer((_) async => [msPaintWindow]);
+        when(storage.getValue('favorites')).thenAnswer(
+          (_) async => <String>[msPaintProcess.executable],
+        );
+        await cubit.manualRefresh();
+        expect(state.windows.first.process.isFavorite, true);
+      });
+    });
+
+    group('refreshWindows:', () {
+      test('manualRefresh fetches updated window list from NativePlatform', () async {
+        when(
+          nativePlatform.windows(showHidden: anyNamed('showHidden')),
+        ).thenAnswer((_) async => [msPaintWindow]);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 1);
+
+        when(
+          nativePlatform.windows(showHidden: anyNamed('showHidden')),
+        ).thenAnswer((_) async => []);
+        await cubit.manualRefresh();
+        expect(state.windows.length, 0);
+      });
+    });
   });
 }

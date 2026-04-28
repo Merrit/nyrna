@@ -215,6 +215,70 @@ void main() {
         verify(storage.saveValue(key: 'autoStart', value: false)).called(1);
         debugDefaultTargetPlatformOverride = null;
       });
+
+      test('enabling autostart calls AutostartService.enable()', () async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+        expect(state.autoStart, false);
+        await cubit.toggleAutostart();
+        verify(autostartService.enable()).called(1);
+        debugDefaultTargetPlatformOverride = null;
+      });
+
+      test('disabling autostart calls AutostartService.disable()', () async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+        when(storage.getValue('autoStart')).thenAnswer((_) async => true);
+        cubit = await SettingsCubit.init(
+          autostartService: autostartService,
+          hotkeyService: hotkeyService,
+          storage: storage,
+        );
+        expect(state.autoStart, true);
+        await cubit.toggleAutostart();
+        verify(autostartService.disable()).called(1);
+        debugDefaultTargetPlatformOverride = null;
+      });
+    });
+
+    group('settings loaded from storage on init:', () {
+      test('minimizeWindows is loaded', () async {
+        when(storage.getValue('minimizeWindows')).thenAnswer((_) async => false);
+        cubit = await SettingsCubit.init(
+          autostartService: autostartService,
+          hotkeyService: hotkeyService,
+          storage: storage,
+        );
+        expect(state.minimizeWindows, false);
+      });
+
+      test('refreshInterval is loaded', () async {
+        when(storage.getValue('refreshInterval')).thenAnswer((_) async => 30);
+        cubit = await SettingsCubit.init(
+          autostartService: autostartService,
+          hotkeyService: hotkeyService,
+          storage: storage,
+        );
+        expect(state.refreshInterval, 30);
+      });
+
+      test('showHiddenWindows is loaded', () async {
+        when(storage.getValue('showHiddenWindows')).thenAnswer((_) async => true);
+        cubit = await SettingsCubit.init(
+          autostartService: autostartService,
+          hotkeyService: hotkeyService,
+          storage: storage,
+        );
+        expect(state.showHiddenWindows, true);
+      });
+
+      test('closeToTray is loaded', () async {
+        when(storage.getValue('closeToTray')).thenAnswer((_) async => true);
+        cubit = await SettingsCubit.init(
+          autostartService: autostartService,
+          hotkeyService: hotkeyService,
+          storage: storage,
+        );
+        expect(state.closeToTray, true);
+      });
     });
 
     group('hotkey:', () {
@@ -259,6 +323,17 @@ void main() {
         await cubit.resetHotkey();
         expect(state.hotKey.physicalKey, PhysicalKeyboardKey.pause);
         verify(storage.deleteValue('hotkey')).called(1);
+      });
+
+      test('updateHotkey saves hotkey to storage as JSON', () async {
+        final newHotkey = HotKey(key: PhysicalKeyboardKey.f5);
+        await cubit.updateHotkey(newHotkey);
+        verify(
+          storage.saveValue(
+            key: 'hotkey',
+            value: anyNamed('value'),
+          ),
+        ).called(1);
       });
     });
   });
