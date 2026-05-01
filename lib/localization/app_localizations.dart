@@ -419,6 +419,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select app'**
   String get selectApp;
+
+  /// Message shown on Wayland explaining hotkeys must be configured manually
+  ///
+  /// In en, this message translates to:
+  /// **'Global hotkeys are not supported on Wayland. You can set up a custom hotkey manually through your desktop environment.'**
+  String get waylandHotkeyMessage;
+
+  /// Link text for Wayland hotkey setup documentation
+  ///
+  /// In en, this message translates to:
+  /// **'View setup instructions'**
+  String get waylandHotkeyDocsLink;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

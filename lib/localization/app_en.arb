@@ -224,5 +224,13 @@
   "selectApp": "Select app",
   "@selectApp": {
     "description": "Hint text for app selection dropdown"
+  },
+  "waylandHotkeyMessage": "Global hotkeys are not supported on Wayland. You can set up a custom hotkey manually through your desktop environment.",
+  "@waylandHotkeyMessage": {
+    "description": "Message shown on Wayland explaining hotkeys must be configured manually"
+  },
+  "waylandHotkeyDocsLink": "View setup instructions",
+  "@waylandHotkeyDocsLink": {
+    "description": "Link text for Wayland hotkey setup documentation"
   }
 }

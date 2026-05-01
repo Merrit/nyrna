@@ -11,6 +11,8 @@ const String kPackageId = 'codes.merritt.Nyrna';
 const String kTroubleshootingGuideUrl =
     'https://nyrna.merritt.codes/docs/troubleshooting';
 
+const String kWaylandHotkeyDocsUrl = 'https://nyrna.merritt.codes/docs/hotkey/#wayland';
+
 const String websiteUrl = 'https://nyrna.merritt.codes/';
 
 /// The app's package name / identifier that Windows uses when installed from

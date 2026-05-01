@@ -3,10 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:hotkey_manager/hotkey_manager.dart';
 
+import '../../app/app.dart';
 import '../../apps_list/apps_list.dart';
+import '../../core/core.dart';
 import '../../localization/app_localizations.dart';
+import '../../native_platform/native_platform.dart';
 import '../../theme/styles.dart';
 import '../settings.dart';
+
+// Quick hack, should be moved to a more appropriate place later.
+bool _isWayland(BuildContext context) {
+  final sessionType = context.read<AppCubit>().state.sessionType;
+  return sessionType?.displayProtocol == DisplayProtocol.wayland;
+}
 
 /// Add shortcuts and icons for portable builds or autostart.
 class IntegrationSection extends StatelessWidget {
@@ -119,6 +128,33 @@ class _HotkeyConfigWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (_isWayland(context)) {
+      // Hotkey manager doesn't work on Wayland, so we hide the hotkey settings in that
+      // case. Instead show a web link to the docs about how to setup a custom hotkey
+      // through the DE.
+      return ListTile(
+        leading: const Icon(Icons.keyboard),
+        title: Text(
+          AppLocalizations.of(context)!.hotkey,
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.waylandHotkeyMessage,
+            ),
+            TextButton(
+              style: TextButton.styleFrom(padding: EdgeInsets.zero),
+              onPressed: () => context.read<AppCubit>().launchURL(kWaylandHotkeyDocsUrl),
+              child: Text(
+                AppLocalizations.of(context)!.waylandHotkeyDocsLink,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return ListTile(
       title: Text(
         AppLocalizations.of(context)!.hotkey,
@@ -240,6 +276,11 @@ class _AppSpecificHotkeys extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (_isWayland(context)) {
+      // Global hotkeys don't work on Wayland.
+      return const SizedBox();
+    }
+
     return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (context, state) {
         return Card(

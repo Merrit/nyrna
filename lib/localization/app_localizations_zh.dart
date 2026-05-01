@@ -168,4 +168,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get selectApp => '选择应用';
+
+  @override
+  String get waylandHotkeyMessage =>
+      'Global hotkeys are not supported on Wayland. You can set up a custom hotkey manually through your desktop environment.';
+
+  @override
+  String get waylandHotkeyDocsLink => 'View setup instructions';
 }

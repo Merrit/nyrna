@@ -172,4 +172,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get selectApp => 'Select app';
+
+  @override
+  String get waylandHotkeyMessage =>
+      'Global hotkeys are not supported on Wayland. You can set up a custom hotkey manually through your desktop environment.';
+
+  @override
+  String get waylandHotkeyDocsLink => 'View setup instructions';
 }
