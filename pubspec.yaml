@@ -61,6 +61,11 @@ dependency_overrides:
       url: https://github.com/gepbird/hotkey_manager.git
       path: packages/hotkey_manager_linux
       ref: 1b31e3ca4ab017ee72f54a7065b2073a88403d61
+  hotkey_manager_windows:
+    git:
+      url: https://github.com/Merrit/hotkey_manager.git
+      path: packages/hotkey_manager_windows
+      ref: a031e87df1ae03a2dd13bb03ea2cc2e5b484a0a7
 
 dev_dependencies:
   build_runner: ^2.4.6

@@ -491,12 +491,13 @@ packages:
     source: hosted
     version: "0.2.0"
   hotkey_manager_windows:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: hotkey_manager_windows
-      sha256: "0d03ced9fe563ed0b68f0a0e1b22c9ffe26eb8053cb960e401f68a4f070e0117"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/hotkey_manager_windows"
+      ref: a031e87df1ae03a2dd13bb03ea2cc2e5b484a0a7
+      resolved-ref: a031e87df1ae03a2dd13bb03ea2cc2e5b484a0a7
+      url: "https://github.com/Merrit/hotkey_manager.git"
+    source: git
     version: "0.2.0"
   http:
     dependency: "direct main"
