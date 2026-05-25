@@ -157,6 +157,7 @@ Otherwise, [consider signing in using X11 instead](https://docs.fedoraproject.or
   /// Fetches release notes from the release notes service.
   Future<void> _fetchReleaseNotes() async {
     if (state.firstRun) return;
+    if (state.runningVersion.isEmpty) return;
 
     final String? lastReleaseNotesVersionShown = await _storageRepository.getValue(
       'lastReleaseNotesVersionShown',
