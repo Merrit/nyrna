@@ -56,11 +56,13 @@ class AppCubit extends Cubit<AppState> {
   /// Lazy loading is used instead of awaiting on a constructor to avoid
   /// blocking the UI, since none of the data fetched here is critical.
   Future<void> _init() async {
+    // Set up tray listener immediately so no events are missed while the
+    // async initialization below is in progress.
+    _listenToSystemTrayEvents();
     await _checkForFirstRun();
     _checkLinuxSessionType();
     await _fetchVersionData();
     await _fetchReleaseNotes();
-    _listenToSystemTrayEvents();
   }
 
   /// Checks if this is the first run of the app.
