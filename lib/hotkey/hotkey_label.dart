@@ -66,7 +66,8 @@ String hotkeyLabel(HotKey hotKey) {
   // hotkey_manager's KeyboardKeyExt.keyLabel covers most standard keys but
   // also falls back to debugName for unknown ones, so we check our extended
   // map first.
-  final keyName = (physicalKey != null ? _extraPhysicalKeyLabels[physicalKey] : null) ??
+  final keyName =
+      (physicalKey != null ? _extraPhysicalKeyLabels[physicalKey] : null) ??
       hotKey.key.keyLabel;
 
   final modifierNames = (hotKey.modifiers ?? []).map((m) => _modifierLabels[m] ?? m.name);
