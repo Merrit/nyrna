@@ -21,9 +21,6 @@ class Donate extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: AppLocalizations.of(context)!.madeBy,
-                      style: const TextStyle(
-                        fontFamily: emojiFont,
-                      ),
                     ),
                     TextSpan(
                       text: 'Kristen McWilliam',
