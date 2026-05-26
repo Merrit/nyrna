@@ -58,6 +58,24 @@ https://www.freedesktop.org/software/appstream/metainfocreator/#/
   </branding>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="2.27.2" date="2026-05-26">
+      <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.27.2</url>
+      <description>
+        <p>Bug Fixes</p>
+        <ul>
+          <li>use latest SDKs when building on Windows</li>
+          <li>windows: don't crash on Windows with Flutter 3.44+</li>
+          <li>Fix hotkey labels on Windows</li>
+          <li>init tray before async work</li>
+          <li>don't try to get release notes if we don't know the running version</li>
+          <li>windows: set tray tooltip to prevent random characters showing</li>
+        </ul>
+        <p>Tests</p>
+        <ul>
+          <li>skip tests on Windows that aren't supported there</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.27.1" date="2026-05-01">
       <url type="details">https://github.com/Merrit/nyrna/releases/tag/v2.27.1</url>
       <description>
