@@ -36,20 +36,20 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
 
       - name: Create Development Release & Upload artifacts
-        uses: marvinpinto/action-automatic-releases@v1.2.1
+        uses: softprops/action-gh-release@v3
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          tag_name: "latest"
           prerelease: true
-          title: "Development Build"
+          name: "Development Build"
           files: |
             ${{ github.workspace }}/artifacts/linux-artifacts/*
             ${{ github.workspace }}/artifacts/windows-artifacts/*

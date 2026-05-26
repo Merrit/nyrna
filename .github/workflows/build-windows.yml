@@ -33,7 +33,7 @@ jobs:
         uses: subosito/flutter-action@v2
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Prepare for build
         run: |
@@ -50,7 +50,7 @@ jobs:
       # ---------------------------------- Upload ---------------------------- #
 
       - name: Upload Windows Store MSIX artifact to workflow
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-store-artifact
           path: output/*.msix
@@ -60,7 +60,7 @@ jobs:
         run: rm output/*.msix
 
       - name: Upload artifacts to workflow
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-artifacts
           path: output/*
