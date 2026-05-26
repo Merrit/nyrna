@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -178,52 +179,60 @@ void main() {
     });
 
     group('setWindowSizeAndPosition:', () {
-      test('reads saved rect from storage and does not call saveValue', () async {
-        const savedJson = '{"left":100.0,"top":200.0,"width":530.0,"height":600.0}';
-        when(
-          mockStorageRepo.getValue(
-            _expectedScreenConfigId,
-            storageArea: 'windowSizeAndPosition',
-          ),
-        ).thenAnswer((_) async => savedJson);
+      test(
+        'reads saved rect from storage and does not call saveValue',
+        skip: Platform.isWindows, // Not supported on Windows at the moment.
+        () async {
+          const savedJson = '{"left":100.0,"top":200.0,"width":530.0,"height":600.0}';
+          when(
+            mockStorageRepo.getValue(
+              _expectedScreenConfigId,
+              storageArea: 'windowSizeAndPosition',
+            ),
+          ).thenAnswer((_) async => savedJson);
 
-        final appWindow = AppWindow(mockStorageRepo);
-        await appWindow.setWindowSizeAndPosition();
+          final appWindow = AppWindow(mockStorageRepo);
+          await appWindow.setWindowSizeAndPosition();
 
-        verify(
-          mockStorageRepo.getValue(
-            _expectedScreenConfigId,
-            storageArea: 'windowSizeAndPosition',
-          ),
-        ).called(1);
-        verifyNever(
-          mockStorageRepo.saveValue(
-            key: anyNamed('key'),
-            value: anyNamed('value'),
-          ),
-        );
-      });
+          verify(
+            mockStorageRepo.getValue(
+              _expectedScreenConfigId,
+              storageArea: 'windowSizeAndPosition',
+            ),
+          ).called(1);
+          verifyNever(
+            mockStorageRepo.saveValue(
+              key: anyNamed('key'),
+              value: anyNamed('value'),
+            ),
+          );
+        },
+      );
 
-      test('when no saved rect, uses default 530x600 size', () async {
-        // Return null to simulate first run.
-        when(
-          mockStorageRepo.getValue(any, storageArea: anyNamed('storageArea')),
-        ).thenAnswer((_) async => null);
+      test(
+        'when no saved rect, uses default 530x600 size',
+        skip: Platform.isWindows, // Not supported on Windows at the moment.
+        () async {
+          // Return null to simulate first run.
+          when(
+            mockStorageRepo.getValue(any, storageArea: anyNamed('storageArea')),
+          ).thenAnswer((_) async => null);
 
-        // Track which frame was set via the channel.
-        List<double>? setFrame;
-        _setupChannelMocks(
-          onSetWindowFrame: (frame) => setFrame = frame,
-        );
+          // Track which frame was set via the channel.
+          List<double>? setFrame;
+          _setupChannelMocks(
+            onSetWindowFrame: (frame) => setFrame = frame,
+          );
 
-        final appWindow = AppWindow(mockStorageRepo);
-        await appWindow.setWindowSizeAndPosition();
+          final appWindow = AppWindow(mockStorageRepo);
+          await appWindow.setWindowSizeAndPosition();
 
-        expect(setFrame, isNotNull);
-        // Default width is 530, height is 600.
-        expect(setFrame![2], 530.0);
-        expect(setFrame![3], 600.0);
-      });
+          expect(setFrame, isNotNull);
+          // Default width is 530, height is 600.
+          expect(setFrame![2], 530.0);
+          expect(setFrame![3], 600.0);
+        },
+      );
     });
 
     group('reset:', () {
@@ -246,22 +255,26 @@ void main() {
         ).called(1);
       });
 
-      test('then calls setWindowSizeAndPosition (reads storage)', () async {
-        const savedJson = '{"left":100.0,"top":200.0,"width":530.0,"height":600.0}';
-        when(
-          mockStorageRepo.getValue(any, storageArea: anyNamed('storageArea')),
-        ).thenAnswer((_) async => savedJson);
+      test(
+        'then calls setWindowSizeAndPosition (reads storage)',
+        skip: Platform.isWindows, // Not supported on Windows at the moment.
+        () async {
+          const savedJson = '{"left":100.0,"top":200.0,"width":530.0,"height":600.0}';
+          when(
+            mockStorageRepo.getValue(any, storageArea: anyNamed('storageArea')),
+          ).thenAnswer((_) async => savedJson);
 
-        final appWindow = AppWindow(mockStorageRepo);
-        await appWindow.reset();
+          final appWindow = AppWindow(mockStorageRepo);
+          await appWindow.reset();
 
-        verify(
-          mockStorageRepo.getValue(
-            _expectedScreenConfigId,
-            storageArea: 'windowSizeAndPosition',
-          ),
-        ).called(1);
-      });
+          verify(
+            mockStorageRepo.getValue(
+              _expectedScreenConfigId,
+              storageArea: 'windowSizeAndPosition',
+            ),
+          ).called(1);
+        },
+      );
     });
   });
 }
