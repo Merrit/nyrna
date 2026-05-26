@@ -19,6 +19,10 @@ class SystemTrayManager {
   final _eventStreamController = StreamController<SystemTrayEvent>.broadcast();
 
   Future<void> initialize() async {
+    if (defaultTargetPlatform.isWindows) {
+      await trayManager.setToolTip('Nyrna');
+    }
+
     final String iconPath;
 
     if (runningInFlatpak() || runningInSnap()) {
