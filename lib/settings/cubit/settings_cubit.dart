@@ -69,6 +69,11 @@ class SettingsCubit extends Cubit<SettingsState> {
     final int refreshInterval = await storage.getValue('refreshInterval') ?? 5;
     final bool showHiddenWindows = await storage.getValue('showHiddenWindows') ?? false;
     final bool startHiddenInTray = await storage.getValue('startHiddenInTray') ?? false;
+    final bool hideProcessPid = await storage.getValue('hideProcessPid') ?? false;
+    final bool showExecutableFirst =
+        await storage.getValue('showExecutableFirst') ?? false;
+    final bool limitWindowTitleToOneLine =
+        await storage.getValue('limitWindowTitleToOneLine') ?? false;
 
     return SettingsCubit._(
       autostartService,
@@ -85,6 +90,9 @@ class SettingsCubit extends Cubit<SettingsState> {
         refreshInterval: refreshInterval,
         showHiddenWindows: showHiddenWindows,
         startHiddenInTray: startHiddenInTray,
+        hideProcessPid: hideProcessPid,
+        showExecutableFirst: showExecutableFirst,
+        limitWindowTitleToOneLine: limitWindowTitleToOneLine,
         working: false,
       ),
     );
@@ -157,6 +165,21 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> updateStartHiddenInTray(bool value) async {
     await _storage.saveValue(key: 'startHiddenInTray', value: value);
     emit(state.copyWith(startHiddenInTray: value));
+  }
+
+  Future<void> updateHideProcessPid(bool value) async {
+    emit(state.copyWith(hideProcessPid: value));
+    await _storage.saveValue(key: 'hideProcessPid', value: value);
+  }
+
+  Future<void> updateShowExecutableFirst(bool value) async {
+    emit(state.copyWith(showExecutableFirst: value));
+    await _storage.saveValue(key: 'showExecutableFirst', value: value);
+  }
+
+  Future<void> updateLimitWindowTitleToOneLine(bool value) async {
+    emit(state.copyWith(limitWindowTitleToOneLine: value));
+    await _storage.saveValue(key: 'limitWindowTitleToOneLine', value: value);
   }
 
   /// Remove the hotkey for a specific application.

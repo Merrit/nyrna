@@ -31,6 +31,9 @@ abstract class SettingsState with _$SettingsState {
     required int refreshInterval,
     required bool showHiddenWindows,
     required bool startHiddenInTray,
+    required bool hideProcessPid,
+    required bool showExecutableFirst,
+    required bool limitWindowTitleToOneLine,
 
     /// True if the app is currently working on something and a loading
     /// indicator should be shown.
@@ -48,6 +51,9 @@ abstract class SettingsState with _$SettingsState {
     refreshInterval: 5,
     showHiddenWindows: false,
     startHiddenInTray: false,
+    hideProcessPid: false,
+    showExecutableFirst: false,
+    limitWindowTitleToOneLine: false,
     working: false,
   );
 }

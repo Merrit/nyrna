@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:nyrna/app_version/app_version.dart';
+import 'package:nyrna/logs/logs.dart';
 import 'package:nyrna/apps_list/apps_list.dart';
 import 'package:nyrna/hotkey/global/hotkey_service.dart';
 import 'package:nyrna/localization/app_localizations.dart';
@@ -78,7 +79,7 @@ void main() {
     when(mockAppsListCubit.stream).thenAnswer((_) => const Stream.empty());
   });
 
-  testWidgets('Clicking more actions button shows context menu', (tester) async {
+  testWidgets('Window tile renders with personalization', (tester) async {
     final appsListCubit = AppsListCubit(
       appVersion: mockAppVersion,
       appWindow: mockAppWindow,
@@ -92,11 +93,15 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
+        locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
-          body: BlocProvider.value(
-            value: appsListCubit,
+          body: MultiBlocProvider(
+            providers: [
+              BlocProvider<SettingsCubit>.value(value: mockSettingsCubit),
+              BlocProvider<AppsListCubit>.value(value: appsListCubit),
+            ],
             child: const WindowTile(
               window: defaultTestWindow,
             ),
@@ -105,10 +110,48 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byType(MenuAnchor));
-    await tester.pumpAndSettle();
+    expect(find.byType(WindowTile), findsOneWidget);
+    expect(find.byKey(const Key('window-tile-pid')), findsOneWidget);
 
-    expect(find.text('Suspend all instances'), findsOneWidget);
+    await appsListCubit.close();
+  });
+
+  testWidgets('PID hidden when hideProcessPid is true', (tester) async {
+    when(mockSettingsCubit.state).thenReturn(
+      SettingsState.initial().copyWith(hideProcessPid: true),
+    );
+
+    final appsListCubit = AppsListCubit(
+      appVersion: mockAppVersion,
+      appWindow: mockAppWindow,
+      hotkeyService: mockHotkeyService,
+      nativePlatform: mockNativePlatform,
+      processRepository: mockProcessRepository,
+      settingsCubit: mockSettingsCubit,
+      storage: mockStorageRepository,
+      systemTrayManager: mockSystemTrayManager,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('en'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: MultiBlocProvider(
+            providers: [
+              BlocProvider<SettingsCubit>.value(value: mockSettingsCubit),
+              BlocProvider<AppsListCubit>.value(value: appsListCubit),
+            ],
+            child: const WindowTile(
+              window: defaultTestWindow,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byKey(const Key('window-tile-pid')), findsNothing);
 
     await appsListCubit.close();
   });
