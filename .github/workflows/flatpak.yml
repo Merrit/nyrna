@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           ref: main
           path: code
@@ -61,7 +61,7 @@ jobs:
         run: sleep 60
 
       - name: Checkout flathub repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           repository: flathub/${{ env.project-id }}
           path: flathub
