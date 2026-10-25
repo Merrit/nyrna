@@ -11,6 +11,7 @@ import '../../app_version/app_version.dart';
 import '../../hotkey/global/hotkey_service.dart';
 import '../../logs/logs.dart';
 import '../../native_platform/native_platform.dart';
+import '../../native_platform/src/win32/power_listener.dart';
 import '../../storage/storage_repository.dart';
 import '../../system_tray/system_tray.dart';
 import '../../window/app_window.dart';
@@ -49,6 +50,7 @@ class AppsListCubit extends Cubit<AppsListState> {
        _appVersion = appVersion,
        super(AppsListState.initial()) {
     _initialize();
+    if (io.Platform.isWindows && !testing) _listenForSystemSleep();
   }
 
   Future<void> _initialize() async {
@@ -362,9 +364,72 @@ class AppsListCubit extends Cubit<AppsListState> {
     );
   }
 
+  PowerListener? _powerListener;
+
+  /// Resume suspended processes just before the system sleeps.
+  ///
+  /// A process that is frozen across a sleep/wake cycle can hang when it is
+  /// resumed afterwards (seen with a D3D12 game), whereas a running process
+  /// handles the power transition itself.
+  void _listenForSystemSleep() {
+    _powerListener = PowerListener(
+      onSuspend: () async {
+        final suspended = state.windows.where(
+          (w) => w.process.status == ProcessStatus.suspended,
+        );
+        log.i(
+          'System is going to sleep, resuming ${suspended.length} '
+          'suspended window(s) first.',
+        );
+        for (final window in suspended) {
+          final successful = await _processRepository.resume(
+            window.process.pid,
+          );
+          log.i(
+            'Resumed ${window.process.executable} (${window.process.pid}) '
+            'before sleep: $successful',
+          );
+          if (successful) _resumedForSleep[window.process.pid] = window;
+        }
+      },
+      onResume: () async {
+        // Both resume events can fire for one wake, so take the list once.
+        final toSuspend = _resumedForSleep.values.toList();
+        _resumedForSleep.clear();
+        if (toSuspend.isEmpty) return;
+
+        // Give the processes time to handle the wake before freezing them.
+        log.i(
+          'System woke up, re-suspending ${toSuspend.length} window(s) in '
+          '${_resuspendDelay.inSeconds}s.',
+        );
+        await Future.delayed(_resuspendDelay);
+
+        for (final window in toSuspend) {
+          final pid = window.process.pid;
+          final status = await _processRepository.getProcessStatus(pid);
+          if (status == ProcessStatus.suspended) continue;
+
+          final successful = await _processRepository.suspend(pid);
+          log.i(
+            'Re-suspended ${window.process.executable} ($pid) '
+            'after wake: $successful',
+          );
+        }
+        await _fetchWindows();
+      },
+    );
+  }
+
+  /// Processes resumed before sleep, by pid, to be suspended again on wake.
+  final _resumedForSleep = <int, Window>{};
+
+  static const _resuspendDelay = Duration(seconds: 5);
+
   @override
   Future<void> close() async {
     _timer?.cancel();
+    _powerListener?.dispose();
     await super.close();
   }
 }
