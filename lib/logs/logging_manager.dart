@@ -49,7 +49,7 @@ class LoggingManager {
 
     log = Logger(
       filter: ProductionFilter(),
-      level: (verbose) ? Level.trace : Level.warning,
+      level: (verbose) ? Level.trace : Level.info,
       output: MultiOutput(outputs),
       // Colors false because it outputs ugly escape characters to log file.
       printer: PrefixPrinter(PrettyPrinter(colors: false)),
